@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos de ação</title>
+    <link rel='stylesheet' href='styles.css'>
+</head>
+<body>
+    <!-- class="active" -->
+    <div id="modal">
+        <button id="modal-close-btn" title="Fechar modal">x</button>
+    </div>
+    <div id="modal-backdrop"></div>
+
+    <header class="main-header">
+        <img src="https://www.fazenda.mg.gov.br/export/system/modules/org.fazenda.mg.gov.br/resources/img/logo2.png" alt="Logo" class="header-logo" width="131" height="41">
+        <h1>Planos de ação</h1>
+    </header>
+
+    <div class="filters-container">
+        <select class="filter" id="filter-periodo">
+            <option selected disabled hidden value="-">--filtrar período--</option>
+            <option value="mes">Este mês</option>
+            <option value="semana">Esta semana</option>
+            <option value="especifico">Período específico</option>
+        </select>
+        <div style="width: 100%;"></div>
+        <div id="periodo-especifico-inputs">
+            <input type="date" id="periodo-inicio" />
+            <input type="date" id="periodo-fim" />
+            <div id="filtrar-especifico">Filtrar</div>
+        </div>
+
+        <select class="filter" id="filter-planoAcao">
+            <option selected disabled hidden value='-'>--filtrar o plano de ação--</option>
+        </select>
+
+        <select class="filter" id="filter-Status">
+            <option selected disabled hidden value='-'>--filtrar o status--</option>
+        </select>
+
+        <select class="filter" id="filter-Responsavel">
+            <option selected disabled hidden value='-'>--filtrar o responsável--</option>
+        </select>
+
+        <select class="filter" id="filter-Orgao">
+            <option selected disabled hidden value='-'>--filtrar o órgão responsável--</option>
+        </select>
+        
+        <div style="width: 100%;"></div>
+        <button onclick="clearFilters()">Limpar filtros</button>
+    </div>
+
+    <div class="gantt-container">
+        <div class="gantt-tasks">
+            <div class="gantt-tasks-header">
+                <div data-col="num">Item do Plano de ação<div class="resizer"></div></div>
+                <div data-col="plano">Plano de ação<div class="resizer"></div></div>
+                <div data-col="atividade">Atividade<div class="resizer"></div></div>
+                <div data-col="status" class="status-header">Status<div class="resizer"></div></div>
+            </div>
+            <div id="gantt-task-list"></div>
+        </div>
+        <div class="gantt-timeline" id="gantt-timeline-container">
+            <div class="gantt-months-header" id="gantt-months-header"></div>
+            <div class="gantt-rows" id="gantt-rows">
+                <div id="todayBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src='scripts.js'></script>
+
+</body>
+</html>

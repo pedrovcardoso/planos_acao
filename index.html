@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos de ação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel='stylesheet' href='styles.css'>
+</head>
+<body class="bg-slate-100">
+    <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+            
+            <!-- Logo e Título (Lado Esquerdo) -->
+            <div class="flex items-center gap-5">
+                <img src="/assets/images/logo sef.png" alt="Logo" width="131" height="41">
+                <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
+            </div>
+
+            <!-- Navegação Principal (Lado Direito para Desktop) -->
+            <nav class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+
+                <a href="/index.html" class="bg-sky-100 text-sky-700 rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Planos de ação</a>
+
+                <a href="/ações/index.html" class="text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Ações</a>
+                </div>
+            </nav>
+
+            <!-- Botão do Menu Hambúrguer (para Mobile) -->
+            <div class="-mr-2 flex md:hidden">
+                <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false">
+                <span class="sr-only">Abrir menu principal</span>
+                <!-- Ícone de Hambúrguer (aparece quando o menu está fechado) -->
+                <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                <!-- Ícone de 'X' (aparece quando o menu está aberto, escondido por padrão) -->
+                <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                </button>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Menu Mobile (escondido por padrão, aparece ao clicar no botão) -->
+        <div class="hidden md:hidden" id="mobile-menu">
+            <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+            <!-- Link Ativo -->
+            <a href="#" class="block rounded-md bg-sky-100 px-3 py-2 text-base font-medium text-sky-700" aria-current="page">Dashboard</a>
+            <!-- Outros Links -->
+            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Relatórios</a>
+            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Equipes</a>
+            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Configurações</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="grid p-6 md:py-5 md:px-8 pt-20 md:pt-24 gap-6">
+        <section id="stat-cards" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+        <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
+        <div class="flex items-center gap-4">
+            <div class="rounded-lg flex justify-center bg-sky-100 p-3">
+                <ion-icon name="layers-outline" class="text-2xl text-sky-600"></ion-icon>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Planos em Andamento</p>
+                    <p class="text-3xl font-semibold text-slate-800">8</p>
+                </div>
+            </div>
+        </div>
+
+            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
+            <div class="flex items-center gap-4">
+                <div class="rounded-lg flex justify-center bg-amber-100 p-3">
+                    <ion-icon name="list-circle-outline" class="text-3xl text-amber-600"></ion-icon>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Atividades em Curso</p>
+                    <p class="text-3xl font-semibold text-slate-800">23</p>
+                </div>
+            </div>
+            </div>
+
+            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
+                <div class="flex items-center gap-4">
+                    <div class="rounded-lg flex justify-center bg-green-100 p-3">
+                        <ion-icon name="calendar-outline" class="text-2xl text-green-600"></ion-icon>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Em desenvolvimento</p>
+                    <p class="text-3xl font-semibold text-slate-800">2</p>
+                </div>
+            </div>
+            </div>
+
+            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
+                <div class="flex items-center gap-4">
+                    <div class="rounded-lg flex justify-center bg-red-100 p-3">
+                    <ion-icon name="time-outline" class="text-2xl text-red-600"></ion-icon>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Entregas em atraso</p>
+                    <p class="text-3xl font-semibold text-slate-800">X</p>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="gantt">
+            <div class="gantt-container bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
+                <div class="gantt-tasks">
+                    <div class="gantt-tasks-header">
+                        <div data-col="plano">Plano de ação<div class="resizer"></div></div>
+                        <div data-col="status" class="status-header">Status<div class="resizer"></div></div>
+                    </div>
+                    <div id="gantt-task-list"></div>
+                </div>
+                <div class="gantt-timeline" id="gantt-timeline-container">
+                    <div class="gantt-months-header" id="gantt-months-header"></div>
+                    <div class="gantt-rows" id="gantt-rows">
+                        <div id="todayBar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cards">
+            <div class="card-container 
+                        grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-auto">
+        <div class="mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center gap-8 md:flex-row md:justify-between">
+            
+            <div>
+                <img class="h-14 w-auto" src="/assets/images/sccg.png" alt="Logo SCCG">
+            </div>
+
+            <!-- Links de Navegação (com o ícone agora) -->
+            <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 md:justify-end">
+                <a href="https://sefazmg-my.sharepoint.com/:f:/r/personal/pedro_cardoso_fazenda_mg_gov_br/Documents/Documentos/Planos%20de%20a%C3%A7%C3%A3o/dados?csf=1&web=1&e=nLcPLB" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Planilha de Dados</a>
+                
+                <a href="https://sefazmg-my.sharepoint.com/:f:/r/personal/pedro_cardoso_fazenda_mg_gov_br/Documents/Documentos/Planos%20de%20a%C3%A7%C3%A3o/dados?csf=1&web=1&e=nLcPLB" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Pasta de arquivos</a>
+                
+                <a href="https://www.sei.mg.gov.br/sei/" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Acessar SEI</a>
+                
+                <a href="https://www.fazenda.mg.gov.br/" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Site da Fazenda</a>
+                
+                <a href="#" class="text-slate-500 hover:text-sky-600 transition-colors" aria-label="GitHub"><span class="sr-only">GitHub</span><ion-icon name="logo-github"></ion-icon></a>
+            </nav>
+
+            </div>
+        </div>
+    </footer>
+
+    <script src='scripts.js'></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

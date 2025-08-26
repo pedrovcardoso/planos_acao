@@ -1,0 +1,209 @@
+:root {
+    --col-plano-width: 250px;
+    --col-status-width: 100px;
+    --month-width: 80px;
+}
+
+.status-Pendente { background-color: #bcbcbc; color: white; }
+.status-Pendente { background-color: #ffc107; color: #5b4904; }
+.status-Em-curso { background-color: #17a2b8; color: white; }
+.status-Concluído { background-color: #28a745; color: white; }
+.status-Finalizado { background-color: #28a745; color: white; }
+
+.gantt-container {
+    display: grid;
+    grid-template-columns: auto 1fr; 
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    height: calc(auto + 30px);
+    border-radius: 10px;
+}
+
+.gantt-tasks {
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+}
+
+.gantt-tasks-header {
+    display: grid;
+    grid-template-columns: var(--col-plano-width)var(--col-status-width);
+    align-items: center;
+    font-weight: bold;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    height: 40px; 
+    box-sizing: border-box;
+}
+
+.gantt-tasks-header > div {
+    padding: 0 10px;
+    border-right: 1px solid #e0e0e0;
+    position: relative;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.resizer {
+    position: absolute;
+    top: 0;
+    right: -3px;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 20;
+}
+
+#gantt-task-list {
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+}
+#gantt-task-list::-webkit-scrollbar {
+    display: none;
+}
+
+.gantt-row-task {
+    display: grid;
+    grid-template-columns: var(--col-plano-width) var(--col-status-width);
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.gantt-row-task > div {
+    padding: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-right: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    height: 100%;
+    line-height: 40px;
+}
+
+.gantt-timeline {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #ffffff;
+    padding-bottom: 31px;
+}
+
+.gantt-months-header {
+    display: flex;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    max-height: 39px;
+}
+
+.gantt-month {
+    flex-shrink: 0;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+    border-right: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    width: var(--month-width);
+}
+
+.gantt-rows {
+    position: relative;
+}
+
+.gantt-row-timeline {
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    transition: background-color 0.2s;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.gantt-bar {
+    position: absolute;
+    height: 25px;
+    background-color: #3498db;
+    border-radius: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.gantt-heatmap {
+    z-index: 0;
+}
+.gantt-row-timeline, .gantt-bar {
+    position: relative;
+    z-index: 1;
+}
+.gantt-total-row {
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    height: 30px;
+    background: #f8f8f8;
+    border-top: 1px solid #ccc;
+    z-index: 2;
+    font-size: 16px;
+    align-items: center;
+}
+
+.gantt-total-cell {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: gray;
+}
+
+.gantt-row-task.hovered, .gantt-row-timeline.hovered {
+    background-color: #f0f8ff;
+    z-index: 0;
+}
+
+.status{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.status > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    padding: 0 5px;
+    border-radius: 5px;
+    height: 24px;
+}
+
+#todayBar{
+    height: 100%;
+    width: 1px;
+    border-left: 2px dashed lightcoral;
+    position: absolute;
+    z-index: 1;
+}
