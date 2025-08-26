@@ -1,8 +1,8 @@
 async function carregarJson() {
-  const respostaAcoes = await fetch("/sef/dados/acoes.json");
+  const respostaAcoes = await fetch("/dados/acoes.json");
   jsonAcoes = await respostaAcoes.json();
 
-  const respostaPlanos = await fetch("/sef/dados/planos.json");
+  const respostaPlanos = await fetch("/dados/planos.json");
   jsonPlanos = await respostaPlanos.json();
 
   console.log(jsonAcoes, jsonPlanos);
@@ -163,47 +163,6 @@ function fillGanttData() {
     ganttTimelineContainer.scrollLeft = positionToday - 100;
 
 //================================================================================
-// Heatmap bakground timeline
-//================================================================================
-    const heatMap = {};
-    jsonAcoes.forEach(acao => {
-        if (acao["Data fim"]) {
-            const date = new Date(acao["Data fim"]);
-            const key = `${date.getFullYear()}-${date.getMonth()}`;
-            heatMap[key] = (heatMap[key] || 0) + 1;
-        }
-    });
-
-    const maxCount = Math.max(...Object.values(heatMap), 1);
-
-    let heatDate = new Date(firstMonth);
-    let monthIndex = 0;
-    while (heatDate <= maxDate) {
-const key = `${heatDate.getFullYear()}-${heatDate.getMonth()}`;
-const count = heatMap[key] || 0;
-
-// Normaliza a intensidade de 0 (nenhum evento) a 1 (máximo de eventos)
-const normalizedIntensity = count / maxCount; 
-
-// A NOVA LINHA DE COR (agora em tom de laranja/âmbar):
-const color = `rgba(219, 37, 37, ${normalizedIntensity * 0.7})`
-
-        const heatDiv = document.createElement('div');
-        heatDiv.className = 'gantt-heatmap';
-        heatDiv.style.position = 'absolute';
-        heatDiv.style.left = `${monthIndex * monthWidth}px`;
-        heatDiv.style.top = '0';
-        heatDiv.style.width = `${monthWidth}px`;
-        heatDiv.style.height = '100%';
-        heatDiv.style.background = color;
-        heatDiv.style.pointerEvents = 'none';
-        ganttRowsContainer.appendChild(heatDiv);
-
-        heatDate.setMonth(heatDate.getMonth() + 1);
-        monthIndex++;
-    }
-
-//================================================================================
 // Preenche os valores no gantt
 //================================================================================
     jsonPlanos.forEach((task, index) => {
@@ -236,16 +195,6 @@ const color = `rgba(219, 37, 37, ${normalizedIntensity * 0.7})`
 
         rowTimeline.appendChild(bar);
         ganttRowsContainer.appendChild(rowTimeline);
-        
-        // Hover effect - está atrapalhando o heatmap
-        // [taskRow, rowTimeline].forEach(row => {
-        //     row.addEventListener('mouseenter', () => {
-        //         document.querySelectorAll(`[data-row-index='${index}']`).forEach(el => el.classList.add('hovered'));
-        //     });
-        //     row.addEventListener('mouseleave', () => {
-        //         document.querySelectorAll(`[data-row-index='${index}']`).forEach(el => el.classList.remove('hovered'));
-        //     });
-        // });
     });
 
 //================================================================================
@@ -287,27 +236,151 @@ const color = `rgba(219, 37, 37, ${normalizedIntensity * 0.7})`
 //================================================================================
 // Linha de totais do gantt
 //================================================================================
-    taskListContainer.innerHTML += `<div class="gantt-row-task"><div style="text-align: right; font-weight: bold; color: gray;">Total de entregas: &nbsp;</div></div>`
+    taskListContainer.innerHTML += `
+    <div class="gantt-row-task">
+      <div style="grid-column: 1 / 3; color: gray;">
+        <span style="font-weight: bold;">Total de entregas:</span>
+        <select id="select-heatmap">
+          <option selected value="encerrando">encerrando no mês</option>
+          <option value="acontecendo">acontecendo no mês</option>
+        </select>
+      </div>
+    </div>`
+    
+  document.getElementById('select-heatmap').addEventListener("change", toggleHeatMap)
 
-    const totalRow = document.createElement('div');
-    totalRow.className = 'gantt-total-row';
-    totalRow.style.width = `${timelineWidth}px`;
+  toggleHeatMap()
+}
 
-    let totalDate = new Date(firstMonth);
-    let totalIndex = 0;
-    while (totalDate <= maxDate) {
-        const key = `${totalDate.getFullYear()}-${totalDate.getMonth()}`;
-        const count = heatMap[key] || 0;
-        const cell = document.createElement('div');
-        cell.className = 'gantt-total-cell';
-        cell.style.width = `${monthWidth}px`;
-        cell.textContent = count;
-        totalRow.appendChild(cell);
+//================================================================================
+// Heatmap bakground timeline
+//================================================================================
+function toggleHeatMap(){
+  const ganttRowsContainer = document.getElementById('gantt-rows');
+  document.querySelectorAll(".gantt-heatmap").forEach(el => el.remove());
+  document.querySelectorAll(".gantt-total-row").forEach(el => el.remove());
 
-        totalDate.setMonth(totalDate.getMonth() + 1);
-        totalIndex++;
+  const estilo = document.getElementById('select-heatmap').value;
+
+  const heatMap = {};
+
+  const root = document.documentElement;
+  const monthWidth = parseInt(getComputedStyle(root).getPropertyValue('--month-width'))
+  let minDate = new Date(Math.min(
+      ...jsonPlanos
+          .filter(task => task["Data início"])
+          .map(task => new Date(task["Data início"]))
+  ));
+  let maxDate = new Date(Math.max(
+      ...jsonPlanos
+          .filter(task => task["Data fim"] || task["Data início"])
+          .map(task => new Date(task["Data fim"] ? task["Data fim"] : task["Data início"]))
+  ));
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  if (minDate > today) minDate = new Date(today);
+  if (maxDate < today) maxDate = new Date(today);
+
+  minDate.setMonth(minDate.getMonth() - 1);
+  maxDate.setMonth(maxDate.getMonth() + 2);
+
+  let firstMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+  let heatDate = new Date(firstMonth);
+  let monthIndex = 0;
+
+  while (heatDate <= maxDate) {
+    const inicioDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth(), 1);
+    const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0);
+
+    let count = 0;
+
+    if (estilo === "encerrando") {
+      // conta apenas quem termina no mês
+      jsonAcoes.forEach(acao => {
+        if (acao["Data fim"]) {
+          const end = new Date(acao["Data fim"]);
+          if (end >= inicioDoMes && end <= fimDoMes) {
+            count++;
+          }
+        }
+      });
+
+    } else if (estilo === "acontecendo") {
+      // conta quem está ativo em qualquer parte do mês
+      jsonAcoes.forEach(acao => {
+        if (acao["Data de início"] && acao["Data fim"]) {
+          const start = new Date(acao["Data de início"]);
+          const end = new Date(acao["Data fim"]);
+          if (start <= fimDoMes && end >= inicioDoMes) {
+            count++;
+          }
+        }
+      });
     }
-    ganttRowsContainer.appendChild(totalRow);
+
+    const key = `${heatDate.getFullYear()}-${heatDate.getMonth()}`;
+    heatMap[key] = count;
+
+    heatDate.setMonth(heatDate.getMonth() + 1);
+    monthIndex++;
+  }
+
+  const maxCount = Math.max(...Object.values(heatMap), 1);
+
+  // número de meses calculado no loop anterior
+  const totalMonths = monthIndex;
+  const timelineWidth = totalMonths * monthWidth;
+
+  // desenha o heatmap
+  heatDate = new Date(firstMonth);
+  monthIndex = 0;
+  while (heatDate <= maxDate) {
+    const key = `${heatDate.getFullYear()}-${heatDate.getMonth()}`;
+    const count = heatMap[key] || 0;
+
+    const normalizedIntensity = count / maxCount;
+    const color = `rgba(219, 37, 37, ${normalizedIntensity * 0.7})`;
+
+    const heatDiv = document.createElement('div');
+    heatDiv.className = 'gantt-heatmap';
+    heatDiv.style.position = 'absolute';
+    heatDiv.style.left = `${monthIndex * monthWidth}px`;
+    heatDiv.style.top = '0';
+    heatDiv.style.width = `${monthWidth}px`;
+    heatDiv.style.height = '100%';
+    heatDiv.style.background = color;
+    heatDiv.style.pointerEvents = 'none';
+    ganttRowsContainer.appendChild(heatDiv);
+
+    heatDate.setMonth(heatDate.getMonth() + 1);
+    monthIndex++;
+  }
+
+  const totalRow = document.createElement('div');
+  totalRow.className = 'gantt-total-row';
+  totalRow.style.display = 'flex'; // garante alinhamento das células
+  totalRow.style.width = `${timelineWidth}px`;
+
+  let totalDate = new Date(firstMonth);
+  let totalIndex = 0;
+  while (totalDate <= maxDate) {
+      const key = `${totalDate.getFullYear()}-${totalDate.getMonth()}`;
+      const count = heatMap[key] || 0;
+
+      const cell = document.createElement('div');
+      cell.className = 'gantt-total-cell';
+      cell.style.width = `${monthWidth}px`;
+      cell.style.textAlign = 'center';
+      cell.textContent = count;
+
+      totalRow.appendChild(cell);
+
+      totalDate.setMonth(totalDate.getMonth() + 1);
+      totalIndex++;
+  }
+  ganttRowsContainer.appendChild(totalRow);
 }
 
 //================================================================================
