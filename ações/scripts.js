@@ -335,3 +335,16 @@ function fillGanttData(jsonAcoes){
     });
     });
 }
+
+//================================================================================
+// hamburguer header
+//================================================================================
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+
+mobileMenuButton.addEventListener('click', () => {
+  mobileMenu.classList.toggle('hidden');
+
+  const icons = mobileMenuButton.querySelectorAll('svg');
+  icons.forEach(icon => icon.classList.toggle('hidden'));
+});

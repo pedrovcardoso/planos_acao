@@ -12,13 +12,11 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
             
-            <!-- Logo e Título (Lado Esquerdo) -->
             <div class="flex items-center gap-5">
                 <img src="/assets/images/logo sef.png" alt="Logo" width="131" height="41">
                 <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
             </div>
 
-            <!-- Navegação Principal (Lado Direito para Desktop) -->
             <nav class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
 
@@ -28,15 +26,12 @@
                 </div>
             </nav>
 
-            <!-- Botão do Menu Hambúrguer (para Mobile) -->
             <div class="-mr-2 flex md:hidden">
                 <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false">
                 <span class="sr-only">Abrir menu principal</span>
-                <!-- Ícone de Hambúrguer (aparece quando o menu está fechado) -->
                 <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
-                <!-- Ícone de 'X' (aparece quando o menu está aberto, escondido por padrão) -->
                 <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -49,12 +44,10 @@
         <!-- Menu Mobile (escondido por padrão, aparece ao clicar no botão) -->
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-            <!-- Link Ativo -->
-            <a href="#" class="block rounded-md bg-sky-100 px-3 py-2 text-base font-medium text-sky-700" aria-current="page">Dashboard</a>
-            <!-- Outros Links -->
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Relatórios</a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Equipes</a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Configurações</a>
+
+            <a href="/index.html" class="block rounded-md bg-sky-100 px-3 py-2 text-base font-medium text-sky-700" aria-current="page">Planos de ação</a>
+            
+            <a href="/ações/index.html" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Ações</a>
             </div>
         </div>
     </header>
@@ -153,7 +146,7 @@
                 
                 <a href="https://www.fazenda.mg.gov.br/" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Site da Fazenda</a>
                 
-                <a href="#" class="text-slate-500 hover:text-sky-600 transition-colors" aria-label="GitHub"><span class="sr-only">GitHub</span><ion-icon name="logo-github"></ion-icon></a>
+                <a href="https://github.com/pedrovcardoso/planos_acao" class="text-slate-500 hover:text-sky-600 transition-colors" aria-label="GitHub"><span class="sr-only">GitHub</span><ion-icon name="logo-github"></ion-icon></a>
             </nav>
 
             </div>

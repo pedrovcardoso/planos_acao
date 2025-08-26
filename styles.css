@@ -13,10 +13,7 @@
 .gantt-container {
     display: grid;
     grid-template-columns: auto 1fr; 
-    border: 1px solid #e0e0e0;
     overflow: hidden;
-    height: calc(auto + 30px);
-    border-radius: 10px;
 }
 
 .gantt-tasks {
