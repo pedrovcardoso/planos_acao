@@ -1,8 +1,8 @@
 async function carregarJson() {
-  const respostaAcoes = await fetch("dados/acoes.json");
+  const respostaAcoes = await fetch("/sef/dados/acoes.json");
   jsonAcoes = await respostaAcoes.json();
 
-  const respostaPlanos = await fetch("dados/planos.json");
+  const respostaPlanos = await fetch("/sef/dados/planos.json");
   jsonPlanos = await respostaPlanos.json();
 
   console.log(jsonAcoes, jsonPlanos);
