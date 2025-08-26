@@ -4,11 +4,14 @@
     --month-width: 80px;
 }
 
+.status-A-iniciar { background-color: #bcbcbc; color: black; }
+.status-Não-iniciado { background-color: #bcbcbc; color: black; }
 .status-Pendente { background-color: #bcbcbc; color: white; }
 .status-Pendente { background-color: #ffc107; color: #5b4904; }
 .status-Em-curso { background-color: #17a2b8; color: white; }
 .status-Concluído { background-color: #28a745; color: white; }
 .status-Finalizado { background-color: #28a745; color: white; }
+.status-Implementado { background-color: #28a745; color: white; }
 
 .gantt-container {
     display: grid;

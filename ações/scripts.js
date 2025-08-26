@@ -201,38 +201,56 @@ function filtrarPeriodo() {
     fillGanttData(filtered);
 };
 
-function fillModal(task){
-    let html = `<button id="modal-close-btn" title="Fechar modal">x</button>
-    <h2>${task.Atividade}</h2>`
+function fillModal(task) {
+    const dataInicioFormatada = task['Data de início'] 
+        ? new Date(task['Data de início']).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
+        : '-';
+    
+    const dataFimFormatada = task['Data fim'] 
+        ? new Date(task['Data fim']).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
+        : '-';
+    
+    // --- 2. CONSTRUÇÃO DO HTML ---
+    document.getElementById('data_inicio').innerText = dataInicioFormatada
+    document.getElementById('data_fim').innerText = dataFimFormatada
 
-    Object.keys(task).forEach(key=>{
-        if(key!=="Atividade"){
-            let value = task[key]==''?'-':task[key];
-            // Verifica se é uma data válida
-            if (key.toLowerCase().includes('data') && value && value !== '-') {
-                const dateObj = new Date(value);
-                if (!isNaN(dateObj)) {
-                    value = dateObj.toLocaleDateString('pt-BR');
-                }
-            }
-            html += `
-            <p>
-                <span class="modal-title">${key}</span>
-                <span class="modal-value">${value}</span>
-            </p>
-            `
+    const statusElement = document.getElementById('status');
+    statusElement.innerText = task.Status;
+    statusElement.className = '';
+    statusElement.classList.add('status-'+task.Status.replace(/\s+/g, '-'));
+
+    const camposExcluidos = ["Data de início", "Data fim", "Status", "Número da atividade"];
+
+    Object.keys(task).forEach(key => {
+        if (!camposExcluidos.includes(key)) {
+            console.log(key)
+            let value = task[key] === '' ? '-' : task[key];
+            document.getElementById(key.toLowerCase().replace(/\s+/g, '_')).innerText = value
         }
-    })
-    const modal = document.getElementById('modal')
-    modal.innerHTML = html
-    modal.classList.add('active')
+    });
+    
+    const modal = document.getElementById('modal');
+    const backdrop = document.getElementById('modal-backdrop');
+
+    modal.classList.add('active');
+    backdrop.classList.add('active');
+
+    const titleElement = document.getElementById('modal-activity-title');
+    titleElement.classList.add('line-clamp-3');
+    titleElement.addEventListener('click', () => {
+        titleElement.classList.toggle('line-clamp-3');
+    });
 
     document.getElementById('modal-close-btn').onclick = closeModal;
-    document.getElementById('modal-backdrop').onclick = closeModal;
+    backdrop.onclick = closeModal;
 }
 
-function closeModal(){
-    document.getElementById('modal').classList.remove('active');
+function closeModal() {
+    const modal = document.getElementById('modal');
+    const backdrop = document.getElementById('modal-backdrop');
+    
+    modal.classList.remove('active');
+    backdrop.classList.remove('active');
 }
 
 function fillGanttData(jsonAcoes){
@@ -316,7 +334,7 @@ function fillGanttData(jsonAcoes){
         taskRow.dataset.rowIndex = index;
         taskRow.innerHTML = `<div>${task["Número da atividade"]}</div>
                                 <div>${task["Plano de ação"]}</div>                     
-                                <div>${task.Atividade}</div><div class="status">
+                                <div>${task.Atividade}</div><div class="status-container">
                                 <div class="${statusClass}">${task.Status}</div></div>`;
         taskListContainer.appendChild(taskRow);
 
