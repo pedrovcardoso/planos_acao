@@ -124,12 +124,6 @@ Private Function TabelaParaJson(ByVal tbl As ListObject) As String
             jsonObject = jsonObject & Chr(34) & headerName & Chr(34) & ":"
             
             Select Case LCase(headerName)
-                Case "número da atividade"
-                    If IsNumeric(cellValue) Then
-                        jsonObject = jsonObject & CLng(cellValue)
-                    Else
-                        jsonObject = jsonObject & "null"
-                    End If
                 Case "data de início", "data fim", "data início"
                     If IsDate(cellValue) Then
                         jsonObject = jsonObject & Chr(34) & Format(cellValue, "yyyy-mm-dd") & Chr(34)

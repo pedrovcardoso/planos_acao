@@ -1,11 +1,12 @@
+//================================================================================
+// busca os dados e inicia os scripts
+//================================================================================
 async function carregarJson() {
-  const respostaAcoes = await fetch("/sef/dados/acoes.json");
+  const respostaAcoes = await fetch("../../assets/data/acoes.json");
   jsonAcoes = await respostaAcoes.json();
 
-  const respostaPlanos = await fetch("/sef/dados/planos.json");
+  const respostaPlanos = await fetch("../../assets/data/planos.json");
   jsonPlanos = await respostaPlanos.json();
-
-  console.log(jsonAcoes, jsonPlanos);
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -31,7 +32,6 @@ function gerarCards() {
   if (!container) return;
 
   container.innerHTML = jsonPlanos.map(plano => {
-    // Datas: se não houver, mostra "-"
     const dataInicio = plano["Data início"] 
       ? plano["Data início"].includes('-') 
         ? plano["Data início"].split('-').reverse().join('/') 
@@ -93,6 +93,9 @@ function gerarCards() {
   }).join('');
 }
 
+//================================================================================
+// configurações gerais para criar o gantt
+//================================================================================
 function fillGanttData() {
   const root = document.documentElement;
   const monthWidth = parseInt(getComputedStyle(root).getPropertyValue('--month-width'))
@@ -171,7 +174,7 @@ function fillGanttData() {
         taskRow.dataset.rowIndex = index;
         taskRow.innerHTML = `
             <div>${task.Nome}</div>
-            <div class="status"><div class="status-${(task.Status || '').replace(/\s+/g, '-')}">${task.Status || '-'}</div></div>
+            <div class="status-container"><div class="status-${(task.Status || '').replace(/\s+/g, '-')}">${task.Status || '-'}</div></div>
         `;
         taskListContainer.appendChild(taskRow);
 
@@ -329,11 +332,9 @@ function toggleHeatMap(){
 
   const maxCount = Math.max(...Object.values(heatMap), 1);
 
-  // número de meses calculado no loop anterior
   const totalMonths = monthIndex;
   const timelineWidth = totalMonths * monthWidth;
 
-  // desenha o heatmap
   heatDate = new Date(firstMonth);
   monthIndex = 0;
   while (heatDate <= maxDate) {
@@ -358,9 +359,12 @@ function toggleHeatMap(){
     monthIndex++;
   }
 
+//================================================================================
+// linha de totais
+//================================================================================
   const totalRow = document.createElement('div');
   totalRow.className = 'gantt-total-row';
-  totalRow.style.display = 'flex'; // garante alinhamento das células
+  totalRow.style.display = 'flex';
   totalRow.style.width = `${timelineWidth}px`;
 
   let totalDate = new Date(firstMonth);

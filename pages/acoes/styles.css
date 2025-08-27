@@ -1,7 +1,8 @@
 :root {
-    --col-plano-width: 250px;
-    --col-status-width: 100px;
-    --month-width: 80px;
+    --col-num-width: 200px;
+    --col-plano-width: 170px;
+    --col-atividade-width: 350px;
+    --col-status-width: 120px;
 }
 
 .status-A-iniciar { background-color: #bcbcbc; color: black; }
@@ -13,9 +14,42 @@
 .status-Finalizado { background-color: #28a745; color: white; }
 .status-Implementado { background-color: #28a745; color: white; }
 
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    background-color: #f4f7fa;
+}
+
+.main-header {
+    display: flex;
+    align-items: center;
+    background-color: #BCBCBC;
+    color: #515254;
+    padding: 10px 32px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    gap: 24px;
+}
+
+.header-logo {
+    height: 41px;
+    width: 131px;
+    object-fit: contain;
+    margin-right: 16px;
+}
+
+.main-header h1 {
+    flex: 1;
+    text-align: left;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
 .gantt-container {
     display: grid;
     grid-template-columns: auto 1fr; 
+    border: 1px solid #e0e0e0;
     overflow: hidden;
 }
 
@@ -32,7 +66,7 @@
 
 .gantt-tasks-header {
     display: grid;
-    grid-template-columns: var(--col-plano-width)var(--col-status-width);
+    grid-template-columns: var(--col-num-width) var(--col-plano-width) var(--col-atividade-width) var(--col-status-width);
     align-items: center;
     font-weight: bold;
     background-color: #f8f9fa;
@@ -79,7 +113,7 @@
 
 .gantt-row-task {
     display: grid;
-    grid-template-columns: var(--col-plano-width) var(--col-status-width);
+    grid-template-columns: var(--col-num-width) var(--col-plano-width) var(--col-atividade-width) var(--col-status-width);
     align-items: center;
     border-bottom: 1px solid #e0e0e0;
     transition: background-color 0.2s;
@@ -104,7 +138,6 @@
     overflow-y: auto;
     overflow-x: auto;
     background-color: #ffffff;
-    padding-bottom: 31px;
 }
 
 .gantt-months-header {
@@ -124,7 +157,7 @@
     padding: 10px 0;
     border-right: 1px solid #e0e0e0;
     box-sizing: border-box;
-    width: var(--month-width);
+    width: 150px;
 }
 
 .gantt-rows {
@@ -150,47 +183,22 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.gantt-heatmap {
-    z-index: 0;
-}
-.gantt-row-timeline, .gantt-bar {
-    position: relative;
-    z-index: 1;
-}
-.gantt-total-row {
-    display: flex;
-    position: absolute;
-    left: 0;
-    top: 100%;
-    height: 30px;
-    background: #f8f8f8;
-    border-top: 1px solid #ccc;
-    z-index: 2;
-    font-size: 16px;
-    align-items: center;
-}
-
-.gantt-total-cell {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: gray;
-}
-
 .gantt-row-task.hovered, .gantt-row-timeline.hovered {
     background-color: #f0f8ff;
     z-index: 0;
 }
 
-.status{
+.status-header{
+    width: 180px;
+}
+
+.status-container{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.status > div{
+.status-container > div{
     display: flex;
     justify-content: center;
     align-items: center;

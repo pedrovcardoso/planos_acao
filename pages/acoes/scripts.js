@@ -1,8 +1,8 @@
 async function carregarJson() {
-  const respostaAcoes = await fetch("/sef/dados/acoes.json");
+  const respostaAcoes = await fetch("../../assets/data/acoes.json");
   jsonAcoes = await respostaAcoes.json();
 
-  const respostaPlanos = await fetch("/sef/dados/planos.json");
+  const respostaPlanos = await fetch("../../assets/data/planos.json");
   jsonPlanos = await respostaPlanos.json();
 
   console.log(jsonAcoes, jsonPlanos);
@@ -232,8 +232,8 @@ function fillModal(task) {
     const modal = document.getElementById('modal');
     const backdrop = document.getElementById('modal-backdrop');
 
-    modal.classList.add('active');
-    backdrop.classList.add('active');
+    backdrop.classList.remove('opacity-0', 'pointer-events-none');
+    modal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
 
     const titleElement = document.getElementById('modal-activity-title');
     titleElement.classList.add('line-clamp-3');
@@ -249,8 +249,8 @@ function closeModal() {
     const modal = document.getElementById('modal');
     const backdrop = document.getElementById('modal-backdrop');
     
-    modal.classList.remove('active');
-    backdrop.classList.remove('active');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+    modal.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
 }
 
 function fillGanttData(jsonAcoes){

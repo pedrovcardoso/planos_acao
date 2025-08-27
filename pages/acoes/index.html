@@ -8,21 +8,21 @@
     <link rel='stylesheet' href='styles.css'>
 </head>
 <body class="bg-slate-100">
-    <header class="bg-white shadow-md fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out">
+    <header class="bg-white shadow-md fixed top-0 left-0 w-full z-20 transition-all duration-300 ease-in-out">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
             
             <div class="flex items-center gap-5">
-                <img src="/sef/assets/images/logo sef.png" alt="Logo" width="131" height="41">
+                <img src="../../assets/images/logo sef.png" alt="Logo" width="131" height="41">
                 <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
             </div>
 
             <nav class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
 
-                <a href="/sef/index.html" class="text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Planos de ação</a>
+                <a href="../../pages/planos/" class="text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Planos de ação</a>
 
-                <a href="/sef/ações/index.html" class="bg-sky-100 text-sky-700 rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Ações</a>
+                <a href="../../pages/acoes/" class="bg-sky-100 text-sky-700 rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Ações</a>
                 </div>
             </nav>
 
@@ -45,9 +45,9 @@
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
 
-            <a href="/sef"  class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Planos de ação</a>
+            <a href="../../pages/planos/" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Planos de ação</a>
 
-            <a href="/sef/ações/index.html" class="block rounded-md bg-sky-100 px-3 py-2 text-base font-medium text-sky-700" aria-current="page">Ações</a>
+            <a href="../../pages/acoes/" class="block rounded-md bg-sky-100 px-3 py-2 text-base font-medium text-sky-700" aria-current="page">Ações</a>
             </div>
         </div>
     </header>
@@ -141,35 +141,45 @@
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div id="modal">
-                <button id="modal-close-btn" title="Fechar modal">x</button>
-        
+        <section>
+            <!-- Backdrop (fundo) do Modal -->
+            <div id="modal-backdrop" class="fixed z-40 inset-0 bg-black bg-opacity-60 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"></div>
+
+            <!-- Container Principal do Modal -->
+            <div id="modal" class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 opacity-0 scale-95 pointer-events-none transition-all duration-300 ease-in-out">
+                
+                <!-- Botão de Fechar -->
+                <button id="modal-close-btn" title="Fechar modal" class="absolute top-3 right-3 h-8 w-8 flex items-center justify-center bg-slate-100 text-slate-600 rounded-full font-bold text-lg hover:bg-slate-200 hover:text-slate-800 transition-colors">x</button>
+
+                <!-- Título Composto -->
                 <div class="mb-4">
                     <span id="plano_de_ação" class="block text-sm font-semibold text-sky-600"></span>
-                    <h2 id="modal-activity-title" class="text-2xl font-bold text-slate-800 line-clamp-3 cursor-pointer">
+                    <h2 id="modal-activity-title" class="text-2xl font-bold text-slate-800 line-clamp-3">
                         <span id="atividade"></span>
                     </h2>
                 </div>
                 
-                <!-- Seção de Datas (estilo footer do card) -->
-                <div class="flex justify-between items-center text-sm mb-4 pt-3 border-t border-slate-200">
+                <!-- Seção de Datas e Status -->
+                <div class="flex flex-wrap items-center justify-between gap-4 text-sm mb-4 pt-3 border-t border-slate-200">
                     <div class="flex items-center gap-2">
                         <p class="font-medium text-slate-500">Status:</p>
                         <div class="status-container">
                             <div id="status"></div>
                         </div>
                     </div>
-                    <p class="font-medium text-slate-500">
-                        Início: 
-                        <strong id="data_inicio" class="font-semibold text-slate-700"></strong>
-                    </p>
-                    <p class="font-medium text-slate-500">
-                        Fim: 
-                        <strong id="data_fim" class="font-semibold text-slate-700"></strong>
-                    </p>
+                    <div class="flex items-center gap-4">
+                        <p class="font-medium text-slate-500">
+                            Início: <strong id="data_inicio" class="font-semibold text-slate-700"></strong>
+                        </p>
+                        <p class="font-medium text-slate-500">
+                            Fim: <strong id="data_fim" class="font-semibold text-slate-700"></strong>
+                        </p>
+                    </div>
                 </div>
 
+                <!-- Detalhes Adicionais -->
                 <div class="space-y-4 pt-3 border-t border-slate-200">
                     <div>
                         <span class="block text-sm font-medium text-slate-500 mb-1">Responsável</span>
@@ -185,8 +195,29 @@
                     </div>
                 </div>
             </div>
-            <div id="modal-backdrop"></div>
         </section>
+<!--===============================================================================
+// footer
+===================================================================================-->
+        <footer class="bg-white border-t border-slate-200 mt-auto">
+            <div class="mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col items-center gap-8 md:flex-row md:justify-between">            
+                    <div><img class="h-14 w-auto" src="../../assets/images/sccg.png" alt="Logo SCCG"></div>
+
+                    <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 md:justify-end">
+                        <a href="https://sefazmg-my.sharepoint.com/:f:/r/personal/pedro_cardoso_fazenda_mg_gov_br/Documents/Documentos/Planos%20de%20a%C3%A7%C3%A3o/dados?csf=1&web=1&e=nLcPLB" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Planilha de Dados</a>
+
+                        <a href="https://sefazmg-my.sharepoint.com/:f:/r/personal/pedro_cardoso_fazenda_mg_gov_br/Documents/Documentos/Planos%20de%20a%C3%A7%C3%A3o/dados?csf=1&web=1&e=nLcPLB" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Pasta de arquivos</a>
+                        
+                        <a href="https://www.sei.mg.gov.br/sei/" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Acessar SEI</a>
+                        
+                        <a href="https://www.fazenda.mg.gov.br/" class="text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors">Site da Fazenda</a>
+                        
+                        <a href="https://github.com/pedrovcardoso/planos_acao" class="text-slate-500 hover:text-sky-600 transition-colors" aria-label="GitHub"><span class="sr-only">GitHub</span><ion-icon name="logo-github"></ion-icon></a>
+                    </nav>
+                </div>
+            </div>
+        </footer>
     </main>
 
     <script src='scripts.js'></script>
