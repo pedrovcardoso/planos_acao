@@ -20,28 +20,32 @@
                 <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
             </div>
 
+            <div class="flex items-center gap-4">
 <!--===============================================================================
 // header para computador
 ===================================================================================-->
-            <nav class="hidden md:block">
-                <div class="ml-10 flex items-baseline space-x-4">
+                <nav class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+    
+                    <a href="../../pages/planos/" class="bg-sky-100 text-sky-700 rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Planos de ação</a>
+    
+                    <a href="../../pages/acoes/" class="text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Ações</a>
+                    </div>
+                </nav>
 
-                <a href="../../pages/planos/" class="bg-sky-100 text-sky-700 rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Planos de ação</a>
+                <img src="../../assets/images/sccg.png" alt="Logo SCCG" class="h-10 w-auto">
 
-                <a href="../../pages/acoes/" class="text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Ações</a>
+                <div class="flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Abrir menu principal</span>
+                    <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    </button>
                 </div>
-            </nav>
-
-            <div class="-mr-2 flex md:hidden">
-                <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false">
-                <span class="sr-only">Abrir menu principal</span>
-                <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-                <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                </button>
             </div>
 
             </div>
@@ -60,11 +64,10 @@
         </div>
     </header>
 
-    <main class="grid p-6 md:py-5 md:px-8 pt-20 md:pt-24 gap-6">
-
 <!--===============================================================================
 // stat cards, destaques principais
 ===================================================================================-->
+    <main class="grid p-6 md:py-5 md:px-8 pt-20 md:pt-24 gap-6">
         <section id="stat-cards" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
             <div class="flex items-center gap-4">
