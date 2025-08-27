@@ -336,7 +336,6 @@ function toggleHeatMap(){
   while (heatDate <= maxDate) {
     const inicioDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth(), 1);
     const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0);
-    console.log(fimDoMes)
 
     let count = 0;
 
@@ -427,19 +426,6 @@ function toggleHeatMap(){
   }
   ganttRowsContainer.appendChild(totalRow);
 }
-
-//================================================================================
-// hamburguer header
-//================================================================================
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-
-mobileMenuButton.addEventListener('click', () => {
-  mobileMenu.classList.toggle('hidden');
-
-  const icons = mobileMenuButton.querySelectorAll('svg');
-  icons.forEach(icon => icon.classList.toggle('hidden'));
-});
 
 //================================================================================
 // painel de filtros
