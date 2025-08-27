@@ -66,18 +66,17 @@
 // stat cards, destaques principais
 ===================================================================================-->
         <section id="stat-cards" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
-        <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
-        <div class="flex items-center gap-4">
-            <div class="rounded-lg flex justify-center bg-sky-100 p-3">
-                <ion-icon name="layers-outline" class="text-2xl text-sky-600"></ion-icon>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Planos em Andamento</p>
-                    <p class="text-3xl font-semibold text-slate-800">8</p>
+            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
+            <div class="flex items-center gap-4">
+                <div class="rounded-lg flex justify-center bg-sky-100 p-3">
+                    <ion-icon name="layers-outline" class="text-2xl text-sky-600"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Planos em Andamento</p>
+                        <p class="text-3xl font-semibold text-slate-800">8</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
             <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
             <div class="flex items-center gap-4">
@@ -144,7 +143,58 @@
             <div class="card-container 
                         grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
         </section>
+
+<!--===============================================================================
+// painel de filtros
+===================================================================================-->
+<!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+<!-- SEÇÃO DE FILTROS COM LARGURA AJUSTADA                             -->
+<!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+<section id="filters-container" class="bg-white p-4 rounded-xl shadow-md">
+    <h2 class="text-lg font-semibold text-slate-800 mb-4">Painel de filtros</h2>
+
+    <div class="flex flex-wrap items-end gap-x-4 gap-y-2">
+        <div class="flex flex-col w-full md:w-56">
+            <label for="filter-periodo" class="block text-sm font-medium text-slate-700 mb-1">Período</label>
+            <select id="filter-periodo" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                <option selected disabled hidden value="-">Selecione</option>
+                <option value="mes">Este mês</option>
+                <option value="semana">Esta semana</option>
+                <option value="especifico">Período específico</option>
+            </select>
+        </div>
+    
+        <div id="periodo-especifico-inputs" class="hidden flex items-end gap-2 w-full md:w-auto">
+            <div class="flex flex-col flex-grow">
+                <label for="periodo-inicio" class="block text-sm font-medium text-slate-700 mb-1">Início</label>
+                <input type="date" id="periodo-inicio" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2" />
+            </div>
+            <div class="flex flex-col flex-grow">
+                <label for="periodo-fim" class="block text-sm font-medium text-slate-700 mb-1">Fim</label>
+                <input type="date" id="periodo-fim" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2" />
+            </div>
+            <div id="filtrar-especifico" class="cursor-pointer bg-sky-600 text-white font-semibold text-sm rounded-lg px-4 py-2 whitespace-nowrap hover:bg-sky-700 transition-colors self-end">
+                Filtrar
+            </div>
+        </div>
+
+        <div class="flex flex-col w-full md:w-56">
+            <label for="filter-Unidade" class="block text-sm font-medium text-slate-700 mb-1">Unidade</label>
+            <select id="filter-Unidade" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                <option selected disabled hidden value='-'>Selecione</option>
+            </select>
+        </div>
+
+        <div class="w-full"></div>
+        
+        <button onclick="clearFilters()" class="flex items-center gap-2 bg-slate-200 text-slate-800 font-semibold text-sm rounded-lg px-4 py-2 hover:bg-slate-300 transition-colors">
+            <ion-icon name="trash" class="text-base"></ion-icon>
+            <span>Limpar filtros</span>
+        </button>
+    </div>
+</section>
     </main>
+    
 
 <!--===============================================================================
 // footer

@@ -4,8 +4,6 @@ async function carregarJson() {
 
   const respostaPlanos = await fetch("../../assets/data/planos.json");
   jsonPlanos = await respostaPlanos.json();
-
-  console.log(jsonAcoes, jsonPlanos);
 }
 
 // const jsonAcoes = '##JSON_ACOES_PLACEHOLDER##';
@@ -332,7 +330,7 @@ function fillGanttData(jsonAcoes){
         const taskRow = document.createElement('div');
         taskRow.className = 'gantt-row-task';
         taskRow.dataset.rowIndex = index;
-        taskRow.innerHTML = `<div>${task["Número da atividade"]}</div>
+        taskRow.innerHTML = `<div class="text-center">${task["Número da atividade"]}</div>
                                 <div>${task["Plano de ação"]}</div>                     
                                 <div>${task.Atividade}</div><div class="status-container">
                                 <div class="${statusClass}">${task.Status}</div></div>`;

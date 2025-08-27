@@ -1,3 +1,10 @@
+const navEntries = performance.getEntriesByType("navigation");
+if (navEntries.length > 0) {
+  const navType = navEntries[0].type;
+  console.log("Tipo de navegação:", navType); 
+  // valores possíveis: "navigate", "reload", "back_forward", "prerender"
+}
+
 //================================================================================
 // busca os dados e inicia os scripts
 //================================================================================
@@ -12,8 +19,41 @@ async function carregarJson() {
 document.addEventListener('DOMContentLoaded', async function () {
     await carregarJson()
 
-    gerarCards()
-    fillGanttData()
+    gerarCards(jsonPlanos)
+    fillGanttData(jsonPlanos)
+    fillUnidadeFilter()
+
+    document.getElementById('filter-Unidade').addEventListener('change', filtrarValores)
+    
+    document.getElementById('filter-periodo').addEventListener('change', function() {
+        const value = this.value;
+        const inputsDiv = document.getElementById('periodo-especifico-inputs');
+        if (value === 'especifico') {
+            inputsDiv.style.display = 'flex';
+        } else {
+            inputsDiv.style.display = 'none';
+            filtrarPeriodo();
+        }
+    });
+
+    document.getElementById('filtrar-especifico').addEventListener('click', function() {
+        const inicio = document.getElementById('periodo-inicio').value;
+        const fim = document.getElementById('periodo-fim').value;
+        if (!inicio || !fim) return;
+    
+        const firstDay = new Date(inicio);
+        firstDay.setHours(0,0,0,0);
+        const lastDay = new Date(fim);
+        lastDay.setHours(23,59,59,999);
+    
+        const filtered = jsonPlanos.filter(task => {
+            const start = new Date(task["Data início"]);
+            const end = new Date(task["Data fim"]);
+            return (start <= lastDay && end >= firstDay);
+        });
+    
+        fillGanttData(filtered);
+    });
 })
 
 // const jsonAcoes = '##JSON_ACOES_PLACEHOLDER##';
@@ -27,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 //================================================================================
 // Cria os cards dos planos de ação
 //================================================================================
-function gerarCards() {
+function gerarCards(jsonPlanos) {
   const container = document.querySelector('.card-container');
   if (!container) return;
 
@@ -96,7 +136,7 @@ function gerarCards() {
 //================================================================================
 // configurações gerais para criar o gantt
 //================================================================================
-function fillGanttData() {
+function fillGanttData(jsonPlanos) {
   const root = document.documentElement;
   const monthWidth = parseInt(getComputedStyle(root).getPropertyValue('--month-width'))
 
@@ -296,6 +336,7 @@ function toggleHeatMap(){
   while (heatDate <= maxDate) {
     const inicioDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth(), 1);
     const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0);
+    console.log(fimDoMes)
 
     let count = 0;
 
@@ -399,3 +440,116 @@ mobileMenuButton.addEventListener('click', () => {
   const icons = mobileMenuButton.querySelectorAll('svg');
   icons.forEach(icon => icon.classList.toggle('hidden'));
 });
+
+//================================================================================
+// painel de filtros
+//================================================================================
+// configurações gerais
+const filtersConfig = [
+    ["Unidades", "filter-Unidade"]
+]
+
+function filterJson(json, chave, valor) {
+    return json.filter(item => {
+        if (typeof item[chave] === "string" && typeof valor === "string") {
+            return normalizeString(item[chave]).includes(normalizeString(valor));
+        }
+        return item[chave] === valor;
+    });
+}
+
+function normalizeString(str) {
+    if (!str) return "";
+    return str
+        .toLowerCase()
+        .normalize("NFD")                 // separa acentos
+        .replace(/[\u0300-\u036f]/g, "")  // remove acentos
+        .replace(/\s+/g, "_")             // troca espaços por _
+        .replace(/[^\w_]/g, "");          // remove caracteres especiais
+}
+// --------------------------------
+// criando/configurando filtros
+function fillUnidadeFilter() {
+  const filtro = document.getElementById('filter-Unidade');
+
+  let valores = [];
+  Object.keys(jsonPlanos).forEach(key => {
+    const unidades = jsonPlanos[key]["Unidades"].split(', ');
+    valores.push(...unidades);
+  });
+
+  valores = [...new Set(valores)];
+  valores = valores.filter(v => v && v.trim() != '').sort();
+
+  valores.forEach(valor => {
+    const option = document.createElement('option');
+    option.value = normalizeString(valor);
+    option.textContent = valor;
+    filtro.appendChild(option);
+  })
+}
+
+// --------------------------------
+// executando filtro
+function filtrarValores(){
+    let jsonFiltrado = jsonPlanos;
+
+    filtersConfig.forEach(([chave, elementId]) => {
+        const filterElement = document.getElementById(elementId);
+        if (filterElement && filterElement.value !== '-') {
+            jsonFiltrado = filterJson(jsonFiltrado, chave, normalizeString(filterElement.value));
+        }
+    });
+
+    fillGanttData(jsonFiltrado);
+    gerarCards(jsonFiltrado);
+}
+
+function clearFilters(){
+    filtersConfig.forEach(([chave, elementId]) => {
+        document.getElementById(elementId).value = '-'
+    });
+    document.getElementById('filter-periodo').value = '-'
+    document.getElementById('periodo-especifico-inputs').style.display = 'none'
+    
+    filtrarValores()
+}
+
+function filtrarPeriodo() {
+    const select = document.getElementById('filter-periodo')
+
+    const value = select.value;
+    let filtered = jsonPlanos;
+
+    if (value === 'mes') {
+        const now = new Date();
+        const month = now.getMonth();
+        const year = now.getFullYear();
+        const monthStart = new Date(year, month, 1, 0, 0, 0, 0);
+        const monthEnd = new Date(year, month + 1, 0, 23, 59, 59, 999);
+        filtered = jsonPlanos.filter(task => {
+            const start = new Date(task["Data início"]);
+            const end = new Date(task["Data fim"]);
+            return (
+                (start <= monthEnd && end >= monthStart)
+            );
+        });
+    } else if (value === 'semana') {
+        const now = new Date();
+        const firstDay = new Date(now);
+        firstDay.setDate(now.getDate() - now.getDay() + 1);
+        firstDay.setHours(0,0,0,0);
+        const lastDay = new Date(firstDay);
+        lastDay.setDate(firstDay.getDate() + 4);
+        lastDay.setHours(23,59,59,999);
+        filtered = jsonPlanos.filter(task => {
+            const start = new Date(task["Data início"]);
+            const end = new Date(task["Data fim"]);
+            return (
+                (start <= lastDay && end >= firstDay)
+            );
+        });
+    }
+
+    fillGanttData(filtered);
+};
