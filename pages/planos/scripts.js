@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     gerarCards(jsonPlanos)
     fillGanttData(jsonPlanos)
     fillUnidadeFilter()
+    fillStatCards()
 
     document.getElementById('filter-Unidade').addEventListener('change', filtrarValores)
     
@@ -228,7 +229,7 @@ function fillGanttData(jsonPlanos) {
 
     while (currentDate <= maxDate) {
         const monthElement = document.createElement('div');
-        monthElement.className = 'gantt-month';
+        monthElement.className = 'flex-shrink-0 text-center text-sm font-bold text-slate-700 uppercase tracking-wider whitespace-nowrap py-[10px] border-r border-[#e0e0e0] box-border w-[var(--month-width)]';
         monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
         monthsHeader.appendChild(monthElement);
         timelineWidth += monthWidth;
@@ -586,3 +587,32 @@ function filtrarPeriodo() {
 
     fillGanttData(filtered);
 };
+
+function fillStatCards(){
+  const now = new Date()
+  const month = now.getMonth()
+  const year = now.getFullYear()
+  const inicioDoMes = new Date(year, month, 1, 0, 0, 0, 0)
+  const fimDoMes = new Date(year, month + 1, 0, 23, 59, 59, 999)
+
+  const statEmAndamento = document.getElementById('stat-emAndamento')
+  const statAcoesEmCurso = document.getElementById('stat-acoesEmCurso')
+  const statEmDesenvolvimento = document.getElementById('stat-emDesenvolvimento')
+  const statEmAtraso = document.getElementById('stat-emAtraso')
+
+  Object.values(jsonPlanos).forEach(value=>{
+    value.Status == 'Em curso' ? statEmAndamento.innerText++ : ''
+  })
+
+  Object.values(jsonAcoes).forEach(value=>{
+    value.Status == 'Em curso' ? statAcoesEmCurso.innerText++ : ''
+  })
+
+  Object.values(jsonPlanos).forEach(value=>{
+    value.Status == 'Em desenvolvimento' ? statEmDesenvolvimento.innerText++ : ''
+  })
+
+  Object.values(jsonAcoes).forEach(value=>{
+    value.Status == 'Pendente' ? statEmDesenvolvimento.innerText++ : ''
+  })
+}

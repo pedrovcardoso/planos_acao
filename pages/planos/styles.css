@@ -3,22 +3,19 @@
 ================================================================================== */
 :root {
     --col-plano-width: 250px;
-    --col-status-width: 100px;
+    --col-status-width: 160px;
     --month-width: 80px;
 }
 
 /* ===============================================================================
 // estilos de status
 ================================================================================== */
-.status-A-iniciar { background-color: #bcbcbc; color: black; }
-.status-Não-iniciado { background-color: #bcbcbc; color: black; }
-.status-Pendente { background-color: #bcbcbc; color: white; }
-.status-Pendente { background-color: #ffc107; color: #5b4904; }
-.status-Em-curso { background-color: #17a2b8; color: white; }
-.status-Concluído { background-color: #28a745; color: white; }
-.status-Finalizado { background-color: #28a745; color: white; }
-.status-Implementado { background-color: #28a745; color: white; }
-.status-Em-desenvolvimento { background-color: #bcbcbc; color: white; }
+.status-Em-desenvolvimento { background-color: #e0e0e0; color: #212529; }
+.status-Planejado { background-color: #cfd4da; color: #212529; }
+.status-Pendente { background-color: #ffdd57; color: #664d03; }
+.status-Em-curso { background-color: #17a2b8; color: #ffffff; }
+.status-Implementado { background-color: #198754; color: #ffffff; }
+
 
 .status-container{
     display: flex;

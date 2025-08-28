@@ -194,7 +194,7 @@
         "Observações": "Processo contínuo",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "SEF/SCAF"
     },
     {
@@ -238,7 +238,7 @@
         "Observações": "Processo contínuo, após vencida a etapa de implantação nos órgãos.",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Administração Indireta "
     },
     {
@@ -260,7 +260,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "Finalizado",
+        "Status": "Implementado",
         "Unidades envolvidas": "SEF, AGE e TJMG"
     },
     {
@@ -315,7 +315,7 @@
         "Observações": "Processo contínuo, após vencida a etapa de implantação nos órgãos.",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Adm. Indireta"
     },
     {
@@ -348,7 +348,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Adm. Indireta"
     },
     {
@@ -359,7 +359,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Adm. Indireta"
     },
     {
@@ -370,7 +370,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Adm. Indireta"
     },
     {
@@ -381,7 +381,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Adm. Indireta"
     },
     {
@@ -392,7 +392,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "AGE/PTPT e Adm. Indireta"
     },
     {
@@ -403,7 +403,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "SEF/SCCG e TJMG"
     },
     {
@@ -414,7 +414,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "TJMG  "
     },
     {
@@ -425,7 +425,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "SEF/SCCG"
     },
     {
@@ -436,7 +436,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "SEF/SCCG"
     },
     {
@@ -447,7 +447,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "SEF/SCCG"
     },
     {
@@ -458,7 +458,7 @@
         "Observações": "",
         "Plano de ação": "Precatórios",
         "Responsável": "",
-        "Status": "A iniciar",
+        "Status": "Planejado",
         "Unidades envolvidas": "SEF, AGE e TJMG"
     },
     {
@@ -744,7 +744,7 @@
         "Observações": "Encaminhado o Ofício Circular Conjunto SEF/STE-SCAF-SCCG nº 2/2025 (114656932). Prazo para atendimento: 30/07/2025.",
         "Plano de ação": "Restos a pagar",
         "Responsável": "-",
-        "Status": "Concluído",
+        "Status": "Implementado",
         "Unidades envolvidas": "-"
     },
     {
@@ -755,7 +755,7 @@
         "Observações": "",
         "Plano de ação": "Restos a pagar",
         "Responsável": "-",
-        "Status": "Não iniciado",
+        "Status": "Planejado",
         "Unidades envolvidas": "-"
     },
     {
@@ -766,7 +766,7 @@
         "Observações": "O estudo elaborado será encaminhado para apreciação do TCE para fins de encerramento da D27 (2021), D3 (2021) e parte da R3 (2021).",
         "Plano de ação": "Restos a pagar",
         "Responsável": "-",
-        "Status": "Não iniciado",
+        "Status": "Planejado",
         "Unidades envolvidas": "-"
     },
     {
@@ -777,7 +777,7 @@
         "Observações": "Os planos de ação completarão o atendimento da R3 (2021).",
         "Plano de ação": "Restos a pagar",
         "Responsável": "-",
-        "Status": "Não iniciado",
+        "Status": "Planejado",
         "Unidades envolvidas": "-"
     },
     {
@@ -788,7 +788,7 @@
         "Observações": "A adequação da programação financeira e do fluxo de caixa do exercício atenderá o R24 (2020).",
         "Plano de ação": "Restos a pagar",
         "Responsável": "-",
-        "Status": "Não iniciado",
+        "Status": "Planejado",
         "Unidades envolvidas": "-"
     },
     {
@@ -799,7 +799,7 @@
         "Observações": "A depender dos resultados verificados com a iniciativa, é possível que as orientações sejam incluídas no decreto de encerramento do exercício.",
         "Plano de ação": "Restos a pagar",
         "Responsável": "-",
-        "Status": "Não iniciado",
+        "Status": "Planejado",
         "Unidades envolvidas": "-"
     },
     {
