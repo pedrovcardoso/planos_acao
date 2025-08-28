@@ -18,6 +18,7 @@
 .status-Concluído { background-color: #28a745; color: white; }
 .status-Finalizado { background-color: #28a745; color: white; }
 .status-Implementado { background-color: #28a745; color: white; }
+.status-Em-desenvolvimento { background-color: #bcbcbc; color: white; }
 
 .status-container{
     display: flex;

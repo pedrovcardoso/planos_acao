@@ -1,3 +1,6 @@
+
+
+
 const navEntries = performance.getEntriesByType("navigation");
 if (navEntries.length > 0) {
   const navType = navEntries[0].type;
@@ -107,14 +110,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
     toggleLoading(false)
 })
-
-// const jsonAcoes = '##JSON_ACOES_PLACEHOLDER##';
-// const jsonPlanos = '##JSON_PLANOS_PLACEHOLDER##';
-
-// document.addEventListener('DOMContentLoaded', async function () {
-//     gerarCards()
-//     fillGanttData()
-// })
 
 //================================================================================
 // Cria os cards dos planos de ação
