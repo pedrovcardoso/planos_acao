@@ -8,6 +8,12 @@
     <link rel='stylesheet' href='styles.css'>
 </head>
 <body class="bg-slate-100 flex flex-col min-h-screen">
+    <div id="loading-overlay" class="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-solid border-sky-600 border-t-transparent"></div>
+        
+        <p class="mt-4 text-lg font-semibold text-slate-700">Buscando dados no OneDrive...</p>
+    </div>
+
     <header id="header"></header>
 <!--===============================================================================
 // stat cards, destaques principais

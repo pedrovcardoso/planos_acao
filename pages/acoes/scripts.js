@@ -1,14 +1,3 @@
-async function carregarJson() {
-  const respostaAcoes = await fetch("../../assets/data/acoes.json");
-  jsonAcoes = await respostaAcoes.json();
-
-  const respostaPlanos = await fetch("../../assets/data/planos.json");
-  jsonPlanos = await respostaPlanos.json();
-}
-
-// const jsonAcoes = '##JSON_ACOES_PLACEHOLDER##';
-// const jsonPlanos = '##JSON_PLANOS_PLACEHOLDER##';
-
 const filtersConfig = [
     ["Plano de ação", "filter-planoAcao"],
     ["Status", "filter-Status"],
@@ -16,8 +5,67 @@ const filtersConfig = [
     ["Unidades envolvidas", "filter-Orgao"]
 ]
 
+function toggleLoading(show) {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+        if (show) {
+            loadingOverlay.classList.remove('hidden');
+        } else {
+            loadingOverlay.classList.add('hidden');
+        }
+    }
+}
+
+async function obterDadosDoOneDrive() {
+  // Cole a URL do seu fluxo do Power Automate aqui
+  const powerAutomateUrl = "https://prod-38.westus.logic.azure.com:443/workflows/6ff0e17beffa412d9fc6fbf256861ea8/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_w4h7w76Nqxz1GjX-fqN4x6rQpE1aW8RRposrxufrzw";
+
+  try {
+    const response = await fetch(powerAutomateUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // Verifica se a requisição foi bem-sucedida
+    if (!response.ok) {
+      throw new Error(`Erro na requisição HTTP: ${response.status} ${response.statusText}`);
+    }
+
+    // Converte a resposta para JSON
+    const dados = await response.json();
+
+    jsonAcoes = JSON.parse(dados.acoes);
+    jsonPlanos = JSON.parse(dados.planos);
+
+  } catch (error) {
+    console.error("Falha ao obter os dados do Power Automate:", error);
+    return null;
+  }
+}
+
+let jsonAcoes
+let jsonPlanos
+
 document.addEventListener('DOMContentLoaded', async function () {
-    await carregarJson()
+    toggleLoading(true)
+
+    jsonAcoes = sessionStorage.getItem("jsonAcoes");
+    jsonPlanos = sessionStorage.getItem("jsonPlanos");
+
+    // se não existir, busca do OneDrive
+    if (!jsonAcoes || jsonAcoes === "null" || !jsonPlanos || jsonPlanos === "null") {
+      await obterDadosDoOneDrive();
+
+      sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
+      sessionStorage.setItem("jsonPlanos", JSON.stringify(jsonPlanos));
+      console.log('dados resgatados do onedrive e armazenados no sessionstorage')
+    } else {
+      jsonAcoes = JSON.parse(jsonAcoes);
+      jsonPlanos = JSON.parse(jsonPlanos);
+      console.log('dados resgatados do sessionstorage')
+    }
 
     fillGanttData(jsonAcoes)
 
@@ -115,6 +163,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         });
     });
+    toggleLoading(false)
 });
 
 function filterJson(json, chave, valor) {
