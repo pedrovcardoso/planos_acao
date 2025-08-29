@@ -1,6 +1,3 @@
-
-
-
 const navEntries = performance.getEntriesByType("navigation");
 if (navEntries.length > 0) {
   const navType = navEntries[0].type;
@@ -73,319 +70,79 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.log('dados resgatados do sessionstorage')
     }
 
-    gerarCards(jsonPlanos)
+    fillStatCards(jsonPlanos)
     fillGanttData(jsonPlanos)
-    fillUnidadeFilter()
-    fillStatCards()
+    gerarCards(jsonPlanos)
     setupModalControls()
+    setupFilters()
 
-    document.getElementById('filter-Unidade').addEventListener('change', filtrarValores)
-    
-    document.getElementById('filter-periodo').addEventListener('change', function() {
-        const value = this.value;
-        const inputsDiv = document.getElementById('periodo-especifico-inputs');
-        if (value === 'especifico') {
-            inputsDiv.style.display = 'flex';
-        } else {
-            inputsDiv.style.display = 'none';
-            filtrarPeriodo();
-        }
-    });
-
-    document.getElementById('filtrar-especifico').addEventListener('click', function() {
-        const inicio = document.getElementById('periodo-inicio').value;
-        const fim = document.getElementById('periodo-fim').value;
-        if (!inicio || !fim) return;
-    
-        const firstDay = new Date(inicio);
-        firstDay.setHours(0,0,0,0);
-        const lastDay = new Date(fim);
-        lastDay.setHours(23,59,59,999);
-    
-        const filtered = jsonPlanos.filter(task => {
-            const start = new Date(task["Data início"]);
-            const end = new Date(task["Data fim"]);
-            return (start <= lastDay && end >= firstDay);
-        });
-    
-        fillGanttData(filtered);
-    });
     toggleLoading(false)
 })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //================================================================================
-// Cria os cards dos planos de ação
+// cards numéricos da parte inicial da página
 //================================================================================
-function gerarCards(jsonPlanos) {
-  const container = document.querySelector('.card-container');
-  if (!container) return;
+function fillStatCards(jsonPlanos) {
+  const statIds = {
+    emAndamento: 'stat-emAndamento',
+    acoesEmCurso: 'stat-acoesEmCurso',
+    emDesenvolvimento: 'stat-emDesenvolvimento',
+    emAtraso: 'stat-emAtraso'
+  }
 
-  container.innerHTML = jsonPlanos.map(plano => {
-    // Lógica para formatar as datas (sem alterações)
-    const dataInicio = plano["Data início"] 
-      ? plano["Data início"].includes('-') 
-        ? plano["Data início"].split('-').reverse().join('/') 
-        : plano["Data início"] 
-      : '-';
-    const dataFim = plano["Data fim"] 
-      ? typeof plano["Data fim"] === "string" && plano["Data fim"].includes('-') 
-        ? plano["Data fim"].split('-').reverse().join('/') 
-        : plano["Data fim"] 
-      : '-';
+  const stats = {
+    emAndamento: 0,
+    acoesEmCurso: 0,
+    emDesenvolvimento: 0,
+    emAtraso: 0
+  }
 
-    // O encodeURIComponent garante que nomes com espaços ou caracteres especiais funcionem na URL
-    const planoNomeEncoded = encodeURIComponent(plano.Nome);
+  // Contagem em jsonPlanos
+  Object.values(jsonPlanos).forEach(({ Status }) => {
+    if (Status === 'Em curso') stats.emAndamento++
+    else if (Status === 'Em desenvolvimento') stats.emDesenvolvimento++
+  })
 
-    return `
-      <div class="relative bg-white border border-slate-200 rounded-xl p-5 shadow-md flex flex-col
-                  transition-all duration-300 hover:shadow-xl">
-        
-        <div class="absolute top-0 right-0 p-3">
-          <div class="relative">
-            <!-- Botão que abre o menu -->
-            <button type="button" class="card-menu-button rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-              </svg>
-            </button>
+  // Contagem em jsonAcoes
+  Object.values(jsonAcoes).forEach(({ Status }) => {
+    if (Status === 'Em curso') stats.acoesEmCurso++
+    else if (Status === 'Pendente') stats.emAtraso++
+  })
 
-            <!-- O menu suspenso (dropdown), que começa escondido -->
-            <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 z-10">
-              <div class="py-1">
-                <a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
-                  Ver Ações
-                </a>
-                <button type="button" 
-                        class="edit-plano-button block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
-                        data-plano-nome="${plano.Nome}">
-                  Editar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-                
-        <div class="flex-grow">
-          <!-- O "pr-8" (padding-right) evita que o título fique embaixo do menu -->
-          <h2 class="pr-8 text-xl font-bold text-sky-700 tracking-wide">${plano.Nome}</h2>
-
-          <div class="mt-3 space-y-1 text-sm text-slate-600">
-            <p><strong class="font-semibold text-slate-700">Processo SEI:</strong> ${plano["Processo SEI"]}</p>
-            <p><strong class="font-semibold text-slate-700">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
-          </div>
-        </div>
-        
-        <div class="mt-4">
-          <details class="text-sm group mb-3">
-            <summary class="font-semibold !text-slate-500 cursor-pointer list-none flex items-center gap-2
-                            hover:!text-slate-700 group-open:!text-sky-700">
-              Mais detalhes
-              <span class="inline-block text-lg font-bold !text-slate-400 transition-transform duration-300 group-open:rotate-90">›</span>
-            </summary>
-            <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-1">
-              <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
-              <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
-              <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
-              <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
-            </div>
-          </details>
-        
-          <div class="pt-3 border-t border-slate-200 flex justify-between text-sm">
-            <p class="font-medium text-slate-500"><strong>Início:</strong> <span class="font-semibold text-slate-700">${dataInicio}</span></p>
-            <p class="font-medium text-slate-500"><strong>Fim:</strong> <span class="font-semibold text-slate-700">${dataFim}</span></p>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  // Depois que os cards são criados, ativamos a interatividade dos menus
-  setupCardMenus();
-  setupEditButtons();
+  // Atualiza DOM
+  Object.entries(stats).forEach(([key, value]) => {
+    const el = document.getElementById(statIds[key])
+    if (el) el.innerText = value
+  })
 }
 
-function setupCardMenus() {
-  const allMenuButtons = document.querySelectorAll('.card-menu-button');
 
-  allMenuButtons.forEach(button => {
-    button.addEventListener('click', (event) => {
-      // Impede que o clique no botão feche o menu imediatamente (veja o listener do window)
-      event.stopPropagation();
-      
-      const dropdown = button.nextElementSibling;
-      const isHidden = dropdown.classList.contains('hidden');
 
-      // Primeiro, fecha todos os outros menus abertos
-      document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
 
-      // Se o menu clicado estava escondido, mostra ele
-      if (isHidden) {
-        dropdown.classList.remove('hidden');
-      }
-    });
-  });
 
-  // Listener global para fechar os menus se o usuário clicar fora deles
-  window.addEventListener('click', () => {
-    document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
-  });
-}
 
-// =================================================================
-// LÓGICA DO MODAL DE EDIÇÃO
-// =================================================================
 
-let hasChanges = false;
-let originalPlanoData = null;
-// Supondo que você tenha a variável 'jsonPlanos' disponível globalmente no seu script.
 
-// Função de salvar que você forneceu, levemente adaptada para usar o nome correto do arquivo.
-const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
 
-async function salvarArquivoNoOneDrive(conteudo) {
-    const nome = 'planos.txt'; // O nome correto do arquivo
-    const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
-    try {
-        const response = await fetch(powerAutomateUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosParaEnviar)
-        });
-        if (!response.ok) throw new Error(`Erro na requisição HTTP: ${response.status}`);
-        const resultado = await response.json();
-        sessionStorage.clear();
-        window.location.reload();
-        return resultado;
-    } catch (error) {
-        console.error("Falha ao enviar os dados para o Power Automate:", error);
-        alert('Erro ao salvar os dados.');
-        return null;
-    }
-}
 
-/**
- * Adiciona listeners de clique a todos os botões "Editar" dos cards.
- */
-function setupEditButtons() {
-    document.querySelectorAll('.edit-plano-button').forEach(button => {
-        button.addEventListener('click', () => {
-            const planoNome = button.dataset.planoNome;
-            openEditModal(planoNome);
-        });
-    });
-}
 
-/**
- * Abre o modal e preenche com os dados do plano de ação selecionado.
- * @param {string} planoNome - O nome do plano a ser editado.
- */
-function openEditModal(planoNome) {
-    const plano = jsonPlanos.find(p => p.Nome === planoNome);
-    if (!plano) {
-        console.error("Plano não encontrado:", planoNome);
-        return;
-    }
 
-    originalPlanoData = { ...plano }; // Salva uma cópia dos dados originais
 
-    // Preenche o formulário
-    document.getElementById('edit-Nome').value = plano.Nome || '';
-    document.getElementById('edit-Processo-SEI').value = plano['Processo SEI'] || '';
-    document.getElementById('edit-Documento-TCE').value = plano['Documento TCE'] || '';
-    document.getElementById('edit-Resolução').value = plano.Resolução || '';
-    document.getElementById('edit-Coordenador').value = plano.Coordenador || '';
-    document.getElementById('edit-Unidades').value = plano.Unidades || '';
-    document.getElementById('edit-Equipe').value = plano.Equipe || '';
-    document.getElementById('edit-Data-inicio').value = plano['Data início'] || '';
-    document.getElementById('edit-Data-fim').value = plano['Data fim'] || '';
 
-    // Mostra o modal
-    document.getElementById('edit-modal').classList.remove('hidden');
-}
-
-/**
- * Fecha o modal de edição, verificando se há alterações não salvas.
- * @param {boolean} force - Se true, fecha o modal sem verificar.
- */
-function closeEditModal(force = false) {
-    if (hasChanges && !force) {
-        document.getElementById('confirmation-modal').classList.remove('hidden');
-    } else {
-        document.getElementById('edit-modal').classList.add('hidden');
-        document.getElementById('confirmation-modal').classList.add('hidden');
-        // Reseta o estado
-        hasChanges = false;
-        originalPlanoData = null;
-    }
-}
-
-/**
- * Coleta os dados do formulário, atualiza o array principal e chama a função de salvar.
- * AGORA:
- * 1. Verifica se houve alterações antes de salvar.
- * 2. Desabilita todos os botões do modal durante a operação de salvamento.
- */
-function handleSave() {
-    // 1. Se não houver alterações, apenas fecha o modal e para a execução.
-    if (!hasChanges) {
-        closeEditModal(true); // Força o fechamento sem confirmação
-        return;
-    }
-
-    // 2. Seleciona todos os botões do modal.
-    const saveButton = document.getElementById('modal-btn-save');
-    const cancelButton = document.getElementById('modal-btn-cancel');
-    const closeButton = document.getElementById('modal-btn-close');
-
-    const form = document.getElementById('modal-form');
-    const updatedPlano = { ...originalPlanoData };
-
-    new FormData(form).forEach((value, key) => {
-        updatedPlano[key] = value;
-    });
-
-    const planIndex = jsonPlanos.findIndex(p => p.Nome === originalPlanoData.Nome);
-    if (planIndex === -1) {
-        alert("Erro: não foi possível encontrar o plano original para atualizar.");
-        return;
-    }
-
-    const updatedJsonPlanos = [...jsonPlanos];
-    updatedJsonPlanos[planIndex] = updatedPlano;
-    
-    const conteudoParaSalvar = JSON.stringify(updatedJsonPlanos, null, 2);
-
-    // 3. Desabilita TODOS os botões antes de iniciar o salvamento.
-    saveButton.disabled = true;
-    cancelButton.disabled = true;
-    closeButton.disabled = true;
-    saveButton.textContent = 'Salvando...';
-
-    salvarArquivoNoOneDrive(conteudoParaSalvar)
-}
-
-/**
- * Configura todos os controles dos modais (botões, inputs).
- */
-function setupModalControls() {
-    const modalForm = document.getElementById('modal-form');
-    
-    // Detecta qualquer alteração nos campos do formulário
-    modalForm.addEventListener('input', () => {
-        hasChanges = true;
-    });
-
-    // Botões do modal de edição
-    document.getElementById('modal-btn-close').addEventListener('click', () => closeEditModal());
-    document.getElementById('modal-btn-cancel').addEventListener('click', () => closeEditModal());
-    document.getElementById('modal-btn-save').addEventListener('click', handleSave);
-
-    // Botões do modal de confirmação
-    document.getElementById('confirm-btn-no').addEventListener('click', () => {
-        document.getElementById('confirmation-modal').classList.add('hidden');
-    });
-    document.getElementById('confirm-btn-yes').addEventListener('click', () => closeEditModal(true));
-}
 
 //================================================================================
 // configurações gerais para criar o gantt
@@ -543,7 +300,7 @@ function fillGanttData(jsonPlanos) {
     });
 
 //================================================================================
-// Linha de totais do gantt
+// Cabeçalho da linha de totais do gantt
 //================================================================================
     taskListContainer.innerHTML += `
     <div class="gantt-row-task">
@@ -693,144 +450,463 @@ function toggleHeatMap(){
   ganttRowsContainer.appendChild(totalRow);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//================================================================================
+// Cria os cards dos planos de ação
+//================================================================================
+/**
+ * Cria todos os cards com informações dos planos de ação.
+ * @param {object} force - Se true, fecha o modal sem verificar.
+ */
+function gerarCards(jsonPlanos) {
+  const container = document.querySelector('.card-container');
+  if (!container) return;
+
+  container.innerHTML = jsonPlanos.map(plano => {
+    // Lógica para formatar as datas (sem alterações)
+    const dataInicio = plano["Data início"] 
+      ? plano["Data início"].includes('-') 
+        ? plano["Data início"].split('-').reverse().join('/') 
+        : plano["Data início"] 
+      : '-';
+    const dataFim = plano["Data fim"] 
+      ? typeof plano["Data fim"] === "string" && plano["Data fim"].includes('-') 
+        ? plano["Data fim"].split('-').reverse().join('/') 
+        : plano["Data fim"] 
+      : '-';
+
+    // O encodeURIComponent garante que nomes com espaços ou caracteres especiais funcionem na URL
+    const planoNomeEncoded = encodeURIComponent(plano.Nome);
+
+    return `
+      <div class="relative bg-white border border-slate-200 rounded-xl p-5 shadow-md flex flex-col
+                  transition-all duration-300 hover:shadow-xl">
+        
+        <div class="absolute top-0 right-0 p-3">
+          <div class="relative">
+            <!-- Botão que abre o menu -->
+            <button type="button" class="card-menu-button rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+              </svg>
+            </button>
+
+            <!-- O menu suspenso (dropdown), que começa escondido -->
+            <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 z-10">
+              <div class="py-1">
+                <a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                  Ver Ações
+                </a>
+                <button type="button" 
+                        class="edit-plano-button block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                        data-plano-nome="${plano.Nome}">
+                  Editar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+                
+        <div class="flex-grow">
+          <!-- O "pr-8" (padding-right) evita que o título fique embaixo do menu -->
+          <h2 class="pr-8 text-xl font-bold text-sky-700 tracking-wide">${plano.Nome}</h2>
+
+          <div class="mt-3 space-y-1 text-sm text-slate-600">
+            <p><strong class="font-semibold text-slate-700">Processo SEI:</strong> ${plano["Processo SEI"]}</p>
+            <p><strong class="font-semibold text-slate-700">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
+          </div>
+        </div>
+        
+        <div class="mt-4">
+          <details class="text-sm group mb-3">
+            <summary class="font-semibold !text-slate-500 cursor-pointer list-none flex items-center gap-2
+                            hover:!text-slate-700 group-open:!text-sky-700">
+              Mais detalhes
+              <span class="inline-block text-lg font-bold !text-slate-400 transition-transform duration-300 group-open:rotate-90">›</span>
+            </summary>
+            <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-1">
+              <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
+            </div>
+          </details>
+        
+          <div class="pt-3 border-t border-slate-200 flex justify-between text-sm">
+            <p class="font-medium text-slate-500"><strong>Início:</strong> <span class="font-semibold text-slate-700">${dataInicio}</span></p>
+            <p class="font-medium text-slate-500"><strong>Fim:</strong> <span class="font-semibold text-slate-700">${dataFim}</span></p>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Adicionar interatividade dos menus
+  setupCardMenus();
+  setupEditButtons();
+}
+
+/**
+ * Adiciona eventos no menu do card (três pontinhos).
+ */
+function setupCardMenus() {
+  const allMenuButtons = document.querySelectorAll('.card-menu-button');
+
+  allMenuButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+      // Impede que o clique no botão feche o menu imediatamente (veja o listener do window)
+      event.stopPropagation();
+      
+      const dropdown = button.nextElementSibling;
+      const isHidden = dropdown.classList.contains('hidden');
+
+      // Primeiro, fecha todos os outros menus abertos
+      document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
+
+      // Se o menu clicado estava escondido, mostra ele
+      if (isHidden) {
+        dropdown.classList.remove('hidden');
+      }
+    });
+  });
+
+  // Listener global para fechar os menus se o usuário clicar fora deles
+  window.addEventListener('click', () => {
+    document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
+  });
+}
+
+// =================================================================
+// Modal de edição
+// =================================================================
+/**
+ * Configurações e variáveis iniciais da criação e funcionamento do modal.
+ */
+let hasChanges = false;
+let originalPlanoData = null;
+
+const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
+
+async function salvarArquivoNoOneDrive(conteudo) {
+    const nome = 'planos.txt'; // O nome correto do arquivo
+    const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
+    try {
+        const response = await fetch(powerAutomateUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosParaEnviar)
+        });
+        if (!response.ok) throw new Error(`Erro na requisição HTTP: ${response.status}`);
+        const resultado = await response.json();
+        sessionStorage.clear();
+        window.location.reload();
+        return resultado;
+    } catch (error) {
+        console.error("Falha ao enviar os dados para o Power Automate:", error);
+        alert('Erro ao salvar os dados.');
+        return null;
+    }
+}
+
+/**
+ * Adiciona listeners de clique a todos os botões "Editar" dos cards.
+ */
+function setupEditButtons() {
+    document.querySelectorAll('.edit-plano-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const planoNome = button.dataset.planoNome;
+            openEditModal(planoNome);
+        });
+    });
+}
+
+/**
+ * Abre o modal e preenche com os dados do plano de ação selecionado.
+ * @param {string} planoNome - O nome do plano a ser editado.
+ */
+function openEditModal(planoNome) {
+    const plano = jsonPlanos.find(p => p.Nome === planoNome);
+    if (!plano) {
+        console.error("Plano não encontrado:", planoNome);
+        return;
+    }
+
+    originalPlanoData = { ...plano }; // Salva uma cópia dos dados originais
+
+    // Preenche o formulário
+    document.getElementById('edit-Nome').value = plano.Nome || '';
+    document.getElementById('edit-Processo-SEI').value = plano['Processo SEI'] || '';
+    document.getElementById('edit-Documento-TCE').value = plano['Documento TCE'] || '';
+    document.getElementById('edit-Resolução').value = plano.Resolução || '';
+    document.getElementById('edit-Coordenador').value = plano.Coordenador || '';
+    document.getElementById('edit-Unidades').value = plano.Unidades || '';
+    document.getElementById('edit-Equipe').value = plano.Equipe || '';
+    document.getElementById('edit-Data-inicio').value = plano['Data início'] || '';
+    document.getElementById('edit-Data-fim').value = plano['Data fim'] || '';
+
+    // Mostra o modal
+    document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+/**
+ * Fecha o modal de edição, verificando se há alterações não salvas.
+ * @param {boolean} force - Se true, fecha o modal sem verificar.
+ */
+function closeEditModal(force = false) {
+    if (hasChanges && !force) {
+        document.getElementById('confirmation-modal').classList.remove('hidden');
+    } else {
+        document.getElementById('edit-modal').classList.add('hidden');
+        document.getElementById('confirmation-modal').classList.add('hidden');
+        // Reseta o estado
+        hasChanges = false;
+        originalPlanoData = null;
+    }
+}
+
+/**
+ * Valida o botão de confirmar/savar dados do modal.
+ */
+function handleSave() {
+    // 1. Se não houver alterações, apenas fecha o modal e para a execução.
+    if (!hasChanges) {
+        closeEditModal(true); // Força o fechamento sem confirmação
+        return;
+    }
+
+    // 2. Seleciona todos os botões do modal.
+    const saveButton = document.getElementById('modal-btn-save');
+    const cancelButton = document.getElementById('modal-btn-cancel');
+    const closeButton = document.getElementById('modal-btn-close');
+
+    const form = document.getElementById('modal-form');
+    const updatedPlano = { ...originalPlanoData };
+
+    new FormData(form).forEach((value, key) => {
+        updatedPlano[key] = value;
+    });
+
+    const planIndex = jsonPlanos.findIndex(p => p.Nome === originalPlanoData.Nome);
+    if (planIndex === -1) {
+        alert("Erro: não foi possível encontrar o plano original para atualizar.");
+        return;
+    }
+
+    const updatedJsonPlanos = [...jsonPlanos];
+    updatedJsonPlanos[planIndex] = updatedPlano;
+    
+    const conteudoParaSalvar = JSON.stringify(updatedJsonPlanos, null, 2);
+
+    // 3. Desabilita TODOS os botões antes de iniciar o salvamento.
+    saveButton.disabled = true;
+    cancelButton.disabled = true;
+    closeButton.disabled = true;
+    saveButton.textContent = 'Salvando...';
+
+    salvarArquivoNoOneDrive(conteudoParaSalvar)
+}
+
+/**
+ * Configura todos os controles do modal (botões, inputs).
+ */
+function setupModalControls() {
+    const modalForm = document.getElementById('modal-form');
+    
+    // Detecta qualquer alteração nos campos do formulário
+    modalForm.addEventListener('input', () => {
+        hasChanges = true;
+    });
+
+    // Botões do modal de edição
+    document.getElementById('modal-btn-close').addEventListener('click', () => closeEditModal());
+    document.getElementById('modal-btn-cancel').addEventListener('click', () => closeEditModal());
+    document.getElementById('modal-btn-save').addEventListener('click', handleSave);
+
+    // Botões do modal de confirmação
+    document.getElementById('confirm-btn-no').addEventListener('click', () => {
+        document.getElementById('confirmation-modal').classList.add('hidden');
+    });
+    document.getElementById('confirm-btn-yes').addEventListener('click', () => closeEditModal(true));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //================================================================================
 // painel de filtros
 //================================================================================
+
 // configurações gerais
 const filtersConfig = [
     ["Unidades", "filter-Unidade"]
 ]
 
+function setupFilters() {
+    // unidade
+    document.getElementById('filter-Unidade')
+        .addEventListener('change', aplicarFiltros)
+
+    // período
+    document.getElementById('filter-periodo')
+        .addEventListener('change', function () {
+            const inputsDiv = document.getElementById('periodo-especifico-inputs')
+            inputsDiv.style.display = (this.value === 'especifico') ? 'flex' : 'none'
+            if (this.value !== 'especifico') aplicarFiltros()
+        })
+
+    // período específico
+    document.getElementById('filtrar-especifico')
+        .addEventListener('click', aplicarFiltros)
+
+    fillUnidadeFilter()
+}
+
+/**
+ * Normaliza string para comparação
+ */
+function normalizeString(str) {
+    if (!str) return ""
+    return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^\w_]/g, "")
+}
+
+/**
+ * Aplica todos os filtros ativos e atualiza as seções
+ */
+function aplicarFiltros() {
+    let jsonFiltrado = [...jsonPlanos]
+
+    // filtro por unidade
+    filtersConfig.forEach(([chave, elementId]) => {
+        const filterElement = document.getElementById(elementId)
+        if (filterElement && filterElement.value !== '-') {
+            jsonFiltrado = filterJson(jsonFiltrado, chave, normalizeString(filterElement.value))
+        }
+    })
+
+    // filtro por período
+    const periodo = document.getElementById('filter-periodo').value
+    if (periodo && periodo !== '-') {
+        jsonFiltrado = filtrarPorPeriodo(jsonFiltrado, periodo)
+    }
+
+    // aplica nas seções
+    fillStatCards(jsonFiltrado)
+    fillGanttData(jsonFiltrado)
+    gerarCards(jsonFiltrado)
+}
+
+/**
+ * Filtro genérico chave/valor
+ */
 function filterJson(json, chave, valor) {
     return json.filter(item => {
         if (typeof item[chave] === "string" && typeof valor === "string") {
-            return normalizeString(item[chave]).includes(normalizeString(valor));
+            return normalizeString(item[chave]).includes(valor)
         }
-        return item[chave] === valor;
-    });
+        return item[chave] === valor
+    })
 }
 
-function normalizeString(str) {
-    if (!str) return "";
-    return str
-        .toLowerCase()
-        .normalize("NFD")                 // separa acentos
-        .replace(/[\u0300-\u036f]/g, "")  // remove acentos
-        .replace(/\s+/g, "_")             // troca espaços por _
-        .replace(/[^\w_]/g, "");          // remove caracteres especiais
-}
-// --------------------------------
-// criando/configurando filtros
-function fillUnidadeFilter() {
-  const filtro = document.getElementById('filter-Unidade');
-
-  let valores = [];
-  Object.keys(jsonPlanos).forEach(key => {
-    const unidades = jsonPlanos[key]["Unidades"].split(', ');
-    valores.push(...unidades);
-  });
-
-  valores = [...new Set(valores)];
-  valores = valores.filter(v => v && v.trim() != '').sort();
-
-  valores.forEach(valor => {
-    const option = document.createElement('option');
-    option.value = normalizeString(valor);
-    option.textContent = valor;
-    filtro.appendChild(option);
-  })
-}
-
-// --------------------------------
-// executando filtro
-function filtrarValores(){
-    let jsonFiltrado = jsonPlanos;
-
-    filtersConfig.forEach(([chave, elementId]) => {
-        const filterElement = document.getElementById(elementId);
-        if (filterElement && filterElement.value !== '-') {
-            jsonFiltrado = filterJson(jsonFiltrado, chave, normalizeString(filterElement.value));
-        }
-    });
-
-    fillGanttData(jsonFiltrado);
-    gerarCards(jsonFiltrado);
-}
-
-function clearFilters(){
-    filtersConfig.forEach(([chave, elementId]) => {
+/**
+ * Limpa filtros
+ */
+function clearFilters() {
+    filtersConfig.forEach(([, elementId]) => {
         document.getElementById(elementId).value = '-'
-    });
+    })
     document.getElementById('filter-periodo').value = '-'
     document.getElementById('periodo-especifico-inputs').style.display = 'none'
-    
-    filtrarValores()
+
+    aplicarFiltros()
 }
 
-function filtrarPeriodo() {
-    const select = document.getElementById('filter-periodo')
+/**
+ * Preenche filtro de unidades
+ */
+function fillUnidadeFilter() {
+    const filtro = document.getElementById('filter-Unidade')
+    let valores = []
 
-    const value = select.value;
-    let filtered = jsonPlanos;
+    Object.values(jsonPlanos).forEach(item => {
+        const unidades = item["Unidades"].split(', ')
+        valores.push(...unidades)
+    })
 
-    if (value === 'mes') {
-        const now = new Date();
-        const month = now.getMonth();
-        const year = now.getFullYear();
-        const monthStart = new Date(year, month, 1, 0, 0, 0, 0);
-        const monthEnd = new Date(year, month + 1, 0, 23, 59, 59, 999);
-        filtered = jsonPlanos.filter(task => {
-            const start = new Date(task["Data início"]);
-            const end = new Date(task["Data fim"]);
-            return (
-                (start <= monthEnd && end >= monthStart)
-            );
-        });
-    } else if (value === 'semana') {
-        const now = new Date();
-        const firstDay = new Date(now);
-        firstDay.setDate(now.getDate() - now.getDay() + 1);
-        firstDay.setHours(0,0,0,0);
-        const lastDay = new Date(firstDay);
-        lastDay.setDate(firstDay.getDate() + 4);
-        lastDay.setHours(23,59,59,999);
-        filtered = jsonPlanos.filter(task => {
-            const start = new Date(task["Data início"]);
-            const end = new Date(task["Data fim"]);
-            return (
-                (start <= lastDay && end >= firstDay)
-            );
-        });
+    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
+
+    valores.forEach(valor => {
+        const option = document.createElement('option')
+        option.value = normalizeString(valor)
+        option.textContent = valor
+        filtro.appendChild(option)
+    })
+}
+
+/**
+ * Filtra lista pelo período selecionado
+ */
+function filtrarPorPeriodo(lista, periodo) {
+    let inicio, fim
+
+    if (periodo === 'mes') {
+        const now = new Date()
+        inicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0)
+        fim = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+
+    } else if (periodo === 'semana') {
+        const now = new Date()
+        inicio = new Date(now)
+        inicio.setDate(now.getDate() - now.getDay() + 1)
+        inicio.setHours(0, 0, 0, 0)
+        fim = new Date(inicio)
+        fim.setDate(inicio.getDate() + 4)
+        fim.setHours(23, 59, 59, 999)
+
+    } else if (periodo === 'especifico') {
+        const inicioVal = document.getElementById('periodo-inicio').value
+        const fimVal = document.getElementById('periodo-fim').value
+        if (!inicioVal || !fimVal) return lista
+
+        inicio = new Date(inicioVal); inicio.setHours(0, 0, 0, 0)
+        fim = new Date(fimVal); fim.setHours(23, 59, 59, 999)
     }
 
-    fillGanttData(filtered);
-};
+    if (inicio && fim) {
+        return lista.filter(task => {
+            const start = new Date(task["Data início"])
+            const end = new Date(task["Data fim"])
+            return (start <= fim && end >= inicio)
+        })
+    }
 
-function fillStatCards(){
-  const now = new Date()
-  const month = now.getMonth()
-  const year = now.getFullYear()
-  const inicioDoMes = new Date(year, month, 1, 0, 0, 0, 0)
-  const fimDoMes = new Date(year, month + 1, 0, 23, 59, 59, 999)
-
-  const statEmAndamento = document.getElementById('stat-emAndamento')
-  const statAcoesEmCurso = document.getElementById('stat-acoesEmCurso')
-  const statEmDesenvolvimento = document.getElementById('stat-emDesenvolvimento')
-  const statEmAtraso = document.getElementById('stat-emAtraso')
-
-  Object.values(jsonPlanos).forEach(value=>{
-    value.Status == 'Em curso' ? statEmAndamento.innerText++ : ''
-  })
-
-  Object.values(jsonAcoes).forEach(value=>{
-    value.Status == 'Em curso' ? statAcoesEmCurso.innerText++ : ''
-  })
-
-  Object.values(jsonPlanos).forEach(value=>{
-    value.Status == 'Em desenvolvimento' ? statEmDesenvolvimento.innerText++ : ''
-  })
-
-  Object.values(jsonAcoes).forEach(value=>{
-    value.Status == 'Pendente' ? statEmDesenvolvimento.innerText++ : ''
-  })
+    return lista
 }
