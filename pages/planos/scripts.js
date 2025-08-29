@@ -515,6 +515,11 @@ function gerarCards(jsonPlanos) {
                         data-plano-nome="${plano.Nome}">
                   Editar
                 </button>
+                <button type="button" 
+                        class="delete-plano-button block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        data-plano-nome="${plano.Nome}">
+                  Excluir
+                </button>
               </div>
             </div>
           </div>
@@ -556,10 +561,39 @@ function gerarCards(jsonPlanos) {
       </div>
     `;
   }).join('');
+  
+  const addCardHtml = `
+      <button id="add-new-plano-button" type="button" 
+              class="relative flex flex-col items-center justify-center 
+                     border-2 border-dashed border-slate-300 rounded-xl p-5 
+                     text-slate-400 hover:border-sky-500 hover:text-sky-600 
+                     transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky-400">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span class="mt-2 font-bold text-lg">Criar Novo Plano</span>
+      </button>
+    `;
 
-  // Adicionar interatividade dos menus
-  setupCardMenus();
-  setupEditButtons();
+    container.innerHTML += addCardHtml;
+
+    // Ativa a interatividade dos menus e botões
+    setupAddButton();
+    setupCardMenus();
+    setupEditButtons();
+    setupDeleteButtons();
+}
+
+/**
+ * Adiciona o listener de clique ao botão "Criar Novo Plano".
+ */
+function setupAddButton() {
+    const addButton = document.getElementById('add-new-plano-button');
+    if (addButton) {
+        // Chama a mesma função de abrir o modal, mas sem passar um nome de plano
+        addButton.addEventListener('click', () => openEditModal());
+    }
 }
 
 /**
@@ -637,42 +671,43 @@ function setupEditButtons() {
 }
 
 /**
- * Abre o modal e preenche com os dados do plano de ação selecionado.
- * @param {string} planoNome - O nome do plano a ser editado.
+ * Abre o modal para criar ou editar um plano.
+ * @param {string | null} planoNome - O nome do plano a editar, ou null para criar um novo.
  */
-function openEditModal(planoNome) {
-    const plano = jsonPlanos.find(p => p.Nome === planoNome);
-    if (!plano) {
-        console.error("Plano não encontrado:", planoNome);
-        return;
+function openEditModal(planoNome = null) {
+    const modalTitle = document.querySelector('#edit-modal h3');
+    const form = document.getElementById('modal-form');
+    
+    // Reseta o formulário para garantir que não haja dados antigos
+    form.reset(); 
+
+    if (planoNome) {
+        // --- MODO DE EDIÇÃO ---
+        modalTitle.textContent = 'Editar Plano de Ação';
+        const plano = jsonPlanos.find(p => p.Nome === planoNome);
+        if (!plano) {
+            console.error("Plano não encontrado:", planoNome);
+            return;
+        }
+        originalPlanoData = { ...plano }; // Salva cópia dos dados originais
+
+        // Preenche o formulário
+        Object.keys(plano).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                input.value = plano[key];
+            }
+        });
+    } else {
+        // --- MODO DE CRIAÇÃO ---
+        modalTitle.textContent = 'Criar Novo Plano de Ação';
+        // Define um objeto "vazio" como base para o novo plano
+        originalPlanoData = {}; 
+        // Você pode definir valores padrão aqui se quiser
+        form.querySelector('[name="Status"]').value = 'Planejado';
     }
 
-    originalPlanoData = { ...plano }; // Salva uma cópia dos dados originais
-
-    // Preenche o formulário
-    const formFields = {
-      'edit-Nome': 'Nome',
-      'edit-Status': 'Status',
-      'edit-Processo-SEI': 'Processo SEI',
-      'edit-Documento-TCE': 'Documento TCE',
-      'edit-Resolução': 'Resolução',
-      'edit-Coordenador': 'Coordenador',
-      'edit-Unidades': 'Unidades',
-      'edit-Equipe': 'Equipe',
-      'edit-Data-inicio': 'Data início',
-      'edit-Data-fim': 'Data fim',
-      'edit-SEI-relacionados': 'SEI relacionados',
-      'edit-Documentos-relacionados': 'Documentos relacionados',
-      'edit-Observacoes': 'Observações'
-    }
-
-    // Preenche os campos automaticamente
-    Object.entries(formFields).forEach(([id, key]) => {
-      const el = document.getElementById(id)
-      if (el) el.value = plano[key] || ''
-    })
-
-    // Mostra o modal
+    hasChanges = false; // Reseta a flag de alterações
     document.getElementById('edit-modal').classList.remove('hidden');
 }
 
@@ -693,45 +728,61 @@ function closeEditModal(force = false) {
 }
 
 /**
- * Valida o botão de confirmar/savar dados do modal.
+ * Coleta os dados, decide se deve atualizar ou criar, e chama a função de salvar.
  */
 function handleSave() {
-    // 1. Se não houver alterações, apenas fecha o modal e para a execução.
     if (!hasChanges) {
-        closeEditModal(true); // Força o fechamento sem confirmação
+        closeEditModal(true);
         return;
     }
 
-    // 2. Seleciona todos os botões do modal.
+    // ... (lógica para desabilitar botões) ...
     const saveButton = document.getElementById('modal-btn-save');
     const cancelButton = document.getElementById('modal-btn-cancel');
     const closeButton = document.getElementById('modal-btn-close');
 
     const form = document.getElementById('modal-form');
-    const updatedPlano = { ...originalPlanoData };
-
-    new FormData(form).forEach((value, key) => {
+    const formData = new FormData(form);
+    const updatedPlano = {};
+    formData.forEach((value, key) => {
         updatedPlano[key] = value;
     });
 
-    const planIndex = jsonPlanos.findIndex(p => p.Nome === originalPlanoData.Nome);
-    if (planIndex === -1) {
-        alert("Erro: não foi possível encontrar o plano original para atualizar.");
+    // Validação simples para garantir que o nome não está vazio
+    if (!updatedPlano.Nome || updatedPlano.Nome.trim() === '') {
+        alert('O nome do plano de ação é obrigatório.');
         return;
     }
 
-    const updatedJsonPlanos = [...jsonPlanos];
-    updatedJsonPlanos[planIndex] = updatedPlano;
+    let updatedJsonPlanos = [...jsonPlanos];
+    // Tenta encontrar o índice do plano original pelo nome salvo em 'originalPlanoData'
+    const planIndex = originalPlanoData.Nome 
+        ? updatedJsonPlanos.findIndex(p => p.Nome === originalPlanoData.Nome) 
+        : -1;
+
+    // ▼▼▼ LÓGICA DE DECISÃO (EDITAR vs CRIAR) ▼▼▼
+    if (planIndex > -1) {
+        // MODO EDIÇÃO: Atualiza o item no índice encontrado
+        updatedJsonPlanos[planIndex] = updatedPlano;
+    } else {
+        // MODO CRIAÇÃO: Adiciona o novo item ao final do array
+        updatedJsonPlanos.push(updatedPlano);
+    }
     
     const conteudoParaSalvar = JSON.stringify(updatedJsonPlanos, null, 2);
 
-    // 3. Desabilita TODOS os botões antes de iniciar o salvamento.
+    // ... (lógica para desabilitar/reabilitar botões e chamar salvarArquivoNoOneDrive) ...
     saveButton.disabled = true;
     cancelButton.disabled = true;
     closeButton.disabled = true;
     saveButton.textContent = 'Salvando...';
 
-    salvarArquivoNoOneDrive(conteudoParaSalvar)
+    salvarArquivoNoOneDrive(conteudoParaSalvar).finally(() => {
+        saveButton.disabled = false;
+        cancelButton.disabled = false;
+        closeButton.disabled = false;
+        saveButton.textContent = 'Salvar Alterações';
+    });
 }
 
 /**
@@ -755,6 +806,80 @@ function setupModalControls() {
         document.getElementById('confirmation-modal').classList.add('hidden');
     });
     document.getElementById('confirm-btn-yes').addEventListener('click', () => closeEditModal(true));
+
+    setupDeleteModalControls();
+}
+
+function setupDeleteButtons() {
+    document.querySelectorAll('.delete-plano-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const planoNome = button.dataset.planoNome;
+            openDeleteConfirmationModal(planoNome);
+        });
+    });
+}
+
+/**
+ * Abre o modal de confirmação de exclusão e define o nome do plano.
+ * @param {string} planoNome - O nome do plano a ser excluído.
+ */
+function openDeleteConfirmationModal(planoNome) {
+    const modal = document.getElementById('delete-confirmation-modal');
+    const nameSpan = document.getElementById('plano-to-delete-name');
+    const confirmButton = document.getElementById('delete-confirm-btn-yes');
+
+    // Preenche o nome do plano no texto do modal
+    nameSpan.textContent = `"${planoNome}"`;
+    
+    // Anexa o nome do plano ao botão de confirmação para uso posterior
+    confirmButton.dataset.planoToDelete = planoNome;
+
+    // Mostra o modal
+    modal.classList.remove('hidden');
+}
+
+/**
+ * Lida com a exclusão real do plano.
+ */
+function handleDelete() {
+    const confirmButton = document.getElementById('delete-confirm-btn-yes');
+    const planoNome = confirmButton.dataset.planoToDelete;
+
+    if (!planoNome) {
+        alert("Erro: não foi possível identificar o plano a ser excluído.");
+        return;
+    }
+
+    // Cria um novo array filtrando o item a ser excluído
+    const updatedJsonPlanos = jsonPlanos.filter(p => p.Nome !== planoNome);
+
+    // Converte o novo array (sem o item excluído) para string JSON
+    const conteudoParaSalvar = JSON.stringify(updatedJsonPlanos, null, 2);
+
+    // Desabilita os botões para feedback visual
+    confirmButton.disabled = true;
+    confirmButton.textContent = 'Excluindo...';
+    document.getElementById('delete-confirm-btn-no').disabled = true;
+
+    // Chama a função para salvar a nova lista de planos
+    salvarArquivoNoOneDrive(conteudoParaSalvar)
+}
+
+/**
+ * Configura os controles do modal de exclusão (botões Sim/Não).
+ */
+function setupDeleteModalControls() {
+    const modal = document.getElementById('delete-confirmation-modal');
+    const noButton = document.getElementById('delete-confirm-btn-no');
+    const yesButton = document.getElementById('delete-confirm-btn-yes');
+
+    // Botão "Cancelar" simplesmente fecha o modal
+    noButton.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    // Botão "Sim, Excluir" chama a função que faz a exclusão
+    yesButton.addEventListener('click', handleDelete);
 }
 
 
@@ -777,13 +902,18 @@ function setupModalControls() {
 
 // configurações gerais
 const filtersConfig = [
-    ["Unidades", "filter-Unidade"]
+    ["Unidades", "filter-Unidade"],
+    ["Equipe", "filter-Equipe"]
 ]
 
 function setupFilters() {
-    // unidade
-    document.getElementById('filter-Unidade')
-        .addEventListener('change', aplicarFiltros)
+    // adiciona eventos para todos filtros listados em filtersConfig
+    filtersConfig.forEach(([ , elementId ]) => {
+        const el = document.getElementById(elementId)
+        if (el) {
+            el.addEventListener('change', aplicarFiltros)
+        }
+    })
 
     // período
     document.getElementById('filter-periodo')
@@ -798,6 +928,7 @@ function setupFilters() {
         .addEventListener('click', aplicarFiltros)
 
     fillUnidadeFilter()
+    fillEquipeFilter()
 }
 
 /**
@@ -873,6 +1004,28 @@ function fillUnidadeFilter() {
 
     Object.values(jsonPlanos).forEach(item => {
         const unidades = item["Unidades"].split(', ')
+        valores.push(...unidades)
+    })
+
+    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
+
+    valores.forEach(valor => {
+        const option = document.createElement('option')
+        option.value = normalizeString(valor)
+        option.textContent = valor
+        filtro.appendChild(option)
+    })
+}
+
+/**
+ * Preenche filtro de equipe
+ */
+function fillEquipeFilter() {
+    const filtro = document.getElementById('filter-Equipe')
+    let valores = []
+
+    Object.values(jsonPlanos).forEach(item => {
+        const unidades = item["Equipe"].split(', ')
         valores.push(...unidades)
     })
 

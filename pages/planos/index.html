@@ -136,6 +136,13 @@
                     </select>
                 </div>
 
+                <div class="flex flex-col w-full md:w-56">
+                    <label for="filter-Equipe" class="block text-sm font-medium text-slate-700 mb-1">Equipe</label>
+                    <select id="filter-Equipe" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                        <option selected disabled hidden value='-'>Selecione</option>
+                    </select>
+                </div>
+
                 <div class="w-full"></div>
                 
                 <button onclick="clearFilters()" class="flex items-center gap-2 bg-slate-200 text-slate-800 font-semibold text-sm rounded-lg px-4 py-2 hover:bg-slate-300 transition-colors">
@@ -233,7 +240,7 @@
                 </div>
             </div>
 
-            <!-- Modal de Confirmação para Descartar Alterações -->
+            <!-- Modal de confirmação para descartar alterações -->
             <div id="confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                     <div class="p-6">
@@ -246,6 +253,41 @@
                         </button>
                         <button id="confirm-btn-yes" type="button" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
                             Sim, Descartar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de confirmação de exclusão -->
+            <div id="delete-confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="p-6">
+                        <div class="flex items-center">
+                            <!-- Ícone de Alerta -->
+                            <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                </svg>
+                            </div>
+                            <div class="ml-4 text-left">
+                                <h3 class="text-lg font-bold text-slate-800">Confirmar Exclusão</h3>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-sm text-slate-600">
+                                Tem certeza de que deseja excluir o plano de ação: <strong id="plano-to-delete-name" class="font-bold text-slate-800"></strong>?
+                            </p>
+                            <p class="mt-2 text-sm font-semibold text-red-700 bg-red-50 p-3 rounded-md">
+                                Esta ação é permanente e não poderá ser revertida pelo usuário.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                        <button id="delete-confirm-btn-no" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
+                            Cancelar
+                        </button>
+                        <button id="delete-confirm-btn-yes" type="button" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
+                            Sim, Excluir
                         </button>
                     </div>
                 </div>
