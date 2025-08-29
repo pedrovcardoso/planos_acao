@@ -233,21 +233,24 @@ function fillGanttData(jsonPlanos) {
         rowTimeline.className = 'gantt-row-timeline';
         rowTimeline.dataset.rowIndex = index;
 
-        const startDate = task["Data início"];
-        const endDate = task["Data fim"]
-        const startOffset = calculatePosition(startDate);
-        const endOffset = endDate ? calculatePosition(endDate) : startOffset+10;
-        const durationWidth = endOffset - startOffset;
+        if(task["Data início"] && task["Data fim"]){
+            const startDate = task["Data início"];
+            const endDate = task["Data fim"]
+            const startOffset = calculatePosition(startDate);
+            const endOffset = endDate ? calculatePosition(endDate) : startOffset+10;
+            const durationWidth = endOffset - startOffset;
 
-        const bar = document.createElement('div');
-        bar.className = 'gantt-bar';
-        bar.style.left = `${startOffset}px`;
-        bar.style.width = `${durationWidth}px`;
-        bar.title = `${task.Nome}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
-        const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
-        bar.classList.add(task.colorTag);
+            const bar = document.createElement('div');
+            bar.className = 'gantt-bar';
+            bar.style.left = `${startOffset}px`;
+            bar.style.width = `${durationWidth}px`;
+            bar.title = `${task.Nome}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
+            const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
+            bar.classList.add(task.colorTag);
 
-        rowTimeline.appendChild(bar);
+            rowTimeline.appendChild(bar);
+        }
+
         ganttRowsContainer.appendChild(rowTimeline);
 
         // Efeito hover sincronizado entre as duas colunas (desativado por enquanto por atrapalhar o heatmap)
