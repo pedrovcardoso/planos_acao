@@ -201,3 +201,16 @@ body {
     position: absolute;
     z-index: 1;
 }
+
+.view-switch-button {
+        padding: 0.5rem 0; /* 8px vertical, 0 horizontal */
+        border-radius: 9999px; /* rounded-full */
+        font-weight: 600; /* font-semibold */
+        color: #475569; /* text-slate-600 */
+        transition: color 0.3s ease-in-out;
+    }
+
+    /* Estilo para o botão que está ATIVO */
+    .view-switch-button.active-view-button {
+        color: #0284c7; /* text-sky-600 */
+    }

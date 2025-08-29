@@ -15,7 +15,7 @@
     </div>
     <header id="header"></header>
 
-    <main class="grid p-6 md:py-5 md:px-8 pt-20 md:pt-20 gap-6 flex-grow">
+    <main class="mx-auto w-full flex-grow p-6 pt-20 md:pt-24">
         <section class="bg-white p-4 rounded-xl shadow-md">
 
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Painel de filtros</h2>
@@ -86,25 +86,51 @@
             </div>
         </section>
 
-        <section id="gantt">
-            <div class="gantt-container bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
-                <div class="gantt-tasks">
-                    <div class="gantt-tasks-header">
-                        <div data-col="num">Item do Plano<div class="resizer"></div></div>
-                        <div data-col="plano">Plano de ação<div class="resizer"></div></div>
-                        <div data-col="atividade">Atividade<div class="resizer"></div></div>
-                        <div data-col="status" class="status-header">Status<div class="resizer"></div></div>
-                    </div>
-                    <div id="gantt-task-list"></div>
-                </div>
-                <div class="gantt-timeline" id="gantt-timeline-container">
-                    <div class="gantt-months-header" id="gantt-months-header"></div>
-                    <div class="gantt-rows" id="gantt-rows">
-                        <div id="todayBar"></div>
-                    </div>
-                </div>
-            </div>
+        <section class="mb-6 flex items-center justify-center space-x-2 rounded-lg bg-slate-100 p-1">
+            <button type="button" data-view-target="gantt-view" class="view-switch-button active-view-button">
+                Gantt
+            </button>
+            <button type="button" data-view-target="table-view" class="view-switch-button">
+                Tabela
+            </button>
+            <button type="button" data-view-target="kanban-view" class="view-switch-button disabled:opacity-50 disabled:cursor-not-allowed" disabled title="Em breve">
+                Kanban
+            </button>
         </section>
+
+        <article id="views-container">
+            <section id="gantt-view" class="view-section">
+                <div class="gantt-container bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
+                    <div class="gantt-tasks">
+                        <div class="gantt-tasks-header">
+                            <div data-col="num">Item do Plano<div class="resizer"></div></div>
+                            <div data-col="plano">Plano de ação<div class="resizer"></div></div>
+                            <div data-col="atividade">Atividade<div class="resizer"></div></div>
+                            <div data-col="status" class="status-header">Status<div class="resizer"></div></div>
+                        </div>
+                        <div id="gantt-task-list"></div>
+                    </div>
+                    <div class="gantt-timeline" id="gantt-timeline-container">
+                        <div class="gantt-months-header" id="gantt-months-header"></div>
+                        <div class="gantt-rows" id="gantt-rows">
+                            <div id="todayBar"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="table-view" class="view-section hidden">
+                <div id="table-container" class="overflow-x-auto bg-white rounded-lg shadow h-[800px]"></div>
+            </section>
+
+            <!-- 3. Visualização de Kanban (Placeholder para o futuro) -->
+            <section id="kanban-view" class="view-section hidden">
+                <!-- O conteúdo do Kanban virá aqui no futuro -->
+                <div class="p-8 text-center bg-white rounded-lg shadow">
+                    <h2 class="text-2xl font-bold text-slate-700">Visualização Kanban (Em Breve)</h2>
+                </div>
+            </section>
+        </article>
 
         <section id="task-modal-container" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
             

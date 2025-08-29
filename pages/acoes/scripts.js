@@ -163,10 +163,47 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         });
     });
+    setupViewSwitcher();
     setPlanoFilterFromUrl()
     setupModalControls();
+    populateActionsTable(jsonAcoes)
     toggleLoading(false)
 });
+
+/**
+ * Configura os botões do seletor de visualização (Gantt, Tabela, Kanban).
+ */
+function setupViewSwitcher() {
+    const switchButtons = document.querySelectorAll('.view-switch-button');
+    const viewSections = document.querySelectorAll('.view-section');
+
+    switchButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Se o botão já estiver ativo ou desabilitado, não faz nada
+            if (button.classList.contains('active-view-button') || button.disabled) {
+                return;
+            }
+
+            // Pega o ID da seção alvo do atributo 'data-view-target'
+            const targetViewId = button.dataset.viewTarget;
+
+            // Esconde todas as seções
+            viewSections.forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Mostra apenas a seção alvo
+            const targetSection = document.getElementById(targetViewId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+
+            // Atualiza o estilo dos botões
+            switchButtons.forEach(btn => btn.classList.remove('active-view-button'));
+            button.classList.add('active-view-button');
+        });
+    });
+}
 
 function setPlanoFilterFromUrl() {
     // 1. Pega os parâmetros da URL atual
@@ -619,4 +656,86 @@ async function salvarArquivoNoOneDrive(conteudo) {
         alert('Erro ao salvar os dados.');
         return null;
     }
+}
+
+// =================================================================
+// CONFIGURAÇÃO E LÓGICA DA VISUALIZAÇÃO DE AÇÕES
+// =================================================================
+
+// 1. Objeto de configuração da tabela (seu novo formato)
+const tableColumnOrder = [
+    { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 100 },
+    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 250 },
+    { key: 'Atividade', label: 'Atividade', className: 'line-clamp-3', width: 400 },
+    { key: 'Data de início', label: 'Início', className: '', width: 120 },
+    { key: 'Data fim', label: 'Fim', className: '', width: 120 },
+    { key: 'Status', label: 'Status', className: '', width: 160 },
+    { key: 'Responsável', label: 'Responsável', className: '', width: 200 },
+    { key: 'Unidades envolvidas', label: 'Unidades envolvidas', className: '', width: 200 },
+    { key: 'Observações', label: 'Observações', className: '', width: 200 }
+];
+
+/**
+ * Cria e popula a tabela de ações com base no objeto de configuração.
+ * A função gera a tabela inteira e a insere no DOM.
+ * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
+ */
+function populateActionsTable(actionsData) {
+    const container = document.getElementById('table-container');
+    if (!container) {
+        console.error("Container #table-view não encontrado.");
+        return;
+    }
+
+    // Calcula a largura total da tabela somando as larguras de cada coluna
+    const totalTableWidth = tableColumnOrder.reduce((sum, col) => sum + col.width, 0);
+
+    // Gera o HTML do cabeçalho (Thead), aplicando a largura de cada coluna
+    const headerHtml = tableColumnOrder.map(col => 
+        `<th scope="col" class="px-6 py-3 ${col.className}" style="width: ${col.width}px;">${col.label}</th>`
+    ).join('');
+
+    // Gera o HTML do corpo da tabela (Tbody)
+    const bodyHtml = actionsData.map(task => {
+        const cellsHtml = tableColumnOrder.map(col => {
+            let cellContent = task[col.key] || '-';
+            
+            // Formatações especiais
+            if (['Data de início', 'Data fim'].includes(col.key)) {
+                cellContent = task[col.key] ? new Date(task[col.key] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+            } else if (col.key === 'Status') {
+                const statusClass = 'status-' + (task.Status || '').replace(/\s+/g, '-');
+                cellContent = `<div class="status-container"><div class="${statusClass}">${task.Status}</div></div>`;
+            }
+
+            return `<td class="px-6 py-4 ${col.className}">${cellContent}</td>`;
+        }).join('');
+
+        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-id="${task['Número da atividade']}">
+                    ${cellsHtml}
+                </tr>`;
+    }).join('');
+
+    // Monta a estrutura completa da tabela
+    console.log(totalTableWidth)
+    const fullTableHtml = `
+        <table style="width: 1350px;">
+            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200">
+                <tr class="divide-x divide-slate-200">${headerHtml}</tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">${bodyHtml}</tbody>
+        </table>
+    `;
+
+    // Insere a tabela no container
+    container.innerHTML = fullTableHtml;
+
+    // Adiciona os eventos de clique DEPOIS que a tabela foi inserida no DOM
+    container.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('click', () => {
+            const taskId = row.dataset.taskId;
+            const task = actionsData.find(t => t['Número da atividade'] == taskId);
+            if (task) openTaskModal(task);
+        });
+    });
 }
