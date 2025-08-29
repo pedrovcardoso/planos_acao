@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     fillGanttData(jsonPlanos)
     fillUnidadeFilter()
     fillStatCards()
+    setupModalControls()
 
     document.getElementById('filter-Unidade').addEventListener('change', filtrarValores)
     
@@ -120,6 +121,7 @@ function gerarCards(jsonPlanos) {
   if (!container) return;
 
   container.innerHTML = jsonPlanos.map(plano => {
+    // Lógica para formatar as datas (sem alterações)
     const dataInicio = plano["Data início"] 
       ? plano["Data início"].includes('-') 
         ? plano["Data início"].split('-').reverse().join('/') 
@@ -131,54 +133,254 @@ function gerarCards(jsonPlanos) {
         : plano["Data fim"] 
       : '-';
 
-  return `
-    <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-md flex flex-col
-                transition-all duration-300 hover:shadow-xl">
-                
-      <div class="flex-grow">
-        <h2 class="text-xl font-bold text-sky-700 tracking-wide">${plano.Nome}</h2>
+    // O encodeURIComponent garante que nomes com espaços ou caracteres especiais funcionem na URL
+    const planoNomeEncoded = encodeURIComponent(plano.Nome);
 
-        <div class="mt-3 space-y-1 text-sm text-slate-600">
-          <p>
-            <strong class="font-semibold text-slate-700">Processo SEI:</strong>
-            ${plano["Processo SEI"]}
-          </p>
-          <p>
-            <strong class="font-semibold text-slate-700">Documento TCE:</strong>
-            ${plano["Documento TCE"]}
-          </p>
-        </div>
-      </div>
-      
-      <div class="mt-4">
-        <details class="text-sm group mb-3">
-          <summary class="font-semibold !text-slate-500 cursor-pointer list-none flex items-center gap-2
-                          hover:!text-slate-700 group-open:!text-sky-700">
-            Mais detalhes
-            <span class="inline-block text-lg font-bold !text-slate-400 transition-transform duration-300 group-open:rotate-90">›</span>
-          </summary>
-          <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-1">
-            <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
-            <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
-            <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
-            <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
+    return `
+      <div class="relative bg-white border border-slate-200 rounded-xl p-5 shadow-md flex flex-col
+                  transition-all duration-300 hover:shadow-xl">
+        
+        <div class="absolute top-0 right-0 p-3">
+          <div class="relative">
+            <!-- Botão que abre o menu -->
+            <button type="button" class="card-menu-button rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+              </svg>
+            </button>
+
+            <!-- O menu suspenso (dropdown), que começa escondido -->
+            <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 z-10">
+              <div class="py-1">
+                <a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                  Ver Ações
+                </a>
+                <button type="button" 
+                        class="edit-plano-button block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                        data-plano-nome="${plano.Nome}">
+                  Editar
+                </button>
+              </div>
+            </div>
           </div>
-        </details>
-      
-        <div class="pt-3 border-t border-slate-200 flex justify-between text-sm">
-          <p class="font-medium text-slate-500">
-            <strong>Início:</strong>
-            <span class="font-semibold text-slate-700">${dataInicio}</span>
-          </p>
-          <p class="font-medium text-slate-500">
-            <strong>Fim:</strong>
-            <span class="font-semibold text-slate-700">${dataFim}</span>
-          </p>
+        </div>
+                
+        <div class="flex-grow">
+          <!-- O "pr-8" (padding-right) evita que o título fique embaixo do menu -->
+          <h2 class="pr-8 text-xl font-bold text-sky-700 tracking-wide">${plano.Nome}</h2>
+
+          <div class="mt-3 space-y-1 text-sm text-slate-600">
+            <p><strong class="font-semibold text-slate-700">Processo SEI:</strong> ${plano["Processo SEI"]}</p>
+            <p><strong class="font-semibold text-slate-700">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
+          </div>
+        </div>
+        
+        <div class="mt-4">
+          <details class="text-sm group mb-3">
+            <summary class="font-semibold !text-slate-500 cursor-pointer list-none flex items-center gap-2
+                            hover:!text-slate-700 group-open:!text-sky-700">
+              Mais detalhes
+              <span class="inline-block text-lg font-bold !text-slate-400 transition-transform duration-300 group-open:rotate-90">›</span>
+            </summary>
+            <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-1">
+              <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
+            </div>
+          </details>
+        
+          <div class="pt-3 border-t border-slate-200 flex justify-between text-sm">
+            <p class="font-medium text-slate-500"><strong>Início:</strong> <span class="font-semibold text-slate-700">${dataInicio}</span></p>
+            <p class="font-medium text-slate-500"><strong>Fim:</strong> <span class="font-semibold text-slate-700">${dataFim}</span></p>
+          </div>
         </div>
       </div>
-    </div>
-  `;
+    `;
   }).join('');
+
+  // Depois que os cards são criados, ativamos a interatividade dos menus
+  setupCardMenus();
+  setupEditButtons();
+}
+
+function setupCardMenus() {
+  const allMenuButtons = document.querySelectorAll('.card-menu-button');
+
+  allMenuButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+      // Impede que o clique no botão feche o menu imediatamente (veja o listener do window)
+      event.stopPropagation();
+      
+      const dropdown = button.nextElementSibling;
+      const isHidden = dropdown.classList.contains('hidden');
+
+      // Primeiro, fecha todos os outros menus abertos
+      document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
+
+      // Se o menu clicado estava escondido, mostra ele
+      if (isHidden) {
+        dropdown.classList.remove('hidden');
+      }
+    });
+  });
+
+  // Listener global para fechar os menus se o usuário clicar fora deles
+  window.addEventListener('click', () => {
+    document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
+  });
+}
+
+// =================================================================
+// LÓGICA DO MODAL DE EDIÇÃO
+// =================================================================
+
+let hasChanges = false;
+let originalPlanoData = null;
+// Supondo que você tenha a variável 'jsonPlanos' disponível globalmente no seu script.
+
+// Função de salvar que você forneceu, levemente adaptada para usar o nome correto do arquivo.
+const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
+
+async function salvarArquivoNoOneDrive(conteudo) {
+    const nome = 'planos.txt'; // O nome correto do arquivo
+    const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
+    try {
+        const response = await fetch(powerAutomateUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosParaEnviar)
+        });
+        if (!response.ok) throw new Error(`Erro na requisição HTTP: ${response.status}`);
+        const resultado = await response.json();
+        sessionStorage.clear();
+        window.location.reload();
+        return resultado;
+    } catch (error) {
+        console.error("Falha ao enviar os dados para o Power Automate:", error);
+        alert('Erro ao salvar os dados.');
+        return null;
+    }
+}
+
+
+/**
+ * Adiciona listeners de clique a todos os botões "Editar" dos cards.
+ */
+function setupEditButtons() {
+    document.querySelectorAll('.edit-plano-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const planoNome = button.dataset.planoNome;
+            openEditModal(planoNome);
+        });
+    });
+}
+
+/**
+ * Abre o modal e preenche com os dados do plano de ação selecionado.
+ * @param {string} planoNome - O nome do plano a ser editado.
+ */
+function openEditModal(planoNome) {
+    const plano = jsonPlanos.find(p => p.Nome === planoNome);
+    if (!plano) {
+        console.error("Plano não encontrado:", planoNome);
+        return;
+    }
+
+    originalPlanoData = { ...plano }; // Salva uma cópia dos dados originais
+
+    // Preenche o formulário
+    document.getElementById('edit-Nome').value = plano.Nome || '';
+    document.getElementById('edit-Processo-SEI').value = plano['Processo SEI'] || '';
+    document.getElementById('edit-Documento-TCE').value = plano['Documento TCE'] || '';
+    document.getElementById('edit-Resolução').value = plano.Resolução || '';
+    document.getElementById('edit-Coordenador').value = plano.Coordenador || '';
+    document.getElementById('edit-Unidades').value = plano.Unidades || '';
+    document.getElementById('edit-Equipe').value = plano.Equipe || '';
+    document.getElementById('edit-Data-inicio').value = plano['Data início'] || '';
+    document.getElementById('edit-Data-fim').value = plano['Data fim'] || '';
+
+    // Mostra o modal
+    document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+/**
+ * Fecha o modal de edição, verificando se há alterações não salvas.
+ * @param {boolean} force - Se true, fecha o modal sem verificar.
+ */
+function closeEditModal(force = false) {
+    if (hasChanges && !force) {
+        document.getElementById('confirmation-modal').classList.remove('hidden');
+    } else {
+        document.getElementById('edit-modal').classList.add('hidden');
+        document.getElementById('confirmation-modal').classList.add('hidden');
+        // Reseta o estado
+        hasChanges = false;
+        originalPlanoData = null;
+    }
+}
+
+/**
+ * Coleta os dados do formulário, atualiza o array principal e chama a função de salvar.
+ */
+function handleSave() {
+    const form = document.getElementById('modal-form');
+    const updatedPlano = { ...originalPlanoData }; // Começa com os dados originais
+
+    // Atualiza o objeto com os novos valores do formulário
+    new FormData(form).forEach((value, key) => {
+        updatedPlano[key] = value;
+    });
+
+    // Encontra o índice do plano original no array principal
+    const planIndex = jsonPlanos.findIndex(p => p.Nome === originalPlanoData.Nome);
+
+    if (planIndex === -1) {
+        alert("Erro: não foi possível encontrar o plano original para atualizar.");
+        return;
+    }
+
+    // Cria uma cópia do array e atualiza o objeto no índice correto
+    const updatedJsonPlanos = [...jsonPlanos];
+    updatedJsonPlanos[planIndex] = updatedPlano;
+    
+    // Converte o array inteiro atualizado para uma string JSON
+    const conteudoParaSalvar = JSON.stringify(updatedJsonPlanos, null, 2);
+
+    // Desabilita botão para evitar cliques duplos
+    const saveButton = document.getElementById('modal-btn-save');
+    saveButton.disabled = true;
+    saveButton.textContent = 'Salvando...';
+
+    // Chama a função para salvar no OneDrive
+    salvarArquivoNoOneDrive(conteudoParaSalvar).finally(() => {
+        // Reabilita o botão, mesmo se der erro
+        saveButton.disabled = false;
+        saveButton.textContent = 'Salvar Alterações';
+    });
+}
+
+/**
+ * Configura todos os controles dos modais (botões, inputs).
+ */
+function setupModalControls() {
+    const modalForm = document.getElementById('modal-form');
+    
+    // Detecta qualquer alteração nos campos do formulário
+    modalForm.addEventListener('input', () => {
+        hasChanges = true;
+    });
+
+    // Botões do modal de edição
+    document.getElementById('modal-btn-close').addEventListener('click', () => closeEditModal());
+    document.getElementById('modal-btn-cancel').addEventListener('click', () => closeEditModal());
+    document.getElementById('modal-btn-save').addEventListener('click', handleSave);
+
+    // Botões do modal de confirmação
+    document.getElementById('confirm-btn-no').addEventListener('click', () => {
+        document.getElementById('confirmation-modal').classList.add('hidden');
+    });
+    document.getElementById('confirm-btn-yes').addEventListener('click', () => closeEditModal(true));
 }
 
 //================================================================================

@@ -144,6 +144,92 @@
                 </button>
             </div>
         </section>
+
+        <section id="modal">
+            <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                    <!-- Cabeçalho do Modal -->
+                    <div class="flex items-center justify-between p-4 border-b border-slate-200">
+                        <h3 class="text-xl font-bold text-slate-800">Editar Plano de Ação</h3>
+                        <button id="modal-btn-close" type="button" class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1.5 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+
+                    <!-- Corpo do Modal (com scroll) -->
+                    <div class="p-6 overflow-y-auto">
+                        <form id="modal-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                            <!-- Inputs serão preenchidos pelo JavaScript -->
+                            <!-- A tag "span" é usada para o label, e o "div" para agrupar -->
+                            <div>
+                                <label for="edit-Nome" class="text-sm font-semibold text-slate-700">Nome</label>
+                                <input type="text" id="edit-Nome" name="Nome" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div>
+                                <label for="edit-Processo-SEI" class="text-sm font-semibold text-slate-700">Processo SEI</label>
+                                <input type="text" id="edit-Processo-SEI" name="Processo SEI" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div>
+                                <label for="edit-Documento-TCE" class="text-sm font-semibold text-slate-700">Documento TCE</label>
+                                <input type="text" id="edit-Documento-TCE" name="Documento TCE" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div>
+                                <label for="edit-Resolução" class="text-sm font-semibold text-slate-700">Resolução</label>
+                                <input type="text" id="edit-Resolução" name="Resolução" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="edit-Coordenador" class="text-sm font-semibold text-slate-700">Coordenador</label>
+                                <input type="text" id="edit-Coordenador" name="Coordenador" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="edit-Unidades" class="text-sm font-semibold text-slate-700">Unidades</label>
+                                <textarea id="edit-Unidades" name="Unidades" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="edit-Equipe" class="text-sm font-semibold text-slate-700">Equipe</label>
+                                <textarea id="edit-Equipe" name="Equipe" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                            </div>
+                            <div>
+                                <label for="edit-Data-inicio" class="text-sm font-semibold text-slate-700">Data de início</label>
+                                <input type="date" id="edit-Data-inicio" name="Data início" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div>
+                                <label for="edit-Data-fim" class="text-sm font-semibold text-slate-700">Data fim</label>
+                                <input type="date" id="edit-Data-fim" name="Data fim" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Rodapé do Modal -->
+                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                        <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400">
+                            Cancelar
+                        </button>
+                        <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de Confirmação para Descartar Alterações -->
+            <div id="confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-slate-800">Descartar Alterações?</h3>
+                        <p class="mt-2 text-sm text-slate-600">Você fez alterações que não foram salvas. Tem certeza de que deseja sair?</p>
+                    </div>
+                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                        <button id="confirm-btn-no" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
+                            Não
+                        </button>
+                        <button id="confirm-btn-yes" type="button" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
+                            Sim, Descartar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div></main>
 
     <footer id="footer"></footer>

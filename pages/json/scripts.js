@@ -6,11 +6,11 @@ if (navEntries.length > 0) {
 }
 
 const columnConfig = {
-    "planos.json": ["ID", "Descricao", "Data de início", "Data fim", "Status"],
+    "planos.json": ["ID", "Descricao", "Data início", "Data fim", "Status"],
     "acoes.json": ["Número da atividade", "Atividade", "Plano de ação", "Status", "Data de início", "Data fim", "Observações", "Responsável", "Unidades envolvidas"]
 };
 
-const statusOptions = ["A iniciar", "Não iniciado", "Pendente", "Em curso", "Concluído", "Finalizado", "Implementado"];
+const statusOptions = ["Em desenvolvimento", "Planejado", "Pendente", "Em curso", "Concluído", "Finalizado", "Implementado"];
 
 //================================================================================
 // busca os dados e inicia os scripts
@@ -61,6 +61,39 @@ let jsonPlanos
 document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(true)
 
+    const params = new URLSearchParams(window.location.search);
+    const nomeArquivoJson = params.get('arquivo');
+    const arquivoSelectEl = document.getElementById('arquivo-select');
+
+    const tabelaContainerEl = document.getElementById('tabela-container');
+    const btnSalvar = document.getElementById('btn-salvar');
+
+    Object.keys(columnConfig).forEach(key => {
+        const option = document.createElement('option');
+        const fileNameWithoutExtension = key.replace('.json', '');
+        
+        option.value = fileNameWithoutExtension;
+        option.textContent = key;
+        arquivoSelectEl.appendChild(option);
+    });
+
+    // Define o valor inicial do select com base no parâmetro da URL
+    !nomeArquivoJson ? '' : arquivoSelectEl.value = nomeArquivoJson;
+
+    // Adiciona o evento que recarrega a página com o novo parâmetro
+    arquivoSelectEl.addEventListener('change', () => {
+        const novoArquivo = arquivoSelectEl.value;
+        window.location.href = `${window.location.pathname}?arquivo=${novoArquivo}`;
+    });
+
+    if (!nomeArquivoJson) {
+        tabelaContainerEl.innerHTML = '<p class="p-8 text-center text-red-500">Selecione um arquivo para exibir os dados.</p>';
+        arquivoSelectEl.style.border = 'red 3px solid';
+        btnSalvar.disabled = true;
+        toggleLoading(false)
+        return;
+    }
+
     jsonAcoes = sessionStorage.getItem("jsonAcoes");
     jsonPlanos = sessionStorage.getItem("jsonPlanos");
 
@@ -76,21 +109,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       jsonPlanos = JSON.parse(jsonPlanos);
       console.log('dados resgatados do sessionstorage')
     }
-
-    const params = new URLSearchParams(window.location.search);
-    const nomeArquivoJson = params.get('arquivo');
-    const nomeArquivoEl = document.getElementById('nome-arquivo');
-    const tabelaContainerEl = document.getElementById('tabela-container');
-    const btnSalvar = document.getElementById('btn-salvar');
-
-    if (!nomeArquivoJson) {
-        nomeArquivoEl.textContent = 'Nenhum arquivo especificado.';
-        tabelaContainerEl.innerHTML = '<p class="p-8 text-center text-red-500">Adicione `?arquivo=nome_do_arquivo.json` à URL.</p>';
-        btnSalvar.disabled = true;
-        return;
-    }
-
-    nomeArquivoEl.textContent = nomeArquivoJson + '.json';
     
     carregarEExibirJson(nomeArquivoJson);
 
@@ -168,6 +186,7 @@ function criarTabelaEditavel(dados, columnOrder) {
             let cellContent = '';
 
             switch (header.toLowerCase()) {
+                case 'data início':
                 case 'data de início':
                 case 'data fim':
                     cellContent = `<input type="date" data-key="${header}" value="${valor}" class="w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">`;
@@ -217,7 +236,8 @@ function initColumnResizing() {
     
     let th; // A coluna (header) sendo redimensionada
     let startX; // Posição inicial do mouse no eixo X
-    let startWidth; // Largura inicial da coluna
+    let startWidthColumn; // Largura inicial da coluna
+    let startWidthTable = table.offsetWidth; // Largura inicial da coluna
 
     resizers.forEach(resizer => {
         // Evento que dispara quando o usuário clica na alça
@@ -227,7 +247,7 @@ function initColumnResizing() {
 
             th = e.target.parentElement;
             startX = e.pageX;
-            startWidth = th.offsetWidth;
+            startWidthColumn = th.offsetWidth;
             
             // Adiciona listeners globais para movimento e soltura do mouse
             document.documentElement.addEventListener('mousemove', onMouseMove);
@@ -237,11 +257,9 @@ function initColumnResizing() {
 
     // Função chamada continuamente enquanto o mouse é movido
     function onMouseMove(e) {
-        const newWidth = startWidth + (e.pageX - startX);
-        // Garante que a coluna tenha uma largura mínima para não desaparecer
-        if (newWidth > 200) { 
-            th.style.width = `${newWidth}px`;
-            console.log(newWidth)
+        if (startWidthColumn+ (e.pageX - startX) > 200) { 
+            table.style.width = `${startWidthTable+ (e.pageX - startX)}px`;
+            th.style.width = `${startWidthColumn+ (e.pageX - startX)}px`;
         }
     }
 

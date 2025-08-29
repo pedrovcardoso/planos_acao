@@ -163,8 +163,39 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         });
     });
+    setPlanoFilterFromUrl()
     toggleLoading(false)
 });
+
+function setPlanoFilterFromUrl() {
+    // 1. Pega os parâmetros da URL atual
+    const params = new URLSearchParams(window.location.search);
+    
+    // 2. Procura por um parâmetro chamado 'plano'
+    const planoNome = params.get('plano');
+
+    // 3. Se não houver parâmetro 'plano', a função para aqui
+    if (!planoNome) {
+        return;
+    }
+
+    // 4. Encontra o elemento <select> na página
+    const selectElement = document.getElementById('filter-planoAcao');
+
+    // 5. Se o elemento <select> existir...
+    if (selectElement) {
+        const decodedPlanoNome = decodeURIComponent(planoNome);
+        
+        selectElement.value = normalizeString(decodedPlanoNome);
+
+        // (Opcional) Dispara um evento de 'change' para que qualquer
+        // filtro que dependa do select seja acionado imediatamente.
+        selectElement.dispatchEvent(new Event('change'));
+        
+    } else {
+        console.warn("Elemento <select> com id 'filter-planoAcao' não foi encontrado na página.");
+    }
+}
 
 function filterJson(json, chave, valor) {
     return json.filter(item => {

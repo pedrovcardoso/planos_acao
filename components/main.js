@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error('Falha ao carregar componente:', error));
     };
 
-    loadComponent('/components/header.html', 'header')
+    loadComponent('../../components/header.html', 'header')
 
-    loadComponent('/components/footer.html', 'footer');
+    loadComponent('../../components/footer.html', 'footer');
     setupHeader()
 });
 
