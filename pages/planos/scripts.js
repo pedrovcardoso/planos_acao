@@ -647,15 +647,26 @@ function openEditModal(planoNome) {
     originalPlanoData = { ...plano }; // Salva uma cópia dos dados originais
 
     // Preenche o formulário
-    document.getElementById('edit-Nome').value = plano.Nome || '';
-    document.getElementById('edit-Processo-SEI').value = plano['Processo SEI'] || '';
-    document.getElementById('edit-Documento-TCE').value = plano['Documento TCE'] || '';
-    document.getElementById('edit-Resolução').value = plano.Resolução || '';
-    document.getElementById('edit-Coordenador').value = plano.Coordenador || '';
-    document.getElementById('edit-Unidades').value = plano.Unidades || '';
-    document.getElementById('edit-Equipe').value = plano.Equipe || '';
-    document.getElementById('edit-Data-inicio').value = plano['Data início'] || '';
-    document.getElementById('edit-Data-fim').value = plano['Data fim'] || '';
+    const formFields = {
+      'edit-Nome': 'Nome',
+      'edit-Processo-SEI': 'Processo SEI',
+      'edit-Documento-TCE': 'Documento TCE',
+      'edit-Resolução': 'Resolução',
+      'edit-Coordenador': 'Coordenador',
+      'edit-Unidades': 'Unidades',
+      'edit-Equipe': 'Equipe',
+      'edit-Data-inicio': 'Data início',
+      'edit-Data-fim': 'Data fim',
+      'edit-SEI-relacionados': 'SEI relacionados',
+      'edit-Documentos-relacionados': 'Documentos relacionados',
+      'edit-Observacoes': 'Observações'
+    }
+
+    // Preenche os campos automaticamente
+    Object.entries(formFields).forEach(([id, key]) => {
+      const el = document.getElementById(id)
+      if (el) el.value = plano[key] || ''
+    })
 
     // Mostra o modal
     document.getElementById('edit-modal').classList.remove('hidden');

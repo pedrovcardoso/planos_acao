@@ -9,7 +9,10 @@
         "Coordenador": "-",
         "Unidades": "-",
         "Equipe": "-",
-        "Status": "Em curso"
+        "Status": "Em curso",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Precatórios",
@@ -21,7 +24,10 @@
         "Coordenador": "-",
         "Unidades": "SEF, SCAF, SCCG, Gabinete SEF, AGE, PDAT, PTPT",
         "Equipe": "-",
-        "Status": "Em curso"
+        "Status": "Em curso",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Renúncia de Receita",
@@ -33,7 +39,10 @@
         "Coordenador": "Antônio Amorim Filho",
         "Unidades": "SAIF, SUTRI, SCCG",
         "Equipe": "-",
-        "Status": "Em curso"
+        "Status": "Em curso",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "MDE E ASPS (Restos a pagar)",
@@ -45,7 +54,10 @@
         "Coordenador": "-",
         "Unidades": "TCE, SEF, STE, SCAF, SCCG, DCICF, SPLOR, SCPO, DCAF",
         "Equipe": "-",
-        "Status": "Em curso"
+        "Status": "Em curso",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Pessoal (Férias Prêmio)",
@@ -57,7 +69,10 @@
         "Coordenador": "-",
         "Unidades": "SEF, AC, STE, SPGF, STI, SEPLAG, SUGESP, SUBLOG, SUBDIGITAL",
         "Equipe": "-",
-        "Status": "Em desenvolvimento"
+        "Status": "Em desenvolvimento",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Ativo Intangível",
@@ -69,7 +84,10 @@
         "Coordenador": "-",
         "Unidades": "SEF, AC, STE, SPGF, STI, SEPLAG, SUGESP, SUBLOG, SUBDIGITAL",
         "Equipe": "-",
-        "Status": "Em curso"
+        "Status": "Em curso",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Ativo Imobilizado",
@@ -81,7 +99,10 @@
         "Coordenador": "-",
         "Unidades": "SEF, AC, STE, SPGF, STI, SEPLAG, SUGESP, SUBLOG, SUBDIGITAL",
         "Equipe": "-",
-        "Status": "Em curso"
+        "Status": "Em curso",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Contabilização",
@@ -93,7 +114,10 @@
         "Coordenador": "-",
         "Unidades": "SEF, AC, STE, SPGF, STI, SEPLAG, SUGESP, SUBLOG, SUBDIGITAL",
         "Equipe": "-",
-        "Status": "Em desenvolvimento"
+        "Status": "Em desenvolvimento",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Saldo Dívida Ativa 2023 - TCE",
@@ -105,7 +129,10 @@
         "Coordenador": "-",
         "Unidades": "-",
         "Equipe": "-",
-        "Status": "Em desenvolvimento"
+        "Status": "Em desenvolvimento",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     },
     {
         "Nome": "Receita por competência",
@@ -117,6 +144,9 @@
         "Coordenador": "Danielle Braga Valaci Ferrari",
         "Unidades": "SCCG, SAIF, SUCRED",
         "Equipe": "Danielle Braga Valaci Ferrari, Raquel Rezende Castro Alves Barbosa, Adriane Aparecida de Paula, Ricardo Alves de Sousa, Rodrigo Santos Faria",
-        "Status": "Em desenvolvimento"
+        "Status": "Em desenvolvimento",
+        "SEI relacionados": "",
+        "Documentos relacionados": "",
+        "Observações": ""
     }
 ]
