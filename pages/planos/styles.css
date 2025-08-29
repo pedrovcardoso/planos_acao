@@ -34,57 +34,8 @@
 }
 
 /* ===============================================================================
-// gráfico de gantt
-================================================================================== */
-.gantt-container {
-    display: grid;
-    grid-template-columns: auto 1fr; 
-    overflow: hidden;
-}
-
-.resizer {
-    position: absolute;
-    top: 0;
-    right: -3px;
-    width: 6px;
-    height: 100%;
-    cursor: col-resize;
-    z-index: 20;
-}
-
-.gantt-bar {
-    position: absolute;
-    height: 25px;
-    background-color: #3498db;
-    border-radius: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-#todayBar{
-    height: 100%;
-    width: 1px;
-    border-left: 2px dashed lightcoral;
-    position: absolute;
-    z-index: 1;
-}
-
-/* ===============================================================================
 // lado esquerdo do gráfico de gantt (lista de planos de ação)
 ================================================================================== */
-.gantt-tasks {
-    background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
-    position: sticky;
-    left: 0;
-    z-index: 10;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    overflow: hidden;
-}
-
 .gantt-tasks-header {
     display: grid;
     grid-template-columns: var(--col-plano-width)var(--col-status-width);
@@ -176,51 +127,10 @@
     width: var(--month-width);
 }
 
-.gantt-rows {
-    position: relative;
-}
-
 .gantt-row-timeline {
     border-bottom: 1px solid #e0e0e0;
     position: relative;
     transition: background-color 0.2s;
     height: 40px;
     box-sizing: border-box;
-}
-
-/* ===============================================================================
-// heatmap e linha de totais (opcional)
-================================================================================== */
-.gantt-heatmap {
-    z-index: 0;
-}
-.gantt-row-timeline, .gantt-bar {
-    position: relative;
-    z-index: 1;
-}
-.gantt-total-row {
-    display: flex;
-    position: absolute;
-    left: 0;
-    top: 100%;
-    height: 30px;
-    background: #f8f8f8;
-    border-top: 1px solid #ccc;
-    z-index: 2;
-    font-size: 16px;
-    align-items: center;
-}
-
-.gantt-total-cell {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: gray;
-}
-
-.gantt-row-task.hovered, .gantt-row-timeline.hovered {
-    background-color: #f0f8ff;
-    z-index: 0;
 }

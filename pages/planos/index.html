@@ -18,7 +18,7 @@
 <!--===============================================================================
 // stat cards, destaques principais
 ===================================================================================-->
-    <main class="flex-grow pt-20 md:pt-24"><div class="grid p-6 md:py-5 md:px-8 gap-6">
+    <main class="flex-grow pt-16"><div class="grid p-6 md:py-5 md:px-8 gap-6">
         <section id="stat-cards" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
             <div class="flex items-center gap-4">
@@ -73,17 +73,17 @@
 // gráfico de gantt
 ===================================================================================-->
         <section id="gantt">
-            <div class="gantt-container bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
+            <div class="grid grid-cols-[auto_1fr] overflow-hidden bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
                 <div class="gantt-tasks">
                     <div class="gantt-tasks-header">
-                        <div data-col="plano">Plano de ação<div class="resizer"></div></div>
-                        <div data-col="status" class="status-header">Status<div class="resizer"></div></div>
+                        <div data-col="plano">Plano de ação<div class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20"></div></div>
+                        <div data-col="status" class="status-header">Status<div class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20"></div></div>
                     </div>
                     <div id="gantt-task-list"></div>
                 </div>
                 <div class="gantt-timeline" id="gantt-timeline-container">
                     <div class="gantt-months-header" id="gantt-months-header"></div>
-                    <div class="gantt-rows" id="gantt-rows">
+                    <div class="relative" id="gantt-rows">
                         <div id="todayBar"></div>
                     </div>
                 </div>

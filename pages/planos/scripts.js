@@ -158,9 +158,9 @@ function fillGanttData(jsonPlanos) {
     const monthsHeader = document.getElementById('gantt-months-header');
     const ganttRowsContainer = document.getElementById('gantt-rows');
 
+    ganttRowsContainer.innerHTML = ""
     taskListContainer.innerHTML = "";
     monthsHeader.innerHTML = "";
-    ganttRowsContainer.innerHTML = "<div id='todayBar'></div>";
     ganttTimelineContainer.scrollLeft = 0;
 
 //================================================================================
@@ -213,6 +213,11 @@ function fillGanttData(jsonPlanos) {
     }
 
     const positionToday = calculatePosition(new Date().toLocaleDateString().split("/").reverse().join("-"));
+    const todayBar = document.createElement('div');
+    todayBar.id = 'todayBar';
+    todayBar.className = 'absolute h-full border-l-2 border-dashed border-[lightcoral] z-[1]';
+    ganttRowsContainer.appendChild(todayBar);
+    todayBar.style.left = `${positionToday}px`;
     document.getElementById("todayBar").style.left = `${positionToday}px`;
     ganttTimelineContainer.scrollLeft = positionToday - 100;
 
@@ -241,7 +246,7 @@ function fillGanttData(jsonPlanos) {
             const durationWidth = endOffset - startOffset;
 
             const bar = document.createElement('div');
-            bar.className = 'gantt-bar';
+            bar.className = `absolute h-[20px] bg-[#3498db] rounded-[10px] top-1/2 -translate-y-1/2 z-[1] shadow-md`;
             bar.style.left = `${startOffset}px`;
             bar.style.width = `${durationWidth}px`;
             bar.title = `${task.Nome}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
@@ -252,18 +257,6 @@ function fillGanttData(jsonPlanos) {
         }
 
         ganttRowsContainer.appendChild(rowTimeline);
-
-        // Efeito hover sincronizado entre as duas colunas (desativado por enquanto por atrapalhar o heatmap)
-        // document.querySelectorAll('.gantt-row-task, .gantt-row-timeline').forEach(row => {
-        //     row.addEventListener('mouseenter', () => {
-        //         const rowIndex = row.dataset.rowIndex;
-        //         document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.add('hovered'));
-        //     });
-        //     row.addEventListener('mouseleave', () => {
-        //         const rowIndex = row.dataset.rowIndex;
-        //         document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.remove('hovered'));
-        //     });
-        // });
     });
 
 //================================================================================
@@ -427,7 +420,7 @@ function toggleHeatMap(){
 // linha de totais
 //================================================================================
   const totalRow = document.createElement('div');
-  totalRow.className = 'gantt-total-row';
+  totalRow.className = 'flex absolute left-0 top-full h-[30px] bg-[#f8f8f8] border-t border-gray-300 z-[2] text-base items-center';
   totalRow.style.display = 'flex';
   totalRow.style.width = `${timelineWidth}px`;
 
@@ -438,7 +431,7 @@ function toggleHeatMap(){
       const count = heatMap[key] || 0;
 
       const cell = document.createElement('div');
-      cell.className = 'gantt-total-cell';
+      cell.className = 'h-full flex items-center justify-center font-bold text-gray-500';
       cell.style.width = `${monthWidth}px`;
       cell.style.textAlign = 'center';
       cell.textContent = count;
