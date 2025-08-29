@@ -548,7 +548,7 @@ function fillGanttData(jsonPlanos) {
     taskListContainer.innerHTML += `
     <div class="gantt-row-task">
       <div style="grid-column: 1 / 3; color: gray;">
-        <span style="font-weight: bold;">Total de entregas:</span>
+        <span style="font-weight: bold;">Total de ações:</span>
         <select id="select-heatmap">
           <option selected value="encerrando">encerrando no mês</option>
           <option value="acontecendo">acontecendo no mês</option>
