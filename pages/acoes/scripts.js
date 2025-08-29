@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     });
     setPlanoFilterFromUrl()
+    setupModalControls();
     toggleLoading(false)
 });
 
@@ -279,60 +280,8 @@ function filtrarPeriodo() {
     fillGanttData(filtered);
 };
 
-function fillModal(task) {
-    const dataInicioFormatada = task['Data de início'] 
-        ? new Date(task['Data de início']+'T10:00:00').toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
-        : '-';
-    
-    const dataFimFormatada = task['Data fim'] 
-        ? new Date(task['Data fim']+'T10:00:00').toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
-        : '-';
-    
-    // --- 2. CONSTRUÇÃO DO HTML ---
-    document.getElementById('data_inicio').innerText = dataInicioFormatada
-    document.getElementById('data_fim').innerText = dataFimFormatada
-
-    const statusElement = document.getElementById('status');
-    statusElement.innerText = task.Status;
-    statusElement.className = '';
-    statusElement.classList.add('status-'+task.Status.replace(/\s+/g, '-'));
-
-    const camposExcluidos = ["Data de início", "Data fim", "Status", "Número da atividade"];
-
-    Object.keys(task).forEach(key => {
-        if (!camposExcluidos.includes(key)) {
-            console.log(key)
-            let value = task[key] === '' ? '-' : task[key];
-            document.getElementById(key.toLowerCase().replace(/\s+/g, '_')).innerText = value
-        }
-    });
-    
-    const modal = document.getElementById('modal');
-    const backdrop = document.getElementById('modal-backdrop');
-
-    backdrop.classList.remove('opacity-0', 'pointer-events-none');
-    modal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-
-    const titleElement = document.getElementById('modal-activity-title');
-    titleElement.classList.add('line-clamp-3');
-    titleElement.addEventListener('click', () => {
-        titleElement.classList.toggle('line-clamp-3');
-    });
-
-    document.getElementById('modal-close-btn').onclick = closeModal;
-    backdrop.onclick = closeModal;
-}
-
-function closeModal() {
-    const modal = document.getElementById('modal');
-    const backdrop = document.getElementById('modal-backdrop');
-    
-        backdrop.classList.add('opacity-0', 'pointer-events-none');
-    modal.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-}
-
 function fillGanttData(jsonAcoes){
-    const monthWidth = 150; 
+    const monthWidth = 80; 
     const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     
     const taskListContainer = document.getElementById('gantt-task-list');
@@ -399,13 +348,13 @@ function fillGanttData(jsonAcoes){
         const durationWidth = endOffset - startOffset;
 
         const bar = document.createElement('div');
-        bar.className = 'gantt-bar';
+        bar.className = 'absolute h-[25px] bg-[#3498db] rounded-[10px] top-1/2 -translate-y-1/2 z-[1] shadow-md';
         bar.style.left = `${startOffset}px`;
         bar.style.width = `${durationWidth}px`;
         bar.title = `${task.Atividade}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
         const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
         bar.classList.add(task.colorTag);
-        bar.addEventListener('click', ()=>{fillModal(task)})
+        bar.addEventListener('click', ()=>{openTaskModal(task)})
 
         const taskRow = document.createElement('div');
         taskRow.className = 'gantt-row-task';
@@ -415,6 +364,9 @@ function fillGanttData(jsonAcoes){
                                 <div>${task.Atividade}</div><div class="status-container">
                                 <div class="${statusClass}">${task.Status}</div></div>`;
         taskListContainer.appendChild(taskRow);
+        taskRow.addEventListener('click', () => {
+            openTaskModal(task);
+        });
 
         rowTimeline.appendChild(bar);
         ganttRowsContainer.appendChild(rowTimeline);
@@ -432,15 +384,239 @@ function fillGanttData(jsonAcoes){
     });
 }
 
-//================================================================================
-// hamburguer header
-//================================================================================
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
 
-mobileMenuButton.addEventListener('click', () => {
-  mobileMenu.classList.toggle('hidden');
+// =================================================================
+// LÓGICA REESTRUTURADA E FINAL DO MODAL DE AÇÕES
+// =================================================================
 
-  const icons = mobileMenuButton.querySelectorAll('svg');
-  icons.forEach(icon => icon.classList.toggle('hidden'));
-});
+let currentTask = null;
+let hasChanges = false;
+// Supondo que 'jsonAcoes' e 'jsonPlanos' estejam disponíveis
+// e que você tenha uma função 'salvarAcoesNoOneDrive'
+
+/**
+ * Função principal para abrir o modal.
+ * @param {object} task - O objeto da tarefa clicada.
+ */
+function openTaskModal(task) {
+    currentTask = task;
+    populateViewMode(task);
+    switchToViewMode(true);
+    document.getElementById('task-modal-container').classList.remove('hidden');
+    // 4. Bloqueia o scroll do body
+    document.body.classList.add('overflow-hidden');
+}
+
+/**
+ * Preenche todos os campos do modo de visualização.
+ */
+function populateViewMode(task) {
+    const setElementText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text || '-';
+    };
+    const formatDate = (dateString) => {
+        return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+    };
+
+    setElementText('modal-view-plano', task['Plano de ação']);
+    setElementText('modal-view-atividade', task['Atividade']);
+    setElementText('modal-view-data-inicio', formatDate(task['Data de início']));
+    setElementText('modal-view-data-fim', formatDate(task['Data fim']));
+    setElementText('modal-view-responsavel', task['Responsável']);
+    setElementText('modal-view-unidades', task['Unidades envolvidas']);
+    setElementText('modal-view-observacoes', task['Observações']);
+
+    const statusEl = document.getElementById('modal-view-status');
+    if (statusEl) {
+        statusEl.innerText = task.Status;
+        statusEl.className = 'status-' + (task.Status || '').replace(/\s+/g, '-');
+    }
+    
+    // 1. Lógica do line-clamp no título da atividade
+    const atividadeTitle = document.getElementById('modal-view-atividade');
+    atividadeTitle.classList.add('line-clamp-3', 'cursor-pointer');
+    // Remove listeners antigos para evitar duplicação
+    const newTitle = atividadeTitle.cloneNode(true);
+    atividadeTitle.parentNode.replaceChild(newTitle, atividadeTitle);
+    newTitle.addEventListener('click', () => {
+        newTitle.classList.toggle('line-clamp-3');
+    });
+}
+
+/**
+ * Preenche o formulário do modo de edição.
+ */
+function populateEditMode(task) {
+    const form = document.getElementById('modal-edit-form');
+    Object.keys(task).forEach(key => {
+        const input = form.querySelector(`[name="${key}"]`);
+        if (input) input.value = task[key];
+    });
+
+    const planoSelect = document.getElementById('edit-plano');
+    if (planoSelect) {
+        planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
+        planoSelect.value = task['Plano de ação'];
+    }
+}
+
+/**
+ * Alterna para o modo de edição.
+ */
+function switchToEditMode() {
+    // 3. Altera o cabeçalho para "Editar Ação"
+    document.getElementById('modal-view-plano').classList.add('hidden');
+    document.getElementById('modal-view-atividade').innerText = 'Editar Ação';
+
+    populateEditMode(currentTask);
+    
+    document.getElementById('view-mode-content').classList.add('hidden');
+    document.getElementById('view-mode-buttons').classList.add('hidden');
+    
+    document.getElementById('edit-mode-content').classList.remove('hidden');
+    document.getElementById('edit-mode-buttons').classList.remove('hidden');
+
+    hasChanges = false;
+}
+
+/**
+ * Alterna de volta para o modo de visualização.
+ * @param {boolean} force - Se true, ignora a verificação de alterações.
+ */
+function switchToViewMode(force = false) {
+    // 2. Verifica se há alterações antes de voltar
+    if (hasChanges && !force) {
+        document.getElementById('confirmation-modal').classList.remove('hidden');
+        return; // Para a execução e espera a decisão do usuário
+    }
+
+    // Repopula o cabeçalho original
+    document.getElementById('modal-view-plano').classList.remove('hidden');
+    populateViewMode(currentTask); // Repopula tudo para garantir consistência
+
+    document.getElementById('edit-mode-content').classList.add('hidden');
+    document.getElementById('edit-mode-buttons').classList.add('hidden');
+
+    document.getElementById('view-mode-content').classList.remove('hidden');
+    document.getElementById('view-mode-buttons').classList.remove('hidden');
+    
+    // Fecha o modal de confirmação, caso esteja aberto
+    document.getElementById('confirmation-modal').classList.add('hidden');
+    hasChanges = false;
+}
+
+/**
+ * Fecha completamente o modal e restaura o scroll.
+ */
+function closeModal() {
+    // Se estiver em modo de edição, verifica alterações antes de fechar
+    if (!document.getElementById('edit-mode-content').classList.contains('hidden')) {
+        if (hasChanges) {
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+            return;
+        }
+    }
+    
+    document.getElementById('task-modal-container').classList.add('hidden');
+    document.getElementById('confirmation-modal').classList.add('hidden');
+    // 4. Libera o scroll do body
+    document.body.classList.remove('overflow-hidden');
+}
+
+/**
+ * Salva as alterações feitas no formulário.
+ */
+function handleSave() {
+    if (!hasChanges) {
+        switchToViewMode(true);
+        return;
+    }
+
+    // Seleciona todos os botões que precisam ser desabilitados
+    const saveButton = document.getElementById('modal-btn-save');
+    const cancelButton = document.getElementById('modal-btn-cancel');
+    const closeButton = document.getElementById('modal-btn-close');
+
+    const form = document.getElementById('modal-edit-form');
+    const formData = new FormData(form);
+    const updatedTask = { ...currentTask };
+
+    formData.forEach((value, key) => {
+        updatedTask[key] = value;
+    });
+
+    const taskIndex = jsonAcoes.findIndex(t => t['Número da atividade'] === currentTask['Número da atividade']);
+    if (taskIndex > -1) {
+        jsonAcoes[taskIndex] = updatedTask;
+    } else {
+        alert("Erro: Tarefa original não encontrada!");
+        return;
+    }
+
+    const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
+
+    // Desabilita a UI ANTES de iniciar o salvamento
+    saveButton.disabled = true;
+    cancelButton.disabled = true;
+    closeButton.disabled = true;
+    saveButton.textContent = 'Salvando...';
+    
+    // 6. Chama a função de salvamento real
+    salvarArquivoNoOneDrive(conteudoParaSalvar)
+}
+
+/**
+ * Configura todos os listeners de eventos para os controles dos modais.
+ */
+function setupModalControls() {
+    // Botões principais do modal
+    document.getElementById('modal-btn-close').addEventListener('click', closeModal);
+    document.getElementById('modal-btn-view-close').addEventListener('click', () => closeModal()); // 5. Botão fechar
+    document.getElementById('modal-btn-edit').addEventListener('click', switchToEditMode);
+    document.getElementById('modal-btn-cancel').addEventListener('click', () => switchToViewMode());
+    document.getElementById('modal-btn-save').addEventListener('click', handleSave);
+    
+    // Detecta alterações no formulário
+    document.getElementById('modal-edit-form').addEventListener('input', () => {
+        hasChanges = true;
+    });
+
+    // Botões do modal de confirmação
+    document.getElementById('confirm-btn-no').addEventListener('click', () => {
+        document.getElementById('confirmation-modal').classList.add('hidden');
+    });
+    document.getElementById('confirm-btn-yes').addEventListener('click', () => {
+        // Decide se deve fechar o modal ou apenas voltar para o modo de visualização
+        if (!document.getElementById('task-modal-container').classList.contains('hidden')) {
+            switchToViewMode(true); // Força a volta para o modo de visualização
+            if (!document.getElementById('edit-mode-content').classList.contains('hidden')) {
+                 // Se o botão de fechar (X) foi clicado enquanto em modo de edição
+                 closeModal();
+            }
+        }
+    });
+}
+
+const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
+
+async function salvarArquivoNoOneDrive(conteudo) {
+    const nome = 'acoes.txt'; // O nome correto do arquivo
+    const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
+    try {
+        const response = await fetch(powerAutomateUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dadosParaEnviar)
+        });
+        if (!response.ok) throw new Error(`Erro na requisição HTTP: ${response.status}`);
+        const resultado = await response.json();
+        sessionStorage.clear();
+        window.location.reload();
+        return resultado;
+    } catch (error) {
+        console.error("Falha ao enviar os dados para o Power Automate:", error);
+        alert('Erro ao salvar os dados.');
+        return null;
+    }
+}

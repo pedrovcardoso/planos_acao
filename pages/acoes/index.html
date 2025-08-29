@@ -90,7 +90,7 @@
             <div class="gantt-container bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
                 <div class="gantt-tasks">
                     <div class="gantt-tasks-header">
-                        <div data-col="num">Item do Plano de ação<div class="resizer"></div></div>
+                        <div data-col="num">Item do Plano<div class="resizer"></div></div>
                         <div data-col="plano">Plano de ação<div class="resizer"></div></div>
                         <div data-col="atividade">Atividade<div class="resizer"></div></div>
                         <div data-col="status" class="status-header">Status<div class="resizer"></div></div>
@@ -106,55 +106,87 @@
             </div>
         </section>
 
-        <section>
-            <!-- Backdrop (fundo) do Modal -->
-            <div id="modal-backdrop" class="fixed z-40 inset-0 bg-black bg-opacity-60 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out"></div>
-
+        <section id="task-modal-container" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+            
             <!-- Container Principal do Modal -->
-            <div id="modal" class="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 opacity-0 scale-95 pointer-events-none transition-all duration-300 ease-in-out">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                 
-                <!-- Botão de Fechar -->
-                <button id="modal-close-btn" title="Fechar modal" class="absolute top-3 right-3 h-8 w-8 flex items-center justify-center bg-slate-100 text-slate-600 rounded-full font-bold text-lg hover:bg-slate-200 hover:text-slate-800 transition-colors">x</button>
-
-                <!-- Título Composto -->
-                <div class="mb-4">
-                    <span id="plano_de_ação" class="block text-sm font-semibold text-sky-600"></span>
-                    <h2 id="modal-activity-title" class="text-2xl font-bold text-slate-800 line-clamp-3">
-                        <span id="atividade"></span>
-                    </h2>
+                <!-- ==================== CABEÇALHO COMPARTILHADO ==================== -->
+                <div class="flex items-start justify-between p-4 border-b border-slate-200">
+                    <div>
+                        <span id="modal-view-plano" class="block text-sm font-semibold text-sky-600"></span>
+                        <h2 id="modal-view-atividade" class="text-2xl font-bold text-slate-800"></h2>
+                    </div>
+                    <button id="modal-btn-close" type="button" class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
                 </div>
-                
-                <!-- Seção de Datas e Status -->
-                <div class="flex flex-wrap items-center justify-between gap-4 text-sm mb-4 pt-3 border-t border-slate-200">
-                    <div class="flex items-center gap-2">
-                        <p class="font-medium text-slate-500">Status:</p>
-                        <div class="status-container">
-                            <div id="status"></div>
+
+                <!-- ==================== CONTEÚDO DO MODO VISUALIZAÇÃO ==================== -->
+                <div id="view-mode-content" class="p-6 space-y-4 overflow-y-auto">
+                    <!-- Datas e Status -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <p class="font-medium text-slate-500">Status:</p>
+                            <div class="status-container"><div id="modal-view-status"></div></div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <p class="font-medium text-slate-500">Início: <strong id="modal-view-data-inicio" class="font-semibold text-slate-700"></strong></p>
+                            <p class="font-medium text-slate-500">Fim: <strong id="modal-view-data-fim" class="font-semibold text-slate-700"></strong></p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <p class="font-medium text-slate-500">
-                            Início: <strong id="data_inicio" class="font-semibold text-slate-700"></strong>
-                        </p>
-                        <p class="font-medium text-slate-500">
-                            Fim: <strong id="data_fim" class="font-semibold text-slate-700"></strong>
-                        </p>
+                    <!-- Detalhes -->
+                    <div class="space-y-4 pt-4 border-t border-slate-200">
+                        <div><span class="block text-sm font-medium text-slate-500 mb-1">Responsável</span><span id="modal-view-responsavel" class="block text-base text-slate-800"></span></div>
+                        <div><span class="block text-sm font-medium text-slate-500 mb-1">Unidades envolvidas</span><span id="modal-view-unidades" class="block text-base text-slate-800"></span></div>
+                        <div><span class="block text-sm font-medium text-slate-500 mb-1">Observações</span><span id="modal-view-observacoes" class="block text-base text-slate-800 whitespace-pre-wrap"></span></div>
                     </div>
                 </div>
 
-                <!-- Detalhes Adicionais -->
-                <div class="space-y-4 pt-3 border-t border-slate-200">
-                    <div>
-                        <span class="block text-sm font-medium text-slate-500 mb-1">Responsável</span>
-                        <span id="responsável" class="block text-base font-normal text-slate-800"></span>
+                <!-- ==================== CONTEÚDO DO MODO EDIÇÃO (FORMULÁRIO) ==================== -->
+                <div id="edit-mode-content" class="hidden p-6 overflow-y-auto">
+                    <form id="modal-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <!-- Inputs do formulário -->
+                        <div class="md:col-span-2"><label for="edit-atividade" class="text-sm font-semibold text-slate-700">Atividade</label><textarea id="edit-atividade" name="Atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea></div>
+                        <div><label for="edit-status" class="text-sm font-semibold text-slate-700">Status</label><select id="edit-status" name="Status" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"><option>A iniciar</option><option>Não iniciado</option><option>Pendente</option><option>Em curso</option><option>Concluído</option><option>Finalizado</option><option>Implementado</option></select></div>
+                        <div><label for="edit-plano" class="text-sm font-semibold text-slate-700">Plano de Ação</label><select id="edit-plano" name="Plano de ação" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></select></div>
+                        <div><label for="edit-data-inicio" class="text-sm font-semibold text-slate-700">Data de início</label><input type="date" id="edit-data-inicio" name="Data de início" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></div>
+                        <div><label for="edit-data-fim" class="text-sm font-semibold text-slate-700">Data fim</label><input type="date" id="edit-data-fim" name="Data fim" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></div>
+                        <div class="md:col-span-2"><label for="edit-responsavel" class="text-sm font-semibold text-slate-700">Responsável</label><input type="text" id="edit-responsavel" name="Responsável" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></div>
+                        <div class="md:col-span-2"><label for="edit-unidades" class="text-sm font-semibold text-slate-700">Unidades envolvidas</label><textarea id="edit-unidades" name="Unidades envolvidas" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea></div>
+                        <div class="md:col-span-2"><label for="edit-observacoes" class="text-sm font-semibold text-slate-700">Observações</label><textarea id="edit-observacoes" name="Observações" rows="3" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea></div>
+                    </form>
+                </div>
+
+                <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                    <!-- Botões do Modo Visualização -->
+                    <div id="view-mode-buttons" class="flex items-center space-x-3">
+                        <!-- ▼▼▼ BOTÃO FECHAR ADICIONADO ▼▼▼ -->
+                        <button id="modal-btn-view-close" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">Fechar</button>
+                        <button id="modal-btn-edit" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700">Editar</button>
                     </div>
-                    <div>
-                        <span class="block text-sm font-medium text-slate-500 mb-1">Unidades envolvidas</span>
-                        <span id="unidades_envolvidas" class="block text-base font-normal text-slate-800"></span>
+                    <!-- Botões do Modo Edição -->
+                    <div id="edit-mode-buttons" class="hidden">
+                        <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">Cancelar</button>
+                        <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar Alterações</button>
                     </div>
-                    <div>
-                        <span class="block text-sm font-medium text-slate-500 mb-1">Observações</span>
-                        <span id="observações" class="block text-base font-normal text-slate-800"></span>
+                </div>
+
+            </div>
+
+            <div id="confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-slate-800">Descartar Alterações?</h3>
+                        <p class="mt-2 text-sm text-slate-600">Você fez alterações que não foram salvas. Tem certeza de que deseja sair?</p>
+                    </div>
+                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                        <button id="confirm-btn-no" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
+                            Não
+                        </button>
+                        <button id="confirm-btn-yes" type="button" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
+                            Sim, Descartar
+                        </button>
                     </div>
                 </div>
             </div>

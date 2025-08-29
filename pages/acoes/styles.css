@@ -1,5 +1,5 @@
 :root {
-    --col-num-width: 200px;
+    --col-num-width: 130px;
     --col-plano-width: 170px;
     --col-atividade-width: 350px;
     --col-status-width: 120px;
@@ -154,7 +154,7 @@ body {
     padding: 10px 0;
     border-right: 1px solid #e0e0e0;
     box-sizing: border-box;
-    width: 150px;
+    width: 80px;
 }
 
 .gantt-rows {
@@ -167,17 +167,6 @@ body {
     transition: background-color 0.2s;
     height: 40px;
     box-sizing: border-box;
-}
-
-.gantt-bar {
-    position: absolute;
-    height: 25px;
-    background-color: #3498db;
-    border-radius: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .gantt-row-task.hovered, .gantt-row-timeline.hovered {

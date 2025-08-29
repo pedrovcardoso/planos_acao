@@ -703,6 +703,7 @@ function openEditModal(planoNome = null) {
 
     hasChanges = false; // Reseta a flag de alterações
     document.getElementById('edit-modal').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
 }
 
 /**
@@ -719,6 +720,7 @@ function closeEditModal(force = false) {
         hasChanges = false;
         originalPlanoData = null;
     }
+    document.body.classList.remove('overflow-hidden');
 }
 
 /**

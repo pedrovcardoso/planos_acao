@@ -805,51 +805,51 @@
     {
         "Plano de ação": "Ativo Imobilizado",
         "Número da atividade": "1",
-        "Atividade": "Alteração do SIAD referente à política de\ndepreciação",
+        "Atividade": "Alteração do SIAD referente à política de depreciação",
         "Status": "Planejado",
         "Responsável": "",
         "Unidades envolvidas": "Seplag",
         "Data de início": "2025-07-01",
         "Data fim": "2025-12-01",
-        "Observações": "Alteração das regras de sistema de modo que a\ndepreciação passe a ser apenas linear, removendo os\ngatilhos atualmente parametrizados no sistema"
+        "Observações": "Alteração das regras de sistema de modo que a depreciação passe a ser apenas linear, removendo os gatilhos atualmente parametrizados no sistema"
     },
     {
         "Plano de ação": "Ativo Imobilizado",
         "Número da atividade": "2",
-        "Atividade": "Alteração do SIAD referente a política de\nreavaliação acionando o sistema financeiro e\ncontábil vigente",
+        "Atividade": "Alteração do SIAD referente a política de reavaliação acionando o sistema financeiro e contábil vigente",
         "Status": "Planejado",
         "Responsável": "",
         "Unidades envolvidas": "Seplag",
         "Data de início": "2025-07-01",
         "Data fim": "2025-12-01",
-        "Observações": "Alteração das regras de sistema de modo que a\nreavaliação passe a ser realizado por classe."
+        "Observações": "Alteração das regras de sistema de modo que a reavaliação passe a ser realizado por classe."
     },
     {
         "Plano de ação": "Ativo Imobilizado",
         "Número da atividade": "3",
-        "Atividade": "Baixa da reserva de reavaliação referente a\ndepreciação de bens imóveis baixados de 2019\naté 2026.",
+        "Atividade": "Baixa da reserva de reavaliação referente a depreciação de bens imóveis baixados de 2019 até 2026.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "Seplag\ne SEF/SCCG",
+        "Unidades envolvidas": "Seplag e SEF/SCCG",
         "Data de início": "2025-09-01",
         "Data fim": "2026-12-01",
-        "Observações": "Baixa, por NAC fundamentada em relatório do SIAD, da\nreserva de reavaliação dos bens alienados/baixados com\nbase em relatório do SIAD."
+        "Observações": "Baixa, por NAC fundamentada em relatório do SIAD, da reserva de reavaliação dos bens alienados/baixados com base em relatório do SIAD."
     },
     {
         "Plano de ação": "Ativo Imobilizado",
         "Número da atividade": "4",
-        "Atividade": "Alteração do SIAD referente a amortização\nautomática da Reserva de Reavaliação,\nacionando o sistema financeiro e contábil\nvigente",
+        "Atividade": "Alteração do SIAD referente a amortização automática da Reserva de Reavaliação, acionando o sistema financeiro e contábil vigente",
         "Status": "Planejado",
         "Responsável": "",
         "Unidades envolvidas": "Seplag",
         "Data de início": "2026-03-01",
         "Data fim": "2027-01-01",
-        "Observações": "1) Implantação de baixa automática pelo uso pelo SIAD.\n2) Implantação de baixa automática pelo\ndesreconhecimento ou alienação pelo SIAD."
+        "Observações": "1) Implantação de baixa automática pelo uso pelo SIAD. 2) Implantação de baixa automática pelo desreconhecimento ou alienação pelo SIAD."
     },
     {
         "Plano de ação": "Ativo Imobilizado",
         "Número da atividade": "5",
-        "Atividade": "Desenvolvimento no SIAD de relatórios sobre\nimobilizados",
+        "Atividade": "Desenvolvimento no SIAD de relatórios sobre imobilizados",
         "Status": "Planejado",
         "Responsável": "",
         "Unidades envolvidas": "Seplag",
@@ -860,199 +860,199 @@
     {
         "Plano de ação": "Ativo Imobilizado",
         "Número da atividade": "6",
-        "Atividade": "Normatização da política de Imobilizado do\nEstado",
+        "Atividade": "Normatização da política de Imobilizado do Estado",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "Seplag e\nSEF/SCCG",
+        "Unidades envolvidas": "Seplag e SEF/SCCG",
         "Data de início": "2026-03-01",
         "Data fim": "2027-01-01",
-        "Observações": "Elaborar e divulgar normativo orientando os procedimentos\nde depreciação e reavaliação do Imobilizados do Estado\nde Minas Gerais"
+        "Observações": "Elaborar e divulgar normativo orientando os procedimentos de depreciação e reavaliação do Imobilizados do Estado de Minas Gerais"
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "1.0",
-        "Atividade": "Leitura e entendimento\nda NBC TSP 08 –\nINTANGÍVEL.",
+        "Atividade": "Leitura e entendimento da NBC TSP 08 – INTANGÍVEL.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "Todos os\nintegrantes\ndo GT.",
+        "Unidades envolvidas": "Todos os integrantes do GT.",
         "Data de início": "2025-05-12",
         "Data fim": "2025-06-17",
-        "Observações": "Levantar os requisitos legais\nprevistos na NBC TSP 08\nque trata do INTANGÍVEL\npara orientação aos órgãos\ne entidades."
+        "Observações": "Levantar os requisitos legais previstos na NBC TSP 08 que trata do INTANGÍVEL para orientação aos órgãos e entidades."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "1.1",
-        "Atividade": "Levantamento dos\nSoftwares da SEF.",
+        "Atividade": "Levantamento dos Softwares da SEF.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEF/STI,\nSEF/SPGF e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEF/STI, SEF/SPGF e SEF/SCCG.",
         "Data de início": "2025-06-02",
         "Data fim": "2025-06-13",
-        "Observações": "Apurar junto à SPGF e STI\nda SEF os softwares\nclassificados como Ativo\nIntangível."
+        "Observações": "Apurar junto à SPGF e STI da SEF os softwares classificados como Ativo Intangível."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "1.2",
-        "Atividade": "Reconhecimento e\nmensuração dos\nSoftwares da SEF\nclassificados como\nativos intangíveis,\nincluindo uma política\nde amortização.",
+        "Atividade": "Reconhecimento e mensuração dos Softwares da SEF classificados como ativos intangíveis, incluindo uma política de amortização.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEF/STI,\nSEF/SPGF e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEF/STI, SEF/SPGF e SEF/SCCG.",
         "Data de início": "2025-08-01",
         "Data fim": "2026-06-30",
-        "Observações": "Adotar as providências\nnecessárias para o\nreconhecimento e a\nmensuração dos softwares\nenquadrados como ativos\nintangíveis, incluindo uma\npolítica de amortização;\nDefinição de vida útil e\ncritérios de Amortização\ne/ou reavaliação."
+        "Observações": "Adotar as providências necessárias para o reconhecimento e a mensuração dos softwares enquadrados como ativos intangíveis, incluindo uma política de amortização; Definição de vida útil e critérios de Amortização e/ou reavaliação."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "1.3",
-        "Atividade": "Tratamento aos\nSoftwares da SEF\nclassificados\nindevidamente como\nintangível bem como os\ncasos de\nobsolescência.",
+        "Atividade": "Tratamento aos Softwares da SEF classificados indevidamente como intangível bem como os casos de obsolescência.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEF/STI,\nSEF/SPGF e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEF/STI, SEF/SPGF e SEF/SCCG.",
         "Data de início": "2026-07-01",
         "Data fim": "2026-10-31",
-        "Observações": "Identificar os itens\nclassificados indevidamente\ncomo Software, bem como\naqueles obsoletos ou em\ndesuso para a respectiva\nbaixa."
+        "Observações": "Identificar os itens classificados indevidamente como Software, bem como aqueles obsoletos ou em desuso para a respectiva baixa."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "1.4",
-        "Atividade": "Impairment/Reavaliação\ne Recálculo de Vida Útil\ndos Softwares da SEF.",
+        "Atividade": "Impairment/Reavaliação e Recálculo de Vida Útil dos Softwares da SEF.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEF/STI,\nSEF/SPGF e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEF/STI, SEF/SPGF e SEF/SCCG.",
         "Data de início": "2026-10-01",
         "Data fim": "2026-12-31",
-        "Observações": "Adotar procedimentos de\nteste de perda de valor,\nreavaliação e de revisão da\nvida útil para os ativos\nintangíveis com vida útil\nindefinida."
+        "Observações": "Adotar procedimentos de teste de perda de valor, reavaliação e de revisão da vida útil para os ativos intangíveis com vida útil indefinida."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "1.5",
-        "Atividade": "Preparação de Notas\nTécnicas para baixa de\nSoftwares Obsoletos\ne/ou classificados\nindevidamente.",
+        "Atividade": "Preparação de Notas Técnicas para baixa de Softwares Obsoletos e/ou classificados indevidamente.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEF/STI e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEF/STI e SEF/SCCG.",
         "Data de início": "2025-08-01",
         "Data fim": "2026-12-31",
-        "Observações": "Preparação de Notas\nTécnicas para baixa de\nSoftwares Obsoletos e/ou\nclassificados indevidamente."
+        "Observações": "Preparação de Notas Técnicas para baixa de Softwares Obsoletos e/ou classificados indevidamente."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "2.1",
-        "Atividade": "Levantamento dos\nSoftwares junto à\nSEPLAG, SEGOV e\nCasa Civil.",
+        "Atividade": "Levantamento dos Softwares junto à SEPLAG, SEGOV e Casa Civil.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG,\nSEGOV e\nCASA CIVIL.",
+        "Unidades envolvidas": "SEPLAG, SEGOV e CASA CIVIL.",
         "Data de início": "2025-06-13",
         "Data fim": "2025-07-31",
-        "Observações": "Circularizar à SEPLAG, à\nSEGOV (SIGCON – saída) e\nà Casa Civil (SIGCON –\nEntrada) visando levantar os\nrespectivos Softwares e seu\nenquadramento como Ativo\nIntangível em atendimento a\nNBC TSP 08."
+        "Observações": "Circularizar à SEPLAG, à SEGOV (SIGCON – saída) e à Casa Civil (SIGCON – Entrada) visando levantar os respectivos Softwares e seu enquadramento como Ativo Intangível em atendimento a NBC TSP 08."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "2.2",
-        "Atividade": "Reconhecimento e\nmensuração dos\nSoftwares da\nSEPLAG/SEGOV e\nCasa Civil classificados\ncomo ativos intangíveis,\nincluindo uma política\nde amortização.",
+        "Atividade": "Reconhecimento e mensuração dos Softwares da SEPLAG/SEGOV e Casa Civil classificados como ativos intangíveis, incluindo uma política de amortização.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG,\nSEGOV e\nCASA CIVIL.",
+        "Unidades envolvidas": "SEPLAG, SEGOV e CASA CIVIL.",
         "Data de início": "2025-08-01",
         "Data fim": "2026-06-30",
-        "Observações": "Adotar as providências\nnecessárias para o\nreconhecimento e a\nmensuração dos softwares\nenquadrados como ativos\nintangíveis, incluindo uma\npolítica de amortização;\nDefinição de vida útil e\ncritérios de Amortização\ne/ou reavaliação."
+        "Observações": "Adotar as providências necessárias para o reconhecimento e a mensuração dos softwares enquadrados como ativos intangíveis, incluindo uma política de amortização; Definição de vida útil e critérios de Amortização e/ou reavaliação."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "2.3",
-        "Atividade": "Tratamento aos\nSoftwares da\nSEPLAG/SEGOV e\nCasa Civil classificados\nindevidamente como\nintangível bem como os\ncasos de\nobsolescência.",
+        "Atividade": "Tratamento aos Softwares da SEPLAG/SEGOV e Casa Civil classificados indevidamente como intangível bem como os casos de obsolescência.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG,\nSEGOV e\nCASA CIVIL.",
+        "Unidades envolvidas": "SEPLAG, SEGOV e CASA CIVIL.",
         "Data de início": "2026-07-01",
         "Data fim": "2026-10-31",
-        "Observações": "Identificar os itens\nclassificados indevidamente\ncomo Software, bem como\naqueles obsoletos ou em\ndesuso para a respectiva\nbaixa (Emitir Nota Técnica)."
+        "Observações": "Identificar os itens classificados indevidamente como Software, bem como aqueles obsoletos ou em desuso para a respectiva baixa (Emitir Nota Técnica)."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "2.4",
-        "Atividade": "Impairment/Reavaliação\ne Recálculo de Vida Útil\ndos Softwares da\nSEPLAG/SEGOV E\nCasa Civil.",
+        "Atividade": "Impairment/Reavaliação e Recálculo de Vida Útil dos Softwares da SEPLAG/SEGOV E Casa Civil.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG,\nSEGOV e\nCASA CIVIL.",
+        "Unidades envolvidas": "SEPLAG, SEGOV e CASA CIVIL.",
         "Data de início": "2026-10-01",
         "Data fim": "2026-12-31",
-        "Observações": "Adotar procedimentos de\nteste de perda de valor,\nreavaliação e de revisão da\nvida útil para os ativos\nintangíveis com vida útil\nindefinida."
+        "Observações": "Adotar procedimentos de teste de perda de valor, reavaliação e de revisão da vida útil para os ativos intangíveis com vida útil indefinida."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "2.5",
-        "Atividade": "Nota Explicativa para\ncomposição do Balanço\nPatrimonial.",
+        "Atividade": "Nota Explicativa para composição do Balanço Patrimonial.",
         "Status": "Planejado",
         "Responsável": "",
         "Unidades envolvidas": "SEF/SCGG.",
         "Data de início": "2027-01-01",
         "Data fim": "2027-03-31",
-        "Observações": "Elaboração de Nota\nExplicativa para composição\ndo Balanço Patrimonial\nesclarecendo os registros\ncontábeis de intangíveis\nrealizados no exercício de\n2026, resultantes das etapas\n1 e 2 deste plano de ação."
+        "Observações": "Elaboração de Nota Explicativa para composição do Balanço Patrimonial esclarecendo os registros contábeis de intangíveis realizados no exercício de 2026, resultantes das etapas 1 e 2 deste plano de ação."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "3.1",
-        "Atividade": "Levantamento dos\ndemais intangíveis do\nEstado (marcas, direitos\ne patentes).",
+        "Atividade": "Levantamento dos demais intangíveis do Estado (marcas, direitos e patentes).",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEPLAG e SEF/SCCG.",
         "Data de início": "2026-04-01",
         "Data fim": "2026-12-31",
-        "Observações": "Circularizar aos Órgãos e\nentidades estatais visando\nlevantar o Ativo Intangível,\nalém dos softwares, em\natendimento à NBC TSP 08."
+        "Observações": "Circularizar aos Órgãos e entidades estatais visando levantar o Ativo Intangível, além dos softwares, em atendimento à NBC TSP 08."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "3.2",
-        "Atividade": "Reconhecimento e\nmensuração dos\ndemais intangíveis do\nEstado (marcas, direitos\ne patentes), incluindo\numa política de\namortização e de\nreavaliação.",
+        "Atividade": "Reconhecimento e mensuração dos demais intangíveis do Estado (marcas, direitos e patentes), incluindo uma política de amortização e de reavaliação.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEPLAG e SEF/SCCG.",
         "Data de início": "2027-01-01",
         "Data fim": "2027-12-31",
-        "Observações": "Adotar as providências\nnecessárias para o\nreconhecimento e a\nmensuração dos demais\nintangíveis do Estado\n(marcas, direitos e\npatentes), incluindo uma\npolítica de amortização;\nDefinição de vida útil e\ncritérios de Amortização\ne/ou reavaliação."
+        "Observações": "Adotar as providências necessárias para o reconhecimento e a mensuração dos demais intangíveis do Estado (marcas, direitos e patentes), incluindo uma política de amortização; Definição de vida útil e critérios de Amortização e/ou reavaliação."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "4.1",
-        "Atividade": "Desenvolvimento do\nmódulo do Ativo\nIntangível no SIAD e\nintegração entre os\nsistemas de\nAdministração\nFinanceira e contábil\nvigente.",
+        "Atividade": "Desenvolvimento do módulo do Ativo Intangível no SIAD e integração entre os sistemas de Administração Financeira e contábil vigente.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG e\nSEF/SCCG",
+        "Unidades envolvidas": "SEPLAG e SEF/SCCG",
         "Data de início": "2026-07-01",
         "Data fim": "2027-06-30",
-        "Observações": "Desenvolver o Módulo do\nAtivo Intangível e promover\na integração entre os\nsistemas de gestão\npatrimonial e contábil,\nassegurando que os dados\nsobre ativos intangíveis\nsejam capturados e\nrefletidos de forma\nautomática nas\ndemonstrações contábeis."
+        "Observações": "Desenvolver o Módulo do Ativo Intangível e promover a integração entre os sistemas de gestão patrimonial e contábil, assegurando que os dados sobre ativos intangíveis sejam capturados e refletidos de forma automática nas demonstrações contábeis."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "4.2",
-        "Atividade": "Parametrização dos\nsistemas SIAD e de\nAdministração\nFinanceira e contábil\nvigente.",
+        "Atividade": "Parametrização dos sistemas SIAD e de Administração Financeira e contábil vigente.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG e\nSEF/SCCG",
+        "Unidades envolvidas": "SEPLAG e SEF/SCCG",
         "Data de início": "2027-07-01",
         "Data fim": "2027-12-31",
-        "Observações": "Parametrização dos\nsistemas SIAD - GRP para a\ncontabilização\n(aquisição/alterações/baixas,\nimpairment e cálculo de\namortização) de forma\nautomatizada."
+        "Observações": "Parametrização dos sistemas SIAD - GRP para a contabilização (aquisição/alterações/baixas, impairment e cálculo de amortização) de forma automatizada."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "5.1",
-        "Atividade": "Levantamento junto a\noutros Estados e na\nUnião de normativos e\nlegislações sobre\nintangível.",
+        "Atividade": "Levantamento junto a outros Estados e na União de normativos e legislações sobre intangível.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEF/SPGF e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEF/SPGF e SEF/SCCG.",
         "Data de início": "2026-01-01",
         "Data fim": "2026-06-30",
-        "Observações": "Levantar os normativos já\nexistentes em outros\nEstados sobre o assunto\nIntangível para subsidiar a\nelaboração de normativos no\nâmbito do Estado de Minas\nGerais."
+        "Observações": "Levantar os normativos já existentes em outros Estados sobre o assunto Intangível para subsidiar a elaboração de normativos no âmbito do Estado de Minas Gerais."
     },
     {
         "Plano de ação": "Ativo Intangível",
         "Número da atividade": "5.2",
-        "Atividade": "Normatização dos\nProcedimentos para\nReconhecimento,\npolítica de amortização,\nimpairment, reavaliação\ne Escrituração dos\nAtivos Intangíveis do\nEstado.",
+        "Atividade": "Normatização dos Procedimentos para Reconhecimento, política de amortização, impairment, reavaliação e Escrituração dos Ativos Intangíveis do Estado.",
         "Status": "Planejado",
         "Responsável": "",
-        "Unidades envolvidas": "SEPLAG e\nSEF/SCCG.",
+        "Unidades envolvidas": "SEPLAG e SEF/SCCG.",
         "Data de início": "2027-07-01",
         "Data fim": "2027-12-31",
-        "Observações": "Elaborar e divulgar\nnormativo orientando\nProcedimentos de\nreconhecimento,\nmensuração, cadastramento\ne contabilização das\ndiferentes classes de Ativo\nIntangível para todo o\nEstado."
+        "Observações": "Elaborar e divulgar normativo orientando Procedimentos de reconhecimento, mensuração, cadastramento e contabilização das diferentes classes de Ativo Intangível para todo o Estado."
     }
 ]
