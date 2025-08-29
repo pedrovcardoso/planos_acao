@@ -169,12 +169,12 @@ function fillGanttData(jsonPlanos) {
     let minDate = new Date(Math.min(
         ...jsonPlanos
             .filter(task => task["Data início"])
-            .map(task => new Date(task["Data início"]))
+            .map(task => new Date(task["Data início"]+'T10:00:00'))
     ));
     let maxDate = new Date(Math.max(
         ...jsonPlanos
             .filter(task => task["Data fim"] || task["Data início"])
-            .map(task => new Date(task["Data fim"] ? task["Data fim"] : task["Data início"]))
+            .map(task => new Date(task["Data fim"] ? task["Data fim"]+'T10:00:00' : task["Data início"]+'T10:00:00'))
     ));
 
     const today = new Date();
@@ -202,7 +202,7 @@ function fillGanttData(jsonPlanos) {
     monthsHeader.style.width = `${timelineWidth}px`;
     
     function calculatePosition(date) {
-        const targetDate = new Date(date);
+        const targetDate = new Date(date+'T10:00:00');
         const year = targetDate.getFullYear();
         const month = targetDate.getMonth();
         const monthsDiff = (year - firstMonth.getFullYear()) * 12 + (month - firstMonth.getMonth());
@@ -234,7 +234,7 @@ function fillGanttData(jsonPlanos) {
         rowTimeline.dataset.rowIndex = index;
 
         if(task["Data início"] && task["Data fim"]){
-            const startDate = task["Data início"];
+            const startDate = task["Data início"]
             const endDate = task["Data fim"]
             const startOffset = calculatePosition(startDate);
             const endOffset = endDate ? calculatePosition(endDate) : startOffset+10;
@@ -338,12 +338,12 @@ function toggleHeatMap(){
   let minDate = new Date(Math.min(
       ...jsonPlanos
           .filter(task => task["Data início"])
-          .map(task => new Date(task["Data início"]))
+          .map(task => new Date(task["Data início"]+'T10:00:00'))
   ));
   let maxDate = new Date(Math.max(
       ...jsonPlanos
           .filter(task => task["Data fim"] || task["Data início"])
-          .map(task => new Date(task["Data fim"] ? task["Data fim"] : task["Data início"]))
+          .map(task => new Date(task["Data fim"] ? task["Data fim"]+'T10:00:00' : task["Data início"]+'T10:00:00'))
   ));
 
   const today = new Date();
@@ -360,28 +360,26 @@ function toggleHeatMap(){
   let monthIndex = 0;
 
   while (heatDate <= maxDate) {
-    const inicioDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth(), 1);
-    const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0);
+    const inicioDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth(), 1, 0, 0);
+    const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0, 23, 59, 59, 999); 
 
     let count = 0;
 
     if (estilo === "encerrando") {
-      // conta apenas quem termina no mês
-      jsonAcoes.forEach(acao => {
-        if (acao["Data fim"]) {
-          const end = new Date(acao["Data fim"]);
-          if (end >= inicioDoMes && end <= fimDoMes) {
-            count++;
-          }
-        }
-      });
-
-    } else if (estilo === "acontecendo") {
+        jsonAcoes.forEach((acao, i) => {
+            if (acao["Data fim"]) {
+                const end = new Date(acao["Data fim"]+'T10:00:00');
+                if (end >= inicioDoMes && end <= fimDoMes) {
+                    count++;
+                }
+            }
+        });
+    }   else if (estilo === "acontecendo") {
       // conta quem está ativo em qualquer parte do mês
       jsonAcoes.forEach(acao => {
         if (acao["Data de início"] && acao["Data fim"]) {
-          const start = new Date(acao["Data de início"]);
-          const end = new Date(acao["Data fim"]);
+          const start = new Date(acao["Data de início"]+'T10:00:00');
+          const end = new Date(acao["Data fim"]+'T10:00:00');
           if (start <= fimDoMes && end >= inicioDoMes) {
             count++;
           }

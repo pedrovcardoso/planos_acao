@@ -109,8 +109,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         lastDay.setHours(23,59,59,999);
     
         const filtered = jsonAcoes.filter(task => {
-            const start = new Date(task["Data de início"]);
-            const end = new Date(task["Data fim"]);
+            const start = new Date(task["Data de início"]+'T10:00:00');
+            const end = new Date(task["Data fim"]+'T10:00:00');
             return (start <= lastDay && end >= firstDay);
         });
     
@@ -253,8 +253,8 @@ function filtrarPeriodo() {
         const monthStart = new Date(year, month, 1, 0, 0, 0, 0);
         const monthEnd = new Date(year, month + 1, 0, 23, 59, 59, 999);
         filtered = jsonAcoes.filter(task => {
-            const start = new Date(task["Data de início"]);
-            const end = new Date(task["Data fim"]);
+            const start = new Date(task["Data de início"]+'T10:00:00');
+            const end = new Date(task["Data fim"]+'T10:00:00');
             return (
                 (start <= monthEnd && end >= monthStart)
             );
@@ -268,8 +268,8 @@ function filtrarPeriodo() {
         lastDay.setDate(firstDay.getDate() + 4);
         lastDay.setHours(23,59,59,999);
         filtered = jsonAcoes.filter(task => {
-            const start = new Date(task["Data de início"]);
-            const end = new Date(task["Data fim"]);
+            const start = new Date(task["Data de início"]+'T10:00:00');
+            const end = new Date(task["Data fim"]+'T10:00:00');
             return (
                 (start <= lastDay && end >= firstDay)
             );
@@ -281,11 +281,11 @@ function filtrarPeriodo() {
 
 function fillModal(task) {
     const dataInicioFormatada = task['Data de início'] 
-        ? new Date(task['Data de início']).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
+        ? new Date(task['Data de início']+'T10:00:00').toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
         : '-';
     
     const dataFimFormatada = task['Data fim'] 
-        ? new Date(task['Data fim']).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
+        ? new Date(task['Data fim']+'T10:00:00').toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
         : '-';
     
     // --- 2. CONSTRUÇÃO DO HTML ---
@@ -345,8 +345,8 @@ function fillGanttData(jsonAcoes){
     ganttRowsContainer.innerHTML = "<div id='todayBar'></div>";
     ganttTimelineContainer.scrollLeft = 0;
 
-    let minDate = new Date(Math.min(...jsonAcoes.map(task => new Date(task["Data de início"]))));
-    let maxDate = new Date(Math.max(...jsonAcoes.map(task => new Date(task["Data fim"] ? task["Data fim"] : task["Data de início"]))));
+    let minDate = new Date(Math.min(...jsonAcoes.map(task => new Date(task["Data de início"]+'T10:00:00'))));
+    let maxDate = new Date(Math.max(...jsonAcoes.map(task => new Date(task["Data fim"] ? task["Data fim"]+'T10:00:00' : task["Data de início"]+'T10:00:00'))));
 
     const today = new Date();
     today.setHours(0,0,0,0);
@@ -392,8 +392,8 @@ function fillGanttData(jsonAcoes){
         rowTimeline.className = 'gantt-row-timeline';
         rowTimeline.dataset.rowIndex = index;
 
-        const startDate = task["Data de início"];
-        const endDate = task["Data fim"]
+        const startDate = task["Data de início"]+'T10:00:00';
+        const endDate = task["Data fim"]+'T10:00:00'
         const startOffset = calculatePosition(startDate);
         const endOffset = endDate ? calculatePosition(endDate) : startOffset+10;
         const durationWidth = endOffset - startOffset;
