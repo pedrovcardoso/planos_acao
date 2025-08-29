@@ -263,7 +263,6 @@ async function salvarArquivoNoOneDrive(conteudo) {
     }
 }
 
-
 /**
  * Adiciona listeners de clique a todos os botões "Editar" dos cards.
  */
@@ -322,42 +321,47 @@ function closeEditModal(force = false) {
 
 /**
  * Coleta os dados do formulário, atualiza o array principal e chama a função de salvar.
+ * AGORA:
+ * 1. Verifica se houve alterações antes de salvar.
+ * 2. Desabilita todos os botões do modal durante a operação de salvamento.
  */
 function handleSave() {
-    const form = document.getElementById('modal-form');
-    const updatedPlano = { ...originalPlanoData }; // Começa com os dados originais
+    // 1. Se não houver alterações, apenas fecha o modal e para a execução.
+    if (!hasChanges) {
+        closeEditModal(true); // Força o fechamento sem confirmação
+        return;
+    }
 
-    // Atualiza o objeto com os novos valores do formulário
+    // 2. Seleciona todos os botões do modal.
+    const saveButton = document.getElementById('modal-btn-save');
+    const cancelButton = document.getElementById('modal-btn-cancel');
+    const closeButton = document.getElementById('modal-btn-close');
+
+    const form = document.getElementById('modal-form');
+    const updatedPlano = { ...originalPlanoData };
+
     new FormData(form).forEach((value, key) => {
         updatedPlano[key] = value;
     });
 
-    // Encontra o índice do plano original no array principal
     const planIndex = jsonPlanos.findIndex(p => p.Nome === originalPlanoData.Nome);
-
     if (planIndex === -1) {
         alert("Erro: não foi possível encontrar o plano original para atualizar.");
         return;
     }
 
-    // Cria uma cópia do array e atualiza o objeto no índice correto
     const updatedJsonPlanos = [...jsonPlanos];
     updatedJsonPlanos[planIndex] = updatedPlano;
     
-    // Converte o array inteiro atualizado para uma string JSON
     const conteudoParaSalvar = JSON.stringify(updatedJsonPlanos, null, 2);
 
-    // Desabilita botão para evitar cliques duplos
-    const saveButton = document.getElementById('modal-btn-save');
+    // 3. Desabilita TODOS os botões antes de iniciar o salvamento.
     saveButton.disabled = true;
+    cancelButton.disabled = true;
+    closeButton.disabled = true;
     saveButton.textContent = 'Salvando...';
 
-    // Chama a função para salvar no OneDrive
-    salvarArquivoNoOneDrive(conteudoParaSalvar).finally(() => {
-        // Reabilita o botão, mesmo se der erro
-        saveButton.disabled = false;
-        saveButton.textContent = 'Salvar Alterações';
-    });
+    salvarArquivoNoOneDrive(conteudoParaSalvar)
 }
 
 /**
@@ -488,6 +492,18 @@ function fillGanttData(jsonPlanos) {
 
         rowTimeline.appendChild(bar);
         ganttRowsContainer.appendChild(rowTimeline);
+
+        // Efeito hover sincronizado entre as duas colunas (desativado por enquanto por atrapalhar o heatmap)
+        // document.querySelectorAll('.gantt-row-task, .gantt-row-timeline').forEach(row => {
+        //     row.addEventListener('mouseenter', () => {
+        //         const rowIndex = row.dataset.rowIndex;
+        //         document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.add('hovered'));
+        //     });
+        //     row.addEventListener('mouseleave', () => {
+        //         const rowIndex = row.dataset.rowIndex;
+        //         document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.remove('hovered'));
+        //     });
+        // });
     });
 
 //================================================================================

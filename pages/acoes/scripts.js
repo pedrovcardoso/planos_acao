@@ -418,17 +418,17 @@ function fillGanttData(jsonAcoes){
 
         rowTimeline.appendChild(bar);
         ganttRowsContainer.appendChild(rowTimeline);
-        
+            
         document.querySelectorAll('.gantt-row-task, .gantt-row-timeline').forEach(row => {
-        row.addEventListener('mouseenter', () => {
-            const rowIndex = row.dataset.rowIndex;
-            document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.add('hovered'));
+            row.addEventListener('mouseenter', () => {
+                const rowIndex = row.dataset.rowIndex;
+                document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.add('hovered'));
+            });
+            row.addEventListener('mouseleave', () => {
+                const rowIndex = row.dataset.rowIndex;
+                document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.remove('hovered'));
+            });
         });
-        row.addEventListener('mouseleave', () => {
-            const rowIndex = row.dataset.rowIndex;
-            document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.remove('hovered'));
-        });
-    });
     });
 }
 
