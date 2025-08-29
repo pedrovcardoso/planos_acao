@@ -507,7 +507,7 @@ function gerarCards(jsonPlanos) {
             <!-- O menu suspenso (dropdown), que começa escondido -->
             <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 z-10">
               <div class="py-1">
-                <a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                <a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 $${plano.Status!=='Em desenvolvimento' ? '' : 'pointer-events-none opacity-50 cursor-default'}">
                   Ver Ações
                 </a>
                 <button type="button" 
@@ -542,6 +542,9 @@ function gerarCards(jsonPlanos) {
               <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
               <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
               <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
+              <p><strong class="font-medium text-slate-600">SEI relacionados:</strong> ${plano['SEI relacionados'] || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Documentos relacionados:</strong> ${plano['Documentos relacionados'] || '-'}</p>
+              <p><strong class="font-medium text-slate-600">Observações:</strong> ${plano['Observações'] || '-'}</p>
             </div>
           </details>
         
@@ -649,6 +652,7 @@ function openEditModal(planoNome) {
     // Preenche o formulário
     const formFields = {
       'edit-Nome': 'Nome',
+      'edit-Status': 'Status',
       'edit-Processo-SEI': 'Processo SEI',
       'edit-Documento-TCE': 'Documento TCE',
       'edit-Resolução': 'Resolução',
