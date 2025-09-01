@@ -741,6 +741,8 @@ let isNewTaskMode = false
  * Configura todos os listeners de eventos para os controles dos modais.
  */
 function setupModalControls() {
+    populatePlanosSelect()
+
     // Botões principais do modal
     document.getElementById('modal-btn-close').addEventListener('click', closeModal);
     document.getElementById('modal-btn-view-close').addEventListener('click', () => closeModal());
@@ -748,6 +750,7 @@ function setupModalControls() {
     document.getElementById('modal-btn-cancel').addEventListener('click', () => switchToViewMode());
     document.getElementById('modal-btn-save').addEventListener('click', handleSave);
     document.getElementById('modal-btn-delete').addEventListener('click', openDeleteConfirmation);
+    document.getElementById('btn-nova-atividade').addEventListener('click', openModalForNewTask)
     
     // Detecta alterações no formulário
     document.getElementById('modal-edit-form').addEventListener('input', () => {
@@ -774,6 +777,37 @@ function setupModalControls() {
     });
     document.getElementById('delete-confirm-btn-yes').addEventListener('click', handleDeleteTask);
 }
+
+/**
+ * [NOVO] Popula o seletor de Planos de Ação no modal.
+ * Esta função é chamada por setupModalControls.
+ */
+function populatePlanosSelect() {
+    const selectPlanos = document.getElementById('edit-plano');
+    // Retorna cedo se o elemento não for encontrado
+    if (!selectPlanos) return;
+
+    // Extrai os nomes únicos dos planos usando map e Set de forma concisa.
+    const nomesDosPlanos = [...new Set(Object.values(jsonPlanos).map(plano => plano.Nome))];
+
+    // Limpa quaisquer opções existentes (importante para evitar duplicatas).
+    selectPlanos.innerHTML = '';
+
+    // Adiciona uma opção padrão "Selecione"
+    const defaultOption = new Option('Selecione um plano', '');
+    defaultOption.selected = true;
+    defaultOption.disabled = true;
+    defaultOption.hidden = true;
+    selectPlanos.add(defaultOption);
+
+    // Adiciona cada plano como uma nova opção.
+    nomesDosPlanos.forEach(nomeDoPlano => {
+        // new Option(textoVisivel, valorDoAtributoValue)
+        const option = new Option(nomeDoPlano, nomeDoPlano);
+        selectPlanos.add(option);
+    });
+}
+
 
 /**
  * Função principal para abrir o modal com os dados de uma tarefa.
@@ -872,6 +906,11 @@ function switchToViewMode(force = false) {
         return;
     }
 
+    if (isNewTaskMode) {
+        closeModal();
+        return;
+    }
+
     populateViewMode(currentTask); // Repopula com os dados mais recentes.
     document.getElementById('modal-view-plano').classList.remove('hidden');
 
@@ -919,14 +958,11 @@ function openModalForNewTask() {
  */
 function clearEditForm() {
     const form = document.getElementById('modal-edit-form');
-    form.reset(); // Método nativo para limpar formulários.
+    form.reset();
+    
+    document.getElementById('edit-status'). value = 'Selecione um valor'
 
-    // Repopula o select de planos, caso necessário, e seleciona o primeiro item.
-    const planoSelect = document.getElementById('edit-plano');
-    if (planoSelect && window.jsonPlanos) {
-        planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
-        planoSelect.selectedIndex = 0;
-    }
+    populatePlanosSelect()
 }
 
 function openDeleteConfirmation() {
@@ -989,7 +1025,6 @@ async function handleDeleteTask() {
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     }
 }
-
 
 /**
  * Fecha completamente o modal.
