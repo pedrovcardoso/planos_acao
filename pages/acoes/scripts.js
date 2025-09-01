@@ -734,6 +734,8 @@ let currentTask = null;
 let originalTaskData = null; 
 // Flag para detectar se houve alguma alteração no formulário.
 let hasChanges = false;
+// Flag para diferenciar entre modo de criação e edição.
+let isNewTaskMode = false
 
 /**
  * Configura todos os listeners de eventos para os controles dos modais.
@@ -741,10 +743,11 @@ let hasChanges = false;
 function setupModalControls() {
     // Botões principais do modal
     document.getElementById('modal-btn-close').addEventListener('click', closeModal);
-    document.getElementById('modal-btn-view-close').addEventListener('click', () => closeModal()); // 5. Botão fechar
+    document.getElementById('modal-btn-view-close').addEventListener('click', () => closeModal());
     document.getElementById('modal-btn-edit').addEventListener('click', switchToEditMode);
     document.getElementById('modal-btn-cancel').addEventListener('click', () => switchToViewMode());
     document.getElementById('modal-btn-save').addEventListener('click', handleSave);
+    document.getElementById('modal-btn-delete').addEventListener('click', openDeleteConfirmation);
     
     // Detecta alterações no formulário
     document.getElementById('modal-edit-form').addEventListener('input', () => {
@@ -765,6 +768,11 @@ function setupModalControls() {
             }
         }
     });
+
+    document.getElementById('delete-confirm-btn-no').addEventListener('click', () => {
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    });
+    document.getElementById('delete-confirm-btn-yes').addEventListener('click', handleDeleteTask);
 }
 
 /**
@@ -772,14 +780,14 @@ function setupModalControls() {
  * @param {object} task - O objeto da tarefa clicada.
  */
 function openTaskModal(task) {
-    // Guarda a referência para a tarefa atual.
+    isNewTaskMode = false;
     currentTask = task;
     originalTaskData = { ...task };
 
     populateViewMode(task);
     switchToViewMode(true);
     document.getElementById('task-modal-container').classList.remove('hidden');
-    document.body.classList.add('overflow-hidden'); // Bloqueia o scroll do body.
+    document.body.classList.add('overflow-hidden');
 }
 
 /**
@@ -878,76 +886,183 @@ function switchToViewMode(force = false) {
 }
 
 /**
- * Fecha completamente o modal e restaura o scroll.
+ * Abre o modal em modo de criação para uma nova tarefa.
+ */
+function openModalForNewTask() {
+    isNewTaskMode = true; // Ativa o modo de criação.
+    currentTask = {};     // A tarefa atual é um objeto vazio.
+    originalTaskData = null; // Não há dados originais.
+
+    // Limpa o formulário de edição para garantir que não haja dados antigos.
+    clearEditForm();
+
+    // Configura a aparência do modal para "Criar".
+    document.getElementById('modal-view-plano').classList.add('hidden');
+    document.getElementById('modal-view-atividade').innerText = 'Criar Nova Ação';
+
+    // Esconde a visualização e mostra diretamente o formulário de edição.
+    document.getElementById('view-mode-content').classList.add('hidden');
+    document.getElementById('view-mode-buttons').classList.add('hidden');
+    document.getElementById('edit-mode-content').classList.remove('hidden');
+    document.getElementById('edit-mode-buttons').classList.remove('hidden');
+
+    // Abre o container principal do modal.
+    document.getElementById('task-modal-container').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+
+    hasChanges = false; // Reseta a flag de alterações.
+}
+
+
+/**
+ * Limpa os campos do formulário de edição.
+ */
+function clearEditForm() {
+    const form = document.getElementById('modal-edit-form');
+    form.reset(); // Método nativo para limpar formulários.
+
+    // Repopula o select de planos, caso necessário, e seleciona o primeiro item.
+    const planoSelect = document.getElementById('edit-plano');
+    if (planoSelect && window.jsonPlanos) {
+        planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
+        planoSelect.selectedIndex = 0;
+    }
+}
+
+function openDeleteConfirmation() {
+    if (!currentTask) return;
+
+    // Popula o nome da atividade no modal de confirmação para clareza.
+    const taskNameToDelete = document.getElementById('plano-to-delete-name');
+    taskNameToDelete.textContent = `"${currentTask['Atividade']}"`;
+    
+    // Mostra o modal de confirmação de exclusão.
+    document.getElementById('delete-confirmation-modal').classList.remove('hidden');
+}
+
+async function handleDeleteTask() {
+    const confirmButton = document.getElementById('delete-confirm-btn-yes');
+    const cancelButton = document.getElementById('delete-confirm-btn-no');
+
+    // Encontra a tarefa a ser excluída usando a mesma lógica robusta da edição.
+    const taskIndex = findTaskIndex(originalTaskData);
+
+    if (taskIndex === -1) {
+        alert("Erro: A tarefa a ser excluída não foi encontrada. A página será recarregada.");
+        window.location.reload();
+        return;
+    }
+
+    // Desabilita botões para prevenir múltiplos cliques.
+    confirmButton.disabled = true;
+    cancelButton.disabled = true;
+    confirmButton.textContent = 'Excluindo...';
+
+    // Guarda uma cópia da tarefa caso o salvamento falhe e precisemos reverter.
+    const taskToRemove = jsonAcoes[taskIndex];
+
+    try {
+        // Remove a tarefa do array local.
+        jsonAcoes.splice(taskIndex, 1);
+        
+        const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
+
+        // Salva o array atualizado no backend.
+        await salvarArquivoNoOneDrive(conteudoParaSalvar);
+
+        // A função `salvarArquivoNoOneDrive` já recarrega a página em caso de sucesso,
+        // então não precisamos fechar o modal manualmente aqui.
+
+    } catch (error) {
+        console.error("Falha ao excluir a tarefa:", error);
+        alert("Ocorreu um erro ao excluir a tarefa. A alteração foi revertida.");
+
+        // IMPORTANTE: Se o salvamento falhar, reinsere a tarefa no array local
+        // para manter a consistência do estado da aplicação.
+        jsonAcoes.splice(taskIndex, 0, taskToRemove);
+
+    } finally {
+        // Garante que os botões sejam reativados e o modal fechado, mesmo se houver erro.
+        confirmButton.disabled = false;
+        cancelButton.disabled = false;
+        confirmButton.textContent = 'Sim, Excluir';
+        document.getElementById('delete-confirmation-modal').classList.add('hidden');
+    }
+}
+
+
+/**
+ * Fecha completamente o modal.
+ * Reseta o estado `isNewTaskMode` ao fechar.
  */
 function closeModal() {
-    // Se estiver em modo de edição, verifica alterações antes de fechar
-    if (!document.getElementById('edit-mode-content').classList.contains('hidden')) {
-        if (hasChanges) {
-            document.getElementById('confirmation-modal').classList.remove('hidden');
-            return;
-        }
+    if (!document.getElementById('edit-mode-content').classList.contains('hidden') && hasChanges) {
+        document.getElementById('confirmation-modal').classList.remove('hidden');
+        return;
     }
     
     document.getElementById('task-modal-container').classList.add('hidden');
     document.getElementById('confirmation-modal').classList.add('hidden');
-    // 4. Libera o scroll do body
     document.body.classList.remove('overflow-hidden');
+    
+    // Reseta o estado para garantir que a próxima abertura funcione corretamente.
+    isNewTaskMode = false;
 }
 
 async function handleSave() {
     if (!hasChanges) {
-        switchToViewMode(true);
+        // Se não houver mudanças, apenas volta para o modo de visualização se estiver editando.
+        if (!isNewTaskMode) {
+            switchToViewMode(true);
+        }
         return;
     }
 
-    // Desabilita a UI ANTES de iniciar o salvamento para evitar cliques duplos.
     document.getElementById('modal-btn-save').disabled = true;
     document.getElementById('modal-btn-save').textContent = 'Salvando...';
     document.getElementById('modal-btn-cancel').disabled = true;
     document.getElementById('modal-btn-close').disabled = true;
 
-    // Monta o objeto da tarefa atualizada com os dados do formulário.
     const form = document.getElementById('modal-edit-form');
     const formData = new FormData(form);
-    const updatedTask = { ...originalTaskData }; // Começa com os dados originais para preservar chaves não presentes no form.
-
+    const taskData = {};
     formData.forEach((value, key) => {
-        updatedTask[key] = value;
+        taskData[key] = value;
     });
-
-    // Encontra o índice da tarefa original no array principal comparando-a
-    // com a cópia que salvamos (originalTaskData).
-    const taskIndex = findTaskIndex(originalTaskData);
-
-    if (taskIndex === -1) {
-        alert("Erro: Tarefa original não pôde ser encontrada para atualização! A ação não foi salva.");
-        return;
-    }
     
     try {
-        // Atualiza o array principal com os novos dados.
-        jsonAcoes[taskIndex] = updatedTask;
-        
-        // Atualiza a tarefa atual para refletir as mudanças na UI ao voltar para o modo de visualização.
-        currentTask = updatedTask;
+        if (isNewTaskMode) {
+            // --- LÓGICA DE CRIAÇÃO ---
+            // Adiciona a nova tarefa ao final do array.
+            // Você pode querer adicionar campos padrão aqui (ex: data de criação).
+            jsonAcoes.push(taskData);
+        } else {
+            // --- LÓGICA DE EDIÇÃO (Existente) ---
+            const taskIndex = findTaskIndex(originalTaskData);
+            if (taskIndex === -1) {
+                throw new Error("Tarefa original não encontrada para atualização.");
+            }
+            // Mescla os dados para garantir que campos não presentes no formulário sejam mantidos.
+            const updatedTask = { ...originalTaskData, ...taskData };
+            jsonAcoes[taskIndex] = updatedTask;
+            currentTask = updatedTask; // Atualiza a tarefa atual.
+        }
 
         const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
-        
-        // Chama a função de salvamento e aguarda sua conclusão.
         await salvarArquivoNoOneDrive(conteudoParaSalvar);
-
-        // Se o salvamento for bem-sucedido, volta ao modo de visualização.
-        // O reload da página já acontece dentro de salvarArquivoNoOneDrive.
-        //switchToViewMode(true);
+        
+        // O reload da página em `salvarArquivoNoOneDrive` finalizará o processo.
+        // Se não houvesse reload, você chamaria `closeModal()` aqui.
 
     } catch (error) {
-        // Se ocorrer um erro durante o salvamento, informa o usuário.
         console.error("Falha ao salvar a tarefa:", error);
-        alert('Ocorreu um erro ao salvar as alterações. Por favor, tente novamente.');
-        // Reverte a alteração no array local, já que o salvamento falhou.
-        jsonAcoes[taskIndex] = originalTaskData;
-    } finally {
+        alert(`Ocorreu um erro ao salvar: ${error.message}`);
+        
+        // Reverte a alteração no array local se o salvamento falhar.
+        if (isNewTaskMode) {
+            jsonAcoes.pop(); // Remove o item recém-adicionado.
+        }
+
     }
 }
 
