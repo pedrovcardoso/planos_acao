@@ -99,10 +99,11 @@ body {
 }
 
 #gantt-task-list {
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 30px;
 }
 #gantt-task-list::-webkit-scrollbar {
     display: none;
@@ -144,7 +145,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 5;
-    max-height: 39px;
+    max-height: 40px;
 }
 
 .gantt-month {
@@ -201,16 +202,12 @@ body {
     position: absolute;
     z-index: 1;
 }
+/* Oculte todas as seções de visualização por padrão */
+.view-section {
+    display: none;
+}
 
-.view-switch-button {
-        padding: 0.5rem 0; /* 8px vertical, 0 horizontal */
-        border-radius: 9999px; /* rounded-full */
-        font-weight: 600; /* font-semibold */
-        color: #475569; /* text-slate-600 */
-        transition: color 0.3s ease-in-out;
-    }
-
-    /* Estilo para o botão que está ATIVO */
-    .view-switch-button.active-view-button {
-        color: #0284c7; /* text-sky-600 */
-    }
+/* Mostre a seção de visualização que tem a classe 'active' */
+.view-section.active {
+    display: block;
+}

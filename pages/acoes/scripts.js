@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     fillGanttData(jsonAcoes)
+    populateKanbanBoard(jsonAcoes)
 
     const taskListContainer = document.getElementById('gantt-task-list');
     const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
@@ -115,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     
         fillGanttData(filtered);
+        populateKanbanBoard(filtered)
     });
 
     let isSyncingScroll = false;
@@ -167,6 +169,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     setPlanoFilterFromUrl()
     setupModalControls();
     populateActionsTable(jsonAcoes)
+    populateKanbanBoard(jsonAcoes)
     toggleLoading(false)
 });
 
@@ -174,36 +177,28 @@ document.addEventListener('DOMContentLoaded', async function () {
  * Configura os botões do seletor de visualização (Gantt, Tabela, Kanban).
  */
 function setupViewSwitcher() {
-    const switchButtons = document.querySelectorAll('.view-switch-button');
+    const radioButtons = document.querySelectorAll('input[name="option"]');
     const viewSections = document.querySelectorAll('.view-section');
 
-    switchButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Se o botão já estiver ativo ou desabilitado, não faz nada
-            if (button.classList.contains('active-view-button') || button.disabled) {
-                return;
-            }
-
-            // Pega o ID da seção alvo do atributo 'data-view-target'
-            const targetViewId = button.dataset.viewTarget;
-
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function () {
             // Esconde todas as seções
             viewSections.forEach(section => {
-                section.classList.add('hidden');
+                section.classList.remove('active');
             });
 
-            // Mostra apenas a seção alvo
-            const targetSection = document.getElementById(targetViewId);
-            if (targetSection) {
-                targetSection.classList.remove('hidden');
+            // Mostra a seção correspondente
+            const selectedViewId = this.id + '-view';
+            const selectedView = document.getElementById(selectedViewId);
+            if (selectedView) {
+                selectedView.classList.add('active');
             }
-
-            // Atualiza o estilo dos botões
-            switchButtons.forEach(btn => btn.classList.remove('active-view-button'));
-            button.classList.add('active-view-button');
         });
     });
 }
+
+// Para garantir que o script rode após o carregamento da página:
+document.addEventListener('DOMContentLoaded', setupViewSwitcher);
 
 function setPlanoFilterFromUrl() {
     // 1. Pega os parâmetros da URL atual
@@ -266,6 +261,7 @@ function filtrarValores(){
     });
 
     fillGanttData(jsonFiltrado);
+    populateKanbanBoard(jsonFiltrado);
 }
 
 function clearFilters(){
@@ -315,6 +311,7 @@ function filtrarPeriodo() {
     }
 
     fillGanttData(filtered);
+    populateKanbanBoard(filtered)
 };
 
 function fillGanttData(jsonAcoes){
@@ -663,16 +660,17 @@ async function salvarArquivoNoOneDrive(conteudo) {
 // =================================================================
 
 // 1. Objeto de configuração da tabela (seu novo formato)
-const tableColumnOrder = [
+// 1. Objeto de configuração da tabela (seu novo formato)
+const tableColumnConfig = [
     { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 100 },
-    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 250 },
-    { key: 'Atividade', label: 'Atividade', className: 'line-clamp-3', width: 400 },
-    { key: 'Data de início', label: 'Início', className: '', width: 120 },
-    { key: 'Data fim', label: 'Fim', className: '', width: 120 },
-    { key: 'Status', label: 'Status', className: '', width: 160 },
+    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 200 },
+    { key: 'Atividade', label: 'Atividade', className: '', width: 500 },
+    { key: 'Data de início', label: 'Início', className: 'text-center', width: 150 },
+    { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150 },
+    { key: 'Status', label: 'Status', className: 'text-center', width: 160 },
     { key: 'Responsável', label: 'Responsável', className: '', width: 200 },
     { key: 'Unidades envolvidas', label: 'Unidades envolvidas', className: '', width: 200 },
-    { key: 'Observações', label: 'Observações', className: '', width: 200 }
+    { key: 'Observações', label: 'Observações', className: '', width: 300 }
 ];
 
 /**
@@ -683,21 +681,26 @@ const tableColumnOrder = [
 function populateActionsTable(actionsData) {
     const container = document.getElementById('table-container');
     if (!container) {
-        console.error("Container #table-view não encontrado.");
+        console.error("Container #table-container não encontrado.");
         return;
     }
 
     // Calcula a largura total da tabela somando as larguras de cada coluna
-    const totalTableWidth = tableColumnOrder.reduce((sum, col) => sum + col.width, 0);
+    const totalTableWidth = tableColumnConfig.reduce((sum, col) => sum + col.width, 0);
 
-    // Gera o HTML do cabeçalho (Thead), aplicando a largura de cada coluna
-    const headerHtml = tableColumnOrder.map(col => 
-        `<th scope="col" class="px-6 py-3 ${col.className}" style="width: ${col.width}px;">${col.label}</th>`
+    // [MELHORIA] Gera as tags <col> para definir a largura de forma otimizada
+    const colgroupHtml = tableColumnConfig.map(col => 
+        `<col style="width: ${col.width}px;">`
+    ).join('');
+
+    // Gera o HTML do cabeçalho (Thead), sem a necessidade de width em cada <th>
+    const headerHtml = tableColumnConfig.map(col => 
+        `<th scope="col" class="px-5 py-3 ${col.className}">${col.label}</th>`
     ).join('');
 
     // Gera o HTML do corpo da tabela (Tbody)
     const bodyHtml = actionsData.map(task => {
-        const cellsHtml = tableColumnOrder.map(col => {
+        const cellsHtml = tableColumnConfig.map(col => {
             let cellContent = task[col.key] || '-';
             
             // Formatações especiais
@@ -708,19 +711,22 @@ function populateActionsTable(actionsData) {
                 cellContent = `<div class="status-container"><div class="${statusClass}">${task.Status}</div></div>`;
             }
 
-            return `<td class="px-6 py-4 ${col.className}">${cellContent}</td>`;
+            // O div interno ajuda a controlar o conteúdo que pode vazar (overflow)
+            return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
         }).join('');
 
-        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-id="${task['Número da atividade']}">
+        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task="${encodeURIComponent(JSON.stringify(task))}">
                     ${cellsHtml}
                 </tr>`;
     }).join('');
 
     // Monta a estrutura completa da tabela
-    console.log(totalTableWidth)
     const fullTableHtml = `
-        <table style="width: 1350px;">
-            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200">
+        <table style="width: ${totalTableWidth}px; table-layout: fixed;">
+            <colgroup>
+                ${colgroupHtml}
+            </colgroup>
+            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md">
                 <tr class="divide-x divide-slate-200">${headerHtml}</tr>
             </thead>
             <tbody class="divide-y divide-slate-200">${bodyHtml}</tbody>
@@ -730,12 +736,94 @@ function populateActionsTable(actionsData) {
     // Insere a tabela no container
     container.innerHTML = fullTableHtml;
 
-    // Adiciona os eventos de clique DEPOIS que a tabela foi inserida no DOM
     container.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('click', () => {
-            const taskId = row.dataset.taskId;
-            const task = actionsData.find(t => t['Número da atividade'] == taskId);
-            if (task) openTaskModal(task);
+            const task = JSON.parse(decodeURIComponent(row.dataset.task));
+            openTaskModal(task);
+        });
+    });
+}
+
+// =================================================================
+// LÓGICA REFAZERADA DO KANBAN COM TAILWIND CSS
+// =================================================================
+
+// 1. Objeto de configuração usando classes do Tailwind
+const kanbanColumnsConfig = [
+    { status: 'Em desenvolvimento', headerClasses: 'bg-gray-200 text-gray-800' },
+    { status: 'Planejado', headerClasses: 'bg-slate-300 text-slate-800' },
+    { status: 'Pendente', headerClasses: 'bg-yellow-300 text-yellow-800' },
+    { status: 'Em curso', headerClasses: 'bg-cyan-500 text-white' },
+    { status: 'Implementado', headerClasses: 'bg-green-600 text-white' }
+    // As cores foram mapeadas para as classes do Tailwind mais próximas.
+    // Ex: #e0e0e0 -> bg-gray-200, #17a2b8 -> bg-cyan-500
+];
+
+/**
+ * Cria e popula o quadro Kanban com altura máxima, cabeçalhos fixos e scrollbar horizontal sempre visível.
+ * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
+ */
+function populateKanbanBoard(actionsData) {
+    const container = document.getElementById('kanban-view');
+    if (!container) {
+        console.error("Container #kanban-view não encontrado.");
+        return;
+    }
+
+    // --- 1. Agrupa as tarefas por status (sem alterações) ---
+    const tasksByStatus = actionsData.reduce((acc, task) => {
+        const status = task.Status || 'Sem Status';
+        if (!acc[status]) acc[status] = [];
+        acc[status].push(task);
+        return acc;
+    }, {});
+
+    // --- 2. Gera o HTML para cada coluna ---
+    const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
+        const tasks = tasksByStatus[columnConfig.status] || [];
+        
+        const cardsHtml = tasks.map(task => `
+            <div 
+                class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
+                data-task="${encodeURIComponent(JSON.stringify(task))}"
+            >
+                <p class="font-semibold text-slate-800 line-clamp-2">${task.Atividade}</p>
+                <p class="mt-2 text-xs text-slate-500">${task['Plano de ação']}</p>
+            </div>
+        `).join('');
+
+        return `
+            <div class="w-80 flex-shrink-0 flex flex-col">
+                <!-- CABEÇALHO FIXO (STICKY) -->
+                <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center p-3 font-semibold rounded-t-xl ${columnConfig.headerClasses}">
+                    <span>${columnConfig.status}</span>
+                    <span class="text-sm font-bold px-2 py-0.5 bg-black/10 rounded-full">${tasks.length}</span>
+                </div>
+                <!-- CONTAINER DOS CARDS COM SCROLL VERTICAL -->
+                <div class="kanban-cards-container bg-slate-100 rounded-b-xl flex-grow p-3 overflow-y-auto space-y-3">
+                    ${cardsHtml}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // --- 3. Monta a estrutura completa do quadro ---
+    const fullKanbanHtml = `
+        <div class="w-full max-h-[600px] flex flex-col bg-white rounded-lg shadow border border-slate-200">
+            <div class="kanban-board flex-grow flex gap-4 overflow-x-scroll p-4">
+                ${columnsHtml}
+            </div>
+        </div>
+    `;
+
+    // --- 4. Insere o quadro no container ---
+    container.innerHTML = fullKanbanHtml;
+
+    // --- 5. Adiciona os eventos de clique ---
+    container.querySelectorAll('.kanban-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const task = JSON.parse(decodeURIComponent(card.dataset.task));
+            openTaskModal(task);
         });
     });
 }
