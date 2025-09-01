@@ -1,10 +1,3 @@
-const filtersConfig = [
-    ["Plano de ação", "filter-planoAcao"],
-    ["Status", "filter-Status"],
-    ["Responsável", "filter-Responsavel"],
-    ["Unidades envolvidas", "filter-Orgao"]
-]
-
 function toggleLoading(show) {
     const loadingOverlay = document.getElementById('loading-overlay');
     if (loadingOverlay) {
@@ -67,104 +60,11 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.log('dados resgatados do sessionstorage')
     }
 
-    const taskListContainer = document.getElementById('gantt-task-list');
-    const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
-    const monthsHeader = document.getElementById('gantt-months-header');
-    const ganttRowsContainer = document.getElementById('gantt-rows');
-    
-    filtersConfig.forEach(filterValue=>{
-        const options = []
-        Object.values(jsonAcoes).forEach(value=>{
-            options.push(value[filterValue[0]])    
-        })
-        const optionsDistinc = new Set(options)
-        const selectElement = document.getElementById(filterValue[1])
-        optionsDistinc.forEach(value=>{
-            selectElement.innerHTML += `<option value=${normalizeString(value)}>${value}</option>`
-        })
-        selectElement.addEventListener('change', ()=>{filtrarValores()})
-    })
-
-    document.getElementById('filter-periodo').addEventListener('change', function() {
-        const value = this.value;
-        const inputsDiv = document.getElementById('periodo-especifico-inputs');
-        if (value === 'especifico') {
-            inputsDiv.style.display = 'flex';
-        } else {
-            inputsDiv.style.display = 'none';
-            filtrarPeriodo(); // chama o filtro normal para outras opções
-        }
-    });
-    
-    document.getElementById('filtrar-especifico').addEventListener('click', function() {
-        const inicio = document.getElementById('periodo-inicio').value;
-        const fim = document.getElementById('periodo-fim').value;
-        if (!inicio || !fim) return;
-    
-        const firstDay = new Date(inicio);
-        firstDay.setHours(0,0,0,0);
-        const lastDay = new Date(fim);
-        lastDay.setHours(23,59,59,999);
-    
-        const filtered = jsonAcoes.filter(task => {
-            const start = new Date(task["Data de início"]+'T10:00:00');
-            const end = new Date(task["Data fim"]+'T10:00:00');
-            return (start <= lastDay && end >= firstDay);
-        });
-    
-        populateKanbanBoard(filtered)
-        fillGanttData(filtered);
-    });
-
-    let isSyncingScroll = false;
-    taskListContainer.addEventListener('scroll', () => {
-        if (isSyncingScroll) return;
-        isSyncingScroll = true;
-        ganttTimelineContainer.scrollTop = taskListContainer.scrollTop;
-        requestAnimationFrame(() => { isSyncingScroll = false; });
-    });
-    ganttTimelineContainer.addEventListener('scroll', () => {
-        if (isSyncingScroll) return;
-        isSyncingScroll = true;
-        taskListContainer.scrollTop = ganttTimelineContainer.scrollTop;
-        requestAnimationFrame(() => { isSyncingScroll = false; });
-    });
-
-    const resizers = document.querySelectorAll('.gantt-tasks-header .resizer');
-    let currentResizer;
-    resizers.forEach(resizer => {
-        resizer.addEventListener('mousedown', (e) => {
-            currentResizer = e.target;
-            e.preventDefault(); 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-            function onMouseMove(e) {
-                const root = document.documentElement;
-                const prevSibling = currentResizer.parentElement;
-                const rect = prevSibling.getBoundingClientRect();
-                const newWidth = e.clientX - rect.left;
-                if (newWidth > 40) { 
-                   const colIdentifier = prevSibling.dataset.col;
-                    if (colIdentifier === 'num') {
-                        root.style.setProperty('--col-num-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'plano') {
-                        root.style.setProperty('--col-plano-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'atividade') {
-                        root.style.setProperty('--col-atividade-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'status') {
-                        root.style.setProperty('--col-status-width', `${newWidth}px`);
-                    }
-                }
-            }
-            function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-        });
-    });
-
     setupViewSwitcher();
     setupModalControls();
+    setupGantt();
+    setupFilters()
+
     fillGanttData(jsonAcoes)
     populateActionsTable(jsonAcoes)
     populateKanbanBoard(jsonAcoes)
@@ -173,9 +73,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(false)
 });
 
-/**
- * Configura os botões do seletor de visualização (Gantt, Tabela, Kanban).
- */
+
 function setupViewSwitcher() {
     const radioButtons = document.querySelectorAll('input[name="option"]');
     const viewSections = document.querySelectorAll('.view-section');
@@ -197,9 +95,83 @@ function setupViewSwitcher() {
     });
 }
 
-// Para garantir que o script rode após o carregamento da página:
-document.addEventListener('DOMContentLoaded', setupViewSwitcher);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =================================================================
+// PAINEL DE FILTROS
+// =================================================================
+
+const filtersConfig = [
+    ["Plano de ação", "filter-planoAcao"],
+    ["Status", "filter-Status"],
+    ["Responsável", "filter-Responsavel"],
+    ["Unidades envolvidas", "filter-Orgao"]
+];
+
+// Nenhuma alteração necessária nesta função.
+function normalizeString(str) {
+    if (!str) return "";
+    return str
+        .toLowerCase()
+        .normalize("NFD")                 // separa acentos
+        .replace(/[\u0300-\u036f]/g, "")  // remove acentos
+        .replace(/\s+/g, "_")             // troca espaços por _
+        .replace(/[^\w_]/g, "");          // remove caracteres especiais
+}
+
+/**
+ * Configura os listeners de eventos e popula os seletores de filtro.
+ */
+function setupFilters() {
+    // Popula os seletores de filtro com opções únicas.
+    filtersConfig.forEach(([chave, elementId]) => {
+        console.log(elementId)
+        const selectElement = document.getElementById(elementId);
+        if (!selectElement) return;
+
+        const opcoes = Object.values(jsonAcoes).map(value => value[chave]);
+        const opcoesUnicas = new Set(opcoes);
+
+        opcoesUnicas.forEach(valor => {
+            // Usa a forma correta e mais performática de adicionar opções.
+            const option = new Option(valor, normalizeString(valor));
+            selectElement.add(option);
+        });
+        
+        selectElement.addEventListener('change', filtrarValores);
+    });
+
+    // Configura o listener para o seletor de período.
+    document.getElementById('filter-periodo').addEventListener('change', function() {
+        const inputsDiv = document.getElementById('periodo-especifico-inputs');
+        inputsDiv.style.display = this.value === 'especifico' ? 'flex' : 'none';
+        
+        // Sempre chama a função principal de filtro para outras opções.
+        if (this.value !== 'especifico') {
+            filtrarValores();
+        }
+    });
+    
+    // Configura o listener para o botão de filtro específico.
+    document.getElementById('filtrar-especifico').addEventListener('click', filtrarValores);
+    setPlanoFilterFromUrl()
+}
+
+/**
+ * Verifica se tem algum parametro na URL com o plano de ação.
+ */
 function setPlanoFilterFromUrl() {
     // 1. Pega os parâmetros da URL atual
     const params = new URLSearchParams(window.location.search);
@@ -230,92 +202,342 @@ function setPlanoFilterFromUrl() {
     }
 }
 
-function filterJson(json, chave, valor) {
+/**
+ * Filtra um array de objetos JSON com base em uma chave e valor.
+ * (Mantida para seguir a estrutura original, embora possa ser integrada em `filtrarValores`).
+ */
+function filterJson(json, chave, valorNormalizado) {
     return json.filter(item => {
-        // comparação flexível: se valor é string, ignora maiúscula/minúscula
-        if (typeof item[chave] === "string" && typeof valor === "string") {
-            return normalizeString(item[chave]) === normalizeString(valor);
-        }
-        return item[chave] === valor;
+        const itemNormalizado = normalizeString(item[chave]);
+        return itemNormalizado === valorNormalizado;
     });
 }
 
-function normalizeString(str) {
-    if (!str) return "";
-    return str
-        .toLowerCase()
-        .normalize("NFD")                 // separa acentos
-        .replace(/[\u0300-\u036f]/g, "")  // remove acentos
-        .replace(/\s+/g, "_")             // troca espaços por _
-        .replace(/[^\w_]/g, "");          // remove caracteres especiais
+/**
+ * Função auxiliar para atualizar todas as visualizações com os dados filtrados.
+ * @param {Array} dados - O array de dados para popular as visualizações.
+ */
+function atualizarVisualizacoes(dados) {
+    fillGanttData(dados);
+    populateKanbanBoard(dados);
+    populateActionsTable(dados);
 }
 
-function filtrarValores(){
-    let jsonFiltrado = jsonAcoes;
+/**
+ * Função central que aplica TODOS os filtros (de categoria e período) e atualiza a interface.
+ */
+function filtrarValores() {
+    let jsonFiltrado = [...jsonAcoes]; // Começa com uma cópia dos dados originais.
 
+    // 1. Aplica filtros de categoria (Plano de Ação, Status, etc.).
     filtersConfig.forEach(([chave, elementId]) => {
         const filterElement = document.getElementById(elementId);
         if (filterElement && filterElement.value !== '-') {
-            jsonFiltrado = filterJson(jsonFiltrado, chave, normalizeString(filterElement.value));
+            jsonFiltrado = filterJson(jsonFiltrado, chave, filterElement.value);
         }
     });
 
-    fillGanttData(jsonFiltrado);
-    populateKanbanBoard(jsonFiltrado);
-    populateActionsTable(jsonFiltrado)
+    // 2. Aplica o filtro de período.
+    jsonFiltrado = filtrarPeriodo(jsonFiltrado);
+
+    // 3. Atualiza todas as visualizações com o resultado final.
+    atualizarVisualizacoes(jsonFiltrado);
 }
 
-function clearFilters(){
-    filtersConfig.forEach(([chave, elementId]) => {
-        document.getElementById(elementId).value = '-'
-    });
-    document.getElementById('filter-periodo').value = '-'
-    document.getElementById('periodo-especifico-inputs').style.display = 'none'
-    
-    filtrarValores()
-}
+/**
+ * Filtra um array de dados com base no período selecionado.
+ * Esta função agora atua como um "helper", recebendo dados e retornando-os filtrados.
+ * @param {Array} dadosParaFiltrar - O array de ações a ser filtrado.
+ * @returns {Array} O array de ações filtrado por período.
+ */
+function filtrarPeriodo(dadosParaFiltrar) {
+    const value = document.getElementById('filter-periodo').value;
+    let dataInicio, dataFim;
 
-function filtrarPeriodo() {
-    const select = document.getElementById('filter-periodo')
+    const agora = new Date();
 
-    const value = select.value;
-    let filtered = jsonAcoes;
+    switch (value) {
+        case 'semana':
+            const primeiroDia = new Date(agora);
+            primeiroDia.setDate(agora.getDate() - agora.getDay() + 1);
+            dataInicio = primeiroDia;
+            
+            const ultimoDia = new Date(primeiroDia);
+            ultimoDia.setDate(primeiroDia.getDate() + 4);
+            dataFim = ultimoDia;
+            break;
+        
+        case 'mes':
+            dataInicio = new Date(agora.getFullYear(), agora.getMonth(), 1);
+            dataFim = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
+            break;
 
-    if (value === 'mes') {
-        const now = new Date();
-        const month = now.getMonth();
-        const year = now.getFullYear();
-        const monthStart = new Date(year, month, 1, 0, 0, 0, 0);
-        const monthEnd = new Date(year, month + 1, 0, 23, 59, 59, 999);
-        filtered = jsonAcoes.filter(task => {
-            const start = new Date(task["Data de início"]+'T10:00:00');
-            const end = new Date(task["Data fim"]+'T10:00:00');
-            return (
-                (start <= monthEnd && end >= monthStart)
-            );
-        });
-    } else if (value === 'semana') {
-        const now = new Date();
-        const firstDay = new Date(now);
-        firstDay.setDate(now.getDate() - now.getDay() + 1);
-        firstDay.setHours(0,0,0,0);
-        const lastDay = new Date(firstDay);
-        lastDay.setDate(firstDay.getDate() + 4);
-        lastDay.setHours(23,59,59,999);
-        filtered = jsonAcoes.filter(task => {
-            const start = new Date(task["Data de início"]+'T10:00:00');
-            const end = new Date(task["Data fim"]+'T10:00:00');
-            return (
-                (start <= lastDay && end >= firstDay)
-            );
-        });
+        case 'especifico':
+            const inicioInput = document.getElementById('periodo-inicio').value;
+            const fimInput = document.getElementById('periodo-fim').value;
+            if (inicioInput && fimInput) {
+                dataInicio = new Date(inicioInput);
+                dataFim = new Date(fimInput);
+            }
+            break;
+
+        default:
+            // Se não for um filtro de período, retorna os dados como estão.
+            return dadosParaFiltrar;
     }
 
-    fillGanttData(filtered);
-    populateActionsTable(filtered)
-    populateKanbanBoard(filtered)
-};
+    if (!dataInicio || !dataFim) {
+        return dadosParaFiltrar; // Retorna sem filtrar se as datas forem inválidas.
+    }
 
+    // Normaliza as horas para garantir que o dia inteiro seja incluído.
+    dataInicio.setHours(0, 0, 0, 0);
+    dataFim.setHours(23, 59, 59, 999);
+
+    return dadosParaFiltrar.filter(task => {
+        // Adiciona um fuso horário para evitar problemas de conversão.
+        const start = new Date(task["Data de início"] + 'T00:00:00');
+        const end = new Date(task["Data fim"] + 'T23:59:59');
+        return start <= dataFim && end >= dataInicio;
+    });
+}
+
+/**
+ * Limpa todos os filtros e reexibe os dados originais.
+ */
+function clearFilters() {
+    filtersConfig.forEach(([chave, elementId]) => {
+        document.getElementById(elementId).value = '-';
+    });
+    document.getElementById('filter-periodo').value = '-';
+    document.getElementById('periodo-inicio').value = '';
+    document.getElementById('periodo-fim').value = '';
+    document.getElementById('periodo-especifico-inputs').style.display = 'none';
+    
+    history.replaceState(null, '', window.location.pathname);
+
+    filtrarValores();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =================================================================
+// LÓGICA DO KANBAN
+// =================================================================
+
+// 1. Objeto de configuração usando classes do Tailwind
+const kanbanColumnsConfig = [
+    { status: 'Em desenvolvimento', headerClasses: 'bg-gray-200 text-gray-800' },
+    { status: 'Planejado', headerClasses: 'bg-slate-300 text-slate-800' },
+    { status: 'Pendente', headerClasses: 'bg-yellow-300 text-yellow-800' },
+    { status: 'Em curso', headerClasses: 'bg-cyan-500 text-white' },
+    { status: 'Implementado', headerClasses: 'bg-green-600 text-white' }
+];
+
+/**
+ * Cria e popula o quadro Kanban com altura máxima, cabeçalhos fixos e scrollbar horizontal sempre visível.
+ * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
+ */
+function populateKanbanBoard(actionsData) {
+    const container = document.getElementById('kanban-view');
+    if (!container) {
+        console.error("Container #kanban-view não encontrado.");
+        return;
+    }
+
+    // --- 1. Agrupa as tarefas por status (sem alterações) ---
+    const tasksByStatus = actionsData.reduce((acc, task) => {
+        const status = task.Status || 'Sem Status';
+        if (!acc[status]) acc[status] = [];
+        acc[status].push(task);
+        return acc;
+    }, {});
+
+    // --- 2. Gera o HTML para cada coluna ---
+    const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
+        const tasks = tasksByStatus[columnConfig.status] || [];
+        
+        const formatDate = (dateString) => {
+            return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+        };
+        
+        const cardsHtml = tasks.map(task => `
+            <div 
+                class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
+                data-task="${encodeURIComponent(JSON.stringify(task))}">
+                <span class="font-semibold text-slate-800 line-clamp-2">${task.Atividade}</span>
+                <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
+                <div class="text-xs text-slate-500 flex justify-between">
+                    <p>Início: <strong>${formatDate(task['Data de início'])}</strong></p>
+                    <p>Fim: <strong>${formatDate(task['Data fim'])}</strong></p>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="w-80 flex-shrink-0 flex flex-col">
+                <!-- CABEÇALHO FIXO (STICKY) -->
+                <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center p-3 font-semibold rounded-t-xl ${columnConfig.headerClasses}">
+                    <span>${columnConfig.status}</span>
+                    <span class="text-sm font-bold px-2 py-0.5 bg-black/10 rounded-full">${tasks.length}</span>
+                </div>
+                <!-- CONTAINER DOS CARDS COM SCROLL VERTICAL -->
+                <div class="kanban-cards-container bg-slate-100 rounded-b-xl flex-grow p-3 overflow-y-auto space-y-3">
+                    ${cardsHtml}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // --- 3. Monta a estrutura completa do quadro ---
+    const fullKanbanHtml = `
+        <div class="w-full max-h-[600px] flex flex-col bg-white rounded-lg shadow border border-slate-200">
+            <div class="kanban-board flex-grow flex gap-4 overflow-x-scroll p-4">
+                ${columnsHtml}
+            </div>
+        </div>
+    `;
+
+    // --- 4. Insere o quadro no container ---
+    container.innerHTML = fullKanbanHtml;
+
+    // --- 5. Adiciona os eventos de clique ---
+    container.querySelectorAll('.kanban-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const task = JSON.parse(decodeURIComponent(card.dataset.task));
+            openTaskModal(task);
+        });
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =================================================================
+// LÓGICA DA TABELA
+// =================================================================
+const tableColumnConfig = [
+    { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 100 },
+    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 200 },
+    { key: 'Atividade', label: 'Atividade', className: '', width: 500 },
+    { key: 'Data de início', label: 'Início', className: 'text-center', width: 150 },
+    { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150 },
+    { key: 'Status', label: 'Status', className: 'text-center', width: 160 },
+    { key: 'Responsável', label: 'Responsável', className: '', width: 200 },
+    { key: 'Unidades envolvidas', label: 'Unidades envolvidas', className: '', width: 200 },
+    { key: 'Observações', label: 'Observações', className: '', width: 300 }
+];
+
+/**
+ * Cria e popula a tabela de ações com base no objeto de configuração.
+ * A função gera a tabela inteira e a insere no DOM.
+ * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
+ */
+function populateActionsTable(actionsData) {
+    const container = document.getElementById('table-container');
+    if (!container) {
+        console.error("Container #table-container não encontrado.");
+        return;
+    }
+
+    // Calcula a largura total da tabela somando as larguras de cada coluna
+    const totalTableWidth = tableColumnConfig.reduce((sum, col) => sum + col.width, 0);
+
+    // [MELHORIA] Gera as tags <col> para definir a largura de forma otimizada
+    const colgroupHtml = tableColumnConfig.map(col => 
+        `<col style="width: ${col.width}px;">`
+    ).join('');
+
+    // Gera o HTML do cabeçalho (Thead), sem a necessidade de width em cada <th>
+    const headerHtml = tableColumnConfig.map(col => 
+        `<th scope="col" class="px-5 py-3 ${col.className}">${col.label}</th>`
+    ).join('');
+
+    // Gera o HTML do corpo da tabela (Tbody)
+    const bodyHtml = actionsData.map(task => {
+        const cellsHtml = tableColumnConfig.map(col => {
+            let cellContent = task[col.key] || '-';
+            
+            // Formatações especiais
+            if (['Data de início', 'Data fim'].includes(col.key)) {
+                cellContent = task[col.key] ? new Date(task[col.key] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+            } else if (col.key === 'Status') {
+                const statusClass = 'status-' + (task.Status || '').replace(/\s+/g, '-');
+                cellContent = `<div class="status-container"><div class="${statusClass}">${task.Status}</div></div>`;
+            }
+
+            // O div interno ajuda a controlar o conteúdo que pode vazar (overflow)
+            return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
+        }).join('');
+
+        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task="${encodeURIComponent(JSON.stringify(task))}">
+                    ${cellsHtml}
+                </tr>`;
+    }).join('');
+
+    // Monta a estrutura completa da tabela
+    const fullTableHtml = `
+        <table style="width: ${totalTableWidth}px; table-layout: fixed;">
+            <colgroup>
+                ${colgroupHtml}
+            </colgroup>
+            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md">
+                <tr class="divide-x divide-slate-200">${headerHtml}</tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">${bodyHtml}</tbody>
+        </table>
+    `;
+
+    // Insere a tabela no container
+    container.innerHTML = fullTableHtml;
+
+    container.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('click', () => {
+            const task = JSON.parse(decodeURIComponent(row.dataset.task));
+            openTaskModal(task);
+        });
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// =================================================================
+// GANTT CHART
+// =================================================================
 function fillGanttData(jsonAcoes){
     const monthWidth = 80; 
     const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
@@ -420,27 +642,137 @@ function fillGanttData(jsonAcoes){
     });
 }
 
+function setupGantt(){
+    setupGanttScroll()
+    setupResizerGantt()
+}
+
+function setupResizerGantt(){
+    const resizers = document.querySelectorAll('.gantt-tasks-header .resizer');
+    let currentResizer;
+    resizers.forEach(resizer => {
+        resizer.addEventListener('mousedown', (e) => {
+            currentResizer = e.target;
+            e.preventDefault(); 
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            function onMouseMove(e) {
+                const root = document.documentElement;
+                const prevSibling = currentResizer.parentElement;
+                const rect = prevSibling.getBoundingClientRect();
+                const newWidth = e.clientX - rect.left;
+                if (newWidth > 40) { 
+                   const colIdentifier = prevSibling.dataset.col;
+                    if (colIdentifier === 'num') {
+                        root.style.setProperty('--col-num-width', `${newWidth}px`);
+                    } else if (colIdentifier === 'plano') {
+                        root.style.setProperty('--col-plano-width', `${newWidth}px`);
+                    } else if (colIdentifier === 'atividade') {
+                        root.style.setProperty('--col-atividade-width', `${newWidth}px`);
+                    } else if (colIdentifier === 'status') {
+                        root.style.setProperty('--col-status-width', `${newWidth}px`);
+                    }
+                }
+            }
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        });
+    });
+}
+
+function setupGanttScroll(){
+    const taskListContainer = document.getElementById('gantt-task-list');
+    const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
+
+    let isSyncingScroll = false;
+    taskListContainer.addEventListener('scroll', () => {
+        if (isSyncingScroll) return;
+        isSyncingScroll = true;
+        ganttTimelineContainer.scrollTop = taskListContainer.scrollTop;
+        requestAnimationFrame(() => { isSyncingScroll = false; });
+    });
+    ganttTimelineContainer.addEventListener('scroll', () => {
+        if (isSyncingScroll) return;
+        isSyncingScroll = true;
+        taskListContainer.scrollTop = ganttTimelineContainer.scrollTop;
+        requestAnimationFrame(() => { isSyncingScroll = false; });
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // =================================================================
 // LÓGICA REESTRUTURADA E FINAL DO MODAL DE AÇÕES
 // =================================================================
 
-let currentTask = null;
+// --- Variáveis de estado do Modal ---
+
+// Armazena a tarefa atualmente exibida/editada no modal.
+let currentTask = null; 
+// Armazena uma cópia fiel da tarefa como ela era ANTES de qualquer edição.
+let originalTaskData = null; 
+// Flag para detectar se houve alguma alteração no formulário.
 let hasChanges = false;
-// Supondo que 'jsonAcoes' e 'jsonPlanos' estejam disponíveis
-// e que você tenha uma função 'salvarAcoesNoOneDrive'
 
 /**
- * Função principal para abrir o modal.
+ * Configura todos os listeners de eventos para os controles dos modais.
+ */
+function setupModalControls() {
+    // Botões principais do modal
+    document.getElementById('modal-btn-close').addEventListener('click', closeModal);
+    document.getElementById('modal-btn-view-close').addEventListener('click', () => closeModal()); // 5. Botão fechar
+    document.getElementById('modal-btn-edit').addEventListener('click', switchToEditMode);
+    document.getElementById('modal-btn-cancel').addEventListener('click', () => switchToViewMode());
+    document.getElementById('modal-btn-save').addEventListener('click', handleSave);
+    
+    // Detecta alterações no formulário
+    document.getElementById('modal-edit-form').addEventListener('input', () => {
+        hasChanges = true;
+    });
+
+    // Botões do modal de confirmação
+    document.getElementById('confirm-btn-no').addEventListener('click', () => {
+        document.getElementById('confirmation-modal').classList.add('hidden');
+    });
+    document.getElementById('confirm-btn-yes').addEventListener('click', () => {
+        // Decide se deve fechar o modal ou apenas voltar para o modo de visualização
+        if (!document.getElementById('task-modal-container').classList.contains('hidden')) {
+            switchToViewMode(true); // Força a volta para o modo de visualização
+            if (!document.getElementById('edit-mode-content').classList.contains('hidden')) {
+                 // Se o botão de fechar (X) foi clicado enquanto em modo de edição
+                 closeModal();
+            }
+        }
+    });
+}
+
+/**
+ * Função principal para abrir o modal com os dados de uma tarefa.
  * @param {object} task - O objeto da tarefa clicada.
  */
 function openTaskModal(task) {
+    // Guarda a referência para a tarefa atual.
     currentTask = task;
+    originalTaskData = { ...task };
+
     populateViewMode(task);
     switchToViewMode(true);
     document.getElementById('task-modal-container').classList.remove('hidden');
-    // 4. Bloqueia o scroll do body
-    document.body.classList.add('overflow-hidden');
+    document.body.classList.add('overflow-hidden'); // Bloqueia o scroll do body.
 }
 
 /**
@@ -501,19 +833,18 @@ function populateEditMode(task) {
  * Alterna para o modo de edição.
  */
 function switchToEditMode() {
-    // 3. Altera o cabeçalho para "Editar Ação"
+    populateEditMode(currentTask);
+    
     document.getElementById('modal-view-plano').classList.add('hidden');
     document.getElementById('modal-view-atividade').innerText = 'Editar Ação';
 
-    populateEditMode(currentTask);
-    
     document.getElementById('view-mode-content').classList.add('hidden');
     document.getElementById('view-mode-buttons').classList.add('hidden');
     
     document.getElementById('edit-mode-content').classList.remove('hidden');
     document.getElementById('edit-mode-buttons').classList.remove('hidden');
 
-    hasChanges = false;
+    hasChanges = false; // Reseta a flag de alterações ao entrar no modo de edição.
 }
 
 /**
@@ -521,15 +852,13 @@ function switchToEditMode() {
  * @param {boolean} force - Se true, ignora a verificação de alterações.
  */
 function switchToViewMode(force = false) {
-    // 2. Verifica se há alterações antes de voltar
     if (hasChanges && !force) {
         document.getElementById('confirmation-modal').classList.remove('hidden');
-        return; // Para a execução e espera a decisão do usuário
+        return;
     }
 
-    // Repopula o cabeçalho original
+    populateViewMode(currentTask); // Repopula com os dados mais recentes.
     document.getElementById('modal-view-plano').classList.remove('hidden');
-    populateViewMode(currentTask); // Repopula tudo para garantir consistência
 
     document.getElementById('edit-mode-content').classList.add('hidden');
     document.getElementById('edit-mode-buttons').classList.add('hidden');
@@ -537,7 +866,6 @@ function switchToViewMode(force = false) {
     document.getElementById('view-mode-content').classList.remove('hidden');
     document.getElementById('view-mode-buttons').classList.remove('hidden');
     
-    // Fecha o modal de confirmação, caso esteja aberto
     document.getElementById('confirmation-modal').classList.add('hidden');
     hasChanges = false;
 }
@@ -560,77 +888,78 @@ function closeModal() {
     document.body.classList.remove('overflow-hidden');
 }
 
-/**
- * Salva as alterações feitas no formulário.
- */
-function handleSave() {
+async function handleSave() {
     if (!hasChanges) {
         switchToViewMode(true);
         return;
     }
 
-    // Seleciona todos os botões que precisam ser desabilitados
-    const saveButton = document.getElementById('modal-btn-save');
-    const cancelButton = document.getElementById('modal-btn-cancel');
-    const closeButton = document.getElementById('modal-btn-close');
+    // Desabilita a UI ANTES de iniciar o salvamento para evitar cliques duplos.
+    document.getElementById('modal-btn-save').disabled = true;
+    document.getElementById('modal-btn-save').textContent = 'Salvando...';
+    document.getElementById('modal-btn-cancel').disabled = true;
+    document.getElementById('modal-btn-close').disabled = true;
 
+    // Monta o objeto da tarefa atualizada com os dados do formulário.
     const form = document.getElementById('modal-edit-form');
     const formData = new FormData(form);
-    const updatedTask = { ...currentTask };
+    const updatedTask = { ...originalTaskData }; // Começa com os dados originais para preservar chaves não presentes no form.
 
     formData.forEach((value, key) => {
         updatedTask[key] = value;
     });
 
-    const taskIndex = jsonAcoes.findIndex(t => t['Número da atividade'] === currentTask['Número da atividade']);
-    if (taskIndex > -1) {
-        jsonAcoes[taskIndex] = updatedTask;
-    } else {
-        alert("Erro: Tarefa original não encontrada!");
+    // Encontra o índice da tarefa original no array principal comparando-a
+    // com a cópia que salvamos (originalTaskData).
+    const taskIndex = findTaskIndex(originalTaskData);
+
+    if (taskIndex === -1) {
+        alert("Erro: Tarefa original não pôde ser encontrada para atualização! A ação não foi salva.");
         return;
     }
-
-    const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
-
-    // Desabilita a UI ANTES de iniciar o salvamento
-    saveButton.disabled = true;
-    cancelButton.disabled = true;
-    closeButton.disabled = true;
-    saveButton.textContent = 'Salvando...';
     
-    // 6. Chama a função de salvamento real
-    salvarArquivoNoOneDrive(conteudoParaSalvar)
+    try {
+        // Atualiza o array principal com os novos dados.
+        jsonAcoes[taskIndex] = updatedTask;
+        
+        // Atualiza a tarefa atual para refletir as mudanças na UI ao voltar para o modo de visualização.
+        currentTask = updatedTask;
+
+        const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
+        
+        // Chama a função de salvamento e aguarda sua conclusão.
+        await salvarArquivoNoOneDrive(conteudoParaSalvar);
+
+        // Se o salvamento for bem-sucedido, volta ao modo de visualização.
+        // O reload da página já acontece dentro de salvarArquivoNoOneDrive.
+        //switchToViewMode(true);
+
+    } catch (error) {
+        // Se ocorrer um erro durante o salvamento, informa o usuário.
+        console.error("Falha ao salvar a tarefa:", error);
+        alert('Ocorreu um erro ao salvar as alterações. Por favor, tente novamente.');
+        // Reverte a alteração no array local, já que o salvamento falhou.
+        jsonAcoes[taskIndex] = originalTaskData;
+    } finally {
+    }
 }
 
 /**
- * Configura todos os listeners de eventos para os controles dos modais.
+ * Encontra o índice de uma tarefa no array `jsonAcoes` comparando todos os seus campos.
+ * @param {object} taskToFind - O objeto da tarefa a ser encontrado.
+ * @returns {number} O índice da tarefa no array, ou -1 se não for encontrada.
  */
-function setupModalControls() {
-    // Botões principais do modal
-    document.getElementById('modal-btn-close').addEventListener('click', closeModal);
-    document.getElementById('modal-btn-view-close').addEventListener('click', () => closeModal()); // 5. Botão fechar
-    document.getElementById('modal-btn-edit').addEventListener('click', switchToEditMode);
-    document.getElementById('modal-btn-cancel').addEventListener('click', () => switchToViewMode());
-    document.getElementById('modal-btn-save').addEventListener('click', handleSave);
-    
-    // Detecta alterações no formulário
-    document.getElementById('modal-edit-form').addEventListener('input', () => {
-        hasChanges = true;
-    });
+function findTaskIndex(taskToFind) {
+    return jsonAcoes.findIndex(taskInArray => {
+        const keys1 = Object.keys(taskInArray);
+        const keys2 = Object.keys(taskToFind);
 
-    // Botões do modal de confirmação
-    document.getElementById('confirm-btn-no').addEventListener('click', () => {
-        document.getElementById('confirmation-modal').classList.add('hidden');
-    });
-    document.getElementById('confirm-btn-yes').addEventListener('click', () => {
-        // Decide se deve fechar o modal ou apenas voltar para o modo de visualização
-        if (!document.getElementById('task-modal-container').classList.contains('hidden')) {
-            switchToViewMode(true); // Força a volta para o modo de visualização
-            if (!document.getElementById('edit-mode-content').classList.contains('hidden')) {
-                 // Se o botão de fechar (X) foi clicado enquanto em modo de edição
-                 closeModal();
-            }
+        if (keys1.length !== keys2.length) {
+            return false;
         }
+
+        // every() retorna true apenas se a condição for verdadeira para todos os elementos.
+        return keys1.every(key => taskInArray[key] === taskToFind[key]);
     });
 }
 
@@ -655,184 +984,4 @@ async function salvarArquivoNoOneDrive(conteudo) {
         alert('Erro ao salvar os dados.');
         return null;
     }
-}
-
-// =================================================================
-// CONFIGURAÇÃO E LÓGICA DA VISUALIZAÇÃO DE AÇÕES
-// =================================================================
-
-// 1. Objeto de configuração da tabela (seu novo formato)
-// 1. Objeto de configuração da tabela (seu novo formato)
-const tableColumnConfig = [
-    { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 100 },
-    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 200 },
-    { key: 'Atividade', label: 'Atividade', className: '', width: 500 },
-    { key: 'Data de início', label: 'Início', className: 'text-center', width: 150 },
-    { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150 },
-    { key: 'Status', label: 'Status', className: 'text-center', width: 160 },
-    { key: 'Responsável', label: 'Responsável', className: '', width: 200 },
-    { key: 'Unidades envolvidas', label: 'Unidades envolvidas', className: '', width: 200 },
-    { key: 'Observações', label: 'Observações', className: '', width: 300 }
-];
-
-/**
- * Cria e popula a tabela de ações com base no objeto de configuração.
- * A função gera a tabela inteira e a insere no DOM.
- * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
- */
-function populateActionsTable(actionsData) {
-    const container = document.getElementById('table-container');
-    if (!container) {
-        console.error("Container #table-container não encontrado.");
-        return;
-    }
-
-    // Calcula a largura total da tabela somando as larguras de cada coluna
-    const totalTableWidth = tableColumnConfig.reduce((sum, col) => sum + col.width, 0);
-
-    // [MELHORIA] Gera as tags <col> para definir a largura de forma otimizada
-    const colgroupHtml = tableColumnConfig.map(col => 
-        `<col style="width: ${col.width}px;">`
-    ).join('');
-
-    // Gera o HTML do cabeçalho (Thead), sem a necessidade de width em cada <th>
-    const headerHtml = tableColumnConfig.map(col => 
-        `<th scope="col" class="px-5 py-3 ${col.className}">${col.label}</th>`
-    ).join('');
-
-    // Gera o HTML do corpo da tabela (Tbody)
-    const bodyHtml = actionsData.map(task => {
-        const cellsHtml = tableColumnConfig.map(col => {
-            let cellContent = task[col.key] || '-';
-            
-            // Formatações especiais
-            if (['Data de início', 'Data fim'].includes(col.key)) {
-                cellContent = task[col.key] ? new Date(task[col.key] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
-            } else if (col.key === 'Status') {
-                const statusClass = 'status-' + (task.Status || '').replace(/\s+/g, '-');
-                cellContent = `<div class="status-container"><div class="${statusClass}">${task.Status}</div></div>`;
-            }
-
-            // O div interno ajuda a controlar o conteúdo que pode vazar (overflow)
-            return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
-        }).join('');
-
-        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task="${encodeURIComponent(JSON.stringify(task))}">
-                    ${cellsHtml}
-                </tr>`;
-    }).join('');
-
-    // Monta a estrutura completa da tabela
-    const fullTableHtml = `
-        <table style="width: ${totalTableWidth}px; table-layout: fixed;">
-            <colgroup>
-                ${colgroupHtml}
-            </colgroup>
-            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md">
-                <tr class="divide-x divide-slate-200">${headerHtml}</tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">${bodyHtml}</tbody>
-        </table>
-    `;
-
-    // Insere a tabela no container
-    container.innerHTML = fullTableHtml;
-
-    container.querySelectorAll('tbody tr').forEach(row => {
-        row.addEventListener('click', () => {
-            const task = JSON.parse(decodeURIComponent(row.dataset.task));
-            openTaskModal(task);
-        });
-    });
-}
-
-// =================================================================
-// LÓGICA REFAZERADA DO KANBAN COM TAILWIND CSS
-// =================================================================
-
-// 1. Objeto de configuração usando classes do Tailwind
-const kanbanColumnsConfig = [
-    { status: 'Em desenvolvimento', headerClasses: 'bg-gray-200 text-gray-800' },
-    { status: 'Planejado', headerClasses: 'bg-slate-300 text-slate-800' },
-    { status: 'Pendente', headerClasses: 'bg-yellow-300 text-yellow-800' },
-    { status: 'Em curso', headerClasses: 'bg-cyan-500 text-white' },
-    { status: 'Implementado', headerClasses: 'bg-green-600 text-white' }
-    // As cores foram mapeadas para as classes do Tailwind mais próximas.
-    // Ex: #e0e0e0 -> bg-gray-200, #17a2b8 -> bg-cyan-500
-];
-
-/**
- * Cria e popula o quadro Kanban com altura máxima, cabeçalhos fixos e scrollbar horizontal sempre visível.
- * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
- */
-function populateKanbanBoard(actionsData) {
-    const container = document.getElementById('kanban-view');
-    if (!container) {
-        console.error("Container #kanban-view não encontrado.");
-        return;
-    }
-
-    // --- 1. Agrupa as tarefas por status (sem alterações) ---
-    const tasksByStatus = actionsData.reduce((acc, task) => {
-        const status = task.Status || 'Sem Status';
-        if (!acc[status]) acc[status] = [];
-        acc[status].push(task);
-        return acc;
-    }, {});
-
-    // --- 2. Gera o HTML para cada coluna ---
-    const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
-        const tasks = tasksByStatus[columnConfig.status] || [];
-        
-        const formatDate = (dateString) => {
-            return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
-        };
-        
-        const cardsHtml = tasks.map(task => `
-            <div 
-                class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
-                data-task="${encodeURIComponent(JSON.stringify(task))}">
-                <span class="font-semibold text-slate-800 line-clamp-2">${task.Atividade}</span>
-                <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
-                <div class="text-xs text-slate-500 flex justify-between">
-                    <p>Início: <strong>${formatDate(task['Data de início'])}</strong></p>
-                    <p>Fim: <strong>${formatDate(task['Data fim'])}</strong></p>
-                </div>
-            </div>
-        `).join('');
-
-        return `
-            <div class="w-80 flex-shrink-0 flex flex-col">
-                <!-- CABEÇALHO FIXO (STICKY) -->
-                <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center p-3 font-semibold rounded-t-xl ${columnConfig.headerClasses}">
-                    <span>${columnConfig.status}</span>
-                    <span class="text-sm font-bold px-2 py-0.5 bg-black/10 rounded-full">${tasks.length}</span>
-                </div>
-                <!-- CONTAINER DOS CARDS COM SCROLL VERTICAL -->
-                <div class="kanban-cards-container bg-slate-100 rounded-b-xl flex-grow p-3 overflow-y-auto space-y-3">
-                    ${cardsHtml}
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // --- 3. Monta a estrutura completa do quadro ---
-    const fullKanbanHtml = `
-        <div class="w-full max-h-[600px] flex flex-col bg-white rounded-lg shadow border border-slate-200">
-            <div class="kanban-board flex-grow flex gap-4 overflow-x-scroll p-4">
-                ${columnsHtml}
-            </div>
-        </div>
-    `;
-
-    // --- 4. Insere o quadro no container ---
-    container.innerHTML = fullKanbanHtml;
-
-    // --- 5. Adiciona os eventos de clique ---
-    container.querySelectorAll('.kanban-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const task = JSON.parse(decodeURIComponent(card.dataset.task));
-            openTaskModal(task);
-        });
-    });
 }
