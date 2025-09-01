@@ -383,7 +383,7 @@ function populateKanbanBoard(actionsData) {
             <div 
                 class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
                 data-task="${encodeURIComponent(JSON.stringify(task))}">
-                <span class="font-semibold text-slate-800 line-clamp-2">${task.Atividade}</span>
+                <span class="font-semibold text-slate-800 line-clamp-2">${task['Número da atividade']} - ${task.Atividade}</span>
                 <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
                 <div class="text-xs text-slate-500 flex justify-between">
                     <p>Início: <strong>${formatDate(task['Data de início'])}</strong></p>
@@ -394,7 +394,6 @@ function populateKanbanBoard(actionsData) {
 
         return `
             <div class="w-80 flex-shrink-0 flex flex-col">
-                <!-- CABEÇALHO FIXO (STICKY) -->
                 <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center p-3 font-semibold rounded-t-xl ${columnConfig.headerClasses}">
                     <span>${columnConfig.status}</span>
                     <span class="text-sm font-bold px-2 py-0.5 bg-black/10 rounded-full">${tasks.length}</span>
@@ -779,7 +778,7 @@ function setupModalControls() {
 }
 
 /**
- * [NOVO] Popula o seletor de Planos de Ação no modal.
+ * Popula o seletor de Planos de Ação no modal.
  * Esta função é chamada por setupModalControls.
  */
 function populatePlanosSelect() {
@@ -837,7 +836,7 @@ function populateViewMode(task) {
     };
 
     setElementText('modal-view-plano', task['Plano de ação']);
-    setElementText('modal-view-atividade', task['Atividade']);
+    setElementText('modal-view-atividade', task['Número da atividade'] +' - '+ task['Atividade']);
     setElementText('modal-view-data-inicio', formatDate(task['Data de início']));
     setElementText('modal-view-data-fim', formatDate(task['Data fim']));
     setElementText('modal-view-responsavel', task['Responsável']);

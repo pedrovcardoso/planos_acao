@@ -179,20 +179,63 @@
                 <div id="edit-mode-content" class="hidden p-6 overflow-y-auto">
                     <form id="modal-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                         <!-- Inputs do formulário -->
-                        <div class="md:col-span-2"><label for="edit-atividade" class="text-sm font-semibold text-slate-700">Atividade</label><textarea id="edit-atividade" name="Atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea></div>
-                        <div><label for="edit-status" class="text-sm font-semibold text-slate-700">Status</label><select id="edit-status" name="Status" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
-                            <option selected disabled hidden>Selecione um valor</option>
-                            <option>Planejado</option>
-                            <option>Em curso</option>
-                            <option>Pendente</option>
-                            <option>Implementado</option>
-                        </select></div>
-                        <div><label for="edit-plano" class="text-sm font-semibold text-slate-700">Plano de Ação</label><select id="edit-plano" name="Plano de ação" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"><option selected disabled hidden>Selecione um plano</option></select></div>
-                        <div><label for="edit-data-inicio" class="text-sm font-semibold text-slate-700">Data de início</label><input type="date" id="edit-data-inicio" name="Data de início" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></div>
-                        <div><label for="edit-data-fim" class="text-sm font-semibold text-slate-700">Data fim</label><input type="date" id="edit-data-fim" name="Data fim" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></div>
-                        <div class="md:col-span-2"><label for="edit-responsavel" class="text-sm font-semibold text-slate-700">Responsável</label><input type="text" id="edit-responsavel" name="Responsável" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></div>
-                        <div class="md:col-span-2"><label for="edit-unidades" class="text-sm font-semibold text-slate-700">Unidades envolvidas</label><textarea id="edit-unidades" name="Unidades envolvidas" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea></div>
-                        <div class="md:col-span-2"><label for="edit-observacoes" class="text-sm font-semibold text-slate-700">Observações</label><textarea id="edit-observacoes" name="Observações" rows="3" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea></div>
+
+                        <div class="md:col-span-2">
+                            <label for="edit-atividade" class="text-sm font-semibold text-slate-700">Atividade</label>
+                            <textarea id="edit-atividade" name="Atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                        </div>
+
+                        <!-- Container para agrupar Nº da Atividade e Status -->
+                        <div class="md:col-span-2">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6">
+                                <div class="col-span-1">
+                                    <label for="edit-numero-atividade" class="text-sm font-semibold text-slate-700">Nº da Atividade</label>
+                                    <input type="text" id="edit-numero-atividade" name="Número da atividade" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="edit-status" class="text-sm font-semibold text-slate-700">Status</label>
+                                    <select id="edit-status" name="Status" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                        <option selected disabled hidden>Selecione um valor</option>
+                                        <option>Planejado</option>
+                                        <option>Em curso</option>
+                                        <option>Pendente</option>
+                                        <option>Implementado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="edit-plano" class="text-sm font-semibold text-slate-700">Plano de Ação</label>
+                            <select id="edit-plano" name="Plano de ação" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                <!-- As opções serão populadas pelo seu JavaScript -->
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="edit-data-inicio" class="text-sm font-semibold text-slate-700">Data de início</label>
+                            <input type="date" id="edit-data-inicio" name="Data de início" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                        </div>
+                        <div>
+                            <label for="edit-data-fim" class="text-sm font-semibold text-slate-700">Data fim</label>
+                            <input type="date" id="edit-data-fim" name="Data fim" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="edit-responsavel" class="text-sm font-semibold text-slate-700">Responsável</label>
+                            <input type="text" id="edit-responsavel" name="Responsável" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                        </div>
+                        
+                        <div class="md:col-span-2">
+                            <label for="edit-unidades" class="text-sm font-semibold text-slate-700">Unidades envolvidas</label>
+                            <textarea id="edit-unidades" name="Unidades envolvidas" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label for="edit-observacoes" class="text-sm font-semibold text-slate-700">Observações</label>
+                            <textarea id="edit-observacoes" name="Observações" rows="3" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                        </div>
+                        
                     </form>
                 </div>
 
