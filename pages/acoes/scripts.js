@@ -67,9 +67,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       console.log('dados resgatados do sessionstorage')
     }
 
-    fillGanttData(jsonAcoes)
-    populateKanbanBoard(jsonAcoes)
-
     const taskListContainer = document.getElementById('gantt-task-list');
     const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
     const monthsHeader = document.getElementById('gantt-months-header');
@@ -115,8 +112,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             return (start <= lastDay && end >= firstDay);
         });
     
-        fillGanttData(filtered);
         populateKanbanBoard(filtered)
+        fillGanttData(filtered);
     });
 
     let isSyncingScroll = false;
@@ -165,11 +162,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         });
     });
+
     setupViewSwitcher();
-    setPlanoFilterFromUrl()
     setupModalControls();
+    fillGanttData(jsonAcoes)
     populateActionsTable(jsonAcoes)
     populateKanbanBoard(jsonAcoes)
+
+    setPlanoFilterFromUrl()
     toggleLoading(false)
 });
 
@@ -262,6 +262,7 @@ function filtrarValores(){
 
     fillGanttData(jsonFiltrado);
     populateKanbanBoard(jsonFiltrado);
+    populateActionsTable(jsonFiltrado)
 }
 
 function clearFilters(){
@@ -311,6 +312,7 @@ function filtrarPeriodo() {
     }
 
     fillGanttData(filtered);
+    populateActionsTable(filtered)
     populateKanbanBoard(filtered)
 };
 
@@ -782,13 +784,20 @@ function populateKanbanBoard(actionsData) {
     const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
         const tasks = tasksByStatus[columnConfig.status] || [];
         
+        const formatDate = (dateString) => {
+            return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+        };
+        
         const cardsHtml = tasks.map(task => `
             <div 
                 class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
-                data-task="${encodeURIComponent(JSON.stringify(task))}"
-            >
-                <p class="font-semibold text-slate-800 line-clamp-2">${task.Atividade}</p>
-                <p class="mt-2 text-xs text-slate-500">${task['Plano de ação']}</p>
+                data-task="${encodeURIComponent(JSON.stringify(task))}">
+                <span class="font-semibold text-slate-800 line-clamp-2">${task.Atividade}</span>
+                <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
+                <div class="text-xs text-slate-500 flex justify-between">
+                    <p>Início: <strong>${formatDate(task['Data de início'])}</strong></p>
+                    <p>Fim: <strong>${formatDate(task['Data fim'])}</strong></p>
+                </div>
             </div>
         `).join('');
 
