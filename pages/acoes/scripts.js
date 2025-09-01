@@ -141,15 +141,21 @@ function setupFilters() {
         const selectElement = document.getElementById(elementId);
         if (!selectElement) return;
 
-        const opcoes = Object.values(jsonAcoes).map(value => value[chave]);
-        const opcoesUnicas = new Set(opcoes);
+        // transforma em array e "achata" os valores que foram separados por vírgula
+        const opcoes = Object.values(jsonAcoes)
+            .map(value => value[chave]) // pega o campo
+            .filter(Boolean) // remove undefined/null
+            .flatMap(v => v.split(', ').map(item => item.trim())); // divide e tira espaços extras
+
+        const opcoesUnicas = [...new Set(opcoes)].sort((a, b) =>
+            a.localeCompare(b, 'pt', { sensitivity: 'base' })
+        );
 
         opcoesUnicas.forEach(valor => {
-            // Usa a forma correta e mais performática de adicionar opções.
             const option = new Option(valor, normalizeString(valor));
             selectElement.add(option);
         });
-        
+
         selectElement.addEventListener('change', filtrarValores);
     });
 
@@ -208,10 +214,11 @@ function setPlanoFilterFromUrl() {
  */
 function filterJson(json, chave, valorNormalizado) {
     return json.filter(item => {
-        const itemNormalizado = normalizeString(item[chave]);
-        return itemNormalizado === valorNormalizado;
+        const itemNormalizado = normalizeString(item[chave] || '');
+        return itemNormalizado.includes(valorNormalizado);
     });
 }
+
 
 /**
  * Função auxiliar para atualizar todas as visualizações com os dados filtrados.
