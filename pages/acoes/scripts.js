@@ -445,13 +445,15 @@ function populateKanbanBoard(actionsData) {
 // LÓGICA DA TABELA
 // =================================================================
 const tableColumnConfig = [
-    { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 100 },
-    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 200 },
-    { key: 'Atividade', label: 'Atividade', className: '', width: 500 },
+    { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 80 },
+    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 150 },
+    { key: 'Atividade', label: 'Atividade', className: '', width: 400 },
+    { key: 'Descrição da atividade', label: 'Descrição da atividade', className: '', width: 200 },
     { key: 'Data de início', label: 'Início', className: 'text-center', width: 150 },
     { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150 },
     { key: 'Status', label: 'Status', className: 'text-center', width: 160 },
     { key: 'Responsável', label: 'Responsável', className: '', width: 200 },
+    { key: 'E-mail', label: 'E-mail', className: '', width: 200 },
     { key: 'Unidades envolvidas', label: 'Unidades envolvidas', className: '', width: 200 },
     { key: 'Observações', label: 'Observações', className: '', width: 300 }
 ];
@@ -839,7 +841,9 @@ function populateViewMode(task) {
     setElementText('modal-view-atividade', task['Número da atividade'] +' - '+ task['Atividade']);
     setElementText('modal-view-data-inicio', formatDate(task['Data de início']));
     setElementText('modal-view-data-fim', formatDate(task['Data fim']));
+    setElementText('modal-view-descricao', task['Descrição da atividade']);
     setElementText('modal-view-responsavel', task['Responsável']);
+    setElementText('modal-view-email', task['E-mail']);
     setElementText('modal-view-unidades', task['Unidades envolvidas']);
     setElementText('modal-view-observacoes', task['Observações']);
 
