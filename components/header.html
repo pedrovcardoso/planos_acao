@@ -5,7 +5,9 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center gap-5">
-                    <img src="../../assets/images/logo sef.png" alt="Logo" width="131" height="41">
+                    <a href="../../pages/planos/">
+                        <img src="../../assets/images/logo sef.png" alt="Logo" width="131" height="41">
+                    </a>
                     <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
                 </div>
 
@@ -24,7 +26,12 @@
                     <img src="../../assets/images/sccg.png" alt="Logo SCCG" class="h-10 w-auto">
 
                     <div class="flex md:hidden">
-                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false">
+                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false"
+                        onclick="
+                            document.getElementById('mobile-menu').classList.toggle('hidden');
+                            
+                            document.getElementById('mobile-menu').querySelectorAll('svg').classList.toggle('hidden');
+                        ">
                             <span class="sr-only">Abrir menu principal</span>
                             <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -49,19 +56,3 @@
             </div>
         </div>
     </header>
-
-
-<script>
-    //================================================================================
-    // hamburguer header
-    //================================================================================
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-
-    const icons = mobileMenuButton.querySelectorAll('svg');
-    icons.forEach(icon => icon.classList.toggle('hidden'));
-    });
-</script>
