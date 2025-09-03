@@ -863,8 +863,9 @@ function populateViewMode(task) {
 /**
  * Preenche o formulário do modo de edição.
  */
-function populateEditMode(task) {
+function populateEditMode(task) {console.log(task)
     const form = document.getElementById('modal-edit-form');
+    form.setAttribute('uuid', task.ID)
     Object.keys(task).forEach(key => {
         const input = form.querySelector(`[name="${key}"]`);
         if (input) input.value = task[key];
@@ -957,6 +958,7 @@ function openModalForNewTask() {
  */
 function clearEditForm() {
     const form = document.getElementById('modal-edit-form');
+    form.removeAttribute('uuid')
     form.reset();
     
     document.getElementById('edit-status'). value = 'Selecione um valor'
@@ -1045,7 +1047,6 @@ function closeModal() {
 
 async function handleSave() {
     if (!hasChanges) {
-        // Se não houver mudanças, apenas volta para o modo de visualização se estiver editando.
         if (!isNewTaskMode) {
             switchToViewMode(true);
         }
@@ -1058,6 +1059,7 @@ async function handleSave() {
     document.getElementById('modal-btn-close').disabled = true;
 
     const form = document.getElementById('modal-edit-form');
+    const id = form.getAttribute('uuid')
     const formData = new FormData(form);
     const taskData = {};
     formData.forEach((value, key) => {
@@ -1067,63 +1069,32 @@ async function handleSave() {
     try {
         if (isNewTaskMode) {
             // --- LÓGICA DE CRIAÇÃO ---
-            // Adiciona a nova tarefa ao final do array.
-            // Você pode querer adicionar campos padrão aqui (ex: data de criação).
-            jsonAcoes.push(taskData);
+            await salvarArquivoNoOneDrive(null, 'acoes.txt', 'create', taskData)
         } else {
             // --- LÓGICA DE EDIÇÃO (Existente) ---
-            const taskIndex = findTaskIndex(originalTaskData);
-            if (taskIndex === -1) {
-                throw new Error("Tarefa original não encontrada para atualização.");
-            }
-            // Mescla os dados para garantir que campos não presentes no formulário sejam mantidos.
-            const updatedTask = { ...originalTaskData, ...taskData };
-            jsonAcoes[taskIndex] = updatedTask;
-            currentTask = updatedTask; // Atualiza a tarefa atual.
+            await salvarArquivoNoOneDrive(id, 'acoes.txt', 'update', taskData)
         }
 
         const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
         await salvarArquivoNoOneDrive(conteudoParaSalvar);
-        
-        // O reload da página em `salvarArquivoNoOneDrive` finalizará o processo.
-        // Se não houvesse reload, você chamaria `closeModal()` aqui.
 
     } catch (error) {
         console.error("Falha ao salvar a tarefa:", error);
         alert(`Ocorreu um erro ao salvar: ${error.message}`);
-        
-        // Reverte a alteração no array local se o salvamento falhar.
-        if (isNewTaskMode) {
-            jsonAcoes.pop(); // Remove o item recém-adicionado.
-        }
-
     }
 }
 
-/**
- * Encontra o índice de uma tarefa no array `jsonAcoes` comparando todos os seus campos.
- * @param {object} taskToFind - O objeto da tarefa a ser encontrado.
- * @returns {number} O índice da tarefa no array, ou -1 se não for encontrada.
- */
-function findTaskIndex(taskToFind) {
-    return jsonAcoes.findIndex(taskInArray => {
-        const keys1 = Object.keys(taskInArray);
-        const keys2 = Object.keys(taskToFind);
+// const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
 
-        if (keys1.length !== keys2.length) {
-            return false;
-        }
-
-        // every() retorna true apenas se a condição for verdadeira para todos os elementos.
-        return keys1.every(key => taskInArray[key] === taskToFind[key]);
-    });
-}
-
-const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
-
-async function salvarArquivoNoOneDrive(conteudo) {
-    const nome = 'acoes.txt'; // O nome correto do arquivo
-    const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
+async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
+    const dadosParaEnviar = 
+        {
+            "id":            id,
+            "arquivo":       arquivo,
+            "evento":        evento,
+            "novoConteúdo":  JSON.stringify(conteudo),
+        };
+    
     try {
         const response = await fetch(powerAutomateUrl, {
             method: 'POST',
