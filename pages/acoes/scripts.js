@@ -43,6 +43,18 @@ let jsonPlanos
 
 document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(true)
+    
+    // const param = 'cachebuster';
+
+    // // Verifica se o parâmetro existe na URL
+    // const urlParams = new URLSearchParams(window.location.search);
+    // if (!urlParams.has(param)) {
+    //     // Se não existir, limpa o sessionStorage
+    //     sessionStorage.clear();
+    //     console.log('Parâmetro não encontrado. sessionStorage limpo.');
+    // } else {
+    //     console.log('Parâmetro encontrado:', urlParams.get(param));
+    // }
 
     jsonAcoes = sessionStorage.getItem("jsonAcoes");
     jsonPlanos = sessionStorage.getItem("jsonPlanos");
@@ -137,7 +149,6 @@ function normalizeString(str) {
 function setupFilters() {
     // Popula os seletores de filtro com opções únicas.
     filtersConfig.forEach(([chave, elementId]) => {
-        console.log(elementId)
         const selectElement = document.getElementById(elementId);
         if (!selectElement) return;
 
@@ -382,7 +393,7 @@ function populateKanbanBoard(actionsData) {
         const cardsHtml = tasks.map(task => `
             <div 
                 class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
-                data-task="${encodeURIComponent(JSON.stringify(task))}">
+                data-task-id="${task.ID}">
                 <span class="font-semibold text-slate-800 line-clamp-2">${task['Número da atividade']} - ${task.Atividade}</span>
                 <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
                 <div class="text-xs text-slate-500 flex justify-between">
@@ -421,8 +432,8 @@ function populateKanbanBoard(actionsData) {
     // --- 5. Adiciona os eventos de clique ---
     container.querySelectorAll('.kanban-card').forEach(card => {
         card.addEventListener('click', () => {
-            const task = JSON.parse(decodeURIComponent(card.dataset.task));
-            openTaskModal(task);
+            const taskId = card.dataset.taskId;
+            openTaskModal(taskId);
         });
     });
 }
@@ -500,7 +511,7 @@ function populateActionsTable(actionsData) {
             return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
         }).join('');
 
-        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task="${encodeURIComponent(JSON.stringify(task))}">
+        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-d="${task.ID}">
                     ${cellsHtml}
                 </tr>`;
     }).join('');
@@ -523,8 +534,8 @@ function populateActionsTable(actionsData) {
 
     container.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('click', () => {
-            const task = JSON.parse(decodeURIComponent(row.dataset.task));
-            openTaskModal(task);
+            const taskId = row.dataset.taskId;
+            openTaskModal(taskId);
         });
     });
 }
@@ -620,7 +631,7 @@ function fillGanttData(jsonAcoes){
         bar.title = `${task.Atividade}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
         const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
         bar.classList.add(task.colorTag);
-        bar.addEventListener('click', ()=>{openTaskModal(task)})
+        bar.addEventListener('click', ()=>{openTaskModal(task.ID)})
 
         const taskRow = document.createElement('div');
         taskRow.className = 'gantt-row-task';
@@ -631,7 +642,7 @@ function fillGanttData(jsonAcoes){
                                 <div class="${statusClass}">${task.Status}</div></div>`;
         taskListContainer.appendChild(taskRow);
         taskRow.addEventListener('click', () => {
-            openTaskModal(task);
+            openTaskModal(task.ID);
         });
 
         rowTimeline.appendChild(bar);
@@ -731,8 +742,6 @@ function setupGanttScroll(){
 
 // Armazena a tarefa atualmente exibida/editada no modal.
 let currentTask = null; 
-// Armazena uma cópia fiel da tarefa como ela era ANTES de qualquer edição.
-let originalTaskData = null; 
 // Flag para detectar se houve alguma alteração no formulário.
 let hasChanges = false;
 // Flag para diferenciar entre modo de criação e edição.
@@ -814,12 +823,12 @@ function populatePlanosSelect() {
  * Função principal para abrir o modal com os dados de uma tarefa.
  * @param {object} task - O objeto da tarefa clicada.
  */
-function openTaskModal(task) {
+function openTaskModal(id) {
     isNewTaskMode = false;
-    currentTask = task;
-    originalTaskData = { ...task };
+    task = jsonAcoes.filter(t => t.ID === id)[0];
 
-    populateViewMode(task);
+    document.getElementById('task-modal-container').setAttribute('data-task-id', task.ID);
+
     switchToViewMode(true);
     document.getElementById('task-modal-container').classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
@@ -829,6 +838,9 @@ function openTaskModal(task) {
  * Preenche todos os campos do modo de visualização.
  */
 function populateViewMode(task) {
+    const id = document.getElementById('task-modal-container').dataset.taskId
+    task = jsonAcoes.filter(t => t.ID === id)[0];
+
     const setElementText = (id, text) => {
         const el = document.getElementById(id);
         if (el) el.innerText = text || '-';
@@ -867,7 +879,10 @@ function populateViewMode(task) {
 /**
  * Preenche o formulário do modo de edição.
  */
-function populateEditMode(task) {
+function populateEditMode() {
+    const id = document.getElementById('task-modal-container').dataset.taskId
+    task = jsonAcoes.filter(t => t.ID === id)[0];
+
     const form = document.getElementById('modal-edit-form');
     Object.keys(task).forEach(key => {
         const input = form.querySelector(`[name="${key}"]`);
@@ -914,7 +929,7 @@ function switchToViewMode(force = false) {
         return;
     }
 
-    populateViewMode(currentTask); // Repopula com os dados mais recentes.
+    populateViewMode(currentTask);
     document.getElementById('modal-view-plano').classList.remove('hidden');
 
     document.getElementById('edit-mode-content').classList.add('hidden');
@@ -933,7 +948,6 @@ function switchToViewMode(force = false) {
 function openModalForNewTask() {
     isNewTaskMode = true; // Ativa o modo de criação.
     currentTask = {};     // A tarefa atual é um objeto vazio.
-    originalTaskData = null; // Não há dados originais.
 
     // Limpa o formulário de edição para garantir que não haja dados antigos.
     clearEditForm();
@@ -962,6 +976,8 @@ function openModalForNewTask() {
 function clearEditForm() {
     const form = document.getElementById('modal-edit-form');
     form.reset();
+
+    document.getElementById('task-modal-container').removeAttribute('data-task-id')
     
     document.getElementById('edit-status'). value = 'Selecione um valor'
 
@@ -969,11 +985,12 @@ function clearEditForm() {
 }
 
 function openDeleteConfirmation() {
-    if (!currentTask) return;
+    const id = document.getElementById('task-modal-container').dataset.taskId
+    task = jsonAcoes.filter(t => t.ID === id)[0];
 
     // Popula o nome da atividade no modal de confirmação para clareza.
     const taskNameToDelete = document.getElementById('plano-to-delete-name');
-    taskNameToDelete.textContent = `"${currentTask['Atividade']}"`;
+    taskNameToDelete.textContent = `"${task['Atividade']}"`;
     
     // Mostra o modal de confirmação de exclusão.
     document.getElementById('delete-confirmation-modal').classList.remove('hidden');
@@ -983,35 +1000,26 @@ async function handleDeleteTask() {
     const confirmButton = document.getElementById('delete-confirm-btn-yes');
     const cancelButton = document.getElementById('delete-confirm-btn-no');
 
-    // Encontra a tarefa a ser excluída usando a mesma lógica robusta da edição.
-    const taskIndex = findTaskIndex(originalTaskData);
-
-    if (taskIndex === -1) {
-        alert("Erro: A tarefa a ser excluída não foi encontrada. A página será recarregada.");
-        window.location.reload();
-        return;
-    }
-
     // Desabilita botões para prevenir múltiplos cliques.
     confirmButton.disabled = true;
     cancelButton.disabled = true;
     confirmButton.textContent = 'Excluindo...';
 
     // Guarda uma cópia da tarefa caso o salvamento falhe e precisemos reverter.
-    const taskToRemove = jsonAcoes[taskIndex];
+    const id = document.getElementById('task-modal-container').getAttribute('data-task-id')
 
     try {
-        // Remove a tarefa do array local.
-        jsonAcoes.splice(taskIndex, 1);
-        
-        const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
-
-        // Salva o array atualizado no backend.
-        await salvarArquivoNoOneDrive(conteudoParaSalvar);
-
-        // A função `salvarArquivoNoOneDrive` já recarrega a página em caso de sucesso,
-        // então não precisamos fechar o modal manualmente aqui.
-
+        const response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '');
+        if(response.status === 200){
+            setSessionMirror('delete', response.data.uuid, null);
+            window.location.reload();
+        } else if(response.status === 400){
+            alert(`Erro ao salvar: ${response.message}`);
+            document.getElementById('modal-btn-save').disabled = false;
+            document.getElementById('modal-btn-save').textContent = 'Salvar';
+            document.getElementById('modal-btn-cancel').disabled = false;
+            document.getElementById('modal-btn-close').disabled = false;
+        }
     } catch (error) {
         console.error("Falha ao excluir a tarefa:", error);
         alert("Ocorreu um erro ao excluir a tarefa. A alteração foi revertida.");
@@ -1049,7 +1057,6 @@ function closeModal() {
 
 async function handleSave() {
     if (!hasChanges) {
-        // Se não houver mudanças, apenas volta para o modo de visualização se estiver editando.
         if (!isNewTaskMode) {
             switchToViewMode(true);
         }
@@ -1062,6 +1069,7 @@ async function handleSave() {
     document.getElementById('modal-btn-close').disabled = true;
 
     const form = document.getElementById('modal-edit-form');
+    const id = document.getElementById('task-modal-container').getAttribute('data-task-id')
     const formData = new FormData(form);
     const taskData = {};
     formData.forEach((value, key) => {
@@ -1069,79 +1077,75 @@ async function handleSave() {
     });
     
     try {
+        let response
         if (isNewTaskMode) {
             // --- LÓGICA DE CRIAÇÃO ---
-            // Adiciona a nova tarefa ao final do array.
-            // Você pode querer adicionar campos padrão aqui (ex: data de criação).
-            jsonAcoes.push(taskData);
+            response = await salvarArquivoNoOneDrive('', 'acoes.txt', 'create', taskData)
         } else {
             // --- LÓGICA DE EDIÇÃO (Existente) ---
-            const taskIndex = findTaskIndex(originalTaskData);
-            if (taskIndex === -1) {
-                throw new Error("Tarefa original não encontrada para atualização.");
-            }
-            // Mescla os dados para garantir que campos não presentes no formulário sejam mantidos.
-            const updatedTask = { ...originalTaskData, ...taskData };
-            jsonAcoes[taskIndex] = updatedTask;
-            currentTask = updatedTask; // Atualiza a tarefa atual.
+            response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'update', taskData)
         }
 
-        const conteudoParaSalvar = JSON.stringify(jsonAcoes, null, 2);
-        await salvarArquivoNoOneDrive(conteudoParaSalvar);
-        
-        // O reload da página em `salvarArquivoNoOneDrive` finalizará o processo.
-        // Se não houvesse reload, você chamaria `closeModal()` aqui.
-
+        if(response.status === 200){
+            console.log(response)
+            setSessionMirror(isNewTaskMode?'create':'update', response.data.uuid, taskData);
+            window.location.reload();
+        } else if(response.status === 400){
+            alert(`Erro ao salvar: ${response.message}`);
+            document.getElementById('modal-btn-save').disabled = false;
+            document.getElementById('modal-btn-save').textContent = 'Salvar';
+            document.getElementById('modal-btn-cancel').disabled = false;
+            document.getElementById('modal-btn-close').disabled = false;
+        }
     } catch (error) {
         console.error("Falha ao salvar a tarefa:", error);
         alert(`Ocorreu um erro ao salvar: ${error.message}`);
-        
-        // Reverte a alteração no array local se o salvamento falhar.
-        if (isNewTaskMode) {
-            jsonAcoes.pop(); // Remove o item recém-adicionado.
-        }
-
     }
 }
 
-/**
- * Encontra o índice de uma tarefa no array `jsonAcoes` comparando todos os seus campos.
- * @param {object} taskToFind - O objeto da tarefa a ser encontrado.
- * @returns {number} O índice da tarefa no array, ou -1 se não for encontrada.
- */
-function findTaskIndex(taskToFind) {
-    return jsonAcoes.findIndex(taskInArray => {
-        const keys1 = Object.keys(taskInArray);
-        const keys2 = Object.keys(taskToFind);
+const powerAutomateUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95292f9f4d384f34bd8e385ea59997d3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xpnrIZmY0PJU-hDBaxRwn8w7RpVR5AdlDyx2rl7QSLc";
 
-        if (keys1.length !== keys2.length) {
-            return false;
-        }
+async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
+    console.log('enviando')
 
-        // every() retorna true apenas se a condição for verdadeira para todos os elementos.
-        return keys1.every(key => taskInArray[key] === taskToFind[key]);
-    });
-}
-
-const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
-
-async function salvarArquivoNoOneDrive(conteudo) {
-    const nome = 'acoes.txt'; // O nome correto do arquivo
-    const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
+    const dadosParaEnviar = 
+        {
+            "id":        id,
+            "arquivo":   arquivo,
+            "evento":    evento,
+            "conteudo":  JSON.stringify(conteudo),
+        };
+    
     try {
         const response = await fetch(powerAutomateUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dadosParaEnviar)
         });
-        if (!response.ok) throw new Error(`Erro na requisição HTTP: ${response.status}`);
-        const resultado = await response.json();
-        sessionStorage.clear();
-        window.location.reload();
-        return resultado;
+
+        const resultado = await response.json().catch(() => null); // caso não tenha JSON na resposta
+
+        return {
+            status: response.status,  // retorna o status code
+            data: resultado           // retorna o JSON (ou null se não tiver)
+        };
+        
     } catch (error) {
         console.error("Falha ao enviar os dados para o Power Automate:", error);
         alert('Erro ao salvar os dados.');
-        return null;
+        return { status: null, data: null }; // retorna status null em caso de erro
     }
+}
+
+function setSessionMirror(event, uuid, taskData){
+    if(event === 'create'){
+        taskData.ID = uuid
+        jsonAcoes.push(taskData)   
+    } else if(event === 'update'){
+        taskData.ID = uuid
+        jsonAcoes = jsonAcoes.map(t => t.ID === uuid ? {...t, ...taskData} : t);
+    } else if(event === 'delete'){
+        jsonAcoes = jsonAcoes.filter(t => t.ID !== uuid);
+    }
+    sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
 }
