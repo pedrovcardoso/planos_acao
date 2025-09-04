@@ -19,35 +19,6 @@ function toggleLoading(show) {
     }
 }
 
-async function obterDadosDoOneDrive() {
-  // Cole a URL do seu fluxo do Power Automate aqui
-  const powerAutomateUrl = "https://prod-38.westus.logic.azure.com:443/workflows/6ff0e17beffa412d9fc6fbf256861ea8/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_w4h7w76Nqxz1GjX-fqN4x6rQpE1aW8RRposrxufrzw";
-
-  try {
-    const response = await fetch(powerAutomateUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    // Verifica se a requisição foi bem-sucedida
-    if (!response.ok) {
-      throw new Error(`Erro na requisição HTTP: ${response.status} ${response.statusText}`);
-    }
-
-    // Converte a resposta para JSON
-    const dados = await response.json();
-
-    jsonAcoes = JSON.parse(dados.acoes);
-    jsonPlanos = JSON.parse(dados.planos);
-
-  } catch (error) {
-    console.error("Falha ao obter os dados do Power Automate:", error);
-    return null;
-  }
-}
-
 let jsonAcoes
 let jsonPlanos
 
@@ -632,7 +603,7 @@ let originalPlanoData = null;
 
 const powerAutomateUrl = "https://prod-174.westus.logic.azure.com:443/workflows/dcc988d813ef43bc8e73a81dd0afc678/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ahd0ynI2hDZJMplv9YsNuug7HzjPuWm4MSNDb-VG-vI";
 
-async function salvarArquivoNoOneDrive(conteudo) {
+async function salvarArquivoNoOneDrive_old(conteudo) {
     const nome = 'planos.txt'; // O nome correto do arquivo
     const dadosParaEnviar = { nomeArquivo: nome, conteudoArquivo: conteudo };
     try {
@@ -774,7 +745,7 @@ function handleSave() {
     closeButton.disabled = true;
     saveButton.textContent = 'Salvando...';
 
-    salvarArquivoNoOneDrive(conteudoParaSalvar).finally(() => {
+    salvarArquivoNoOneDrive_old(conteudoParaSalvar).finally(() => {
         saveButton.disabled = false;
         cancelButton.disabled = false;
         closeButton.disabled = false;
@@ -859,7 +830,7 @@ function handleDelete() {
     document.getElementById('delete-confirm-btn-no').disabled = true;
 
     // Chama a função para salvar a nova lista de planos
-    salvarArquivoNoOneDrive(conteudoParaSalvar)
+    salvarArquivoNoOneDrive_old(conteudoParaSalvar)
 }
 
 /**
