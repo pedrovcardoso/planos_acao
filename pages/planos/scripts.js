@@ -272,6 +272,7 @@ function fillGanttData(jsonPlanos) {
         <select id="select-heatmap">
           <option selected value="encerrando">encerrando no mês</option>
           <option value="acontecendo">acontecendo no mês</option>
+          <option value="desativado">heatmap desativado</option>
         </select>
       </div>
     </div>`
@@ -290,6 +291,10 @@ function toggleHeatMap(){
   document.querySelectorAll(".gantt-total-row").forEach(el => el.remove());
 
   const estilo = document.getElementById('select-heatmap').value;
+
+  if(estilo == "destivado"){
+    return
+  }
 
   const heatMap = {};
 
