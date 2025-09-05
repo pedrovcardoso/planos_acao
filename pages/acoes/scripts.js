@@ -9,9 +9,6 @@ function toggleLoading(show) {
     }
 }
 
-let jsonAcoes
-let jsonPlanos
-
 document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(true)
     
@@ -994,10 +991,6 @@ async function handleDeleteTask() {
     } catch (error) {
         console.error("Falha ao excluir a tarefa:", error);
         alert("Ocorreu um erro ao excluir a tarefa. A alteração foi revertida.");
-
-        // IMPORTANTE: Se o salvamento falhar, reinsere a tarefa no array local
-        // para manter a consistência do estado da aplicação.
-        jsonAcoes.splice(taskIndex, 0, taskToRemove);
 
     } finally {
         // Garante que os botões sejam reativados e o modal fechado, mesmo se houver erro.

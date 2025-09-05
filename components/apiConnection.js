@@ -1,3 +1,6 @@
+var jsonAcoes
+var jsonPlanos
+
 async function obterDadosDoOneDrive() {
   // Cole a URL do seu fluxo do Power Automate aqui
   const powerAutomateUrl = "https://prod-38.westus.logic.azure.com:443/workflows/6ff0e17beffa412d9fc6fbf256861ea8/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_w4h7w76Nqxz1GjX-fqN4x6rQpE1aW8RRposrxufrzw";
@@ -63,11 +66,12 @@ async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
 
 function setSessionMirror(event, uuid, data, jsonArrayName) {
   let arr = window[jsonArrayName] || [];
-  data.ID = uuid;
 
   if (event === 'create') {
+    data.ID = uuid;
     arr.push(data);
   } else if (event === 'update') {
+    data.ID = uuid;
     arr = arr.map(item => item.ID === uuid ? { ...item, ...data } : item);
   } else if (event === 'delete') {
     arr = arr.filter(item => item.ID !== uuid);
