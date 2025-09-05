@@ -61,15 +61,18 @@ async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
     }
 }
 
-function setSessionMirror(event, uuid, taskData){
-    if(event === 'create'){
-        taskData.ID = uuid
-        jsonAcoes.push(taskData)   
-    } else if(event === 'update'){
-        taskData.ID = uuid
-        jsonAcoes = jsonAcoes.map(t => t.ID === uuid ? {...t, ...taskData} : t);
-    } else if(event === 'delete'){
-        jsonAcoes = jsonAcoes.filter(t => t.ID !== uuid);
-    }
-    sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
+function setSessionMirror(event, uuid, data, jsonArrayName) {
+  let arr = window[jsonArrayName] || [];
+  data.ID = uuid;
+
+  if (event === 'create') {
+    arr.push(data);
+  } else if (event === 'update') {
+    arr = arr.map(item => item.ID === uuid ? { ...item, ...data } : item);
+  } else if (event === 'delete') {
+    arr = arr.filter(item => item.ID !== uuid);
+  }
+
+  window[jsonArrayName] = arr;
+  sessionStorage.setItem(jsonArrayName, JSON.stringify(arr));
 }
