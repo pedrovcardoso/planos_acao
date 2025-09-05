@@ -982,7 +982,7 @@ async function handleDeleteTask() {
     try {
         const response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '');
         if(response.status === 200){
-            setSessionMirror('delete', response.data.uuid, null);
+            setSessionMirror('delete', response.data.uuid, null, "jsonAcoes");
             window.location.reload();
         } else if(response.status === 400){
             alert(`Erro ao salvar: ${response.message}`);
@@ -1059,7 +1059,7 @@ async function handleSave() {
 
         if(response.status === 200){
             console.log(response)
-            setSessionMirror(isNewTaskMode?'create':'update', response.data.uuid, taskData);
+            setSessionMirror(isNewTaskMode?'create':'update', response.data.uuid, taskData, "jsonAcoes");
             window.location.reload();
         } else if(response.status === 400){
             alert(`Erro ao salvar: ${response.message}`);
