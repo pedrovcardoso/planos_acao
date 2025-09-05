@@ -19,9 +19,6 @@ function toggleLoading(show) {
     }
 }
 
-let jsonAcoes
-let jsonPlanos
-
 document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(true)
 
