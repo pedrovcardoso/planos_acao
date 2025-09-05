@@ -492,7 +492,10 @@ function gerarCards(jsonPlanos) {
           <h2 class="pr-8 text-xl font-bold text-sky-700 tracking-wide">${plano.Nome}</h2>
 
           <div class="mt-3 space-y-1 text-sm text-slate-600">
-            <p><strong class="font-semibold text-slate-700">Processo SEI:</strong> ${plano["Processo SEI"]}</p>
+            <div class="flex items-center gap-2">
+              <img src="../../assets/images/logo_sei_mg.png" class="w-10 h-10 object-contain filter grayscale-[40%]" alt="Logo SEI">
+              <span>${plano["Processo SEI"]}</span>
+            </div>
             <p><strong class="font-semibold text-slate-700">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
           </div>
         </div>
@@ -509,7 +512,17 @@ function gerarCards(jsonPlanos) {
               <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
               <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
               <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
-              <p><strong class="font-medium text-slate-600">SEI relacionados:</strong> ${plano['SEI relacionados'] || '-'}</p>
+              <div class="flex items-center gap-2">
+                <img 
+                  src="../../assets/images/logo_sei_mg.png" 
+                  class="w-10 object-contain filter grayscale-[40%]" 
+                  alt="Logo SEI">
+                <strong class="font-medium text-slate-600">relacionados:</strong>
+              </div>
+              <span>
+                ${plano['SEI relacionados'] || '-'}
+              </span>
+
               <p><strong class="font-medium text-slate-600">Documentos relacionados:</strong> ${plano['Documentos relacionados'] || '-'}</p>
               <p><strong class="font-medium text-slate-600">Observações:</strong> ${plano['Observações'] || '-'}</p>
             </div>
@@ -554,7 +567,7 @@ function setupAddButton() {
     const addButton = document.getElementById('add-new-plano-button');
     if (addButton) {
         // Chama a mesma função de abrir o modal, mas sem passar um nome de plano
-        addButton.addEventListener('click', () => openEditModal());
+        addButton.addEventListener('click', () => {isNewPlan = true; openEditModal();});
     }
 }
 
