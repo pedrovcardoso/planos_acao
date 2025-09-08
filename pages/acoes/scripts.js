@@ -1028,10 +1028,12 @@ async function handleSave() {
         return;
     }
 
-    document.getElementById('modal-btn-save').disabled = true;
+    const btnSave = document.getElementById('modal-btn-save');
+    const btnCancel = document.getElementById('modal-btn-cancel');
+    const btnClose = document.getElementById('modal-btn-close');
+
+    [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = true);
     document.getElementById('modal-btn-save').textContent = 'Salvando...';
-    document.getElementById('modal-btn-cancel').disabled = true;
-    document.getElementById('modal-btn-close').disabled = true;
 
     const form = document.getElementById('modal-edit-form');
     const id = document.getElementById('task-modal-container').getAttribute('data-task-id')
@@ -1040,6 +1042,27 @@ async function handleSave() {
     formData.forEach((value, key) => {
         taskData[key] = value;
     });
+
+    // Validação de campos obrigatórios
+    const camposObrigatorios = ['Número da atividade', 'Plano de ação', 'Atividade', 'Status'];
+    const camposInvalidos = [];
+
+    camposObrigatorios.forEach(campo => {
+        if (!taskData[campo] || taskData[campo].trim() === '') {
+        camposInvalidos.push(campo);
+        }
+        [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = false);
+        document.getElementById('modal-btn-save').textContent = 'Salvar Alterações';
+    });
+
+    if (camposInvalidos.length > 0) {
+        alert(
+        `Os seguintes campos são obrigatórios e não foram preenchidos:\n- ${camposInvalidos.join('\n- ')}`
+        );
+        [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = false);
+        document.getElementById('modal-btn-save').textContent = 'Salvar Alterações';
+        return;
+    }
     
     try {
         let response
