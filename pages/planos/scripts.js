@@ -554,7 +554,7 @@ function gerarCards(jsonPlanos) {
 function setupAddButton() {
     const addButton = document.getElementById('add-new-plano-button');
     if (addButton) {
-        // Chama a mesma função de abrir o modal, mas sem passar um nome de plano
+        isNewPlan = true
         addButton.addEventListener('click', () => openEditModal());
     }
 }
