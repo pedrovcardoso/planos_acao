@@ -479,7 +479,7 @@ function populateActionsTable(actionsData) {
             return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
         }).join('');
 
-        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-d="${task.ID}">
+        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-id="${task.ID}">
                     ${cellsHtml}
                 </tr>`;
     }).join('');
