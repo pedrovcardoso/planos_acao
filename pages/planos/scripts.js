@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     gerarCards(jsonPlanos)
     setupFilters()
 
+    testeTabelaModal()
+
     toggleLoading(false)
 })
 
@@ -728,7 +730,44 @@ async function handleSave() {
   // Converte o formulário em objeto
   const form = document.getElementById('modal-form');
   const formData = new FormData(form);
+
+
+
+  formData.delete('nome');
+  formData.delete('email');
+  formData.delete('unidade');
+  formData.delete('coordenador')
+
+
+    const corpoTabela = document.getElementById('corpoTabelaPessoas');
+
+  const linhasTabela = corpoTabela.querySelectorAll('tr');
+        const objPessoas = [];
+
+        linhasTabela.forEach(linha => {
+            const nome = linha.querySelector('input[name="nome"]').value;
+            const email = linha.querySelector('input[name="email"]').value;
+            const unidade = linha.querySelector('input[name="unidade"]').value;
+            const coordenador = linha.querySelector('input[name="coordenador"]').checked;
+
+            objPessoas.push({
+                Nome: nome,
+                Email: email,
+                Unidade: unidade,
+                Coordenador: coordenador
+            });
+        });
+
+  formData.append('objPessoas', JSON.stringify(objPessoas));
   const updatedPlan = Object.fromEntries(formData.entries());
+
+
+
+
+
+
+
+
 
   // Validação de campos obrigatórios
   const camposObrigatorios = ['Nome', 'Status'];
@@ -755,20 +794,72 @@ async function handleSave() {
     const action = isNewPlan ? 'create' : 'update';
     const id = isNewPlan ? '' : currentPlanId;
 
-    const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan);
+    console.log(updatedPlan)
+    // const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan);
 
-    if (response?.status === 200) {
-      setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos");
-      window.location.reload();
-    } else {
-      throw new Error(response?.message || 'Erro desconhecido ao salvar');
-    }
+    // if (response?.status === 200) {
+    //   setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos");
+    //   window.location.reload();
+    // } else {
+    //   throw new Error(response?.message || 'Erro desconhecido ao salvar');
+    // }
   } catch (error) {
     console.error('Falha ao salvar a tarefa:', error);
     alert(`Ocorreu um erro ao salvar: ${error.message}`);
     [saveBtn, cancelBtn, closeBtn].forEach(btn => (btn.disabled = false));
     saveBtn.textContent = 'Salvar';
   }
+}
+
+function testeTabelaModal(){
+    const form = document.querySelector('form'); // Certifique-se de que este seletor corresponda ao seu formulário
+    const corpoTabela = document.getElementById('corpoTabelaPessoas');
+    const btnAdicionar = document.getElementById('btnAdicionarPessoa');
+
+    // Função para adicionar uma nova linha à tabela
+    const adicionarLinha = () => {
+        const novaLinha = document.createElement('tr');
+        novaLinha.innerHTML = `
+            <td class="px-4 py-2 whitespace-nowrap">
+                <input type="text" name="nome" class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+            </td>
+            <td class="px-4 py-2 whitespace-nowrap">
+                <input type="email" name="email" class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+            </td>
+            <td class="px-4 py-2 whitespace-nowrap">
+                <input type="text" name="unidade" class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+            </td>
+            <td class="px-2 py-2 text-center">
+                <input type="checkbox" name="coordenador" class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500">
+            </td>
+            <td class="px-4 py-2 text-right">
+              <button type="button" class="remover-linha text-red-600 hover:text-red-800">
+              <ion-icon name="trash" class="text-base"></ion-icon></button>
+            </td>
+        `;
+        corpoTabela.appendChild(novaLinha);
+
+        
+
+        const removerButtons = document.querySelectorAll('.remover-linha');
+
+        // Loop through each button and add a click event listener
+        removerButtons.forEach(button => {
+          button.addEventListener('click', function(e) {
+              const tabela = e.target.closest('table');       // pega a tabela
+              const linhas = tabela.querySelectorAll('tbody tr'); // pega todas as linhas do tbody
+
+              if (linhas.length > 1) {                        // só remove se houver mais de 1 linha
+                  e.target.closest('tr').remove();
+              } else {
+                  alert('Não é possível remover a última linha!');
+              }
+          });
+        });
+    };
+
+    // Evento para o botão de adicionar nova linha
+    btnAdicionar.addEventListener('click', adicionarLinha);
 }
 
 async function handleDelete() {
