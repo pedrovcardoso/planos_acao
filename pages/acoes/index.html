@@ -16,6 +16,10 @@
     <header id="header"></header>
 
     <main class="mx-auto w-full flex-grow p-6 pt-20 md:pt-24">
+
+<!--===============================================================================
+// painel de filtros
+===================================================================================-->
         <section class="bg-white p-4 rounded-xl shadow-md">
 
             <h2 class="text-lg font-semibold text-slate-800 mb-4">Painel de filtros</h2>
@@ -86,6 +90,9 @@
             </div>
         </section>
 
+<!--===============================================================================
+// switch do modo de visualização
+===================================================================================-->
         <section class="flex flex-wrap gap-2 items-center justify-center p-4">
             <div class="relative flex w-full max-w-sm items-center rounded-full bg-white p-1 shadow">
                 <input type="radio" name="option" id="kanban" class="peer/kanban sr-only" checked />
@@ -104,7 +111,22 @@
             </div>
         </section>
 
+<!--===============================================================================
+// visualização dos dados
+===================================================================================-->
         <article id="views-container">
+            <!-- kanban -->
+            <section id="kanban-view" class="view-section active">
+                <div class="p-8 text-center bg-white rounded-lg shadow">
+                </div>
+            </section>
+
+            <!-- tabela -->
+            <section id="table-view" class="view-section">
+                <div id="table-container" class="overflow-x-auto bg-white rounded-lg shadow h-[600px]"></div>
+            </section>
+
+            <!-- gantt -->
             <section id="gantt-view" class="view-section">
                 <div class="gantt-container bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg h-[600px]">
                     <div class="gantt-tasks">
@@ -124,26 +146,17 @@
                     </div>
                 </div>
             </section>
-
-            <section id="table-view" class="view-section">
-                <div id="table-container" class="overflow-x-auto bg-white rounded-lg shadow h-[600px]"></div>
-            </section>
-
-            <!-- 3. Visualização de Kanban (Placeholder para o futuro) -->
-            <section id="kanban-view" class="view-section active">
-                <!-- O conteúdo do Kanban virá aqui no futuro -->
-                <div class="p-8 text-center bg-white rounded-lg shadow">
-                    <h2 class="text-2xl font-bold text-slate-700">Visualização Kanban (Em Breve)</h2>
-                </div>
-            </section>
         </article>
 
+<!--===============================================================================
+// modal
+===================================================================================-->
         <section id="task-modal-container" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
             
-            <!-- Container Principal do Modal -->
+            <!-- Modal principal -->
             <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                 
-                <!-- ==================== CABEÇALHO COMPARTILHADO ==================== -->
+                <!-- cabeçalho -->
                 <div class="flex items-start justify-between p-4 border-b border-slate-200">
                     <div>
                         <span id="modal-view-plano" class="block text-sm font-semibold text-sky-600"></span>
@@ -154,9 +167,8 @@
                     </button>
                 </div>
 
-                <!-- ==================== CONTEÚDO DO MODO VISUALIZAÇÃO ==================== -->
+                <!-- conteúdo do modo visualização -->
                 <div id="view-mode-content" class="p-6 space-y-4 overflow-y-auto">
-                    <!-- Datas e Status -->
                     <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
                         <div class="flex items-center gap-2">
                             <p class="font-medium text-slate-500">Status:</p>
@@ -167,7 +179,6 @@
                             <p class="font-medium text-slate-500">Fim: <strong id="modal-view-data-fim" class="font-semibold text-slate-700"></strong></p>
                         </div>
                     </div>
-                    <!-- Detalhes -->
                     <div class="space-y-4 pt-4 border-t border-slate-200">
                         <div><span class="block text-sm font-medium text-slate-500 mb-1">Descrição da atividade</span><span id="modal-view-descricao" class="block text-base text-slate-800"></span></div>
                         <div><span class="block text-sm font-medium text-slate-500 mb-1">Responsável</span><span id="modal-view-responsavel" class="block text-base text-slate-800"></span></div>
@@ -177,10 +188,9 @@
                     </div>
                 </div>
 
-                <!-- ==================== CONTEÚDO DO MODO EDIÇÃO (FORMULÁRIO) ==================== -->
+                <!-- conteúdo do modo de edição -->
                 <div id="edit-mode-content" class="hidden p-6 overflow-y-auto">
                     <form id="modal-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                        <!-- Inputs do formulário -->
                         <div class="md:col-span-2">
                             <label for="edit-atividade" class="text-sm font-semibold text-slate-700">Atividade</label>
                             <textarea id="edit-atividade" name="Atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
@@ -190,7 +200,6 @@
                             <textarea id="edit-descricao" name="Descrição da atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
                         </div>
 
-                        <!-- Container para agrupar Nº da Atividade e Status -->
                         <div class="md:col-span-2">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6">
                                 <div class="col-span-1">
@@ -214,7 +223,6 @@
                         <div class="md:col-span-2">
                             <label for="edit-plano" class="text-sm font-semibold text-slate-700">Plano de Ação</label>
                             <select id="edit-plano" name="Plano de ação" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
-                                <!-- As opções serão populadas pelo seu JavaScript -->
                             </select>
                         </div>
 
@@ -249,9 +257,10 @@
                         
                     </form>
                 </div>
-
+                
+                <!-- rodapé -->
                 <div class="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                    <!-- Botões do Modo Visualização -->
+                    <!-- botão de excluir -->
                     <button id="modal-btn-delete" type="button" class=" text-red-700 font-bold py-2 px-4 rounded-lg hover:bg-red-200 hover:text-red-800 disabled:cursor-not-allowed text-sm flex items-center space-x-2">
                         <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.036-2.134H8.716C7.59 2.25 6.68 3.204 6.68 4.384v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -259,11 +268,12 @@
                         <span>Excluir</span>
                     </button>
                     <div>
+                        <!-- botões do Modo Visualização -->
                         <div id="view-mode-buttons" class="flex items-center space-x-3">
                             <button id="modal-btn-view-close" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">Fechar</button>
                             <button id="modal-btn-edit" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700">Editar</button>
                         </div>
-                        <!-- Botões do Modo Edição -->
+                        <!-- botões do Modo Edição -->
                         <div id="edit-mode-buttons" class="hidden">
                             <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">Cancelar</button>
                             <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar Alterações</button>
@@ -272,7 +282,7 @@
                 </div>
             </div>
 
-            <!-- Modal de confirmação para descartar alterações -->
+            <!-- modal de confirmação para descartar alterações -->
             <div id="confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                     <div class="p-6">
@@ -290,12 +300,11 @@
                 </div>
             </div>
 
-            <!-- Modal de confirmação de exclusão -->
+            <!-- modal de confirmação de exclusão -->
             <div id="delete-confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                     <div class="p-6">
                         <div class="flex items-center">
-                            <!-- Ícone de Alerta -->
                             <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                 <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -326,6 +335,9 @@
             </div>
         </section>
 
+<!--===============================================================================
+// botão criar nova atividade
+===================================================================================-->
         <section class="flex justify-center mt-8">
             <button id="btn-nova-atividade" type="button" 
                     class="relative flex flex-col items-center justify-center 

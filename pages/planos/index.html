@@ -137,8 +137,8 @@
                 </div>
 
                 <div class="flex flex-col w-full md:w-56">
-                    <label for="filter-Equipe" class="block text-sm font-medium text-slate-700 mb-1">Equipe</label>
-                    <select id="filter-Equipe" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                    <label for="filter-Nome" class="block text-sm font-medium text-slate-700 mb-1">Pessoa</label>
+                    <select id="filter-Nome" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
@@ -152,28 +152,34 @@
             </div>
         </section>
 
+<!--===============================================================================
+// modal
+===================================================================================-->
         <section id="modal">
+            <!-- Modal de edição -->
             <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                     <!-- Cabeçalho do Modal -->
-                    <div class="flex items-center justify-between p-4 border-b border-slate-200">
+                    <div class="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
                         <h3 class="text-xl font-bold text-slate-800">Editar Plano de Ação</h3>
-                        <button id="modal-btn-close" type="button" class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:cursor-not-allowed">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        <button id="modal-btn-close" type="button" class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <ion-icon name="close-outline" class="text-2xl"></ion-icon>
                         </button>
                     </div>
 
-                    <!-- Corpo do Modal (com scroll) -->
-                    <div class="p-6 overflow-y-auto">
+                    <!-- Corpo do Modal -->
+                    <div class="p-5 overflow-y-auto">
                         <form id="modal-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                            <div class="md:col-span-2 mb-2">
+                            <!-- Título Editável -->
+                            <div class="md:col-span-2">
                                 <input type="text" id="edit-Nome" name="Nome" 
-                                    class="w-full bg-transparent border-none p-0 text-xl font-bold text-sky-700 focus:ring-0"
+                                    class="w-full bg-transparent border-none p-0 text-2xl font-bold text-sky-700 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
                                     placeholder="Nome do Plano de Ação">
                             </div>
+                            <!-- Campos Principais -->
                             <div>
-                                <label for="edit-Status" class="text-sm font-semibold text-slate-700">Status</label>
-                                <select id="edit-Status" name="Status" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <label for="edit-Status" class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
+                                <select id="edit-Status" name="Status" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                     <option value="Em desenvolvimento">Em desenvolvimento</option>
                                     <option value="Planejado">Planejado</option>
                                     <option value="Em curso">Em curso</option>
@@ -182,58 +188,94 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="edit-Processo-SEI" class="text-sm font-semibold text-slate-700">Processo SEI</label>
-                                <input type="text" id="edit-Processo-SEI" name="Processo SEI" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <label for="edit-Resolução" class="block text-sm font-semibold text-slate-500 mb-1">Resolução</label>
+                                <input type="text" id="edit-Resolução" name="Resolução" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div>
-                                <label for="edit-Documento-TCE" class="text-sm font-semibold text-slate-700">Documento TCE</label>
-                                <input type="text" id="edit-Documento-TCE" name="Documento TCE" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <label for="edit-Data-inicio" class="block text-sm font-semibold text-slate-500 mb-1">Data de início</label>
+                                <input type="date" id="edit-Data-inicio" name="Data início" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div>
-                                <label for="edit-Resolução" class="text-sm font-semibold text-slate-700">Resolução</label>
-                                <input type="text" id="edit-Resolução" name="Resolução" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <label for="edit-Data-fim" class="block text-sm font-semibold text-slate-500 mb-1">Data fim</label>
+                                <input type="date" id="edit-Data-fim" name="Data fim" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="edit-Observacoes" class="block text-sm font-semibold text-slate-500 mb-1">Observações</label>
+                                <textarea id="edit-Observacoes" name="Observações" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
+                            </div>
+
+                            <!-- Seção SEI -->
+                            <div class="md:col-span-2 flex items-center gap-2 pt-4 border-t border-slate-200 mt-2">
+                                <img src="../../assets/images/logo_sei_mg.png" class="h-6 w-auto object-contain" alt="Logo SEI">
                             </div>
                             <div>
-                                <label for="edit-Data-inicio" class="text-sm font-semibold text-slate-700">Data de início</label>
-                                <input type="date" id="edit-Data-inicio" name="Data início" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
-                            </div>
-                            <div>
-                                <label for="edit-Data-fim" class="text-sm font-semibold text-slate-700">Data fim</label>
-                                <input type="date" id="edit-Data-fim" name="Data fim" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <label for="edit-Processo-SEI" class="block text-sm font-semibold text-slate-500 mb-1">Processo SEI de origem</label>
+                                <input type="text" id="edit-Processo-SEI" name="Processo SEI" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-Coordenador" class="text-sm font-semibold text-slate-700">Coordenador</label>
-                                <input type="text" id="edit-Coordenador" name="Coordenador" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500">
+                                <label for="edit-SEI-relacionados" class="block text-sm font-semibold text-slate-500 mb-1">Outros SEI relacionados</label>
+                                <textarea id="edit-SEI-relacionados" name="SEI relacionados" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
+                            </div>
+
+                            <!-- Seção Equipe -->
+                            <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                                <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                    <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
+                                </h4>
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-Unidades" class="text-sm font-semibold text-slate-700">Unidades</label>
-                                <textarea id="edit-Unidades" name="Unidades" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                                <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
+                                    <table id="tabelaPessoas" class="min-w-full divide-y divide-slate-200">
+                                        <thead class="bg-slate-50">
+                                            <tr>
+                                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
+                                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
+                                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Unidade</th>
+                                                <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Coordenador</th>
+                                                <th scope="col" class="relative px-4 py-3"><span class="sr-only">Remover</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="corpoTabelaPessoas" class="bg-white divide-y divide-slate-200">
+                                            <!-- Linhas da tabela serão inseridas aqui -->
+                                            <!-- <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="nome" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
+                                            <td class="px-4 py-2 whitespace-nowrap"><input type="email" name="email" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
+                                            <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="unidade" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
+                                            <td class="px-4 py-3 text-center"><input type="checkbox" name="coordenador" class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500"></td>
+                                            <td class="px-4 py-3 text-center"><button type="button" class="remover-linha text-slate-500 transition-colors hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled><ion-icon name="trash-outline" class="text-lg"></ion-icon></button></td> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-3 text-right">
+                                    <button type="button" id="btnAdicionarPessoa" class="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 text-sky-800 text-sm font-medium rounded-md hover:bg-sky-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-sky-300 transition-colors">
+                                        <ion-icon name="add-outline" class="text-base"></ion-icon> Adicionar Pessoa
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Seção Documentos -->
+                            <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                                <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                    <ion-icon name="documents" class="text-lg"></ion-icon>
+                                    Documentos
+                                </h4>
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-Equipe" class="text-sm font-semibold text-slate-700">Equipe</label>
-                                <textarea id="edit-Equipe" name="Equipe" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                                <label for="edit-Documento-TCE" class="block text-sm font-semibold text-slate-500 mb-1">Documento TCE</label>
+                                <input type="text" id="edit-Documento-TCE" name="Documento TCE" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-SEI-relacionados" class="text-sm font-semibold text-slate-700">SEI relacionados</label>
-                                <textarea id="edit-SEI-relacionados" name="SEI relacionados" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="edit-Documentos-relacionados" class="text-sm font-semibold text-slate-700">Documentos relacionados</label>
-                                <textarea id="edit-Documentos-relacionados" name="Documentos relacionados" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="edit-Observacoes" class="text-sm font-semibold text-slate-700">Observações</label>
-                                <textarea id="edit-Observacoes" name="Observações" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                                <label for="edit-Documentos-relacionados" class="block text-sm font-semibold text-slate-500 mb-1">Documentos relacionados</label>
+                                <textarea id="edit-Documentos-relacionados" name="Documentos relacionados" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
                         </form>
                     </div>
 
                     <!-- Rodapé do Modal -->
-                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400 disabled:cursor-not-allowed">
+                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3 flex-shrink-0">
+                        <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-semibold py-2 px-5 rounded-lg border border border-slate-150 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
                             Cancelar
                         </button>
-                        <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:cursor-not-allowed">
+                        <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-semibold py-2 px-5 rounded-lg shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
                             Salvar Alterações
                         </button>
                     </div>
