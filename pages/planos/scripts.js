@@ -42,8 +42,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     fillGanttData(jsonPlanos)
     gerarCards(jsonPlanos)
     setupFilters()
-
-    testeTabelaModal()
+    setupModalUI()
 
     toggleLoading(false)
 })
@@ -516,10 +515,27 @@ function gerarCards(jsonPlanos) {
             </summary>
             <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-1">
               <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
-              <p><strong class="font-medium text-slate-600">Coordenador:</strong> ${plano.Coordenador || '-'}</p>
-              <p><strong class="font-medium text-slate-600">Unidades:</strong> ${plano.Unidades || '-'}</p>
-              <p><strong class="font-medium text-slate-600">Equipe:</strong> ${plano.Equipe || '-'}</p>
-              <div class="flex items-center gap-2">
+
+              <div>
+                <strong class="font-medium text-slate-600">Equipe:</strong>
+                <ul class="ml-4 list-disc space-y-1">
+                  ${plano.objPessoas && plano.objPessoas.length > 0 
+                    ? plano.objPessoas.map(pessoa => `
+                      <li class="relative">
+                        <span 
+                          class="font-medium ${pessoa.Email ? 'text-blue-600 underline cursor-pointer' : 'text-slate-500'}" 
+                          ${pessoa.Email ? `onmouseenter="cardShowTooltip(event, '${pessoa.Email}')" onmousemove="cardMoveTooltip(event)" onmouseleave="cardHideTooltip()" onclick="cardCopyEmail(event, '${pessoa.Email}')"` : ''}>
+                          ${pessoa.Nome}</span>
+                        (${pessoa.Unidade || '-'})
+                        ${pessoa.Coordenador ? '<span class="text-slate-600">[Coordenador]</span>' : ''}
+                      </li>
+                        `).join('')
+                    : ''
+                  }
+                </ul>
+              </div>
+
+              <div class="flex items-center gap-2 mt-2">
                 <img 
                   src="../../assets/images/logo_sei_mg.png" 
                   class="w-10 object-contain filter grayscale-[40%]" 
@@ -563,9 +579,86 @@ function gerarCards(jsonPlanos) {
     // Ativa a interatividade dos menus e botões
     setupAddButton();
     setupCardMenus();
-    
-    setupModalUI()
 }
+let tooltipElement;
+
+function cardShowTooltip(event, email) {
+  if (!email) return;
+
+  tooltipElement = document.createElement('div');
+  tooltipElement.textContent = email;
+  tooltipElement.style.position = 'fixed';
+  tooltipElement.style.left = event.clientX + 10 + 'px';
+  tooltipElement.style.top = event.clientY + 20 + 'px';
+  tooltipElement.style.background = '#1e293b'; // slate-700
+  tooltipElement.style.color = '#fff';
+  tooltipElement.style.padding = '2px 6px';
+  tooltipElement.style.borderRadius = '4px';
+  tooltipElement.style.fontSize = '0.75rem';
+  tooltipElement.style.fontWeight = '500';
+  tooltipElement.style.pointerEvents = 'none';
+  tooltipElement.style.zIndex = '9999';
+  tooltipElement.style.opacity = '0';
+  tooltipElement.style.transition = 'opacity 0.2s';
+
+  document.body.appendChild(tooltipElement);
+
+  requestAnimationFrame(() => {
+    tooltipElement.style.opacity = '1';
+  });
+}
+
+function cardMoveTooltip(event) {
+  if (!tooltipElement) return;
+  tooltipElement.style.left = event.clientX + 10 + 'px';
+  tooltipElement.style.top = event.clientY + 20 + 'px';
+}
+
+function cardHideTooltip() {
+  if (!tooltipElement) return;
+  tooltipElement.style.opacity = '0';
+  setTimeout(() => {
+    tooltipElement.remove();
+    tooltipElement = null;
+  }, 200);
+}
+
+function cardCopyEmail(event, email) {
+  if (!email) return;
+
+  // Copia o email
+  navigator.clipboard.writeText(email).then(() => {
+    // Cria tooltip dinamicamente sobre o cursor
+    let tooltip = document.createElement('span');
+    tooltip.textContent = 'Email copiado!';
+    tooltip.style.position = 'fixed';
+    tooltip.style.left = event.clientX + 'px';
+    tooltip.style.top = (event.clientY - 25) + 'px';
+    tooltip.style.background = '#1e293b'; // slate-700
+    tooltip.style.color = '#fff';
+    tooltip.style.padding = '2px 6px';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.fontSize = '0.75rem';
+    tooltip.style.fontWeight = '500';
+    tooltip.style.zIndex = '9999';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.opacity = '0';
+    tooltip.style.transition = 'opacity 0.3s';
+
+    document.body.appendChild(tooltip);
+
+    // Força animação
+    requestAnimationFrame(() => {
+      tooltip.style.opacity = '1';
+    });
+
+    setTimeout(() => {
+      tooltip.style.opacity = '0';
+      setTimeout(() => tooltip.remove(), 300);
+    }, 1200);
+  });
+}
+
 
 /**
  * Adiciona o listener de clique ao botão "Criar Novo Plano".
@@ -624,7 +717,7 @@ function setupModalUI() {
 
   // --- Configuração dos botões de exclusão ---
   document.querySelectorAll('.delete-plano-button').forEach(button => {
-    button.addEventListener('click', () => openDeleteConfirmationModal());
+    button.addEventListener('click', () => openDeleteConfirmationModal(button.dataset.planId));
   });
 
   // --- Controles do modal de edição ---
@@ -651,7 +744,7 @@ function setupModalUI() {
   const deleteModal = document.getElementById('delete-confirmation-modal');
   if (deleteModal) {
     const deleteBtnMap = {
-      'delete-confirm-btn-no': () => deleteModal.classList.add('hidden'),
+      'delete-confirm-btn-no': () => {deleteModal.classList.add('hidden'); currentPlanId = ''},
       'delete-confirm-btn-yes': handleDelete
     };
 
@@ -660,6 +753,56 @@ function setupModalUI() {
       if (btn) btn.addEventListener('click', handler);
     });
   }
+
+  // --- controles da tabela ---
+  const btnAdicionar = document.getElementById('btnAdicionarPessoa');
+  btnAdicionar.addEventListener('click', adicionarLinha);
+}
+
+function adicionarLinha(pessoaData = {}) {
+    const corpoTabela = document.getElementById('corpoTabelaPessoas');
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+        <td class="px-4 py-2 whitespace-nowrap">
+          <input type="text" name="nome" value="${pessoaData.Nome || ''}" 
+            class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+        </td>
+        <td class="px-4 py-2 whitespace-nowrap">
+          <input type="email" name="email" value="${pessoaData.Email || ''}" 
+            class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+        </td>
+        <td class="px-4 py-2 whitespace-nowrap">
+          <input type="text" name="unidade" value="${pessoaData.Unidade || ''}" 
+            class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+        </td>
+        <td class="px-2 py-2 text-center">
+          <input type="checkbox" name="coordenador" 
+            class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500" 
+            ${pessoaData.Coordenador ? 'checked' : ''}>
+        </td>
+        <td class="px-4 py-2 text-right">
+          <button type="button" class="remover-linha text-red-600 hover:text-red-800">
+            <ion-icon name="trash" class="text-base"></ion-icon>
+          </button>
+        </td>`;
+    
+    corpoTabela.appendChild(novaLinha);
+    novaLinha.addEventListener('input', () => (hasChanges = true));
+
+    // Adiciona listener apenas ao botão recém-criado
+    novaLinha.querySelector('.remover-linha').addEventListener('click', function(e) {
+        const btn = e.currentTarget; // garante que seja o botão
+        const linha = btn.closest('tr');
+        linha.remove();
+        hasChanges = true
+
+        const linhasRestantes = corpoTabela.querySelectorAll('tr');
+        if (linhasRestantes.length === 0) {
+            // adiciona uma linha em branco para a tabela não ficar vazia
+            adicionarLinha();
+        }
+    });
+    
 }
 
 function openEditModal(planId) {
@@ -675,20 +818,38 @@ function openEditModal(planId) {
     // --- MODO DE CRIAÇÃO ---
     modalTitle.textContent = 'Criar Novo Plano de Ação';
     form.querySelector('[name="Status"]').value = 'Planejado';
+    adicionarLinha()
   } else {
     // --- MODO DE EDIÇÃO ---
     modalTitle.textContent = 'Editar Plano de Ação';
 
     const planData = jsonPlanos.find(p => p.ID === currentPlanId);
-    Object.entries(planData).forEach(([key, value]) => {
-      const input = form.querySelector(`[name="${key}"]`);
-      if (input) input.value = value;
-    });
+    fillModalEdicao(planData)
   }
 
   hasChanges = false;
   modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
+}
+
+function fillModalEdicao(planData){
+  const form = document.getElementById('modal-form');
+
+  const pessoas = planData.objPessoas || []
+  if(pessoas.length === 0){
+    adicionarLinha()
+  } else{
+    pessoas.forEach(pessoa => {
+      adicionarLinha(pessoa)
+    })
+  }
+  
+  Object.entries(planData).forEach(([key, value]) => {
+    if(key!=='objPessoas'){
+      const input = form.querySelector(`[name="${key}"]`);
+      if (input) input.value = value;
+    }
+  });
 }
 
 function closeEditModal(force = false) {
@@ -707,6 +868,8 @@ function closeEditModal(force = false) {
     
     editModal.classList.add('hidden');
     confirmationModal.classList.add('hidden');
+
+    document.getElementById('corpoTabelaPessoas').innerHTML = ''
     
     hasChanges = false;
     isNewPlan = false;
@@ -731,16 +894,9 @@ async function handleSave() {
   const form = document.getElementById('modal-form');
   const formData = new FormData(form);
 
+  ['nome', 'email', 'unidade', 'coordenador'].forEach(v => {formData.delete(v)})
 
-
-  formData.delete('nome');
-  formData.delete('email');
-  formData.delete('unidade');
-  formData.delete('coordenador')
-
-
-    const corpoTabela = document.getElementById('corpoTabelaPessoas');
-
+  const corpoTabela = document.getElementById('corpoTabelaPessoas');
   const linhasTabela = corpoTabela.querySelectorAll('tr');
         const objPessoas = [];
 
@@ -760,14 +916,7 @@ async function handleSave() {
 
   formData.append('objPessoas', JSON.stringify(objPessoas));
   const updatedPlan = Object.fromEntries(formData.entries());
-
-
-
-
-
-
-
-
+  updatedPlan.objPessoas = JSON.parse(updatedPlan.objPessoas)
 
   // Validação de campos obrigatórios
   const camposObrigatorios = ['Nome', 'Status'];
@@ -794,72 +943,20 @@ async function handleSave() {
     const action = isNewPlan ? 'create' : 'update';
     const id = isNewPlan ? '' : currentPlanId;
 
-    console.log(updatedPlan)
-    // const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan);
+    const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan);
 
-    // if (response?.status === 200) {
-    //   setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos");
-    //   window.location.reload();
-    // } else {
-    //   throw new Error(response?.message || 'Erro desconhecido ao salvar');
-    // }
+    if (response?.status === 200) {
+      setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos");
+      window.location.reload();
+    } else {
+      throw new Error(response?.message || 'Erro desconhecido ao salvar');
+    }
   } catch (error) {
     console.error('Falha ao salvar a tarefa:', error);
     alert(`Ocorreu um erro ao salvar: ${error.message}`);
     [saveBtn, cancelBtn, closeBtn].forEach(btn => (btn.disabled = false));
     saveBtn.textContent = 'Salvar';
   }
-}
-
-function testeTabelaModal(){
-    const form = document.querySelector('form'); // Certifique-se de que este seletor corresponda ao seu formulário
-    const corpoTabela = document.getElementById('corpoTabelaPessoas');
-    const btnAdicionar = document.getElementById('btnAdicionarPessoa');
-
-    // Função para adicionar uma nova linha à tabela
-    const adicionarLinha = () => {
-        const novaLinha = document.createElement('tr');
-        novaLinha.innerHTML = `
-            <td class="px-4 py-2 whitespace-nowrap">
-                <input type="text" name="nome" class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-            </td>
-            <td class="px-4 py-2 whitespace-nowrap">
-                <input type="email" name="email" class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-            </td>
-            <td class="px-4 py-2 whitespace-nowrap">
-                <input type="text" name="unidade" class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-            </td>
-            <td class="px-2 py-2 text-center">
-                <input type="checkbox" name="coordenador" class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500">
-            </td>
-            <td class="px-4 py-2 text-right">
-              <button type="button" class="remover-linha text-red-600 hover:text-red-800">
-              <ion-icon name="trash" class="text-base"></ion-icon></button>
-            </td>
-        `;
-        corpoTabela.appendChild(novaLinha);
-
-        
-
-        const removerButtons = document.querySelectorAll('.remover-linha');
-
-        // Loop through each button and add a click event listener
-        removerButtons.forEach(button => {
-          button.addEventListener('click', function(e) {
-              const tabela = e.target.closest('table');       // pega a tabela
-              const linhas = tabela.querySelectorAll('tbody tr'); // pega todas as linhas do tbody
-
-              if (linhas.length > 1) {                        // só remove se houver mais de 1 linha
-                  e.target.closest('tr').remove();
-              } else {
-                  alert('Não é possível remover a última linha!');
-              }
-          });
-        });
-    };
-
-    // Evento para o botão de adicionar nova linha
-    btnAdicionar.addEventListener('click', adicionarLinha);
 }
 
 async function handleDelete() {
@@ -898,8 +995,10 @@ async function handleDelete() {
     }
 }
 
-function openDeleteConfirmationModal() {
-    const planData = jsonPlanos.find(p => p.ID === currentPlanId);
+function openDeleteConfirmationModal(idPlan) {
+    const planData = jsonPlanos.find(p => p.ID === idPlan);
+
+    currentPlanId = idPlan
 
     const modal = document.getElementById('delete-confirmation-modal');
     const nameSpan = document.getElementById('plano-to-delete-name');
@@ -928,14 +1027,17 @@ function openDeleteConfirmationModal() {
 //================================================================================
 
 // configurações gerais
+// [nome do filtro, id do select, está dentro do objPessoa]
 const filtersConfig = [
-    ["Unidades", "filter-Unidade"],
-    ["Equipe", "filter-Equipe"]
+    ["Unidade", "filter-Unidade", true],
+    ["Nome", "filter-Nome", true]
 ]
 
 function setupFilters() {
     // adiciona eventos para todos filtros listados em filtersConfig
-    filtersConfig.forEach(([ , elementId ]) => {
+    filtersConfig.forEach(([chave, elementId]) => {
+        fillFilterObjPessoas(chave)
+
         const el = document.getElementById(elementId)
         if (el) {
             el.addEventListener('change', aplicarFiltros)
@@ -953,9 +1055,6 @@ function setupFilters() {
     // período específico
     document.getElementById('filtrar-especifico')
         .addEventListener('click', aplicarFiltros)
-
-    fillUnidadeFilter()
-    fillEquipeFilter()
 }
 
 /**
@@ -978,12 +1077,14 @@ function aplicarFiltros() {
     let jsonFiltrado = [...jsonPlanos]
 
     // filtro por unidade
-    filtersConfig.forEach(([chave, elementId]) => {
-        const filterElement = document.getElementById(elementId)
-        if (filterElement && filterElement.value !== '-') {
-            jsonFiltrado = filterJson(jsonFiltrado, chave, normalizeString(filterElement.value))
-        }
-    })
+    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+    const filterElement = document.getElementById(elementId);
+    if (!filterElement || filterElement.value === '-') return;
+
+    jsonFiltrado = isObjPessoa
+        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
+        : filterJson(jsonFiltrado, chave, filterElement.value);
+    });
 
     // filtro por período
     const periodo = document.getElementById('filter-periodo').value
@@ -1003,10 +1104,28 @@ function aplicarFiltros() {
 function filterJson(json, chave, valor) {
     return json.filter(item => {
         if (typeof item[chave] === "string" && typeof valor === "string") {
-            return normalizeString(item[chave]).includes(valor)
+            return normalizeString(item[chave]) === normalizeString(valor)
         }
         return item[chave] === valor
     })
+}
+
+/**
+ * Filtro genérico chave/valor para valores dentro do objeto pessoa
+ */
+function filterJsonObjPessoa(json, chave, valor) {
+    return json.filter(item => {
+        const pessoas = item.objPessoas;
+        if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
+
+        // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
+        return pessoas.some(pessoa => {
+            if (typeof pessoa[chave] === "string" && typeof valor === "string") {
+                return normalizeString(pessoa[chave]) === normalizeString(valor);
+            }
+            return pessoa[chave] === valor;
+        });
+    });
 }
 
 /**
@@ -1023,38 +1142,18 @@ function clearFilters() {
 }
 
 /**
- * Preenche filtro de unidades
- */
-function fillUnidadeFilter() {
-    const filtro = document.getElementById('filter-Unidade')
-    let valores = []
-
-    Object.values(jsonPlanos).forEach(item => {
-        const unidades = item["Unidades"].split(', ')
-        valores.push(...unidades)
-    })
-
-    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
-
-    valores.forEach(valor => {
-        const option = document.createElement('option')
-        option.value = normalizeString(valor)
-        option.textContent = valor
-        filtro.appendChild(option)
-    })
-}
-
-/**
  * Preenche filtro de equipe
  */
-function fillEquipeFilter() {
-    const filtro = document.getElementById('filter-Equipe')
+function fillFilterObjPessoas(key) {
+    const filtro = document.getElementById(`filter-${key}`)
     let valores = []
 
     Object.values(jsonPlanos).forEach(item => {
-        const unidades = item["Equipe"].split(', ')
-        valores.push(...unidades)
-    })
+        const objPessoas = item.objPessoas || [];
+        objPessoas.forEach(pessoa => {
+            valores.push(pessoa[key]);
+        });
+    });
 
     valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
 
