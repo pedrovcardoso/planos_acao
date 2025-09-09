@@ -137,8 +137,8 @@
                 </div>
 
                 <div class="flex flex-col w-full md:w-56">
-                    <label for="filter-Equipe" class="block text-sm font-medium text-slate-700 mb-1">Equipe</label>
-                    <select id="filter-Equipe" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                    <label for="filter-Nome" class="block text-sm font-medium text-slate-700 mb-1">Pessoa</label>
+                    <select id="filter-Nome" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
@@ -152,8 +152,12 @@
             </div>
         </section>
 
+<!--===============================================================================
+// modal
+===================================================================================-->
         <section id="modal">
-            <div id="edit-modal" class=" hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+            <!-- Modal de edição -->
+            <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                     <!-- Cabeçalho do Modal -->
                     <div class="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
@@ -163,7 +167,7 @@
                         </button>
                     </div>
 
-                    <!-- Corpo do Modal (com scroll) -->
+                    <!-- Corpo do Modal -->
                     <div class="p-5 overflow-y-auto">
                         <form id="modal-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                             <!-- Título Editável -->
@@ -174,7 +178,7 @@
                             </div>
                             <!-- Campos Principais -->
                             <div>
-                                <label for="edit-Status" class="block text-sm font-semibold text-slate-600 mb-1">Status</label>
+                                <label for="edit-Status" class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
                                 <select id="edit-Status" name="Status" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                     <option value="Em desenvolvimento">Em desenvolvimento</option>
                                     <option value="Planejado">Planejado</option>
@@ -184,40 +188,39 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="edit-Resolução" class="block text-sm font-semibold text-slate-600 mb-1">Resolução</label>
+                                <label for="edit-Resolução" class="block text-sm font-semibold text-slate-500 mb-1">Resolução</label>
                                 <input type="text" id="edit-Resolução" name="Resolução" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div>
-                                <label for="edit-Data-inicio" class="block text-sm font-semibold text-slate-600 mb-1">Data de início</label>
+                                <label for="edit-Data-inicio" class="block text-sm font-semibold text-slate-500 mb-1">Data de início</label>
                                 <input type="date" id="edit-Data-inicio" name="Data início" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div>
-                                <label for="edit-Data-fim" class="block text-sm font-semibold text-slate-600 mb-1">Data fim</label>
+                                <label for="edit-Data-fim" class="block text-sm font-semibold text-slate-500 mb-1">Data fim</label>
                                 <input type="date" id="edit-Data-fim" name="Data fim" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-Observacoes" class="block text-sm font-semibold text-slate-600 mb-1">Observações</label>
+                                <label for="edit-Observacoes" class="block text-sm font-semibold text-slate-500 mb-1">Observações</label>
                                 <textarea id="edit-Observacoes" name="Observações" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
 
                             <!-- Seção SEI -->
                             <div class="md:col-span-2 flex items-center gap-2 pt-4 border-t border-slate-200 mt-2">
                                 <img src="../../assets/images/logo_sei_mg.png" class="h-6 w-auto object-contain" alt="Logo SEI">
-                                <h4 class="font-semibold text-slate-600">Informações do SEI</h4>
                             </div>
                             <div>
-                                <label for="edit-Processo-SEI" class="block text-sm font-semibold text-slate-600 mb-1">Processo SEI de origem</label>
+                                <label for="edit-Processo-SEI" class="block text-sm font-semibold text-slate-500 mb-1">Processo SEI de origem</label>
                                 <input type="text" id="edit-Processo-SEI" name="Processo SEI" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-SEI-relacionados" class="block text-sm font-semibold text-slate-600 mb-1">Outros SEI relacionados</label>
+                                <label for="edit-SEI-relacionados" class="block text-sm font-semibold text-slate-500 mb-1">Outros SEI relacionados</label>
                                 <textarea id="edit-SEI-relacionados" name="SEI relacionados" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
 
                             <!-- Seção Equipe -->
                             <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
                                 <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
-                                    <ion-icon name="people-outline" class="text-lg"></ion-icon> Equipe responsável
+                                    <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
                                 </h4>
                             </div>
                             <div class="md:col-span-2">
@@ -234,17 +237,17 @@
                                         </thead>
                                         <tbody id="corpoTabelaPessoas" class="bg-white divide-y divide-slate-200">
                                             <!-- Linhas da tabela serão inseridas aqui -->
-                                            <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="nome" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
+                                            <!-- <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="nome" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
                                             <td class="px-4 py-2 whitespace-nowrap"><input type="email" name="email" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
                                             <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="unidade" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
                                             <td class="px-4 py-3 text-center"><input type="checkbox" name="coordenador" class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500"></td>
-                                            <td class="px-4 py-3 text-center"><button type="button" class="remover-linha text-slate-500 transition-colors hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled><ion-icon name="trash-outline" class="text-lg"></ion-icon></button></td>
+                                            <td class="px-4 py-3 text-center"><button type="button" class="remover-linha text-slate-500 transition-colors hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled><ion-icon name="trash-outline" class="text-lg"></ion-icon></button></td> -->
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="mt-3 text-right">
-                                    <button type="button" id="btnAdicionarPessoa" class="inline-flex items-center gap-2 px-4 py-2 bg-sky-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors">
-                                        <ion-icon name="add-outline" class="text-lg"></ion-icon> Adicionar Pessoa
+                                    <button type="button" id="btnAdicionarPessoa" class="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 text-sky-800 text-sm font-medium rounded-md hover:bg-sky-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-sky-300 transition-colors">
+                                        <ion-icon name="add-outline" class="text-base"></ion-icon> Adicionar Pessoa
                                     </button>
                                 </div>
                             </div>
@@ -252,15 +255,16 @@
                             <!-- Seção Documentos -->
                             <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
                                 <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
-                                    <ion-icon name="documents-outline" class="text-lg"></ion-icon> Documentos
+                                    <ion-icon name="documents" class="text-lg"></ion-icon>
+                                    Documentos
                                 </h4>
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-Documento-TCE" class="block text-sm font-semibold text-slate-600 mb-1">Documento TCE</label>
+                                <label for="edit-Documento-TCE" class="block text-sm font-semibold text-slate-500 mb-1">Documento TCE</label>
                                 <input type="text" id="edit-Documento-TCE" name="Documento TCE" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-Documentos-relacionados" class="block text-sm font-semibold text-slate-600 mb-1">Documentos relacionados</label>
+                                <label for="edit-Documentos-relacionados" class="block text-sm font-semibold text-slate-500 mb-1">Documentos relacionados</label>
                                 <textarea id="edit-Documentos-relacionados" name="Documentos relacionados" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
                         </form>
