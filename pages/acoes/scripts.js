@@ -994,6 +994,7 @@ function populateEditMode() {
  * Alterna para o modo de edição.
  */
 function switchToEditMode() {
+    document.getElementById('corpoTabelaPessoasEdit').innerHTML = '';
     populateEditMode(currentTask);
     
     document.getElementById('modal-view-plano').classList.add('hidden');
@@ -1030,6 +1031,7 @@ function switchToViewMode(force = false) {
         return;
     }
 
+    document.getElementById('corpoTabelaPessoasView').innerHTML = '';
     populateViewMode(currentTask);
 
     modalViewPlano.classList.remove('hidden');
@@ -1050,6 +1052,7 @@ function switchToViewMode(force = false) {
  */
 function openModalForNewTask() {
     isNewTaskMode = true;
+    adicionarLinhaEdit()
     currentTask = {};
 
     // Limpa o formulário de edição para garantir que não haja dados antigos.
