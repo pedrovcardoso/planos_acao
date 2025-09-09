@@ -95,10 +95,11 @@ function setupViewSwitcher() {
 // =================================================================
 
 const filtersConfig = [
-    ["Plano de ação", "filter-planoAcao"],
-    ["Status", "filter-Status"],
-    ["Responsável", "filter-Responsavel"],
-    ["Unidades envolvidas", "filter-Orgao"]
+    // [nome do filtro, id do select, está dentro do objPessoa]
+    ["Plano de ação", "filter-planoAcao", false],
+    ["Status", "filter-Status", false],
+    ["Nome", "filter-Nome", true],
+    ["Unidade", "filter-Unidade", true]
 ];
 
 // Nenhuma alteração necessária nesta função.
@@ -117,26 +118,29 @@ function normalizeString(str) {
  */
 function setupFilters() {
     // Popula os seletores de filtro com opções únicas.
-    filtersConfig.forEach(([chave, elementId]) => {
-        const selectElement = document.getElementById(elementId);
-        if (!selectElement) return;
+    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+        if(isObjPessoa){
+            fillFilterObjPessoas(chave)
+        } else {
+            const selectElement = document.getElementById(elementId);
+            if (!selectElement) return;
 
-        // transforma em array e "achata" os valores que foram separados por vírgula
-        const opcoes = Object.values(jsonAcoes)
-            .map(value => value[chave]) // pega o campo
-            .filter(Boolean) // remove undefined/null
-            .flatMap(v => v.split(', ').map(item => item.trim())); // divide e tira espaços extras
+            // transforma em array e "achata" os valores que foram separados por vírgula
+            const opcoes = Object.values(jsonAcoes)
+                .map(value => value[chave]) // pega o campo
+                .filter(Boolean) // remove undefined/null
+                .flatMap(v => v.split(', ').map(item => item.trim())); // divide e tira espaços extras
 
-        const opcoesUnicas = [...new Set(opcoes)].sort((a, b) =>
-            a.localeCompare(b, 'pt', { sensitivity: 'base' })
-        );
+            const opcoesUnicas = [...new Set(opcoes)].sort((a, b) =>
+                a.localeCompare(b, 'pt', { sensitivity: 'base' })
+            );
 
-        opcoesUnicas.forEach(valor => {
-            const option = new Option(valor, normalizeString(valor));
-            selectElement.add(option);
-        });
-
-        selectElement.addEventListener('change', filtrarValores);
+            opcoesUnicas.forEach(valor => {
+                const option = new Option(valor, normalizeString(valor));
+                selectElement.add(option);
+            });
+            selectElement.addEventListener('change', filtrarValores);
+        }
     });
 
     // Configura o listener para o seletor de período.
@@ -153,6 +157,32 @@ function setupFilters() {
     // Configura o listener para o botão de filtro específico.
     document.getElementById('filtrar-especifico').addEventListener('click', filtrarValores);
     setPlanoFilterFromUrl()
+}
+
+/**
+ * Preenche filtro de equipe
+ */
+function fillFilterObjPessoas(key) {
+    const filtro = document.getElementById(`filter-${key}`)
+    let valores = []
+
+    Object.values(jsonAcoes).forEach(item => {
+        const objPessoas = item.objPessoas || [];
+        objPessoas.forEach(pessoa => {
+            valores.push(pessoa[key]);
+        });
+    });
+
+    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
+
+    valores.forEach(valor => {
+        const option = document.createElement('option')
+        option.value = normalizeString(valor)
+        option.textContent = valor
+        filtro.appendChild(option)
+    })
+
+    filtro.addEventListener('change', filtrarValores)
 }
 
 /**
@@ -189,13 +219,32 @@ function setPlanoFilterFromUrl() {
 }
 
 /**
- * Filtra um array de objetos JSON com base em uma chave e valor.
- * (Mantida para seguir a estrutura original, embora possa ser integrada em `filtrarValores`).
+ * Filtro genérico chave/valor
  */
-function filterJson(json, chave, valorNormalizado) {
+function filterJson(json, chave, valor) {
     return json.filter(item => {
-        const itemNormalizado = normalizeString(item[chave] || '');
-        return itemNormalizado.includes(valorNormalizado);
+        if (typeof item[chave] === "string" && typeof valor === "string") {
+            return normalizeString(item[chave]) === normalizeString(valor)
+        }
+        return item[chave] === valor
+    })
+}
+
+/**
+ * Filtro genérico chave/valor para valores dentro do objeto pessoa
+ */
+function filterJsonObjPessoa(json, chave, valor) {
+    return json.filter(item => {
+        const pessoas = item.objPessoas;
+        if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
+
+        // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
+        return pessoas.some(pessoa => {
+            if (typeof pessoa[chave] === "string" && typeof valor === "string") {
+                return normalizeString(pessoa[chave]) === normalizeString(valor);
+            }
+            return pessoa[chave] === valor;
+        });
     });
 }
 
@@ -216,12 +265,15 @@ function atualizarVisualizacoes(dados) {
 function filtrarValores() {
     let jsonFiltrado = [...jsonAcoes]; // Começa com uma cópia dos dados originais.
 
+
     // 1. Aplica filtros de categoria (Plano de Ação, Status, etc.).
-    filtersConfig.forEach(([chave, elementId]) => {
-        const filterElement = document.getElementById(elementId);
-        if (filterElement && filterElement.value !== '-') {
-            jsonFiltrado = filterJson(jsonFiltrado, chave, filterElement.value);
-        }
+    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+    const filterElement = document.getElementById(elementId);
+    if (!filterElement || filterElement.value === '-') return;
+
+    jsonFiltrado = isObjPessoa
+        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
+        : filterJson(jsonFiltrado, chave, filterElement.value);
     });
 
     // 2. Aplica o filtro de período.
