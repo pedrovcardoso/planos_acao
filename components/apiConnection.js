@@ -22,6 +22,7 @@ async function obterDadosDoOneDrive() {
     const dados = await response.json();
 
     jsonAcoes = JSON.parse(dados.acoes);
+    jsonAcoes = ordenarJsonAcoes(jsonAcoes)
     jsonPlanos = JSON.parse(dados.planos);
 
   } catch (error) {
@@ -79,4 +80,17 @@ function setSessionMirror(event, uuid, data, jsonArrayName) {
 
   window[jsonArrayName] = arr;
   sessionStorage.setItem(jsonArrayName, JSON.stringify(arr));
+}
+
+function ordenarJsonAcoes(jsonAcoes) {
+  return jsonAcoes.sort((a, b) => {
+    const planoA = String(a["Plano de ação"] || "");
+    const planoB = String(b["Plano de ação"] || "");
+    const compPlano = planoA.localeCompare(planoB, "pt-BR");
+    if (compPlano !== 0) return compPlano;
+
+    const numA = String(a["Número da atividade"] || "");
+    const numB = String(b["Número da atividade"] || "");
+    return numA.localeCompare(numB, "pt-BR", { numeric: true });
+  });
 }

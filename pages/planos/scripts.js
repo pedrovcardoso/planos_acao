@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       jsonPlanos = JSON.parse(jsonPlanos);
       console.log('dados resgatados do sessionstorage')
     }
+    ordenarJsonAcoes(jsonAcoes)
 
     fillStatCards(jsonPlanos)
     fillGanttData(jsonPlanos)

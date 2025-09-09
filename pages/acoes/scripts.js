@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       jsonPlanos = JSON.parse(jsonPlanos);
       console.log('dados resgatados do sessionstorage')
     }
+    ordenarJsonAcoes(jsonAcoes)
 
     setupViewSwitcher();
     setupModalControls();
@@ -479,7 +480,7 @@ function populateActionsTable(actionsData) {
             return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
         }).join('');
 
-        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-d="${task.ID}">
+        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-id="${task.ID}">
                     ${cellsHtml}
                 </tr>`;
     }).join('');
@@ -740,14 +741,7 @@ function setupModalControls() {
         document.getElementById('confirmation-modal').classList.add('hidden');
     });
     document.getElementById('confirm-btn-yes').addEventListener('click', () => {
-        // Decide se deve fechar o modal ou apenas voltar para o modo de visualização
-        if (!document.getElementById('task-modal-container').classList.contains('hidden')) {
-            switchToViewMode(true); // Força a volta para o modo de visualização
-            if (!document.getElementById('edit-mode-content').classList.contains('hidden')) {
-                 // Se o botão de fechar (X) foi clicado enquanto em modo de edição
-                 closeModal();
-            }
-        }
+        switchToViewMode(true);
     });
 
     document.getElementById('delete-confirm-btn-no').addEventListener('click', () => {
@@ -887,35 +881,44 @@ function switchToEditMode() {
  * @param {boolean} force - Se true, ignora a verificação de alterações.
  */
 function switchToViewMode(force = false) {
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const editContent = document.getElementById('edit-mode-content');
+    const editButtons = document.getElementById('edit-mode-buttons');
+    const viewContent = document.getElementById('view-mode-content');
+    const viewButtons = document.getElementById('view-mode-buttons');
+    const modalViewPlano = document.getElementById('modal-view-plano');
+
     if (hasChanges && !force) {
-        document.getElementById('confirmation-modal').classList.remove('hidden');
+        confirmationModal.classList.remove('hidden');
         return;
     }
 
     if (isNewTaskMode) {
-        closeModal();
+        closeModal(true);
         return;
     }
 
     populateViewMode(currentTask);
-    document.getElementById('modal-view-plano').classList.remove('hidden');
 
-    document.getElementById('edit-mode-content').classList.add('hidden');
-    document.getElementById('edit-mode-buttons').classList.add('hidden');
+    modalViewPlano.classList.remove('hidden');
 
-    document.getElementById('view-mode-content').classList.remove('hidden');
-    document.getElementById('view-mode-buttons').classList.remove('hidden');
-    
-    document.getElementById('confirmation-modal').classList.add('hidden');
+    editContent.classList.add('hidden');
+    editButtons.classList.add('hidden');
+
+    viewContent.classList.remove('hidden');
+    viewButtons.classList.remove('hidden');
+
+    confirmationModal.classList.add('hidden');
     hasChanges = false;
 }
+
 
 /**
  * Abre o modal em modo de criação para uma nova tarefa.
  */
 function openModalForNewTask() {
-    isNewTaskMode = true; // Ativa o modo de criação.
-    currentTask = {};     // A tarefa atual é um objeto vazio.
+    isNewTaskMode = true;
+    currentTask = {};
 
     // Limpa o formulário de edição para garantir que não haja dados antigos.
     clearEditForm();
@@ -1004,19 +1007,24 @@ async function handleDeleteTask() {
 /**
  * Fecha completamente o modal.
  * Reseta o estado `isNewTaskMode` ao fechar.
+ * @param {boolean} force - Se true, ignora a verificação de alterações.
  */
-function closeModal() {
-    if (!document.getElementById('edit-mode-content').classList.contains('hidden') && hasChanges) {
-        document.getElementById('confirmation-modal').classList.remove('hidden');
+function closeModal(force = false) {
+    const editContent = document.getElementById('edit-mode-content');
+    const taskModal = document.getElementById('task-modal-container');
+    const confirmationModal = document.getElementById('confirmation-modal');
+
+    if (!editContent.classList.contains('hidden') && hasChanges && !force) {
+        confirmationModal.classList.remove('hidden');
         return;
     }
-    
-    document.getElementById('task-modal-container').classList.add('hidden');
-    document.getElementById('confirmation-modal').classList.add('hidden');
+
+    taskModal.classList.add('hidden');
+    confirmationModal.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
-    
-    // Reseta o estado para garantir que a próxima abertura funcione corretamente.
+
     isNewTaskMode = false;
+    hasChanges = false;
 }
 
 async function handleSave() {
@@ -1027,10 +1035,12 @@ async function handleSave() {
         return;
     }
 
-    document.getElementById('modal-btn-save').disabled = true;
+    const btnSave = document.getElementById('modal-btn-save');
+    const btnCancel = document.getElementById('modal-btn-cancel');
+    const btnClose = document.getElementById('modal-btn-close');
+
+    [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = true);
     document.getElementById('modal-btn-save').textContent = 'Salvando...';
-    document.getElementById('modal-btn-cancel').disabled = true;
-    document.getElementById('modal-btn-close').disabled = true;
 
     const form = document.getElementById('modal-edit-form');
     const id = document.getElementById('task-modal-container').getAttribute('data-task-id')
@@ -1039,6 +1049,27 @@ async function handleSave() {
     formData.forEach((value, key) => {
         taskData[key] = value;
     });
+
+    // Validação de campos obrigatórios
+    const camposObrigatorios = ['Número da atividade', 'Plano de ação', 'Atividade', 'Status'];
+    const camposInvalidos = [];
+
+    camposObrigatorios.forEach(campo => {
+        if (!taskData[campo] || taskData[campo].trim() === '') {
+        camposInvalidos.push(campo);
+        }
+        [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = false);
+        document.getElementById('modal-btn-save').textContent = 'Salvar Alterações';
+    });
+
+    if (camposInvalidos.length > 0) {
+        alert(
+        `Os seguintes campos são obrigatórios e não foram preenchidos:\n- ${camposInvalidos.join('\n- ')}`
+        );
+        [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = false);
+        document.getElementById('modal-btn-save').textContent = 'Salvar Alterações';
+        return;
+    }
     
     try {
         let response
