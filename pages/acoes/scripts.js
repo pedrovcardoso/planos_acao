@@ -95,10 +95,11 @@ function setupViewSwitcher() {
 // =================================================================
 
 const filtersConfig = [
-    ["Plano de ação", "filter-planoAcao"],
-    ["Status", "filter-Status"],
-    ["Responsável", "filter-Responsavel"],
-    ["Unidades envolvidas", "filter-Orgao"]
+    // [nome do filtro, id do select, está dentro do objPessoa]
+    ["Plano de ação", "filter-planoAcao", false],
+    ["Status", "filter-Status", false],
+    ["Nome", "filter-Nome", true],
+    ["Unidade", "filter-Unidade", true]
 ];
 
 // Nenhuma alteração necessária nesta função.
@@ -117,26 +118,29 @@ function normalizeString(str) {
  */
 function setupFilters() {
     // Popula os seletores de filtro com opções únicas.
-    filtersConfig.forEach(([chave, elementId]) => {
-        const selectElement = document.getElementById(elementId);
-        if (!selectElement) return;
+    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+        if(isObjPessoa){
+            fillFilterObjPessoas(chave)
+        } else {
+            const selectElement = document.getElementById(elementId);
+            if (!selectElement) return;
 
-        // transforma em array e "achata" os valores que foram separados por vírgula
-        const opcoes = Object.values(jsonAcoes)
-            .map(value => value[chave]) // pega o campo
-            .filter(Boolean) // remove undefined/null
-            .flatMap(v => v.split(', ').map(item => item.trim())); // divide e tira espaços extras
+            // transforma em array e "achata" os valores que foram separados por vírgula
+            const opcoes = Object.values(jsonAcoes)
+                .map(value => value[chave]) // pega o campo
+                .filter(Boolean) // remove undefined/null
+                .flatMap(v => v.split(', ').map(item => item.trim())); // divide e tira espaços extras
 
-        const opcoesUnicas = [...new Set(opcoes)].sort((a, b) =>
-            a.localeCompare(b, 'pt', { sensitivity: 'base' })
-        );
+            const opcoesUnicas = [...new Set(opcoes)].sort((a, b) =>
+                a.localeCompare(b, 'pt', { sensitivity: 'base' })
+            );
 
-        opcoesUnicas.forEach(valor => {
-            const option = new Option(valor, normalizeString(valor));
-            selectElement.add(option);
-        });
-
-        selectElement.addEventListener('change', filtrarValores);
+            opcoesUnicas.forEach(valor => {
+                const option = new Option(valor, normalizeString(valor));
+                selectElement.add(option);
+            });
+            selectElement.addEventListener('change', filtrarValores);
+        }
     });
 
     // Configura o listener para o seletor de período.
@@ -153,6 +157,32 @@ function setupFilters() {
     // Configura o listener para o botão de filtro específico.
     document.getElementById('filtrar-especifico').addEventListener('click', filtrarValores);
     setPlanoFilterFromUrl()
+}
+
+/**
+ * Preenche filtro de equipe
+ */
+function fillFilterObjPessoas(key) {
+    const filtro = document.getElementById(`filter-${key}`)
+    let valores = []
+
+    Object.values(jsonAcoes).forEach(item => {
+        const objPessoas = item.objPessoas || [];
+        objPessoas.forEach(pessoa => {
+            valores.push(pessoa[key]);
+        });
+    });
+
+    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
+
+    valores.forEach(valor => {
+        const option = document.createElement('option')
+        option.value = normalizeString(valor)
+        option.textContent = valor
+        filtro.appendChild(option)
+    })
+
+    filtro.addEventListener('change', filtrarValores)
 }
 
 /**
@@ -189,13 +219,32 @@ function setPlanoFilterFromUrl() {
 }
 
 /**
- * Filtra um array de objetos JSON com base em uma chave e valor.
- * (Mantida para seguir a estrutura original, embora possa ser integrada em `filtrarValores`).
+ * Filtro genérico chave/valor
  */
-function filterJson(json, chave, valorNormalizado) {
+function filterJson(json, chave, valor) {
     return json.filter(item => {
-        const itemNormalizado = normalizeString(item[chave] || '');
-        return itemNormalizado.includes(valorNormalizado);
+        if (typeof item[chave] === "string" && typeof valor === "string") {
+            return normalizeString(item[chave]) === normalizeString(valor)
+        }
+        return item[chave] === valor
+    })
+}
+
+/**
+ * Filtro genérico chave/valor para valores dentro do objeto pessoa
+ */
+function filterJsonObjPessoa(json, chave, valor) {
+    return json.filter(item => {
+        const pessoas = item.objPessoas;
+        if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
+
+        // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
+        return pessoas.some(pessoa => {
+            if (typeof pessoa[chave] === "string" && typeof valor === "string") {
+                return normalizeString(pessoa[chave]) === normalizeString(valor);
+            }
+            return pessoa[chave] === valor;
+        });
     });
 }
 
@@ -216,12 +265,15 @@ function atualizarVisualizacoes(dados) {
 function filtrarValores() {
     let jsonFiltrado = [...jsonAcoes]; // Começa com uma cópia dos dados originais.
 
+
     // 1. Aplica filtros de categoria (Plano de Ação, Status, etc.).
-    filtersConfig.forEach(([chave, elementId]) => {
-        const filterElement = document.getElementById(elementId);
-        if (filterElement && filterElement.value !== '-') {
-            jsonFiltrado = filterJson(jsonFiltrado, chave, filterElement.value);
-        }
+    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+    const filterElement = document.getElementById(elementId);
+    if (!filterElement || filterElement.value === '-') return;
+
+    jsonFiltrado = isObjPessoa
+        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
+        : filterJson(jsonFiltrado, chave, filterElement.value);
     });
 
     // 2. Aplica o filtro de período.
@@ -748,6 +800,69 @@ function setupModalControls() {
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     });
     document.getElementById('delete-confirm-btn-yes').addEventListener('click', handleDeleteTask);
+
+    // --- controles da tabela ---
+    const btnAdicionar = document.getElementById('btnAdicionarPessoa');
+    btnAdicionar.addEventListener('click', adicionarLinhaEdit);
+}
+
+function adicionarLinhaView(pessoaData = {}) {
+    const corpoTabela = document.getElementById('corpoTabelaPessoasView');
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+        <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Nome || ''}</td>
+        <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Email || ''}</td>
+        <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Unidade || ''}</td>
+        <td class="px-2 py-3 text-center">
+            <input type="checkbox" class="pointer-events-none opacity-50 h-5 w-5 text-sky-600 border-slate-300 rounded focus:ring-sky-500 disabled:opacity-50" ${pessoaData.Coordenador ? 'checked="checked"' : ''}>
+        </td>`;
+    
+    corpoTabela.appendChild(novaLinha);
+}
+
+function adicionarLinhaEdit(pessoaData = {}) {
+    const corpoTabela = document.getElementById('corpoTabelaPessoasEdit');
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+        <td class="px-4 py-2 whitespace-nowrap">
+          <input type="text" name="nome" value="${pessoaData.Nome || ''}" 
+            class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+        </td>
+        <td class="px-4 py-2 whitespace-nowrap">
+          <input type="email" name="email" value="${pessoaData.Email || ''}" 
+            class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+        </td>
+        <td class="px-4 py-2 whitespace-nowrap">
+          <input type="text" name="unidade" value="${pessoaData.Unidade || ''}" 
+            class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+        </td>
+        <td class="px-2 py-2 text-center">
+          <input type="checkbox" name="coordenador" 
+            class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500" 
+            ${pessoaData.Coordenador ? 'checked' : ''}>
+        </td>
+        <td class="px-4 py-2 text-right">
+          <button type="button" class="remover-linha text-red-600 hover:text-red-800">
+            <ion-icon name="trash" class="text-base"></ion-icon>
+          </button>
+        </td>`;
+    
+    corpoTabela.appendChild(novaLinha);
+    novaLinha.addEventListener('input', () => (hasChanges = true));
+
+    // Adiciona listener apenas ao botão recém-criado
+    novaLinha.querySelector('.remover-linha').addEventListener('click', function(e) {
+        const btn = e.currentTarget; // garante que seja o botão
+        const linha = btn.closest('tr');
+        linha.remove();
+        hasChanges = true
+
+        const linhasRestantes = corpoTabela.querySelectorAll('tr');
+        if (linhasRestantes.length === 0) {
+            // adiciona uma linha em branco para a tabela não ficar vazia
+            adicionarLinhaEdit();
+        }
+    });
 }
 
 /**
@@ -816,10 +931,16 @@ function populateViewMode(task) {
     setElementText('modal-view-data-inicio', formatDate(task['Data de início']));
     setElementText('modal-view-data-fim', formatDate(task['Data fim']));
     setElementText('modal-view-descricao', task['Descrição da atividade']);
-    setElementText('modal-view-responsavel', task['Responsável']);
-    setElementText('modal-view-email', task['E-mail']);
-    setElementText('modal-view-unidades', task['Unidades envolvidas']);
     setElementText('modal-view-observacoes', task['Observações']);
+
+    const pessoas = task.objPessoas || []
+    if(pessoas.length === 0){
+        adicionarLinhaView()
+    } else{
+        pessoas.forEach(pessoa => {
+        adicionarLinhaView(pessoa)
+        })
+    }
 
     const statusEl = document.getElementById('modal-view-status');
     if (statusEl) {
@@ -847,14 +968,25 @@ function populateEditMode() {
 
     const form = document.getElementById('modal-edit-form');
     Object.keys(task).forEach(key => {
-        const input = form.querySelector(`[name="${key}"]`);
-        if (input) input.value = task[key];
+        if(key!=='objPessoas'){
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) input.value = task[key];
+        }
     });
 
     const planoSelect = document.getElementById('edit-plano');
     if (planoSelect) {
         planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
         planoSelect.value = task['Plano de ação'];
+    }
+
+    const pessoas = task.objPessoas || []
+    if(pessoas.length === 0){
+        adicionarLinhaEdit()
+    } else{
+        pessoas.forEach(pessoa => {
+        adicionarLinhaEdit(pessoa)
+        })
     }
 }
 
@@ -1021,6 +1153,8 @@ function closeModal(force = false) {
 
     taskModal.classList.add('hidden');
     confirmationModal.classList.add('hidden');
+    document.getElementById('corpoTabelaPessoasEdit').innerHTML = '';
+    document.getElementById('corpoTabelaPessoasView').innerHTML = '';
     document.body.classList.remove('overflow-hidden');
 
     isNewTaskMode = false;
@@ -1045,10 +1179,30 @@ async function handleSave() {
     const form = document.getElementById('modal-edit-form');
     const id = document.getElementById('task-modal-container').getAttribute('data-task-id')
     const formData = new FormData(form);
-    const taskData = {};
-    formData.forEach((value, key) => {
-        taskData[key] = value;
-    });
+
+    ['nome', 'email', 'unidade', 'coordenador'].forEach(v => {formData.delete(v)})
+
+    const corpoTabela = document.getElementById('corpoTabelaPessoasEdit');
+    const linhasTabela = corpoTabela.querySelectorAll('tr');
+            const objPessoas = [];
+
+            linhasTabela.forEach(linha => {
+                const nome = linha.querySelector('input[name="nome"]').value;
+                const email = linha.querySelector('input[name="email"]').value;
+                const unidade = linha.querySelector('input[name="unidade"]').value;
+                const coordenador = linha.querySelector('input[name="coordenador"]').checked;
+
+                objPessoas.push({
+                    Nome: nome,
+                    Email: email,
+                    Unidade: unidade,
+                    Coordenador: coordenador
+                });
+            });
+
+    formData.append('objPessoas', JSON.stringify(objPessoas));
+    const taskData = Object.fromEntries(formData.entries());
+    taskData.objPessoas = JSON.parse(taskData.objPessoas)
 
     // Validação de campos obrigatórios
     const camposObrigatorios = ['Número da atividade', 'Plano de ação', 'Atividade', 'Status'];
@@ -1058,8 +1212,6 @@ async function handleSave() {
         if (!taskData[campo] || taskData[campo].trim() === '') {
         camposInvalidos.push(campo);
         }
-        [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = false);
-        document.getElementById('modal-btn-save').textContent = 'Salvar Alterações';
     });
 
     if (camposInvalidos.length > 0) {

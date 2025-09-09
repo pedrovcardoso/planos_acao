@@ -67,15 +67,15 @@
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[200px]">
-                    <label for="filter-Responsavel" class="block text-sm font-medium text-slate-700 mb-1">Responsável</label>
-                    <select id="filter-Responsavel" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                    <label for="filter-Nome" class="block text-sm font-medium text-slate-700 mb-1">Responsável</label>
+                    <select id="filter-Nome" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
 
                 <div class="flex flex-col flex-1 min-w-[200px]">
-                    <label for="filter-Orgao" class="block text-sm font-medium text-slate-700 mb-1">Órgão Responsável</label>
-                    <select id="filter-Orgao" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                    <label for="filter-Unidade" class="block text-sm font-medium text-slate-700 mb-1">Órgão Responsável</label>
+                    <select id="filter-Unidade" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
@@ -181,10 +181,32 @@
                     </div>
                     <div class="space-y-4 pt-4 border-t border-slate-200">
                         <div><span class="block text-sm font-medium text-slate-500 mb-1">Descrição da atividade</span><span id="modal-view-descricao" class="block text-base text-slate-800"></span></div>
-                        <div><span class="block text-sm font-medium text-slate-500 mb-1">Responsável</span><span id="modal-view-responsavel" class="block text-base text-slate-800"></span></div>
-                        <div><span class="block text-sm font-medium text-slate-500 mb-1">Lista de e-mail</span><span id="modal-view-email" class="block text-base text-slate-800"></span></div>
-                        <div><span class="block text-sm font-medium text-slate-500 mb-1">Unidades envolvidas</span><span id="modal-view-unidades" class="block text-base text-slate-800"></span></div>
                         <div><span class="block text-sm font-medium text-slate-500 mb-1">Observações</span><span id="modal-view-observacoes" class="block text-base text-slate-800 whitespace-pre-wrap"></span></div>
+                    </div>
+                    
+                    <div class="space-y-4 pt-4 border-t border-slate-200">
+                        <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
+                            <table id="tabelaPessoas" class="min-w-full table-fixed divide-y divide-slate-200">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th scope="col" class="w-1/4 px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                            Nome
+                                        </th>
+                                        <th scope="col" class="w-1/3 px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                            Email
+                                        </th>
+                                        <th scope="col" class="w-1/4 px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                            Unidade
+                                        </th>
+                                        <th scope="col" class="w-16 px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                            Coord.
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="corpoTabelaPessoasView" class="bg-white divide-y divide-slate-200">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -192,23 +214,23 @@
                 <div id="edit-mode-content" class="hidden p-6 overflow-y-auto">
                     <form id="modal-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                         <div class="md:col-span-2">
-                            <label for="edit-atividade" class="text-sm font-semibold text-slate-700">Atividade</label>
-                            <textarea id="edit-atividade" name="Atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                            <input type="text" id="edit-atividade" name="Atividade" rows="2" class="w-full bg-transparent border-none p-0 text-2xl font-bold text-slate-800 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
+                                    placeholder="Nome do Plano de Ação">
                         </div>
                         <div class="md:col-span-2">
-                            <label for="edit-descricao" class="text-sm font-semibold text-slate-700">Descrição da atividade</label>
-                            <textarea id="edit-descricao" name="Descrição da atividade" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                            <label for="edit-descricao" class="block text-sm font-semibold text-slate-500 mb-1">Descrição da atividade</label>
+                            <textarea id="edit-descricao" name="Descrição da atividade" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                         </div>
 
                         <div class="md:col-span-2">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6">
                                 <div class="col-span-1">
-                                    <label for="edit-numero-atividade" class="text-sm font-semibold text-slate-700">Nº da Atividade</label>
-                                    <input type="text" id="edit-numero-atividade" name="Número da atividade" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                    <label for="edit-numero-atividade" class="block text-sm font-semibold text-slate-500 mb-1">Nº da Atividade</label>
+                                    <input type="text" id="edit-numero-atividade" name="Número da atividade" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                 </div>
                                 <div class="col-span-2">
-                                    <label for="edit-status" class="text-sm font-semibold text-slate-700">Status</label>
-                                    <select id="edit-status" name="Status" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                    <label for="edit-status" class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
+                                    <select id="edit-status" name="Status" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                         <option selected disabled hidden>Selecione um valor</option>
                                         <option>Em desenvolvimento</option>
                                         <option>Planejado</option>
@@ -221,40 +243,53 @@
                         </div>
                         
                         <div class="md:col-span-2">
-                            <label for="edit-plano" class="text-sm font-semibold text-slate-700">Plano de Ação</label>
-                            <select id="edit-plano" name="Plano de ação" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                            <label for="edit-plano" class="block text-sm font-semibold text-slate-500 mb-1">Plano de Ação</label>
+                            <select id="edit-plano" name="Plano de ação" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </select>
                         </div>
 
                         <div>
-                            <label for="edit-data-inicio" class="text-sm font-semibold text-slate-700">Data de início</label>
-                            <input type="date" id="edit-data-inicio" name="Data de início" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                            <label for="edit-data-inicio" class="block text-sm font-semibold text-slate-500 mb-1">Data de início</label>
+                            <input type="date" id="edit-data-inicio" name="Data de início" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                         </div>
                         <div>
-                            <label for="edit-data-fim" class="text-sm font-semibold text-slate-700">Data fim</label>
-                            <input type="date" id="edit-data-fim" name="Data fim" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label for="edit-responsavel" class="text-sm font-semibold text-slate-700">Responsável</label>
-                            <input type="text" id="edit-responsavel" name="Responsável" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label for="edit-responsavel" class="text-sm font-semibold text-slate-700">E-mail</label>
-                            <input type="text" id="edit-email" name="E-mail" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label for="edit-unidades" class="text-sm font-semibold text-slate-700">Unidades envolvidas</label>
-                            <textarea id="edit-unidades" name="Unidades envolvidas" rows="2" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                            <label for="edit-data-fim" class="block text-sm font-semibold text-slate-500 mb-1">Data fim</label>
+                            <input type="date" id="edit-data-fim" name="Data fim" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                         </div>
 
                         <div class="md:col-span-2">
-                            <label for="edit-observacoes" class="text-sm font-semibold text-slate-700">Observações</label>
-                            <textarea id="edit-observacoes" name="Observações" rows="3" class="mt-1 block w-full p-2 border border-slate-300 rounded-md"></textarea>
+                            <label for="edit-observacoes" class="block text-sm font-semibold text-slate-500 mb-1">Observações</label>
+                            <textarea id="edit-observacoes" name="Observações" rows="3" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                         </div>
                         
+                        <!-- Seção Equipe -->
+                        <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                            <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
+                            </h4>
+                        </div>
+                        <div class="md:col-span-2">
+                            <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
+                                <table id="tabelaPessoas" class="min-w-full divide-y divide-slate-200">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Unidade</th>
+                                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Coordenador</th>
+                                            <th scope="col" class="relative px-4 py-3"><span class="sr-only">Remover</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="corpoTabelaPessoasEdit" class="bg-white divide-y divide-slate-200">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3 text-right">
+                                <button type="button" id="btnAdicionarPessoa" class="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 text-sky-800 text-sm font-medium rounded-md hover:bg-sky-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-sky-300 transition-colors">
+                                    <ion-icon name="add-outline" class="text-base"></ion-icon> Adicionar Pessoa
+                                </button>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 
