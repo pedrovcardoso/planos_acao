@@ -568,10 +568,20 @@ function gerarCards(jsonPlanos) {
     setupAddButton();
     setupCardMenus();
 }
-let tooltipElement;
+let tooltipElement = null;
+let hideTimeout = null;
 
 function cardShowTooltip(event, email) {
   if (!email) return;
+
+  if (hideTimeout) {
+    clearTimeout(hideTimeout);
+    hideTimeout = null;
+  }
+
+  if (tooltipElement) {
+    tooltipElement.remove();
+  }
 
   tooltipElement = document.createElement('div');
   tooltipElement.textContent = email;
@@ -604,10 +614,15 @@ function cardMoveTooltip(event) {
 
 function cardHideTooltip() {
   if (!tooltipElement) return;
+
   tooltipElement.style.opacity = '0';
-  setTimeout(() => {
-    tooltipElement.remove();
-    tooltipElement = null;
+
+  hideTimeout = setTimeout(() => {
+    if (tooltipElement) {
+      tooltipElement.remove();
+      tooltipElement = null;
+    }
+    hideTimeout = null;
   }, 200);
 }
 
