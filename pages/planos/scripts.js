@@ -460,24 +460,24 @@ function gerarCards(jsonPlanos) {
     const planoNomeEncoded = encodeURIComponent(plano.Nome);
 
     return `
-      <div class="relative bg-white border border-slate-200 rounded-xl p-5 shadow-md flex flex-col
-                  transition-all duration-300 hover:shadow-xl">
+      <div class="relative bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex flex-col
+                  transition-all duration-300 hover:shadow-md">
         
-        <div class="absolute top-0 right-0 p-3">
+        <div class="absolute top-0 right-0 p-2">
           <div class="relative">
             <!-- Botão que abre o menu -->
-            <button type="button" class="card-menu-button rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <button type="button" class="card-menu-button rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
               </svg>
             </button>
 
             <!-- O menu suspenso (dropdown), que começa escondido -->
-            <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 z-10">
+            <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-10">
               <div class="py-1">
                 ${plano.Status!=='Em desenvolvimento' ? 
                   `<a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` : 
-                  '<span class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 $pointer-events-none opacity-50 cursor-default">Ver ações</span>'}
+                  '<span class="block w-full text-left px-4 py-2 text-sm text-slate-400 cursor-not-allowed">Ver ações</span>'}
                 
                 <button type="button" 
                         class="edit-plano-button block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
@@ -496,27 +496,27 @@ function gerarCards(jsonPlanos) {
                 
         <div class="flex-grow">
           <!-- O "pr-8" (padding-right) evita que o título fique embaixo do menu -->
-          <h2 class="pr-8 text-xl font-bold text-sky-700 tracking-wide">${plano.Nome}</h2>
+          <h2 class="pr-8 text-lg font-bold text-sky-800 tracking-normal">${plano.Nome}</h2>
 
-          <div class="mt-3 space-y-1 text-sm text-slate-600">
-            <p><strong class="font-semibold text-slate-700">SEI de origem:</strong> ${plano["Processo SEI"]}</p>
-            <p><strong class="font-semibold text-slate-700">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
+          <div class="mt-2 space-y-1 text-sm text-slate-500">
+            <p><strong class="font-medium text-slate-600">SEI de origem:</strong> ${plano["Processo SEI"]}</p>
+            <p><strong class="font-medium text-slate-600">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
           </div>
         </div>
         
         <div class="mt-4">
           <details class="text-sm group mb-3">
-            <summary class="font-semibold !text-slate-500 cursor-pointer list-none flex items-center gap-2
-                            hover:!text-slate-700 group-open:!text-sky-700">
+            <summary class="font-medium text-slate-500 cursor-pointer list-none flex items-center gap-1
+                            hover:text-slate-700 group-open:text-sky-700">
               Mais detalhes
-              <span class="inline-block text-lg font-bold !text-slate-400 transition-transform duration-300 group-open:rotate-90">›</span>
+              <span class="inline-block text-base font-bold text-slate-400 transition-transform duration-300 group-open:rotate-90">›</span>
             </summary>
-            <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-1">
+            <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-2">
               <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
 
               <div>
                 <strong class="font-medium text-slate-600">Equipe:</strong>
-                <ul class="ml-4 list-disc space-y-1">
+                <ul class="ml-4 list-disc space-y-1 text-xs">
                   ${plano.objPessoas && plano.objPessoas.length > 0 
                     ? plano.objPessoas.map(pessoa => `
                       <li class="relative">
@@ -524,28 +524,24 @@ function gerarCards(jsonPlanos) {
                           class="font-medium ${pessoa.Email ? 'text-blue-600 underline cursor-pointer' : 'text-slate-500'}" 
                           ${pessoa.Email ? `onmouseenter="cardShowTooltip(event, '${pessoa.Email}')" onmousemove="cardMoveTooltip(event)" onmouseleave="cardHideTooltip()" onclick="cardCopyEmail(event, '${pessoa.Email}')"` : ''}>
                           ${pessoa.Nome}</span>
-                        (${pessoa.Unidade || '-'})
-                        ${pessoa.Coordenador ? '<span class="text-slate-600">[Coordenador]</span>' : ''}
+                        <span class="text-slate-400">(${pessoa.Unidade || '-'})</span>
+                        ${pessoa.Coordenador ? '<span class="text-slate-500 font-medium">[Coordenador]</span>' : ''}
                       </li>
                         `).join('')
-                    : ''
+                    : '<li class="text-slate-400">Nenhuma equipe atribuída.</li>'
                   }
                 </ul>
               </div>
 
               <p><strong class="font-medium text-slate-600">SEI relacionados:</strong> ${plano['SEI relacionados'] || '-'}</p>
-              <span>
-                ${plano['SEI relacionados'] || '-'}
-              </span>
-
               <p><strong class="font-medium text-slate-600">Documentos relacionados:</strong> ${plano['Documentos relacionados'] || '-'}</p>
               <p><strong class="font-medium text-slate-600">Observações:</strong> ${plano['Observações'] || '-'}</p>
             </div>
           </details>
         
-          <div class="pt-3 border-t border-slate-200 flex justify-between text-sm">
-            <p class="font-medium text-slate-500"><strong>Início:</strong> <span class="font-semibold text-slate-700">${dataInicio}</span></p>
-            <p class="font-medium text-slate-500"><strong>Fim:</strong> <span class="font-semibold text-slate-700">${dataFim}</span></p>
+          <div class="pt-2 border-t border-slate-200 flex justify-between text-xs">
+            <p class="font-medium text-slate-500"><strong>Início:</strong> <span class="font-semibold text-slate-600">${dataInicio}</span></p>
+            <p class="font-medium text-slate-500"><strong>Fim:</strong> <span class="font-semibold text-slate-600">${dataFim}</span></p>
           </div>
         </div>
       </div>
