@@ -812,10 +812,7 @@ function adicionarLinhaView(pessoaData = {}) {
     novaLinha.innerHTML = `
         <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Nome || ''}</td>
         <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Email || ''}</td>
-        <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Unidade || ''}</td>
-        <td class="px-2 py-3 text-center">
-            <input type="checkbox" class="pointer-events-none opacity-50 h-5 w-5 text-sky-600 border-slate-300 rounded focus:ring-sky-500 disabled:opacity-50" ${pessoaData.Coordenador ? 'checked="checked"' : ''}>
-        </td>`;
+        <td class="px-4 py-3 text-sm text-slate-700 whitespace-nowrap">${pessoaData.Unidade || ''}</td>`;
     
     corpoTabela.appendChild(novaLinha);
 }
@@ -835,11 +832,6 @@ function adicionarLinhaEdit(pessoaData = {}) {
         <td class="px-4 py-2 whitespace-nowrap">
           <input type="text" name="unidade" value="${pessoaData.Unidade || ''}" 
             class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-        </td>
-        <td class="px-2 py-2 text-center">
-          <input type="checkbox" name="coordenador" 
-            class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500" 
-            ${pessoaData.Coordenador ? 'checked' : ''}>
         </td>
         <td class="px-4 py-2 text-right">
           <button type="button" class="remover-linha text-red-600 hover:text-red-800">
