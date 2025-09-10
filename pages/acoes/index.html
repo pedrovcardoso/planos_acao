@@ -20,14 +20,15 @@
 <!--===============================================================================
 // painel de filtros
 ===================================================================================-->
-        <section class="bg-white p-4 rounded-xl shadow-md">
+        <section class="bg-white p-4 rounded-lg shadow-sm">
 
-            <h2 class="text-lg font-semibold text-slate-800 mb-4">Painel de filtros</h2>
+            <h2 class="text-base font-semibold text-slate-700 mb-3">Painel de filtros</h2>
 
-            <div class="flex flex-wrap items-end gap-x-4 gap-y-2">
-                <div class="flex flex-col w-full md:w-56">
-                    <label for="filter-periodo" class="block text-sm font-medium text-slate-700 mb-1">Período</label>
-                    <select id="filter-periodo" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+            <div class="flex flex-wrap items-end gap-x-8 gap-y-3">
+                <!-- Filtro de Período -->
+                <div class="flex flex-col w-full sm:w-48">
+                    <label for="filter-periodo" class="text-xs font-medium text-slate-600 mb-1">Período</label>
+                    <select id="filter-periodo" class="w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
                         <option selected disabled hidden value="-">Selecione</option>
                         <option value="mes">Este mês</option>
                         <option value="semana">Esta semana</option>
@@ -35,16 +36,17 @@
                     </select>
                 </div>
             
-                <div id="periodo-especifico-inputs" class="hidden flex items-center gap-2 w-full md:w-auto">
-                    <div class="flex-grow">
-                        <label for="periodo-inicio" class="block text-sm font-medium text-slate-700 mb-1">Início</label>
-                        <input type="date" id="periodo-inicio" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2" />
+                <!-- Inputs de Período Específico -->
+                <div id="periodo-especifico-inputs" class="hidden flex items-end gap-2 w-full sm:w-auto">
+                    <div>
+                        <label for="periodo-inicio" class="text-xs font-medium text-slate-600 mb-1">Início</label>
+                        <input type="date" id="periodo-inicio" class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 transition duration-150 hover:border-slate-400" />
                     </div>
-                    <div class="flex-grow">
-                        <label for="periodo-fim" class="block text-sm font-medium text-slate-700 mb-1">Fim</label>
-                        <input type="date" id="periodo-fim" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2" />
+                    <div>
+                        <label for="periodo-fim" class="text-xs font-medium text-slate-600 mb-1">Fim</label>
+                        <input type="date" id="periodo-fim" class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 transition duration-150 hover:border-slate-400" />
                     </div>
-                    <div id="filtrar-especifico" class="cursor-pointer bg-sky-600 text-white font-semibold text-sm rounded-lg px-4 py-2 whitespace-nowrap hover:bg-sky-700 transition-colors self-end">
+                    <div id="filtrar-especifico" class="cursor-pointer bg-sky-600 text-white font-semibold text-sm rounded-md px-3 py-2 whitespace-nowrap hover:bg-sky-700 transition-colors">
                         Filtrar
                     </div>
                 </div>
@@ -52,39 +54,41 @@
                 <!-- quebra de linha -->
                 <div class="w-full"></div>
 
-                <div class="flex flex-col flex-1 min-w-[200px]">
-                    <label for="filter-planoAcao" class="block text-sm font-medium text-slate-700 mb-1">Plano de Ação</label>
-                    <select id="filter-planoAcao" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                <!-- Outros Filtros -->
+                <div class="flex flex-col flex-1 min-w-[180px]">
+                    <label for="filter-planoAcao" class="text-xs font-medium text-slate-600 mb-1">Plano de Ação</label>
+                    <select id="filter-planoAcao" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
 
-                <div class="flex flex-col flex-1 min-w-[200px]">
-                    <label for="filter-Status" class="block text-sm font-medium text-slate-700 mb-1">Status</label>
-                    <select id="filter-Status" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                <div class="flex flex-col flex-1 min-w-[180px]">
+                    <label for="filter-Status" class="text-xs font-medium text-slate-600 mb-1">Status</label>
+                    <select id="filter-Status" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
 
-                <div class="flex flex-col flex-1 min-w-[200px]">
-                    <label for="filter-Nome" class="block text-sm font-medium text-slate-700 mb-1">Responsável</label>
-                    <select id="filter-Nome" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                <div class="flex flex-col flex-1 min-w-[180px]">
+                    <label for="filter-Nome" class="text-xs font-medium text-slate-600 mb-1">Responsável</label>
+                    <select id="filter-Nome" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
 
-                <div class="flex flex-col flex-1 min-w-[200px]">
-                    <label for="filter-Unidade" class="block text-sm font-medium text-slate-700 mb-1">Órgão Responsável</label>
-                    <select id="filter-Unidade" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 p-2 transition-shadow duration-200 hover:shadow-md">
+                <div class="flex flex-col flex-1 min-w-[180px]">
+                    <label for="filter-Unidade" class="text-xs font-medium text-slate-600 mb-1">Órgão Responsável</label>
+                    <select id="filter-Unidade" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
                         <option selected disabled hidden value='-'>Selecione</option>
                     </select>
                 </div>
-                
+
                 <!-- quebra de linha -->
                 <div class="w-full"></div>
                 
-                <button onclick="clearFilters()" class="flex items-center gap-2 bg-slate-200 text-slate-800 font-semibold text-sm rounded-lg px-4 py-2 hover:bg-slate-300 transition-colors">
-                    <ion-icon name="trash" class="text-base"></ion-icon>
+                <!-- Botão de Limpar -->
+                <button onclick="clearFilters()" class="flex items-center gap-1.5 bg-transparent text-slate-500 font-medium text-sm rounded-md px-3 py-2 hover:bg-slate-100 hover:text-slate-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                     <span>Limpar filtros</span>
                 </button>
             </div>

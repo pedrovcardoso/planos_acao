@@ -1066,18 +1066,27 @@ function aplicarFiltros() {
 
     // filtro por unidade
     filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-    const filterElement = document.getElementById(elementId);
-    if (!filterElement || filterElement.value === '-') return;
+        const filterElement = document.getElementById(elementId);
+        if (!filterElement || filterElement.value === '-'){
+            filterElement.classList.remove('filter-active')
+            return;
+        } else {
+            jsonFiltrado = isObjPessoa
+                ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
+                : filterJson(jsonFiltrado, chave, filterElement.value);
 
-    jsonFiltrado = isObjPessoa
-        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
-        : filterJson(jsonFiltrado, chave, filterElement.value);
+            filterElement.classList.add('filter-active');
+        }
     });
 
     // filtro por período
-    const periodo = document.getElementById('filter-periodo').value
+    const periodoElement = document.getElementById('filter-periodo')
+    const periodo = periodoElement.value
     if (periodo && periodo !== '-') {
         jsonFiltrado = filtrarPorPeriodo(jsonFiltrado, periodo)
+        periodoElement.classList.add('filter-active')
+    } else {
+        periodoElement.classList.remove('filter-active')
     }
 
     // aplica nas seções

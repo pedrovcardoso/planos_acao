@@ -268,12 +268,17 @@ function filtrarValores() {
 
     // 1. Aplica filtros de categoria (Plano de Ação, Status, etc.).
     filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-    const filterElement = document.getElementById(elementId);
-    if (!filterElement || filterElement.value === '-') return;
+        const filterElement = document.getElementById(elementId);
+        if (!filterElement || filterElement.value === '-'){
+            filterElement.classList.remove('filter-active')
+            return;
+        } else {
+            jsonFiltrado = isObjPessoa
+                ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
+                : filterJson(jsonFiltrado, chave, filterElement.value);
 
-    jsonFiltrado = isObjPessoa
-        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
-        : filterJson(jsonFiltrado, chave, filterElement.value);
+            filterElement.classList.add('filter-active');
+        }
     });
 
     // 2. Aplica o filtro de período.
@@ -290,13 +295,15 @@ function filtrarValores() {
  * @returns {Array} O array de ações filtrado por período.
  */
 function filtrarPeriodo(dadosParaFiltrar) {
-    const value = document.getElementById('filter-periodo').value;
+    const filterElement = document.getElementById('filter-periodo')
+    const value = filterElement.value;
     let dataInicio, dataFim;
 
     const agora = new Date();
 
     switch (value) {
         case 'semana':
+            filterElement.classList.add('filter-active')
             const primeiroDia = new Date(agora);
             primeiroDia.setDate(agora.getDate() - agora.getDay() + 1);
             dataInicio = primeiroDia;
@@ -307,11 +314,13 @@ function filtrarPeriodo(dadosParaFiltrar) {
             break;
         
         case 'mes':
+            filterElement.classList.add('filter-active')
             dataInicio = new Date(agora.getFullYear(), agora.getMonth(), 1);
             dataFim = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
             break;
 
         case 'especifico':
+            filterElement.classList.add('filter-active')
             const inicioInput = document.getElementById('periodo-inicio').value;
             const fimInput = document.getElementById('periodo-fim').value;
             if (inicioInput && fimInput) {
@@ -321,7 +330,7 @@ function filtrarPeriodo(dadosParaFiltrar) {
             break;
 
         default:
-            // Se não for um filtro de período, retorna os dados como estão.
+            filterElement.classList.remove('filter-active')
             return dadosParaFiltrar;
     }
 
@@ -346,7 +355,9 @@ function filtrarPeriodo(dadosParaFiltrar) {
  */
 function clearFilters() {
     filtersConfig.forEach(([chave, elementId]) => {
-        document.getElementById(elementId).value = '-';
+        const element = document.getElementById(elementId)
+        element.value = '-';
+        element.classList.remove('filter-active')
     });
     document.getElementById('filter-periodo').value = '-';
     document.getElementById('periodo-inicio').value = '';
