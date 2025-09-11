@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Componente Carregado Dinamicamente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center font-sans p-8 space-y-8">
+
+    <!-- Componente 1 -->
+    <div class="w-72">
+        <label for="my-tools-select" class="block text-sm font-medium text-gray-700 mb-1">Ferramentas de Design</label>
+        <select multiple data-placeholder="Adicionar ferramentas" id="my-tools-select">
+            <option value="sketch">Sketch</option>
+            <option value="framerx" selected>Framer X</option>
+            <option value="photoshop">Photoshop</option>
+            <option value="principle">Principle</option>
+            <option value="invision">Invision</option>
+        </select>
+    </div>
+
+    <!-- Componente 2 -->
+    <div class="w-72">
+        <label for="my-frameworks-select" class="block text-sm font-medium text-gray-700 mb-1">Frameworks JS</label>
+        <select multiple data-placeholder="Adicionar frameworks" id="my-frameworks-select">
+            <option value="react">React</option>
+            <option value="vue">Vue.js</option>
+            <option value="angular" selected>Angular</option>
+            <option value="svelte">Svelte</option>
+        </select>
+    </div>
+
+    <!-- SCRIPT CARREGADOR (LOADER) -->
+    <script>
+        /**
+         * Carrega um script de forma dinâmica e executa um callback quando estiver pronto.
+         * @param {string} scriptPath O caminho para o arquivo .js
+         * @param {function} onReady O callback a ser executado após o carregamento.
+         */
+        function loadComponentScript(scriptPath, onReady) {
+            const script = document.createElement('script');
+            script.src = scriptPath;
+            
+            // A mágica acontece aqui: a função 'onReady' só será chamada
+            // depois que o 'scripts.js' for totalmente carregado e executado.
+            script.onload = () => {
+                if (onReady) {
+                    onReady();
+                }
+            };
+
+            script.onerror = () => {
+                console.error(`Falha ao carregar o script em: ${scriptPath}`);
+            };
+
+            document.head.appendChild(script);
+        }
+
+        // --- INICIALIZAÇÃO ---
+        // Espera o DOM estar pronto, depois carrega nosso componente e o inicializa.
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponentScript('../multiple_select.js', () => {
+                console.log("Componente 'scripts.js' carregado e pronto para uso!");
+
+                // Agora que o script foi carregado, podemos chamar as funções que ele define.
+                createCustomSelect('my-tools-select');
+                createCustomSelect('my-frameworks-select');
+
+                // Você também pode chamar a outra função a partir daqui.
+                const initialToolValues = getCustomSelectValues('my-tools-select');
+                console.log('Valores iniciais das ferramentas:', initialToolValues);
+            });
+        });
+    </script>
+</body>
+</html>
