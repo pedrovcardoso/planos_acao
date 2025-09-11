@@ -98,16 +98,16 @@
 // switch do modo de visualização
 ===================================================================================-->
         <section class="flex flex-wrap gap-2 items-center justify-center p-4">
-            <div class="relative flex w-full max-w-sm items-center rounded-full bg-white p-1 shadow">
+            <div class="relative flex w-full max-w-sm items-center rounded-full p-1 bg-white shadow">
                 <input type="radio" name="option" id="kanban" class="peer/kanban sr-only" checked />
                 <input type="radio" name="option" id="table" class="peer/table sr-only" />
                 <input type="radio" name="option" id="gantt" class="peer/gantt sr-only" />
 
-                <label for="kanban" class="z-10 w-full cursor-pointer rounded-full py-2 text-center font-semibold text-gray-500 transition-colors duration-300 ease-in-out peer-checked/kanban:text-gray-700">Kanban</label>
-                <label for="table" class="z-10 w-full cursor-pointer rounded-full py-2 text-center font-semibold text-gray-500 transition-colors duration-300 ease-in-out peer-checked/table:text-gray-700">Tabela</label>
-                <label for="gantt" class="z-10 w-full cursor-pointer rounded-full py-2 text-center font-semibold text-gray-500 transition-colors duration-300 ease-in-out peer-checked/gantt:text-gray-700">Gantt</label>
+                <label for="kanban" class="z-10 w-full cursor-pointer rounded-full py-1.5 text-center text-sm font-medium text-slate-500 transition-colors duration-300 ease-in-out hover:text-slate-800 peer-checked/kanban:text-slate-900">Kanban</label>
+                <label for="table" class="z-10 w-full cursor-pointer rounded-full py-1.5 text-center text-sm font-medium text-slate-500 transition-colors duration-300 ease-in-out hover:text-slate-800 peer-checked/table:text-slate-900">Tabela</label>
+                <label for="gantt" class="z-10 w-full cursor-pointer rounded-full py-1.5 text-center text-sm font-medium text-slate-500 transition-colors duration-300 ease-in-out hover:text-slate-800 peer-checked/gantt:text-slate-900">Gantt</label>
 
-                <div class="absolute inset-0 z-0 h-full w-1/3 transform rounded-full bg-gray-300 shadow-md transition-transform duration-300 ease-in-out
+                <div class="absolute inset-0 z-0 h-full w-1/3 transform rounded-full bg-slate-200 transition-transform duration-300 ease-in-out
                     peer-checked/kanban:translate-x-0
                     peer-checked/table:translate-x-full
                     peer-checked/gantt:translate-x-[200%]"
