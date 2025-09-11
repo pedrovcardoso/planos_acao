@@ -73,7 +73,7 @@
 
         const activeSelection = document.createElement('div');
         // Alterado para items-start para alinhar corretamente quando houver quebra de linha
-        activeSelection.className = 'relative z-20 flex items-start p-2 min-h-[44px] bg-white rounded-lg shadow-md cursor-pointer transition-shadow duration-200 hover:shadow-lg';
+        activeSelection.className = 'relative z-20 flex items-start p-2 w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500';
 
         // NOVO: Wrapper para os itens selecionados (tags)
         const tagsWrapper = document.createElement('div');
@@ -108,6 +108,13 @@
         
         selectContainer.append(activeSelection, list);
         
+        const parent = selectElement.parentElement;
+        const existingComponent = parent.querySelector(`.custom-select-container[data-select-id="${selectId}"]`);
+        if (existingComponent) {
+            // Se encontrar, remove-o antes de criar um novo
+            parent.removeChild(existingComponent);
+        }
+
         selectElement.style.display = 'none';
         selectElement.parentElement.insertBefore(selectContainer, selectElement);
     };

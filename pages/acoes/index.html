@@ -188,26 +188,194 @@
                         <div><span class="block text-sm font-medium text-slate-500 mb-1">Observações</span><span id="modal-view-observacoes" class="block text-base text-slate-800 whitespace-pre-wrap"></span></div>
                     </div>
                     
-                    <div class="space-y-4 pt-4 border-t border-slate-200">
-                        <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
-                            <table id="tabelaPessoas" class="min-w-full table-fixed divide-y divide-slate-200">
-                                <thead class="bg-slate-50">
-                                    <tr>
-                                        <th scope="col" class="w-1/4 px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                            Nome
-                                        </th>
-                                        <th scope="col" class="w-1/3 px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                            Email
-                                        </th>
-                                        <th scope="col" class="w-1/4 px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                            Unidade
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="corpoTabelaPessoasView" class="bg-white divide-y divide-slate-200">
-                                </tbody>
-                            </table>
+                        <!-- Seção Equipe -->
+                        <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                            <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
+                            </h4>
                         </div>
+                        <div id="multi-select-container" class="md:col-span-2">
+                        </div>
+
+                    <!-- lista de notificações -->
+                    <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                        <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                            <ion-icon name="notifications"></ion-icon>
+                            Notificações
+                        </h4>
+                    </div>
+                    <div id="notifications-list" class="space-y-4">
+
+                        <!-- Exemplo 1: Alerta de Início (Verde) -->
+                        <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                            <!-- Container flexível que se adapta à tela -->
+                            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                                
+                                <!-- Parte 1: Informações da Notificação -->
+                                <div class="flex min-w-0 items-center gap-4">
+                                    <!-- Ícone Verde -->
+                                    <div class="flex-shrink-0 rounded-full bg-green-100 p-2 text-green-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <!-- Textos -->
+                                    <div class="min-w-0">
+                                        <p class="truncate font-semibold text-slate-800" title="30 de Setembro de 2025, às 08:00">30 de Setembro de 2025, às 08:00</p>
+                                        <p class="text-sm text-slate-500">Alerta de início</p>
+                                    </div>
+                                </div>
+
+                                <!-- Parte 2: Destinatários (com a nova seção expansível) -->
+                                <div class="w-full md:w-auto md:max-w-xs">
+                                    <p class="mb-2 text-xs font-medium uppercase text-slate-500 md:text-right">Destinatários</p>
+                                    <!-- Avatares para visualização rápida -->
+                                    <div class="flex items-center md:justify-end">
+                                        <span title="Carlos Diniz" class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700 ring-2 ring-white">CD</span>
+                                        <span title="Daniela Lima" class="flex h-8 w-8 items-center justify-center rounded-full bg-red-200 text-xs font-bold text-red-700 ring-2 ring-white -ml-3">-DL-</span>
+                                        <span title="Mais 1" class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600 ring-2 ring-white -ml-3">+1</span>
+                                    </div>
+
+                                    <!-- Elemento <details> para a lista completa -->
+                                    <details class="group mt-2">
+                                        <!-- O que o usuário clica para abrir/fechar -->
+                                        <summary class="list-none cursor-pointer text-right">
+                                            <span class="inline-flex items-center gap-1 text-sm font-medium text-sky-600 hover:text-sky-800">
+                                                Ver lista completa
+                                                <!-- Seta que gira com a abertura -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </span>
+                                        </summary>
+
+                                        <!-- O conteúdo que é revelado -->
+                                        <div class="mt-3 overflow-hidden rounded-md border border-slate-200 bg-slate-50/50">
+                                            <ul class="divide-y divide-slate-200">
+                                                <!-- Item da lista (exemplo 1) -->
+                                                <li class="p-3 text-sm">
+                                                    <p class="font-semibold text-slate-800">Carlos Diniz</p>
+                                                    <p class="text-slate-600">carlos.diniz@email.com</p>
+                                                    <p class="text-xs text-slate-500">Secretaria de Planejamento</p>
+                                                </li>
+                                                <!-- Item da lista (exemplo 2) -->
+                                                <li class="p-3 text-sm">
+                                                    <p class="font-semibold text-slate-800">Daniela Lima</p>
+                                                    <p class="text-slate-600">daniela.lima@email.com</p>
+                                                    <p class="text-xs text-slate-500">Gabinete do Secretário</p>
+                                                </li>
+                                                <!-- Item da lista (exemplo 3) -->
+                                                <li class="p-3 text-sm">
+                                                    <p class="font-semibold text-slate-800">Eduardo Moreira Com Um Nome Bem Grande Para Testar</p>
+                                                    <p class="text-slate-600">eduardo.m@email.com</p>
+                                                    <p class="text-xs text-slate-500">Diretoria de Tecnologia</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Exemplo: Alerta de Aviso (Azul) com lista expansível -->
+                        <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                            <!-- Container flexível que se adapta à tela -->
+                            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                                
+                                <!-- Parte 1: Informações da Notificação -->
+                                <div class="flex min-w-0 items-center gap-4">
+                                    <!-- Ícone Azul -->
+                                    <div class="flex-shrink-0 rounded-full bg-sky-100 p-2 text-sky-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10 2a6 6 0 00-6 6v3.586l-1.707 1.707A1 1 0 003 15h14a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                                        </svg>
+                                    </div>
+                                    <!-- Textos -->
+                                    <div class="min-w-0">
+                                        <p class="truncate font-semibold text-slate-800" title="02 de Outubro de 2025, às 15:30">02 de Outubro de 2025, às 15:30</p>
+                                        <p class="text-sm text-slate-500">Alerta de aviso</p>
+                                    </div>
+                                </div>
+
+                                <!-- Parte 2: Destinatários (com a nova seção expansível) -->
+                                <div class="w-full md:w-auto md:max-w-xs">
+                                    <p class="mb-2 text-xs font-medium uppercase text-slate-500 md:text-right">Destinatários</p>
+                                    <!-- Avatares para visualização rápida -->
+                                    <div class="flex items-center md:justify-end">
+                                        <span title="Carlos Diniz" class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700 ring-2 ring-white">CD</span>
+                                        <span title="Daniela Lima" class="flex h-8 w-8 items-center justify-center rounded-full bg-red-200 text-xs font-bold text-red-700 ring-2 ring-white -ml-3">-DL-</span>
+                                        <span title="Mais 1" class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600 ring-2 ring-white -ml-3">+1</span>
+                                    </div>
+
+                                    <!-- Elemento <details> para a lista completa -->
+                                    <details class="group mt-2">
+                                        <!-- O que o usuário clica para abrir/fechar -->
+                                        <summary class="list-none cursor-pointer text-right">
+                                            <span class="inline-flex items-center gap-1 text-sm font-medium text-sky-600 hover:text-sky-800">
+                                                Ver lista completa
+                                                <!-- Seta que gira com a abertura -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </span>
+                                        </summary>
+
+                                        <!-- O conteúdo que é revelado -->
+                                        <div class="mt-3 overflow-hidden rounded-md border border-slate-200 bg-slate-50/50">
+                                            <ul class="divide-y divide-slate-200">
+                                                <!-- Item da lista (exemplo 1) -->
+                                                <li class="p-3 text-sm">
+                                                    <p class="font-semibold text-slate-800">Carlos Diniz</p>
+                                                    <p class="text-slate-600">carlos.diniz@email.com</p>
+                                                    <p class="text-xs text-slate-500">Secretaria de Planejamento</p>
+                                                </li>
+                                                <!-- Item da lista (exemplo 2) -->
+                                                <li class="p-3 text-sm">
+                                                    <p class="font-semibold text-slate-800">Daniela Lima</p>
+                                                    <p class="text-slate-600">daniela.lima@email.com</p>
+                                                    <p class="text-xs text-slate-500">Gabinete do Secretário</p>
+                                                </li>
+                                                <!-- Item da lista (exemplo 3) -->
+                                                <li class="p-3 text-sm">
+                                                    <p class="font-semibold text-slate-800">Eduardo Moreira Com Um Nome Bem Grande Para Testar</p>
+                                                    <p class="text-slate-600">eduardo.m@email.com</p>
+                                                    <p class="text-xs text-slate-500">Diretoria de Tecnologia</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </details>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Exemplo 3: Alerta de Pendência (Amarelo) -->
+                        <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                                <div class="flex min-w-0 items-center gap-4">
+                                    <!-- Ícone Amarelo -->
+                                    <div class="flex-shrink-0 rounded-full bg-amber-100 p-2 text-amber-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.001-1.742 3.001H4.42c-1.532 0-2.492-1.667-1.742-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="truncate font-semibold text-slate-800" title="05 de Outubro de 2025, às 18:00">05 de Outubro de 2025, às 18:00</p>
+                                        <p class="text-sm text-slate-500">Alerta de pendência</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="mb-2 text-xs font-medium uppercase text-slate-500 md:text-right">Destinatários</p>
+                                    <div class="flex items-center">
+                                        <span title="Todos os envolvidos" class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-slate-600 ring-2 ring-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -269,26 +437,125 @@
                                 <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
                             </h4>
                         </div>
-                        <div class="md:col-span-2">
-                            <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
-                                <table id="tabelaPessoas" class="min-w-full divide-y divide-slate-200">
-                                    <thead class="bg-slate-50">
-                                        <tr>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Unidade</th>
-                                            <th scope="col" class="relative px-4 py-3"><span class="sr-only">Remover</span></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="corpoTabelaPessoasEdit" class="bg-white divide-y divide-slate-200">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="mt-3 text-right">
-                                <button type="button" id="btnAdicionarPessoa" class="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 text-sky-800 text-sm font-medium rounded-md hover:bg-sky-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-sky-300 transition-colors">
-                                    <ion-icon name="add-outline" class="text-base"></ion-icon> Adicionar Pessoa
+                        <div id="multi-select-container" class="md:col-span-2">
+                            <select multiple id="unidades-multi-select">
+                            </select>
+                        </div>
+
+                        <!-- lista de notificações -->
+                        <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                            <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                <ion-icon name="notifications"></ion-icon>
+                                Notificações
+                            </h4>
+                        </div>
+                        <div id="notifications-edit-list" class="space-y-4 pt-2">
+                            <div class="relative rounded-lg border border-slate-200 bg-slate-50/80 p-4 space-y-4 transition-shadow hover:shadow-md">
+                                
+                                <!-- Botão para Excluir esta notificação -->
+                                <button type="button" class="absolute top-2 right-2 rounded-full p-1.5 text-slate-400 hover:bg-red-100 hover:text-red-600 transition-colors" title="Excluir esta notificação">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
                                 </button>
+
+                                <!-- Inputs: Tipo e Data/Hora - VERSÃO RECOMENDADA -->
+                                <div class="grid grid-cols-1 gap-4">
+                                    <div>
+                                        <label for="notification-type-1" class="block text-sm font-medium text-slate-500 mb-1 cursor-pointer">Tipo de Alerta</label>
+                                        <div class="relative">
+                                            <select id="notification-type-1" class="w-full appearance-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 transition-all duration-150 ease-in-out placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500">
+                                                <option value="inicio">Alerta de início</option>
+                                                <option value="aviso" selected>Alerta de aviso</option>
+                                                <option value="pendencia">Alerta de pendência</option>
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="notification-datetime-1" class="block text-sm font-medium text-slate-500 mb-1 cursor-pointer">Data e Hora</label>
+                                        <div class="relative">
+                                            <!-- Adicionamos a classe 'hide-native-icon' para esconder o ícone padrão -->
+                                            <input type="datetime-local" id="notification-datetime-1" value="2025-10-02T15:30" class="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 transition-all duration-150 ease-in-out placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Lista de Destinatários com Checkboxes -->
+                                <div>
+                                    <div class="flex items-center gap-1 mb-1">
+                                        <h5 class="flex items-center text-sm font-medium text-slate-500">
+                                            Selecionar Destinatários
+
+                                            <div class="relative ml-1 flex items-center">
+                                                <button class="group flex items-center text-slate-500 hover:text-slate-700 focus:outline-none" aria-describedby="tooltip-destinatarios">
+                                                    <ion-icon name="information-circle" class="w-4 h-4"></ion-icon>
+
+                                                    <span id="tooltip-destinatarios" role="tooltip" class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-32 px-3 py-2 text-xs text-white bg-gray-700 rounded shadow-lg whitespace-normal opacity-0 group-hover:opacity-100 transition-opacity before:content-[''] before:absolute before:-top-1  before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-b-gray-700 pointer-events-none">
+                                                    Para adicionar novas pessoas, acrescente na lista dos integrantes do plano de ação.
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </h5>
+                                    </div>
+
+                                    <!-- Container com rolagem para listas longas -->
+                                    <div class="max-h-48 overflow-y-auto rounded-md border border-slate-200 bg-white">
+                                        <ul id="recipients-list-1" class="divide-y divide-slate-200">
+                                            
+                                            <!-- Item da lista (exemplo 1) -->
+                                            <li class="p-2 hover:bg-slate-50">
+                                                <label class="flex items-center justify-between gap-4 cursor-pointer">
+                                                    <div class="text-sm">
+                                                        <p class="font-semibold text-slate-800">Nome de Teste</p>
+                                                        <p class="text-slate-600">email@email.com</p>
+                                                        <p class="text-xs text-slate-500">SEF</p>
+                                                    </div>
+                                                    <input type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                                </label>
+                                            </li>
+                                            
+                                            <!-- Item da lista (exemplo 2) -->
+                                            <li class="p-2 hover:bg-slate-50">
+                                                <label class="flex items-center justify-between gap-4 cursor-pointer">
+                                                    <div class="text-sm">
+                                                        <p class="font-semibold text-slate-800">Outro nome mais longo para ver como que fica</p>
+                                                        <p class="text-slate-600">email@email.com</p>
+                                                        <p class="text-xs text-slate-500">SCCG / DIEX</p>
+                                                    </div>
+                                                    <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                                </label>
+                                            </li>
+                                            
+                                            <!-- Item da lista (exemplo 3) -->
+                                            <li class="p-2 hover:bg-slate-50">
+                                                <label class="flex items-center justify-between gap-4 cursor-pointer">
+                                                    <div class="text-sm">
+                                                        <p class="font-semibold text-slate-800">Pedro Henrique Vieira Cardoso</p>
+                                                        <p class="text-slate-600">email@email.com</p>
+                                                        <p class="text-xs text-slate-500">SCCG / ATRI</p>
+                                                    </div>
+                                                    <input type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                                </label>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button id="add-notification-btn" type="button" class="w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 hover:border-slate-400 hover:bg-slate-100 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Adicionar Notificação
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -311,7 +578,7 @@
                         <!-- botões do Modo Edição -->
                         <div id="edit-mode-buttons" class="hidden">
                             <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">Cancelar</button>
-                            <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar Alterações</button>
+                            <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar</button>
                         </div>
                     </div>
                 </div>
