@@ -816,6 +816,8 @@ function setupModalControls() {
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
     });
     document.getElementById('delete-confirm-btn-yes').addEventListener('click', handleDeleteTask);
+
+    document.getElementById('add-notification-btn').addEventListener('click', createNotificacao);
 }
 
 /**
@@ -908,14 +910,13 @@ function populateViewMode(task) {
  */
 function populateEditMode() {
     const id = document.getElementById('task-modal-container').dataset.taskId
-    task = jsonAcoes.filter(t => t.ID === id)[0];
+    task = jsonAcoes.find(t => t.ID === id);
+    plan = jsonPlanos.find(t => t.Nome === task["Plano de ação"]);
 
     const form = document.getElementById('modal-edit-form');
     Object.keys(task).forEach(key => {
-        if(key!=='objPessoas'){
-            const input = form.querySelector(`[name="${key}"]`);
-            if (input) input.value = task[key];
-        }
+        const input = form.querySelector(`[name="${key}"]`);
+        if (input) input.value = task[key];
     });
 
     const planoSelect = document.getElementById('edit-plano');
@@ -924,20 +925,161 @@ function populateEditMode() {
         planoSelect.value = task['Plano de ação'];
     }
 
-    const pessoas = task.objPessoas || []
-
     const multSelect = document.getElementById('unidades-multi-select')
     const fragment = document.createDocumentFragment();
-    const uniqueUnidades = [...new Set(pessoas.map(p => p.Unidade))];
+    const uniqueUnidades = [...new Set(plan.objPessoas.map(p => p.Unidade.trim()))].sort();
+    console.log(uniqueUnidades);
+
     uniqueUnidades.forEach(unidade => {
         const option = document.createElement('option');
         option.value = unidade;
         option.innerText = unidade;
+        option.selected = task.Unidades.includes(unidade) ? true : false;
         fragment.appendChild(option);
     });
+    multSelect.innerHTML = "";
     multSelect.appendChild(fragment);
-    createCustomSelect('unidades-multi-select')
+    
+    createCustomSelect('unidades-multi-select');
+
+    onCustomSelectChange('unidades-multi-select', (values) => {
+        populateTabelaNotificacoes(values);
+    });
+
+    const initialValues = getCustomSelectValues('unidades-multi-select');
+    populateTabelaNotificacoes(initialValues)
 }
+
+function populateTabelaNotificacoes(unidades) {
+    // Pega unidades selecionadas se não forem passadas como argumento
+    unidades = unidades && unidades.length ? unidades : getCustomSelectValues('unidades-multi-select') || [];
+
+    const taskContainer = document.getElementById('task-modal-container');
+    if (!taskContainer) return; // Verifica se existe o container
+
+    const id = taskContainer.dataset.taskId;
+    if (!id) return;
+
+    // Busca a task e o plano correspondente
+    const task = jsonAcoes.find(t => t.ID === id);
+    const plan = jsonPlanos.find(t => task && t.Nome === task["Plano de ação"]);
+
+    // Filtra pessoas do plano com base nas unidades selecionadas
+    const pessoas = plan.objPessoas ? plan.objPessoas.filter(p => unidades.includes(p.Unidade)) : [];
+
+    // Atualiza cada lista de destinatários
+    const lists = document.getElementsByClassName('recipients-list');
+
+    Array.from(lists).forEach(list => {
+        let html = '';
+
+        if (pessoas.length === 0) {
+            html = `<li class="p-2 text-slate-600 italic text-sm">
+                        Selecione a unidade responsável para exibir os destinatários.
+                    </li>`;
+        } else {
+            html = pessoas.map(pessoa => `
+                <li class="p-2 hover:bg-slate-50">
+                    <label class="flex items-center justify-between gap-4 cursor-pointer">
+                        <div class="text-sm flex-1 min-w-0">
+                            <p class="font-semibold text-slate-800 truncate">${pessoa.Nome}</p>
+                            <p class="text-slate-600 truncate">${pessoa.Email}</p>
+                            <p class="text-xs text-slate-500 truncate">${pessoa.Unidade}</p>
+                        </div>
+                        <input type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                    </label>
+                </li>
+            `).join('');
+        }
+
+        list.innerHTML = html;
+    });
+}
+
+function createNotificacao(notificacao = {}) {
+    const container = document.getElementById('notifications-edit-list');
+
+    // Garante um ID único mesmo se não houver notificacao.ID
+    const uniqueId = notificacao.ID || `new-${Date.now()}`;
+
+    // Valores padrão
+    const tipo = notificacao.tipo || "";
+    const data = notificacao.data || "";
+    const status = notificacao.status || "";
+    const mailList = notificacao.mailList || [];
+
+    container.innerHTML += `
+    <div class="container-notificacao relative rounded-lg border border-slate-200 bg-slate-50/80 p-4 space-y-4 transition-shadow hover:shadow-md">
+
+        <!-- Inputs: Tipo e Data/Hora -->
+        <div class="grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-1 gap-1">
+                <div class="flex items-center justify-between">
+                    <label for="notification-type-${uniqueId}" class="block text-sm font-medium text-slate-500 mb-1 cursor-pointer">
+                        Tipo de Alerta
+                    </label>
+                    ${status === "enviado" ? `<span class="bg-green-700 text-white text-xs font-semibold px-2 py-1 rounded">Enviado</span>` : ''}
+                </div>
+                <div>
+                    <select id="notification-type-${uniqueId}" class="w-full appearance-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 transition-all duration-150 ease-in-out placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500">
+                        <option value="inicio" ${tipo === "inicio" ? "selected" : ""}>Alerta de início</option>
+                        <option value="aviso" ${tipo === "aviso" ? "selected" : ""}>Alerta de aviso</option>
+                        <option value="pendencia" ${tipo === "pendencia" ? "selected" : ""}>Alerta de pendência</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label for="notification-date-${uniqueId}" class="block text-sm font-medium text-slate-500 mb-1 cursor-pointer">
+                    Data
+                </label>
+                <input type="date" id="notification-date-${uniqueId}" value="${data}" class="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 transition-all duration-150 ease-in-out placeholder:text-slate-400 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500" />
+            </div>
+        </div>
+
+        <!-- Lista de Destinatários -->
+        <div>
+            <div class="flex items-center gap-1 mb-1">
+                <h5 class="flex items-center text-sm font-medium text-slate-500">
+                    Destinatários
+                    ${status !== "enviado" ? `
+                        <div class="relative ml-1 flex items-center">
+                            <button class="group flex items-center text-slate-500 hover:text-slate-700 focus:outline-none" aria-describedby="tooltip-destinatarios">
+                                <ion-icon name="information-circle" class="w-4 h-4"></ion-icon>
+                                <span id="tooltip-destinatarios" role="tooltip" class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-32 px-3 py-2 text-xs text-white bg-gray-700 rounded shadow-lg whitespace-normal opacity-0 group-hover:opacity-100 transition-opacity before:content-[''] before:absolute before:-top-1  before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-b-gray-700 pointer-events-none">
+                                    Para adicionar novas pessoas, acrescente na lista dos integrantes do plano de ação.
+                                </span>
+                            </button>
+                        </div>
+                    ` : ''}
+                </h5>
+            </div>
+            <div class="max-h-48 overflow-y-auto rounded-md border border-slate-200 bg-white">
+                <ul id="recipients-list-${uniqueId}" class="recipients-list divide-y divide-slate-200"></ul>
+            </div>
+        </div>
+    </div>`;
+
+    const notificationElement = container.lastElementChild;
+
+    if (status === "enviado") {
+        notificationElement.querySelectorAll('input, select, button').forEach(el => el.disabled = true);
+
+        const ul = document.getElementById(`recipients-list-${uniqueId}`);
+        mailList.forEach(email => {
+            const li = document.createElement('li');
+            li.className = "px-3 py-2 text-sm text-slate-800";
+            li.textContent = email;
+            ul.appendChild(li);
+        });
+    } else {
+        document.getElementById(`notification-type-${uniqueId}`).value = tipo || "aviso";
+        document.getElementById(`notification-date-${uniqueId}`).value = data || "";
+
+        populateTabelaNotificacoes();
+    }
+}
+
 
 /**
  * Alterna para o modo de edição.
@@ -999,7 +1141,6 @@ function switchToViewMode(force = false) {
  */
 function openModalForNewTask() {
     isNewTaskMode = true;
-    adicionarLinhaEdit()
     currentTask = {};
 
     // Limpa o formulário de edição para garantir que não haja dados antigos.
@@ -1174,4 +1315,8 @@ async function handleSave() {
         console.error("Falha ao salvar a tarefa:", error);
         alert(`Ocorreu um erro ao salvar: ${error.message}`);
     }
+}
+
+function saveNotificacoes(){
+    document.querySelectorAll('container-notificacao')
 }

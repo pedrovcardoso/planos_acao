@@ -191,7 +191,7 @@
                         <!-- Seção Equipe -->
                         <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
                             <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
-                                <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
+                                <ion-icon name="people" class="text-lg"></ion-icon> Unidade responsável
                             </h4>
                         </div>
                         <div id="multi-select-container" class="md:col-span-2">
@@ -434,7 +434,7 @@
                         <!-- Seção Equipe -->
                         <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
                             <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
-                                <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
+                                <ion-icon name="people" class="text-lg"></ion-icon> Unidade responsável
                             </h4>
                         </div>
                         <div id="multi-select-container" class="md:col-span-2">
@@ -449,8 +449,8 @@
                                 Notificações
                             </h4>
                         </div>
-                        <div id="notifications-edit-list" class="space-y-4 pt-2">
-                            <div class="relative rounded-lg border border-slate-200 bg-slate-50/80 p-4 space-y-4 transition-shadow hover:shadow-md">
+                        <div id="notifications-edit-list" class="w-full pt-2">
+                            <div class="container-notificacao relative rounded-lg border border-slate-200 bg-slate-50/80 p-4 space-y-4 transition-shadow hover:shadow-md">
                                 
                                 <!-- Botão para Excluir esta notificação -->
                                 <button type="button" class="absolute top-2 right-2 rounded-full p-1.5 text-slate-400 hover:bg-red-100 hover:text-red-600 transition-colors" title="Excluir esta notificação">
@@ -459,7 +459,6 @@
                                     </svg>
                                 </button>
 
-                                <!-- Inputs: Tipo e Data/Hora - VERSÃO RECOMENDADA -->
                                 <div class="grid grid-cols-1 gap-4">
                                     <div>
                                         <label for="notification-type-1" class="block text-sm font-medium text-slate-500 mb-1 cursor-pointer">Tipo de Alerta</label>
@@ -505,45 +504,7 @@
 
                                     <!-- Container com rolagem para listas longas -->
                                     <div class="max-h-48 overflow-y-auto rounded-md border border-slate-200 bg-white">
-                                        <ul id="recipients-list-1" class="divide-y divide-slate-200">
-                                            
-                                            <!-- Item da lista (exemplo 1) -->
-                                            <li class="p-2 hover:bg-slate-50">
-                                                <label class="flex items-center justify-between gap-4 cursor-pointer">
-                                                    <div class="text-sm">
-                                                        <p class="font-semibold text-slate-800">Nome de Teste</p>
-                                                        <p class="text-slate-600">email@email.com</p>
-                                                        <p class="text-xs text-slate-500">SEF</p>
-                                                    </div>
-                                                    <input type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                                                </label>
-                                            </li>
-                                            
-                                            <!-- Item da lista (exemplo 2) -->
-                                            <li class="p-2 hover:bg-slate-50">
-                                                <label class="flex items-center justify-between gap-4 cursor-pointer">
-                                                    <div class="text-sm">
-                                                        <p class="font-semibold text-slate-800">Outro nome mais longo para ver como que fica</p>
-                                                        <p class="text-slate-600">email@email.com</p>
-                                                        <p class="text-xs text-slate-500">SCCG / DIEX</p>
-                                                    </div>
-                                                    <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                                                </label>
-                                            </li>
-                                            
-                                            <!-- Item da lista (exemplo 3) -->
-                                            <li class="p-2 hover:bg-slate-50">
-                                                <label class="flex items-center justify-between gap-4 cursor-pointer">
-                                                    <div class="text-sm">
-                                                        <p class="font-semibold text-slate-800">Pedro Henrique Vieira Cardoso</p>
-                                                        <p class="text-slate-600">email@email.com</p>
-                                                        <p class="text-xs text-slate-500">SCCG / ATRI</p>
-                                                    </div>
-                                                    <input type="checkbox" checked class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                                                </label>
-                                            </li>
-
-                                        </ul>
+                                        <ul class="recipients-list divide-y divide-slate-200"></ul>
                                     </div>
                                 </div>
                             </div>
