@@ -153,10 +153,10 @@
         document.body.classList.remove('overflow-hidden'); // <-- ADICIONADO AQUI
       }
       
-      async function obterLogDoOneDrive() {
+      async function obterLogDoOneDrive(arrFiles) {
         displayTableMessage("Carregando logs...");
         const powerAutomateUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9019b15756f14c698b3ea71554389290/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VNrk0XHX2XqG_nLsuzcYmPJP4kGUFifRX2c4FC_sc4w";
-        const dadosParaEnviar = { files: ['log.txt'] };
+        const dadosParaEnviar = { files: arrFiles };
 
         try {
           const response = await fetch(powerAutomateUrl, {
@@ -170,7 +170,8 @@
           }
           
           const data = await response.json();
-          logs = data[0]; // Assumindo que os logs estão no primeiro item do array retornado
+          logs = data[0];
+          jsonPlanos = data[1];
           renderLogs();
 
         } catch (error) {
@@ -196,7 +197,7 @@
       });
       
       // Inicia a busca de dados
-      obterLogDoOneDrive();
+      obterLogDoOneDrive(['log.txt', 'planos.txt']);
     });
   </script>
 </body>

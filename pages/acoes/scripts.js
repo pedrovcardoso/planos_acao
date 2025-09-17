@@ -11,18 +11,6 @@ function toggleLoading(show) {
 
 document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(true)
-    
-    // const param = 'cachebuster';
-
-    // // Verifica se o parâmetro existe na URL
-    // const urlParams = new URLSearchParams(window.location.search);
-    // if (!urlParams.has(param)) {
-    //     // Se não existir, limpa o sessionStorage
-    //     sessionStorage.clear();
-    //     console.log('Parâmetro não encontrado. sessionStorage limpo.');
-    // } else {
-    //     console.log('Parâmetro encontrado:', urlParams.get(param));
-    // }
 
     jsonAcoes = sessionStorage.getItem("jsonAcoes");
     jsonPlanos = sessionStorage.getItem("jsonPlanos");
@@ -68,14 +56,14 @@ function setupViewSwitcher() {
         radio.addEventListener('change', function () {
             // Esconde todas as seções
             viewSections.forEach(section => {
-                section.classList.remove('active');
+                section.style.display = 'none';
             });
 
             // Mostra a seção correspondente
             const selectedViewId = this.id + '-view';
             const selectedView = document.getElementById(selectedViewId);
             if (selectedView) {
-                selectedView.classList.add('active');
+                selectedView.style.display = 'block';
             }
         });
     });
@@ -541,7 +529,8 @@ function populateActionsTable(actionsData) {
                 cellContent = task[col.key] ? new Date(task[col.key] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
             } else if (col.key === 'Status') {
                 const statusClass = 'status-' + (task.Status || '').replace(/\s+/g, '-');
-                cellContent = `<div class="status-container"><div class="${statusClass}">${task.Status}</div></div>`;
+                cellContent = `<div class="flex justify-center items-center">
+                                    <div class="${statusClass} flex justify-center items-center text-sm px-1.5 rounded h-6">${task.Status}</div></div>`;
             }
 
             // O div interno ajuda a controlar o conteúdo que pode vazar (overflow)
@@ -605,7 +594,7 @@ function fillGanttData(jsonAcoes){
 
     taskListContainer.innerHTML = "";
     monthsHeader.innerHTML = "";
-    ganttRowsContainer.innerHTML = "<div id='todayBar'></div>";
+    ganttRowsContainer.innerHTML = `<div id="todayBar" class="h-full w-px border-l-2 border-dashed border-[lightcoral] absolute z-10"></div>`;
     ganttTimelineContainer.scrollLeft = 0;
 
     let minDate = new Date(Math.min(...jsonAcoes.map(task => new Date(task["Data de início"]+'T10:00:00'))));
@@ -626,7 +615,7 @@ function fillGanttData(jsonAcoes){
 
     while (currentDate <= maxDate) {
         const monthElement = document.createElement('div');
-        monthElement.className = 'gantt-month';
+        monthElement.className = 'flex-shrink-0 text-center font-bold py-2.5 border-r border-gray-200 box-border w-20"';
         monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
         monthsHeader.appendChild(monthElement);
         timelineWidth += monthWidth;
@@ -652,7 +641,7 @@ function fillGanttData(jsonAcoes){
 
     jsonAcoes.forEach((task, index) => {
         const rowTimeline = document.createElement('div');
-        rowTimeline.className = 'gantt-row-timeline';
+        rowTimeline.className = 'gantt-row-timeline border-b border-gray-200 relative transition-colors duration-200 h-10 box-border';
         rowTimeline.dataset.rowIndex = index;
 
         const startDate = task["Data de início"]+'T10:00:00';
@@ -671,12 +660,13 @@ function fillGanttData(jsonAcoes){
         bar.addEventListener('click', ()=>{openTaskModal(task.ID)})
 
         const taskRow = document.createElement('div');
-        taskRow.className = 'gantt-row-task';
+        taskRow.className = 'gantt-row-task flex items-center border-b border-gray-200 transition-colors duration-200 h-10 box-border';
         taskRow.dataset.rowIndex = index;
-        taskRow.innerHTML = `<div class="text-center">${task["Número da atividade"]}</div>
-                                <div>${task["Plano de ação"]}</div>                     
-                                <div>${task.Atividade}</div><div class="status-container">
-                                <div class="${statusClass}">${task.Status}</div></div>`;
+        taskRow.innerHTML = `<div class="text-center px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">${task["Número da atividade"]}</div>
+                                <div class="px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">${task["Plano de ação"]}</div>                     
+                                <div class="px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">${task.Atividade}</div>
+                                <div class="flex justify-center items-center px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">
+                                    <div class="${statusClass} flex justify-center items-center text-sm px-1.5 rounded h-6">${task.Status}</div></div>`;
         taskListContainer.appendChild(taskRow);
         taskRow.addEventListener('click', () => {
             openTaskModal(task.ID);
@@ -889,9 +879,10 @@ function populateViewMode(task) {
     setElementText('modal-view-observacoes', task['Observações']);
 
     const statusEl = document.getElementById('modal-view-status');
+    const defaultStatusClass = 'flex justify-center items-center text-sm px-1.5 rounded h-6'
     if (statusEl) {
         statusEl.innerText = task.Status;
-        statusEl.className = 'status-' + (task.Status || '').replace(/\s+/g, '-');
+        statusEl.className = 'status-' + (task.Status || '').replace(/\s+/g, '-') + ' ' + defaultStatusClass;
     }
     
     // 1. Lógica do line-clamp no título da atividade
