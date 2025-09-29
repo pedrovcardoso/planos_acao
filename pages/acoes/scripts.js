@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
     ordenarJsonAcoes(jsonAcoes)
 
+    jsonNotificacoes = await obterDadosDoOneDriveNew(['notificacoes.txt'])
+
     const script = document.createElement('script');
     script.src = '../../components/multiple_select.js';
 
@@ -100,10 +102,10 @@ function normalizeString(str) {
     if (!str) return "";
     return str
         .toLowerCase()
-        .normalize("NFD")                 // separa acentos
-        .replace(/[\u0300-\u036f]/g, "")  // remove acentos
-        .replace(/\s+/g, "_")             // troca espaços por _
-        .replace(/[^\w_]/g, "");          // remove caracteres especiais
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^\w_]/g, "")
 }
 
 /**
@@ -884,7 +886,24 @@ function populateViewMode(task) {
         statusEl.innerText = task.Status;
         statusEl.className = 'status-' + (task.Status || '').replace(/\s+/g, '-') + ' ' + defaultStatusClass;
     }
-    
+
+    const unidadesContainer = document.getElementById('unidades-view-container');
+    unidadesContainer.innerHTML = ''
+    const unidades = task['Unidades'];
+    if (unidades && unidades.length > 0) {
+        unidades.forEach(unidade => {
+            unidadesContainer.innerHTML += `
+        <span class="flex items-center gap-1.5 bg-gray-200 text-gray-800 text-sm font-medium px-2.5 py-1 rounded">
+            ${unidade}
+        </span>
+        `;
+            });
+        } else {
+            unidadesContainer.innerHTML = `
+        <span class="text-gray-500 italic">Nenhuma unidade cadastrada</span>
+        `;
+    }
+
     // 1. Lógica do line-clamp no título da atividade
     const atividadeTitle = document.getElementById('modal-view-atividade');
     atividadeTitle.classList.add('line-clamp-3', 'cursor-pointer');
@@ -893,6 +912,126 @@ function populateViewMode(task) {
     atividadeTitle.parentNode.replaceChild(newTitle, atividadeTitle);
     newTitle.addEventListener('click', () => {
         newTitle.classList.toggle('line-clamp-3');
+    });
+
+    jsonNotificacoesFiltrado = filterJson(jsonNotificacoes, 'idAcao', id)
+    populateViewNotificacoes(jsonNotificacoesFiltrado)
+}
+
+function formatarDataExtenso(isoDate) {
+    const meses = [
+    "janeiro","fevereiro","março","abril","maio","junho",
+    "julho","agosto","setembro","outubro","novembro","dezembro"
+    ];
+    const [ano, mes, dia] = isoDate.split("-");
+    return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
+}
+
+    function getInitials(nome) {
+    return nome.split(" ")
+               .map(n => n[0].toUpperCase())
+    .slice(0, 2)
+    .join("");
+}
+
+function populateViewNotificacoes(jsonNotificacoes) {
+    const container = document.getElementById("notifications-list");
+    container.innerHTML = "";
+
+    jsonNotificacoes.forEach(notif => {
+        const acao = jsonAcoes.find(a => a.ID === notif.idAcao);
+        if (!acao) return;
+
+        const plano = jsonPlanos.find(p => p.Nome === acao["Plano de ação"]);
+        if (!plano) return;
+
+        const destinatarios = plano.objPessoas.filter(pessoa =>
+            notif.mailList.includes(pessoa.Email)
+        );
+
+        let colorClasses = "";
+        let iconSVG = "";
+
+        switch (notif.tipo) {
+            case "inicio":
+                colorClasses = "bg-green-100 text-green-700";
+                iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+                           </svg>`;
+                break;
+            case "aviso":
+                colorClasses = "bg-sky-100 text-sky-700";
+                iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M10 2a6 6 0 00-6 6v3.586l-1.707 1.707A1 1 0 003 15h14a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                           </svg>`;
+                break;
+            case "pendencia":
+                colorClasses = "bg-amber-100 text-amber-600";
+                iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.001-1.742 3.001H4.42c-1.532 0-2.492-1.667-1.742-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                           </svg>`;
+                break;
+            default:
+                colorClasses = "bg-slate-100 text-slate-700";
+        }
+
+        const notifDiv = document.createElement("div");
+        notifDiv.className = "rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md";
+
+        notifDiv.innerHTML = `
+            <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div class="flex min-w-0 items-center gap-4">
+                    <div class="flex-shrink-0 rounded-full ${colorClasses} p-2">${iconSVG}</div>
+                    <div class="min-w-0">
+                        <p class="truncate font-semibold text-slate-800" title="${formatarDataExtenso(notif.data)}">
+                            ${formatarDataExtenso(notif.data)}
+                        </p>
+                        <p class="text-sm text-slate-500">Alerta de ${notif.tipo}</p>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-auto md:max-w-xs">
+                    <p class="mb-2 text-xs font-medium uppercase text-slate-500 md:text-right">Destinatários</p>
+                    <div class="flex items-center md:justify-end">
+                        ${destinatarios.map((pessoa, idx) => `
+                            <span title="${pessoa.Nome}" 
+                                  class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700 ring-2 ring-white ${idx > 0 ? "-ml-3" : ""}">
+                                  ${getInitials(pessoa.Nome)}
+                            </span>
+                        `).join("")}
+                    </div>
+
+                    ${destinatarios.length > 0
+                ? `
+                        <details class="group mt-2">
+                            <summary class="list-none cursor-pointer text-right">
+                                <span class="inline-flex items-center gap-1 text-sm font-medium text-sky-600 hover:text-sky-800">
+                                    Ver lista completa
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200 group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </summary>
+                            <div class="mt-3 overflow-hidden rounded-md border border-slate-200 bg-slate-50/50">
+                                <ul class="divide-y divide-slate-200">
+                                    ${destinatarios.map(pessoa => `
+                                        <li class="p-3 text-sm">
+                                            <p class="font-semibold text-slate-800">${pessoa.Nome}</p>
+                                            <p class="text-slate-600">${pessoa.Email}</p>
+                                            <p class="text-xs text-slate-500">${pessoa.Unidade}</p>
+                                        </li>
+                                    `).join("")}
+                                </ul>
+                            </div>
+                        </details>
+                        `
+                : ""
+            }
+                </div>
+            </div>
+        `;
+
+        container.appendChild(notifDiv);
     });
 }
 
@@ -919,7 +1058,6 @@ function populateEditMode() {
     const multSelect = document.getElementById('unidades-multi-select')
     const fragment = document.createDocumentFragment();
     const uniqueUnidades = [...new Set(plan.objPessoas.map(p => p.Unidade.trim()))].sort();
-    console.log(uniqueUnidades);
 
     uniqueUnidades.forEach(unidade => {
         const option = document.createElement('option');

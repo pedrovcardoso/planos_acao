@@ -1,5 +1,6 @@
 var jsonAcoes
 var jsonPlanos
+var jsonNotificacoes
 
 async function obterDadosDoOneDrive() {
   // Cole a URL do seu fluxo do Power Automate aqui
@@ -28,6 +29,31 @@ async function obterDadosDoOneDrive() {
   } catch (error) {
     console.error("Falha ao obter os dados do Power Automate:", error);
     return null;
+  }
+}
+
+async function obterDadosDoOneDriveNew(arrFiles) {
+  const powerAutomateUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9019b15756f14c698b3ea71554389290/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VNrk0XHX2XqG_nLsuzcYmPJP4kGUFifRX2c4FC_sc4w";
+  const dadosParaEnviar = { files: arrFiles };
+
+  try {
+    const response = await fetch(powerAutomateUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dadosParaEnviar)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro na requisição: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    jsonNotificacoes = data[0];
+
+    console.log('ok')
+    return jsonNotificacoes
+  } catch (error) {
+    console.error("Falha ao obter os dados do Power Automate:", error);
   }
 }
 
