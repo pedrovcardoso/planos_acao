@@ -490,9 +490,7 @@ const tableColumnConfig = [
     { key: 'Data de início', label: 'Início', className: 'text-center', width: 150 },
     { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150 },
     { key: 'Status', label: 'Status', className: 'text-center', width: 160 },
-    { key: 'Responsável', label: 'Responsável', className: '', width: 200 },
-    { key: 'E-mail', label: 'E-mail', className: '', width: 200 },
-    { key: 'Unidades envolvidas', label: 'Unidades envolvidas', className: '', width: 200 },
+    { key: 'Unidades', label: 'Unidades', className: '', width: 200 },
     { key: 'Observações', label: 'Observações', className: '', width: 300 }
 ];
 
@@ -927,7 +925,7 @@ function formatarDataExtenso(isoDate) {
     return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
 }
 
-    function getInitials(nome) {
+function getInitials(nome) {
     return nome.split(" ")
                .map(n => n[0].toUpperCase())
     .slice(0, 2)
