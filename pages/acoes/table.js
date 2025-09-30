@@ -92,7 +92,7 @@ function populateActionsTable(jsonAcoes) {
     const fullTableHtml = `
         <table style="width: ${totalTableWidth}px; table-layout: fixed;">
             <colgroup>${colgroupHtml}</colgroup>
-            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md z-20">
+            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md z-10">
                 <tr class="divide-x divide-slate-200">${headerHtml}</tr>
             </thead>
             <tbody class="divide-y divide-slate-200">${bodyHtml}</tbody>
