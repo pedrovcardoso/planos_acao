@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(false)
 });
 
-
 function setupViewSwitcher() {
     const radioButtons = document.querySelectorAll('input[name="option"]');
     const viewSections = document.querySelectorAll('.view-section');
@@ -80,11 +79,6 @@ function setupViewSwitcher() {
 
 
 
-
-
-
-
-
 // =================================================================
 // PAINEL DE FILTROS
 // =================================================================
@@ -97,7 +91,6 @@ const filtersConfig = [
     ["Unidade", "filter-Unidade", true]
 ];
 
-// Nenhuma alteração necessária nesta função.
 function normalizeString(str) {
     if (!str) return "";
     return str
@@ -108,9 +101,6 @@ function normalizeString(str) {
         .replace(/[^\w_]/g, "")
 }
 
-/**
- * Configura os listeners de eventos e popula os seletores de filtro.
- */
 function setupFilters() {
     // Popula os seletores de filtro com opções únicas.
     filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
@@ -154,9 +144,6 @@ function setupFilters() {
     setPlanoFilterFromUrl()
 }
 
-/**
- * Preenche filtro de equipe
- */
 function fillFilterObjPessoas(key) {
     const filtro = document.getElementById(`filter-${key}`)
     let valores = []
@@ -180,9 +167,6 @@ function fillFilterObjPessoas(key) {
     filtro.addEventListener('change', filtrarValores)
 }
 
-/**
- * Verifica se tem algum parametro na URL com o plano de ação.
- */
 function setPlanoFilterFromUrl() {
     // 1. Pega os parâmetros da URL atual
     const params = new URLSearchParams(window.location.search);
@@ -213,9 +197,6 @@ function setPlanoFilterFromUrl() {
     }
 }
 
-/**
- * Filtro genérico chave/valor
- */
 function filterJson(json, chave, valor) {
     return json.filter(item => {
         if (typeof item[chave] === "string" && typeof valor === "string") {
@@ -225,9 +206,6 @@ function filterJson(json, chave, valor) {
     })
 }
 
-/**
- * Filtro genérico chave/valor para valores dentro do objeto pessoa
- */
 function filterJsonObjPessoa(json, chave, valor) {
     return json.filter(item => {
         const pessoas = item.objPessoas;
@@ -243,20 +221,12 @@ function filterJsonObjPessoa(json, chave, valor) {
     });
 }
 
-
-/**
- * Função auxiliar para atualizar todas as visualizações com os dados filtrados.
- * @param {Array} dados - O array de dados para popular as visualizações.
- */
 function atualizarVisualizacoes(dados) {
     fillGanttData(dados);
     populateKanbanBoard(dados);
     populateActionsTable(dados);
 }
 
-/**
- * Função central que aplica TODOS os filtros (de categoria e período) e atualiza a interface.
- */
 function filtrarValores() {
     let jsonFiltrado = [...jsonAcoes]; // Começa com uma cópia dos dados originais.
 
@@ -283,12 +253,6 @@ function filtrarValores() {
     atualizarVisualizacoes(jsonFiltrado);
 }
 
-/**
- * Filtra um array de dados com base no período selecionado.
- * Esta função agora atua como um "helper", recebendo dados e retornando-os filtrados.
- * @param {Array} dadosParaFiltrar - O array de ações a ser filtrado.
- * @returns {Array} O array de ações filtrado por período.
- */
 function filtrarPeriodo(dadosParaFiltrar) {
     const filterElement = document.getElementById('filter-periodo')
     const value = filterElement.value;
@@ -345,9 +309,6 @@ function filtrarPeriodo(dadosParaFiltrar) {
     });
 }
 
-/**
- * Limpa todos os filtros e reexibe os dados originais.
- */
 function clearFilters() {
     filtersConfig.forEach(([chave, elementId]) => {
         const element = document.getElementById(elementId)
@@ -373,410 +334,15 @@ function clearFilters() {
 
 
 
-
-
-
-
-// =================================================================
-// LÓGICA DO KANBAN
-// =================================================================
-
-// 1. Objeto de configuração usando classes do Tailwind
-const kanbanColumnsConfig = [
-    { status: 'Em desenvolvimento', headerClasses: 'bg-gray-200 text-gray-800' },
-    { status: 'Planejado', headerClasses: 'bg-slate-300 text-slate-800' },
-    { status: 'Pendente', headerClasses: 'bg-yellow-300 text-yellow-800' },
-    { status: 'Em curso', headerClasses: 'bg-cyan-500 text-white' },
-    { status: 'Implementado', headerClasses: 'bg-green-600 text-white' }
-];
-
-/**
- * Cria e popula o quadro Kanban com altura máxima, cabeçalhos fixos e scrollbar horizontal sempre visível.
- * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
- */
-function populateKanbanBoard(actionsData) {
-    const container = document.getElementById('kanban-view');
-    if (!container) {
-        console.error("Container #kanban-view não encontrado.");
-        return;
-    }
-
-    // --- 1. Agrupa as tarefas por status (sem alterações) ---
-    const tasksByStatus = actionsData.reduce((acc, task) => {
-        const status = task.Status || 'Sem Status';
-        if (!acc[status]) acc[status] = [];
-        acc[status].push(task);
-        return acc;
-    }, {});
-
-    // --- 2. Gera o HTML para cada coluna ---
-    const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
-        const tasks = tasksByStatus[columnConfig.status] || [];
-        
-        const formatDate = (dateString) => {
-            return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
-        };
-        
-        const cardsHtml = tasks.map(task => `
-            <div 
-                class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
-                data-task-id="${task.ID}">
-                <span class="font-semibold text-slate-800 line-clamp-2">${task['Número da atividade']} - ${task.Atividade}</span>
-                <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
-                <div class="text-xs text-slate-500 flex justify-between">
-                    <p>Início: <strong>${formatDate(task['Data de início'])}</strong></p>
-                    <p>Fim: <strong>${formatDate(task['Data fim'])}</strong></p>
-                </div>
-            </div>
-        `).join('');
-
-        return `
-            <div class="w-80 flex-shrink-0 flex flex-col">
-                <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center p-3 font-semibold rounded-t-xl ${columnConfig.headerClasses}">
-                    <span>${columnConfig.status}</span>
-                    <span class="text-sm font-bold px-2 py-0.5 bg-black/10 rounded-full">${tasks.length}</span>
-                </div>
-                <!-- CONTAINER DOS CARDS COM SCROLL VERTICAL -->
-                <div class="kanban-cards-container bg-slate-100 rounded-b-xl flex-grow p-3 overflow-y-auto space-y-3">
-                    ${cardsHtml}
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    // --- 3. Monta a estrutura completa do quadro ---
-    const fullKanbanHtml = `
-        <div class="w-full max-h-[600px] flex flex-col bg-white rounded-lg shadow border border-slate-200">
-            <div class="kanban-board flex-grow flex gap-4 overflow-x-scroll p-4">
-                ${columnsHtml}
-            </div>
-        </div>
-    `;
-
-    // --- 4. Insere o quadro no container ---
-    container.innerHTML = fullKanbanHtml;
-
-    // --- 5. Adiciona os eventos de clique ---
-    container.querySelectorAll('.kanban-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const taskId = card.dataset.taskId;
-            openTaskModal(taskId);
-        });
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================================================================
-// LÓGICA DA TABELA
-// =================================================================
-const tableColumnConfig = [
-    { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 80 },
-    { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 150 },
-    { key: 'Atividade', label: 'Atividade', className: '', width: 400 },
-    { key: 'Descrição da atividade', label: 'Descrição da atividade', className: '', width: 200 },
-    { key: 'Data de início', label: 'Início', className: 'text-center', width: 150 },
-    { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150 },
-    { key: 'Status', label: 'Status', className: 'text-center', width: 160 },
-    { key: 'Unidades', label: 'Unidades', className: '', width: 200 },
-    { key: 'Observações', label: 'Observações', className: '', width: 300 }
-];
-
-/**
- * Cria e popula a tabela de ações com base no objeto de configuração.
- * A função gera a tabela inteira e a insere no DOM.
- * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
- */
-function populateActionsTable(actionsData) {
-    const container = document.getElementById('table-container');
-    if (!container) {
-        console.error("Container #table-container não encontrado.");
-        return;
-    }
-
-    // Calcula a largura total da tabela somando as larguras de cada coluna
-    const totalTableWidth = tableColumnConfig.reduce((sum, col) => sum + col.width, 0);
-
-    // [MELHORIA] Gera as tags <col> para definir a largura de forma otimizada
-    const colgroupHtml = tableColumnConfig.map(col => 
-        `<col style="width: ${col.width}px;">`
-    ).join('');
-
-    // Gera o HTML do cabeçalho (Thead), sem a necessidade de width em cada <th>
-    const headerHtml = tableColumnConfig.map(col => 
-        `<th scope="col" class="px-5 py-3 ${col.className}">${col.label}</th>`
-    ).join('');
-
-    // Gera o HTML do corpo da tabela (Tbody)
-    const bodyHtml = actionsData.map(task => {
-        const cellsHtml = tableColumnConfig.map(col => {
-            let cellContent = task[col.key] || '-';
-            
-            // Formatações especiais
-            if (['Data de início', 'Data fim'].includes(col.key)) {
-                cellContent = task[col.key] ? new Date(task[col.key] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
-            } else if (col.key === 'Status') {
-                const statusClass = 'status-' + (task.Status || '').replace(/\s+/g, '-');
-                cellContent = `<div class="flex justify-center items-center">
-                                    <div class="${statusClass} flex justify-center items-center text-sm px-1.5 rounded h-6">${task.Status}</div></div>`;
-            }
-
-            // O div interno ajuda a controlar o conteúdo que pode vazar (overflow)
-            return `<td class="p-3 ${col.className}"><div class="line-clamp-3">${cellContent}</div></td>`;
-        }).join('');
-
-        return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-id="${task.ID}">
-                    ${cellsHtml}
-                </tr>`;
-    }).join('');
-
-    // Monta a estrutura completa da tabela
-    const fullTableHtml = `
-        <table style="width: ${totalTableWidth}px; table-layout: fixed;">
-            <colgroup>
-                ${colgroupHtml}
-            </colgroup>
-            <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md">
-                <tr class="divide-x divide-slate-200">${headerHtml}</tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">${bodyHtml}</tbody>
-        </table>
-    `;
-
-    // Insere a tabela no container
-    container.innerHTML = fullTableHtml;
-
-    container.querySelectorAll('tbody tr').forEach(row => {
-        row.addEventListener('click', () => {
-            const taskId = row.dataset.taskId;
-            openTaskModal(taskId);
-        });
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// =================================================================
-// GANTT CHART
-// =================================================================
-function fillGanttData(jsonAcoes){
-    const monthWidth = 80; 
-    const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    
-    const taskListContainer = document.getElementById('gantt-task-list');
-    const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
-    const monthsHeader = document.getElementById('gantt-months-header');
-    const ganttRowsContainer = document.getElementById('gantt-rows');
-
-    taskListContainer.innerHTML = "";
-    monthsHeader.innerHTML = "";
-    ganttRowsContainer.innerHTML = `<div id="todayBar" class="h-full w-px border-l-2 border-dashed border-[lightcoral] absolute z-10"></div>`;
-    ganttTimelineContainer.scrollLeft = 0;
-
-    let minDate = new Date(Math.min(...jsonAcoes.map(task => new Date(task["Data de início"]+'T10:00:00'))));
-    let maxDate = new Date(Math.max(...jsonAcoes.map(task => new Date(task["Data fim"] ? task["Data fim"]+'T10:00:00' : task["Data de início"]+'T10:00:00'))));
-
-    const today = new Date();
-    today.setHours(0,0,0,0);
-
-    if (minDate > today) minDate = new Date(today);
-    if (maxDate < today) maxDate = new Date(today);
-
-    minDate.setMonth(minDate.getMonth() - 1);
-    maxDate.setMonth(maxDate.getMonth() + 2);
-
-    let firstMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
-    let currentDate = new Date(firstMonth);
-    let timelineWidth = 0;
-
-    while (currentDate <= maxDate) {
-        const monthElement = document.createElement('div');
-        monthElement.className = 'flex-shrink-0 text-center font-bold py-2.5 border-r border-gray-200 box-border w-20"';
-        monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-        monthsHeader.appendChild(monthElement);
-        timelineWidth += monthWidth;
-        currentDate.setMonth(currentDate.getMonth() + 1);
-    }
-    ganttRowsContainer.style.width = `${timelineWidth}px`;
-    monthsHeader.style.width = `${timelineWidth}px`;
-    
-    function calculatePosition(date) {
-        const targetDate = new Date(date);
-        const year = targetDate.getFullYear();
-        const month = targetDate.getMonth();
-        const monthsDiff = (year - firstMonth.getFullYear()) * 12 + (month - firstMonth.getMonth());
-        const dayOfMonth = targetDate.getDate();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const dayOffset = (dayOfMonth / daysInMonth) * monthWidth;
-        return (monthsDiff * monthWidth) + dayOffset;
-    }
-
-    const positionToday = calculatePosition(new Date().toLocaleDateString().split("/").reverse().join("-"));
-    document.getElementById("todayBar").style.left = `${positionToday}px`;
-    ganttTimelineContainer.scrollLeft = positionToday - 100; // Centraliza o "Hoje" na tela
-
-    jsonAcoes.forEach((task, index) => {
-        const rowTimeline = document.createElement('div');
-        rowTimeline.className = 'gantt-row-timeline border-b border-gray-200 relative transition-colors duration-200 h-10 box-border';
-        rowTimeline.dataset.rowIndex = index;
-
-        const startDate = task["Data de início"]+'T10:00:00';
-        const endDate = task["Data fim"]+'T10:00:00'
-        const startOffset = calculatePosition(startDate);
-        const endOffset = endDate ? calculatePosition(endDate) : startOffset+10;
-        const durationWidth = endOffset - startOffset;
-
-        const bar = document.createElement('div');
-        bar.className = 'absolute h-[25px] bg-[#3498db] rounded-[10px] top-1/2 -translate-y-1/2 z-[1] shadow-md';
-        bar.style.left = `${startOffset}px`;
-        bar.style.width = `${durationWidth}px`;
-        bar.title = `${task.Atividade}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
-        const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
-        bar.classList.add(task.colorTag);
-        bar.addEventListener('click', ()=>{openTaskModal(task.ID)})
-
-        const taskRow = document.createElement('div');
-        taskRow.className = 'gantt-row-task flex items-center border-b border-gray-200 transition-colors duration-200 h-10 box-border';
-        taskRow.dataset.rowIndex = index;
-        taskRow.innerHTML = `<div class="text-center px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">${task["Número da atividade"]}</div>
-                                <div class="px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">${task["Plano de ação"]}</div>                     
-                                <div class="px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">${task.Atividade}</div>
-                                <div class="flex justify-center items-center px-3 whitespace-nowrap overflow-hidden text-ellipsis border-r border-gray-200 box-border h-full leading-[40px]">
-                                    <div class="${statusClass} flex justify-center items-center text-sm px-1.5 rounded h-6">${task.Status}</div></div>`;
-        taskListContainer.appendChild(taskRow);
-        taskRow.addEventListener('click', () => {
-            openTaskModal(task.ID);
-        });
-
-        rowTimeline.appendChild(bar);
-        ganttRowsContainer.appendChild(rowTimeline);
-            
-        document.querySelectorAll('.gantt-row-task, .gantt-row-timeline').forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                const rowIndex = row.dataset.rowIndex;
-                document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.add('hovered'));
-            });
-            row.addEventListener('mouseleave', () => {
-                const rowIndex = row.dataset.rowIndex;
-                document.querySelectorAll(`[data-row-index='${rowIndex}']`).forEach(el => el.classList.remove('hovered'));
-            });
-        });
-    });
-}
-
-function setupGantt(){
-    setupGanttScroll()
-    setupResizerGantt()
-}
-
-function setupResizerGantt(){
-    const resizers = document.querySelectorAll('.gantt-tasks-header .resizer');
-    let currentResizer;
-    resizers.forEach(resizer => {
-        resizer.addEventListener('mousedown', (e) => {
-            currentResizer = e.target;
-            e.preventDefault(); 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-            function onMouseMove(e) {
-                const root = document.documentElement;
-                const prevSibling = currentResizer.parentElement;
-                const rect = prevSibling.getBoundingClientRect();
-                const newWidth = e.clientX - rect.left;
-                if (newWidth > 40) { 
-                   const colIdentifier = prevSibling.dataset.col;
-                    if (colIdentifier === 'num') {
-                        root.style.setProperty('--col-num-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'plano') {
-                        root.style.setProperty('--col-plano-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'atividade') {
-                        root.style.setProperty('--col-atividade-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'status') {
-                        root.style.setProperty('--col-status-width', `${newWidth}px`);
-                    }
-                }
-            }
-            function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-        });
-    });
-}
-
-function setupGanttScroll(){
-    const taskListContainer = document.getElementById('gantt-task-list');
-    const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
-
-    let isSyncingScroll = false;
-    taskListContainer.addEventListener('scroll', () => {
-        if (isSyncingScroll) return;
-        isSyncingScroll = true;
-        ganttTimelineContainer.scrollTop = taskListContainer.scrollTop;
-        requestAnimationFrame(() => { isSyncingScroll = false; });
-    });
-    ganttTimelineContainer.addEventListener('scroll', () => {
-        if (isSyncingScroll) return;
-        isSyncingScroll = true;
-        taskListContainer.scrollTop = ganttTimelineContainer.scrollTop;
-        requestAnimationFrame(() => { isSyncingScroll = false; });
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // =================================================================
 // LÓGICA REESTRUTURADA E FINAL DO MODAL DE AÇÕES
 // =================================================================
 
-// --- Variáveis de estado do Modal ---
-
-// Armazena a tarefa atualmente exibida/editada no modal.
 let currentTask = null; 
-// Flag para detectar se houve alguma alteração no formulário.
+let courrentNotificacoesTask = {}
 let hasChanges = false;
-// Flag para diferenciar entre modo de criação e edição.
 let isNewTaskMode = false
 
-/**
- * Configura todos os listeners de eventos para os controles dos modais.
- */
 function setupModalControls() {
     populatePlanosSelect()
 
@@ -810,10 +376,6 @@ function setupModalControls() {
     document.getElementById('add-notification-btn').addEventListener('click', createNotificacao);
 }
 
-/**
- * Popula o seletor de Planos de Ação no modal.
- * Esta função é chamada por setupModalControls.
- */
 function populatePlanosSelect() {
     const selectPlanos = document.getElementById('edit-plano');
     // Retorna cedo se o elemento não for encontrado
@@ -840,11 +402,6 @@ function populatePlanosSelect() {
     });
 }
 
-
-/**
- * Função principal para abrir o modal com os dados de uma tarefa.
- * @param {object} task - O objeto da tarefa clicada.
- */
 function openTaskModal(id) {
     isNewTaskMode = false;
     task = jsonAcoes.filter(t => t.ID === id)[0];
@@ -856,9 +413,6 @@ function openTaskModal(id) {
     document.body.classList.add('overflow-hidden');
 }
 
-/**
- * Preenche todos os campos do modo de visualização.
- */
 function populateViewMode(task) {
     const id = document.getElementById('task-modal-container').dataset.taskId
     task = jsonAcoes.filter(t => t.ID === id)[0];
@@ -912,8 +466,8 @@ function populateViewMode(task) {
         newTitle.classList.toggle('line-clamp-3');
     });
 
-    jsonNotificacoesFiltrado = filterJson(jsonNotificacoes, 'idAcao', id)
-    populateViewNotificacoes(jsonNotificacoesFiltrado)
+    courrentNotificacoesTask = filterJson(jsonNotificacoes, 'idAcao', id)
+    populateViewNotificacoes()
 }
 
 function formatarDataExtenso(isoDate) {
@@ -925,18 +479,11 @@ function formatarDataExtenso(isoDate) {
     return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
 }
 
-function getInitials(nome) {
-    return nome.split(" ")
-               .map(n => n[0].toUpperCase())
-    .slice(0, 2)
-    .join("");
-}
-
-function populateViewNotificacoes(jsonNotificacoes) {
+function populateViewNotificacoes() {
     const container = document.getElementById("notifications-list");
     container.innerHTML = "";
 
-    jsonNotificacoes.forEach(notif => {
+    courrentNotificacoesTask.forEach(notif => {
         const acao = jsonAcoes.find(a => a.ID === notif.idAcao);
         if (!acao) return;
 
@@ -975,6 +522,13 @@ function populateViewNotificacoes(jsonNotificacoes) {
 
         const notifDiv = document.createElement("div");
         notifDiv.className = "rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md";
+
+        function getInitials(nome) {
+            const partes = nome.trim().split(" ");
+            const primeira = partes[0][0].toUpperCase();
+            const ultima = partes[partes.length - 1][0].toUpperCase();
+            return primeira + ultima;
+        }
 
         notifDiv.innerHTML = `
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -1031,50 +585,6 @@ function populateViewNotificacoes(jsonNotificacoes) {
 
         container.appendChild(notifDiv);
     });
-}
-
-/**
- * Preenche o formulário do modo de edição.
- */
-function populateEditMode() {
-    const id = document.getElementById('task-modal-container').dataset.taskId
-    task = jsonAcoes.find(t => t.ID === id);
-    plan = jsonPlanos.find(t => t.Nome === task["Plano de ação"]);
-
-    const form = document.getElementById('modal-edit-form');
-    Object.keys(task).forEach(key => {
-        const input = form.querySelector(`[name="${key}"]`);
-        if (input) input.value = task[key];
-    });
-
-    const planoSelect = document.getElementById('edit-plano');
-    if (planoSelect) {
-        planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
-        planoSelect.value = task['Plano de ação'];
-    }
-
-    const multSelect = document.getElementById('unidades-multi-select')
-    const fragment = document.createDocumentFragment();
-    const uniqueUnidades = [...new Set(plan.objPessoas.map(p => p.Unidade.trim()))].sort();
-
-    uniqueUnidades.forEach(unidade => {
-        const option = document.createElement('option');
-        option.value = unidade;
-        option.innerText = unidade;
-        option.selected = task.Unidades.includes(unidade) ? true : false;
-        fragment.appendChild(option);
-    });
-    multSelect.innerHTML = "";
-    multSelect.appendChild(fragment);
-    
-    createCustomSelect('unidades-multi-select');
-
-    onCustomSelectChange('unidades-multi-select', (values) => {
-        populateTabelaNotificacoes(values);
-    });
-
-    const initialValues = getCustomSelectValues('unidades-multi-select');
-    populateTabelaNotificacoes(initialValues)
 }
 
 function populateTabelaNotificacoes(unidades) {
@@ -1207,10 +717,6 @@ function createNotificacao(notificacao = {}) {
     }
 }
 
-
-/**
- * Alterna para o modo de edição.
- */
 function switchToEditMode() {
     populateEditMode(currentTask);
     
@@ -1226,10 +732,48 @@ function switchToEditMode() {
     hasChanges = false; // Reseta a flag de alterações ao entrar no modo de edição.
 }
 
-/**
- * Alterna de volta para o modo de visualização.
- * @param {boolean} force - Se true, ignora a verificação de alterações.
- */
+function populateEditMode() {
+    const id = document.getElementById('task-modal-container').dataset.taskId
+    task = jsonAcoes.find(t => t.ID === id);
+    plan = jsonPlanos.find(t => t.Nome === task["Plano de ação"]);
+
+    const form = document.getElementById('modal-edit-form');
+    Object.keys(task).forEach(key => {
+        const input = form.querySelector(`[name="${key}"]`);
+        if (input) input.value = task[key];
+    });
+
+    const planoSelect = document.getElementById('edit-plano');
+    if (planoSelect) {
+        planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
+        planoSelect.value = task['Plano de ação'];
+    }
+
+    const multSelect = document.getElementById('unidades-multi-select')
+    const fragment = document.createDocumentFragment();
+    const uniqueUnidades = [...new Set(plan.objPessoas.map(p => p.Unidade.trim()))].sort();
+
+    uniqueUnidades.forEach(unidade => {
+        const option = document.createElement('option');
+        option.value = unidade;
+        option.innerText = unidade;
+        option.selected = task.Unidades.includes(unidade) ? true : false;
+        fragment.appendChild(option);
+    });
+    multSelect.innerHTML = "";
+    multSelect.appendChild(fragment);
+    
+    createCustomSelect('unidades-multi-select');
+
+    onCustomSelectChange('unidades-multi-select', (values) => {
+        populateTabelaNotificacoes(values);
+        hasChanges = true;
+    });
+
+    const initialValues = getCustomSelectValues('unidades-multi-select');
+    populateTabelaNotificacoes(initialValues)
+}
+
 function switchToViewMode(force = false) {
     const confirmationModal = document.getElementById('confirmation-modal');
     const editContent = document.getElementById('edit-mode-content');
@@ -1262,10 +806,6 @@ function switchToViewMode(force = false) {
     hasChanges = false;
 }
 
-
-/**
- * Abre o modal em modo de criação para uma nova tarefa.
- */
 function openModalForNewTask() {
     isNewTaskMode = true;
     currentTask = {};
@@ -1288,21 +828,6 @@ function openModalForNewTask() {
     document.body.classList.add('overflow-hidden');
 
     hasChanges = false; // Reseta a flag de alterações.
-}
-
-
-/**
- * Limpa os campos do formulário de edição.
- */
-function clearEditForm() {
-    const form = document.getElementById('modal-edit-form');
-    form.reset();
-
-    document.getElementById('task-modal-container').removeAttribute('data-task-id')
-    
-    document.getElementById('edit-status'). value = 'Selecione um valor'
-
-    populatePlanosSelect()
 }
 
 function openDeleteConfirmation() {
@@ -1354,11 +879,6 @@ async function handleDeleteTask() {
     }
 }
 
-/**
- * Fecha completamente o modal.
- * Reseta o estado `isNewTaskMode` ao fechar.
- * @param {boolean} force - Se true, ignora a verificação de alterações.
- */
 function closeModal(force = false) {
     const editContent = document.getElementById('edit-mode-content');
     const taskModal = document.getElementById('task-modal-container');
@@ -1373,8 +893,21 @@ function closeModal(force = false) {
     confirmationModal.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 
-    isNewTaskMode = false;
-    hasChanges = false;
+    let currentTask = null; 
+    let courrentNotificacoesTask = {}
+    let hasChanges = false;
+    let isNewTaskMode = false
+}
+
+function clearEditForm() {
+    const form = document.getElementById('modal-edit-form');
+    form.reset();
+
+    document.getElementById('task-modal-container').removeAttribute('data-task-id')
+    
+    document.getElementById('edit-status'). value = 'Selecione um valor'
+
+    populatePlanosSelect()
 }
 
 async function handleSave() {
