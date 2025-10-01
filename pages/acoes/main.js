@@ -488,8 +488,8 @@ function populateViewMode(task) {
         newTitle.classList.toggle('line-clamp-3');
     });
 
-    courrentNotificacoesTask = filterJson(jsonNotificacoes, 'idAcao', id)
-    populateViewNotificacoes()
+    courrentNotificacoesTask = jsonNotificacoes.filter(a => a.idAcao === id)
+    populateViewNotificacoes(courrentNotificacoesTask)
 }
 
 function formatarDataExtenso(isoDate) {
@@ -501,7 +501,7 @@ function formatarDataExtenso(isoDate) {
     return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
 }
 
-function populateViewNotificacoes() {
+function populateViewNotificacoes(courrentNotificacoesTask) {
     const container = document.getElementById("notifications-list");
     container.innerHTML = "";
 
