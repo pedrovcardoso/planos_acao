@@ -28,22 +28,30 @@ document.addEventListener('DOMContentLoaded', async function () {
     ordenarJsonAcoes(jsonAcoes);
     jsonNotificacoes = await obterDadosDoOneDriveNew(['notificacoes.txt']);
 
-    const script = document.createElement('script');
-    script.src = '../../components/multiple_select.js';
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => resolve(src);
+            script.onerror = () => reject(new Error(`Erro ao carregar script: ${src}`));
+            document.head.appendChild(script);
+        });
+    }
 
-    script.onload = function () {
-        console.log('multiple_select.js carregado com sucesso.');
+    Promise.all([
+        loadScript('../../components/multiple_select.js'),
+        loadScript('../../components/custom-table.js')
+    ]).then(() => {
         setupFilters();
-
         fillGanttData(jsonAcoes);
         populateActionsTable(jsonAcoes);
         populateKanbanBoard(jsonAcoes);
 
         setPlanoFilterFromUrl();
         toggleLoading(false);
-    };
-
-    document.head.appendChild(script);
+    }).catch(err => {
+        console.error(err);
+    });      
 
     setupViewSwitcher();
     setupModalControls();

@@ -2,7 +2,7 @@
 (function () {
     // Objeto de configuração global
     const CONFIG = {
-        primaryColor: 'indigo'
+        primaryColor: 'sky'
     };
 
     // Classes de animação do Tailwind para um item sendo removido
