@@ -100,29 +100,25 @@
                 <!-- Outros Filtros -->
                 <div class="flex flex-col flex-1 min-w-[180px]">
                     <label for="filter-planoAcao" class="text-xs font-medium text-slate-600 mb-1">Plano de Ação</label>
-                    <select id="filter-planoAcao" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold">
-                        <option selected disabled hidden value='-'>Selecione</option>
+                    <select id="filter-planoAcao" multiple data-placeholder="Selecione um Plano">
                     </select>
                 </div>
-
+                
                 <div class="flex flex-col flex-1 min-w-[180px]">
                     <label for="filter-Status" class="text-xs font-medium text-slate-600 mb-1">Status</label>
-                    <select id="filter-Status" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold">
-                        <option selected disabled hidden value='-'>Selecione</option>
+                    <select id="filter-Status" multiple data-placeholder="Selecione um Status">
                     </select>
                 </div>
-
+                
                 <div class="flex flex-col flex-1 min-w-[180px]">
                     <label for="filter-Nome" class="text-xs font-medium text-slate-600 mb-1">Responsável</label>
-                    <select id="filter-Nome" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold">
-                        <option selected disabled hidden value='-'>Selecione</option>
+                    <select id="filter-Nome" multiple data-placeholder="Selecione um Responsável">
                     </select>
                 </div>
-
+                
                 <div class="flex flex-col flex-1 min-w-[180px]">
                     <label for="filter-Unidade" class="text-xs font-medium text-slate-600 mb-1">Órgão Responsável</label>
-                    <select id="filter-Unidade" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
-                        <option selected disabled hidden value='-'>Selecione</option>
+                    <select id="filter-Unidade" multiple data-placeholder="Selecione um Órgão">
                     </select>
                 </div>
 
@@ -313,7 +309,7 @@
                             </h4>
                         </div>
                         <div id="multi-select-container" class="md:col-span-2">
-                            <select multiple id="unidades-multi-select">
+                            <select multiple data-placeholder="Selecionar unidades" id="unidades-multi-select">
                             </select>
                         </div>
 

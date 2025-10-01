@@ -10,43 +10,44 @@ function toggleLoading(show) {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-    toggleLoading(true)
+    toggleLoading(true);
 
     jsonAcoes = sessionStorage.getItem("jsonAcoes");
     jsonPlanos = sessionStorage.getItem("jsonPlanos");
 
-    // se não existir, busca do OneDrive
     if (!jsonAcoes || jsonAcoes === "null" || !jsonPlanos || jsonPlanos === "null") {
-      await obterDadosDoOneDrive();
-
-      sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
-      sessionStorage.setItem("jsonPlanos", JSON.stringify(jsonPlanos));
-      console.log('dados resgatados do onedrive e armazenados no sessionstorage')
+        await obterDadosDoOneDrive();
+        sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
+        sessionStorage.setItem("jsonPlanos", JSON.stringify(jsonPlanos));
+        console.log('dados resgatados do onedrive e armazenados no sessionstorage');
     } else {
-      jsonAcoes = JSON.parse(jsonAcoes);
-      jsonPlanos = JSON.parse(jsonPlanos);
-      console.log('dados resgatados do sessionstorage')
+        jsonAcoes = JSON.parse(jsonAcoes);
+        jsonPlanos = JSON.parse(jsonPlanos);
+        console.log('dados resgatados do sessionstorage');
     }
-    ordenarJsonAcoes(jsonAcoes)
-
-    jsonNotificacoes = await obterDadosDoOneDriveNew(['notificacoes.txt'])
+    ordenarJsonAcoes(jsonAcoes);
+    jsonNotificacoes = await obterDadosDoOneDriveNew(['notificacoes.txt']);
 
     const script = document.createElement('script');
     script.src = '../../components/multiple_select.js';
+
+    script.onload = function () {
+        console.log('multiple_select.js carregado com sucesso.');
+        setupFilters();
+
+        fillGanttData(jsonAcoes);
+        populateActionsTable(jsonAcoes);
+        populateKanbanBoard(jsonAcoes);
+
+        setPlanoFilterFromUrl();
+        toggleLoading(false);
+    };
 
     document.head.appendChild(script);
 
     setupViewSwitcher();
     setupModalControls();
     setupGantt();
-    setupFilters()
-
-    fillGanttData(jsonAcoes)
-    populateActionsTable(jsonAcoes)
-    populateKanbanBoard(jsonAcoes)
-
-    setPlanoFilterFromUrl()
-    toggleLoading(false)
 });
 
 function setupViewSwitcher() {
@@ -98,23 +99,21 @@ function normalizeString(str) {
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/\s+/g, "_")
-        .replace(/[^\w_]/g, "")
+        .replace(/[^\w_]/g, "");
 }
 
 function setupFilters() {
-    // Popula os seletores de filtro com opções únicas.
     filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-        if(isObjPessoa){
-            fillFilterObjPessoas(chave)
+        if (isObjPessoa) {
+            fillFilterObjPessoas(chave);
         } else {
             const selectElement = document.getElementById(elementId);
             if (!selectElement) return;
 
-            // transforma em array e "achata" os valores que foram separados por vírgula
             const opcoes = Object.values(jsonAcoes)
-                .map(value => value[chave]) // pega o campo
-                .filter(Boolean) // remove undefined/null
-                .flatMap(v => v.split(', ').map(item => item.trim())); // divide e tira espaços extras
+                .map(value => value[chave])
+                .filter(Boolean)
+                .flatMap(v => v.split(', ').map(item => item.trim()));
 
             const opcoesUnicas = [...new Set(opcoes)].sort((a, b) =>
                 a.localeCompare(b, 'pt', { sensitivity: 'base' })
@@ -124,100 +123,71 @@ function setupFilters() {
                 const option = new Option(valor, normalizeString(valor));
                 selectElement.add(option);
             });
-            selectElement.addEventListener('change', filtrarValores);
         }
+
+        createCustomSelect(elementId);
+        onCustomSelectChange(elementId, filtrarValores);
     });
 
-    // Configura o listener para o seletor de período.
-    document.getElementById('filter-periodo').addEventListener('change', function() {
+    document.getElementById('filter-periodo').addEventListener('change', function () {
         const inputsDiv = document.getElementById('periodo-especifico-inputs');
         inputsDiv.style.display = this.value === 'especifico' ? 'flex' : 'none';
-        
-        // Sempre chama a função principal de filtro para outras opções.
         if (this.value !== 'especifico') {
             filtrarValores();
         }
     });
-    
-    // Configura o listener para o botão de filtro específico.
     document.getElementById('filtrar-especifico').addEventListener('click', filtrarValores);
-    setPlanoFilterFromUrl()
+
+    setPlanoFilterFromUrl();
 }
 
 function fillFilterObjPessoas(key) {
-    const filtro = document.getElementById(`filter-${key}`)
-    let valores = []
+    const filtro = document.getElementById(`filter-${key}`);
+    if (!filtro) return;
 
-    Object.values(jsonAcoes).forEach(item => {
-        const objPessoas = item.objPessoas || [];
+    const valores = new Set();
+
+    Object.values(jsonPlanos).forEach(plan => {
+        const objPessoas = plan.objPessoas || [];
         objPessoas.forEach(pessoa => {
-            valores.push(pessoa[key]);
+            if (pessoa[key] && pessoa[key].trim() !== '') {
+                valores.add(pessoa[key].trim());
+            }
         });
     });
 
-    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
+    const valoresOrdenados = [...valores].sort((a, b) =>
+        a.localeCompare(b, 'pt', { sensitivity: 'base' })
+    );
 
-    valores.forEach(valor => {
-        const option = document.createElement('option')
-        option.value = normalizeString(valor)
-        option.textContent = valor
-        filtro.appendChild(option)
-    })
-
-    filtro.addEventListener('change', filtrarValores)
+    valoresOrdenados.forEach(valor => {
+        const option = new Option(valor, normalizeString(valor));
+        filtro.appendChild(option);
+    });
 }
 
 function setPlanoFilterFromUrl() {
-    // 1. Pega os parâmetros da URL atual
     const params = new URLSearchParams(window.location.search);
-    
-    // 2. Procura por um parâmetro chamado 'plano'
     const planoNome = params.get('plano');
+    if (!planoNome) return;
 
-    // 3. Se não houver parâmetro 'plano', a função para aqui
-    if (!planoNome) {
-        return;
-    }
-
-    // 4. Encontra o elemento <select> na página
     const selectElement = document.getElementById('filter-planoAcao');
-
-    // 5. Se o elemento <select> existir...
     if (selectElement) {
-        const decodedPlanoNome = decodeURIComponent(planoNome);
-        
-        selectElement.value = normalizeString(decodedPlanoNome);
+        const valorNormalizado = normalizeString(decodeURIComponent(planoNome));
+        const optionToSelect = Array.from(selectElement.options).find(opt => opt.value === valorNormalizado);
 
-        // (Opcional) Dispara um evento de 'change' para que qualquer
-        // filtro que dependa do select seja acionado imediatamente.
-        selectElement.dispatchEvent(new Event('change'));
-        
-    } else {
-        console.warn("Elemento <select> com id 'filter-planoAcao' não foi encontrado na página.");
+        if (optionToSelect) {
+            optionToSelect.selected = true;
+            createCustomSelect('filter-planoAcao');
+            filtrarValores();
+        }
     }
 }
 
-function filterJson(json, chave, valor) {
+function filterJson(json, chave, valoresSelecionados) {
     return json.filter(item => {
-        if (typeof item[chave] === "string" && typeof valor === "string") {
-            return normalizeString(item[chave]) === normalizeString(valor)
-        }
-        return item[chave] === valor
-    })
-}
-
-function filterJsonObjPessoa(json, chave, valor) {
-    return json.filter(item => {
-        const pessoas = item.objPessoas;
-        if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
-
-        // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
-        return pessoas.some(pessoa => {
-            if (typeof pessoa[chave] === "string" && typeof valor === "string") {
-                return normalizeString(pessoa[chave]) === normalizeString(valor);
-            }
-            return pessoa[chave] === valor;
-        });
+        const itemValores = (item[chave] || '').split(',').map(v => normalizeString(v.trim()));
+        return itemValores.some(v => valoresSelecionados.includes(v));
     });
 }
 
@@ -228,29 +198,67 @@ function atualizarVisualizacoes(dados) {
 }
 
 function filtrarValores() {
-    let jsonFiltrado = [...jsonAcoes]; // Começa com uma cópia dos dados originais.
+    let jsonFiltrado = [...jsonAcoes];
 
-
-    // 1. Aplica filtros de categoria (Plano de Ação, Status, etc.).
     filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-        const filterElement = document.getElementById(elementId);
-        if (!filterElement || filterElement.value === '-'){
-            filterElement.classList.remove('filter-active')
-            return;
-        } else {
-            jsonFiltrado = isObjPessoa
-                ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
-                : filterJson(jsonFiltrado, chave, filterElement.value);
+        const selectedValues = getCustomSelectValues(elementId);
+        const customComponent = document.querySelector(`.custom-select-container[data-select-id="${elementId}"]`);
 
-            filterElement.classList.add('filter-active');
+        if (!selectedValues || selectedValues.length === 0) {
+            if (customComponent) customComponent.querySelector('.relative.z-10').classList.remove('border-sky-500', 'font-semibold');
+            return;
+        }
+
+        if (isObjPessoa) {
+            const validPlanUnitKeys = new Set();
+
+            Object.values(jsonPlanos).forEach(plan => {
+                (plan.objPessoas || []).forEach(pessoa => {
+                    if (selectedValues.includes(normalizeString(pessoa[chave]))) {
+                        const key = `${plan.Nome}|${pessoa.Unidade}`;
+                        validPlanUnitKeys.add(key);
+                    }
+                });
+            });
+
+            jsonFiltrado = jsonFiltrado.filter(action => {
+                const actionPlan = action['Plano de ação'];
+                const actionUnits = action.Unidades || [];
+
+                return actionUnits.some(unit => {
+                    const testKey = `${actionPlan}|${unit}`;
+                    return validPlanUnitKeys.has(testKey);
+                });
+            });
+
+        } else {
+            jsonFiltrado = filterJson(jsonFiltrado, chave, selectedValues);
+        }
+
+        if (customComponent) customComponent.querySelector('.relative.z-10').classList.add('border-sky-500', 'font-semibold');
+    });
+
+    jsonFiltrado = filtrarPeriodo(jsonFiltrado);
+    atualizarVisualizacoes(jsonFiltrado);
+}
+
+function clearFilters() {
+    filtersConfig.forEach(([chave, elementId]) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            Array.from(element.options).forEach(opt => opt.selected = false);
+            createCustomSelect(elementId);
         }
     });
 
-    // 2. Aplica o filtro de período.
-    jsonFiltrado = filtrarPeriodo(jsonFiltrado);
+    document.getElementById('filter-periodo').value = '-';
+    document.getElementById('periodo-inicio').value = '';
+    document.getElementById('periodo-fim').value = '';
+    document.getElementById('periodo-especifico-inputs').style.display = 'none';
 
-    // 3. Atualiza todas as visualizações com o resultado final.
-    atualizarVisualizacoes(jsonFiltrado);
+    history.replaceState(null, '', window.location.pathname);
+
+    filtrarValores();
 }
 
 function filtrarPeriodo(dadosParaFiltrar) {
@@ -294,35 +302,17 @@ function filtrarPeriodo(dadosParaFiltrar) {
     }
 
     if (!dataInicio || !dataFim) {
-        return dadosParaFiltrar; // Retorna sem filtrar se as datas forem inválidas.
+        return dadosParaFiltrar;
     }
 
-    // Normaliza as horas para garantir que o dia inteiro seja incluído.
     dataInicio.setHours(0, 0, 0, 0);
     dataFim.setHours(23, 59, 59, 999);
 
     return dadosParaFiltrar.filter(task => {
-        // Adiciona um fuso horário para evitar problemas de conversão.
         const start = new Date(task["Data de início"] + 'T00:00:00');
         const end = new Date(task["Data fim"] + 'T23:59:59');
         return start <= dataFim && end >= dataInicio;
     });
-}
-
-function clearFilters() {
-    filtersConfig.forEach(([chave, elementId]) => {
-        const element = document.getElementById(elementId)
-        element.value = '-';
-        element.classList.remove('filter-active')
-    });
-    document.getElementById('filter-periodo').value = '-';
-    document.getElementById('periodo-inicio').value = '';
-    document.getElementById('periodo-fim').value = '';
-    document.getElementById('periodo-especifico-inputs').style.display = 'none';
-    
-    history.replaceState(null, '', window.location.pathname);
-
-    filtrarValores();
 }
 
 
