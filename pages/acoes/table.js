@@ -38,7 +38,7 @@ function populateActionsTable(jsonAcoes) {
         }
         return `<th scope="col" class="px-5 py-3 ${col.className} relative">
                     <div class="flex items-center justify-between w-full gap-x-2">
-                        <div class="w-full line-clamp-2 min-w-0">${col.label}</div>
+                        <div class="table-span-header w-full line-clamp-2 min-w-0">${col.label}</div>
                         ${filterHtml}
                     </div>
                 </th>`;
@@ -108,4 +108,5 @@ function populateActionsTable(jsonAcoes) {
 
     initializeTableFilters('actions-main-table');
     initializeTableResizing('actions-main-table'); 
+    initializeTableReordering('actions-main-table');
 }

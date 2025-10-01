@@ -159,12 +159,13 @@
             }
 
             const resizeHandle = document.createElement('div');
-            resizeHandle.className = 'absolute top-0 bottom-0 w-[5px] cursor-col-resize z-10 hover:bg-slate-300 transition-colors';
+            resizeHandle.className = 'cursor-col-resize absolute top-0 bottom-0 w-[3px] z-10 hover:bg-slate-300';
             resizeHandle.style.right = '-2px';
 
             header.appendChild(resizeHandle);
 
             resizeHandle.addEventListener('mousedown', function (e) {
+                e.stopPropagation();
                 e.preventDefault();
 
                 const startX = e.pageX;
@@ -175,8 +176,6 @@
                 const handleMouseMove = (moveEvent) => {
                     const deltaX = moveEvent.pageX - startX;
                     const newColWidth = startColWidth + deltaX;
-
-                    // [MODIFICADO] A largura mínima agora é 100px.
                     const minWidth = 100;
                     if (newColWidth > minWidth) {
                         col.style.width = newColWidth + 'px';
@@ -193,6 +192,226 @@
                 document.addEventListener('mouseup', handleMouseUp);
             });
         });
+    };
+
+    window.initializeTableReordering = function (tableId) {
+        const table = document.getElementById(tableId);
+        if (!table) {
+            console.error(`Tabela com id "${tableId}" não encontrada.`);
+            return;
+        }
+
+        let sourceTh = null;        // O <th> que está sendo arrastado
+        let sourceIndex = -1;       // O índice da coluna de origem
+        let cloneTh = null;         // O clone visual do <th> que segue o mouse
+        let dropMarker = null;      // O indicador visual de onde a coluna será solta
+
+        // --- 1. INICIALIZAÇÃO DOS CABEÇALHOS ARRASTÁVEIS ---
+        table.querySelectorAll('thead th .table-span-header').forEach(spanHeader => {
+            const th = spanHeader.closest('th');
+            if (!th) return;
+
+            spanHeader.classList.add('cursor-grab');
+
+            spanHeader.addEventListener('mousedown', (e) => {
+                // Ignora cliques nos botões de filtro ou nas alças de redimensionamento
+                if (e.target.closest('.table-filter-trigger') || e.target.closest('.resize-handle')) {
+                    return;
+                }
+                e.preventDefault();
+
+                sourceTh = th;
+                sourceIndex = Array.from(sourceTh.parentElement.children).indexOf(sourceTh);
+
+                sourceTh.classList.add('opacity-50');
+
+                createClone(e);
+                createDropMarker();
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp, { once: true }); // 'once' remove o listener automaticamente após o primeiro evento
+            });
+        });
+
+        // --- 2. CRIAÇÃO DOS ELEMENTOS VISUAIS (CLONE E MARCADOR) ---
+        function createClone(e) {
+            cloneTh = sourceTh.cloneNode(true);
+            // Aplica classes do Tailwind para o estilo do clone
+            cloneTh.classList.add(
+                'absolute', 'z-[1000]', 'pointer-events-none', // Posicionamento e comportamento
+                'bg-white', 'shadow-xl', 'border', 'border-slate-200' // Estilo visual
+            );
+
+            // Define dimensões e anexa ao body
+            cloneTh.style.width = `${sourceTh.offsetWidth}px`;
+            cloneTh.style.height = `${sourceTh.offsetHeight}px`;
+            document.body.appendChild(cloneTh);
+            updateClonePosition(e);
+        }
+
+        function createDropMarker() {
+            dropMarker = document.createElement('div');
+
+            dropMarker.classList.add(
+                'absolute',
+                'z-10',
+                'w-1',
+                'bg-slate-300',
+                'hidden',
+                'h-[580px]'
+            );
+
+            // Anexa o marcador diretamente ao 'body'
+            table.appendChild(dropMarker);
+        }
+
+        // --- 3. LÓGICA DE MOVIMENTO (DRAG) ---
+        function handleMouseMove(e) {
+            if (!cloneTh) return;
+
+            // Adiciona classes ao body para feedback visual global
+            document.body.classList.add('cursor-grabbing', 'select-none');
+
+            updateClonePosition(e);
+            updateDropMarker(e);
+        }
+
+        function updateClonePosition(e) {
+            // Centraliza o clone na posição do cursor
+            cloneTh.style.left = `${e.pageX - cloneTh.offsetWidth / 2}px`;
+            cloneTh.style.top = `${e.pageY - cloneTh.offsetHeight / 2}px`;
+        }
+
+        function updateDropMarker(e) {
+            const headers = Array.from(table.querySelectorAll('thead th'));
+            let targetTh = null;
+            let insertBefore = false;
+
+            // Encontra sobre qual cabeçalho o cursor está
+            for (const th of headers) {
+                if (th === sourceTh) continue;
+
+                const rect = th.getBoundingClientRect();
+                const midX = rect.left + rect.width / 2;
+
+                if (e.clientX >= rect.left && e.clientX <= rect.right) {
+                    targetTh = th;
+                    insertBefore = e.clientX < midX;
+                    break;
+                }
+            }
+
+            if (targetTh) {
+                // --- LÓGICA DE ALTURA E POSIÇÃO CORRIGIDA ---
+                const thead = table.querySelector('thead');
+                const tbody = table.querySelector('tbody');
+                if (!thead || !tbody) return; // Garante que a tabela tenha cabeçalho e corpo
+
+                const theadRect = thead.getBoundingClientRect();
+                const markerTop = theadRect.top;
+                // --- FIM DA CORREÇÃO ---
+
+                const targetRect = targetTh.getBoundingClientRect();
+
+                // Calcula a posição horizontal do marcador
+                const markerX = insertBefore ? targetRect.left : targetRect.right;
+
+                // Aplica os novos estilos de altura e posição
+                dropMarker.style.top = `${markerTop + window.scrollY}px`; // Adiciona a rolagem da página
+                dropMarker.style.left = `${markerX + window.scrollX - (dropMarker.offsetWidth / 2)}px`; // Centraliza o marcador
+
+                dropMarker.classList.remove('hidden'); // Mostra o marcador
+            } else {
+                dropMarker.classList.add('hidden'); // Oculta se não estiver sobre um alvo válido
+            }
+        }
+
+        // --- 4. LÓGICA DE SOLTURA (DROP) E REORDENAÇÃO ---
+        function handleMouseUp(e) {
+            // Verifica se a soltura ocorreu sobre um alvo válido
+            if (!sourceTh || !dropMarker || dropMarker.classList.contains('hidden')) {
+                cleanup();
+                return;
+            }
+
+            const headers = Array.from(sourceTh.parentElement.children);
+            let targetTh = null;
+            let insertBefore = false;
+
+            // Re-calcula o alvo no momento do mouseup para garantir precisão
+            for (const th of headers) {
+                if (th === sourceTh) continue;
+                const rect = th.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right) {
+                    targetTh = th;
+                    insertBefore = e.clientX < (rect.left + rect.width / 2);
+                    break;
+                }
+            }
+
+            if (targetTh) {
+                const targetIndex = headers.indexOf(targetTh);
+                reorderTable(sourceIndex, targetIndex, insertBefore);
+            }
+
+            cleanup();
+        }
+
+        function reorderTable(fromIndex, toIndex, insertBefore) {
+            // Impede a movimentação desnecessária
+            if (fromIndex === toIndex || (fromIndex === toIndex - 1 && !insertBefore)) return;
+
+            // Reordena as células em cada linha (cabeçalho, corpo, rodapé)
+            table.querySelectorAll('tr').forEach(row => {
+                const cells = Array.from(row.children);
+                const sourceCell = cells[fromIndex];
+                const targetCell = cells[toIndex];
+
+                if (insertBefore) {
+                    row.insertBefore(sourceCell, targetCell);
+                } else {
+                    row.insertBefore(sourceCell, targetCell.nextElementSibling);
+                }
+            });
+
+            // Reordena o elemento <col> correspondente no <colgroup> para manter a largura
+            const colgroup = table.querySelector('colgroup');
+            if (colgroup) {
+                const cols = Array.from(colgroup.children);
+                const sourceCol = cols[fromIndex];
+                const targetCol = cols[toIndex];
+
+                if (insertBefore) {
+                    colgroup.insertBefore(sourceCol, targetCol);
+                } else {
+                    colgroup.insertBefore(sourceCol, targetCol.nextElementSibling);
+                }
+            }
+        }
+
+        // --- 5. LIMPEZA DOS EVENTOS E ELEMENTOS TEMPORÁRIOS ---
+        function cleanup() {
+            if (sourceTh) {
+                sourceTh.classList.remove('opacity-50');
+            }
+            if (cloneTh) {
+                cloneTh.remove();
+            }
+            if (dropMarker) {
+                dropMarker.remove();
+            }
+
+            document.body.classList.remove('cursor-grabbing', 'select-none');
+
+            // Reseta as variáveis de estado
+            sourceTh = null;
+            cloneTh = null;
+            dropMarker = null;
+            sourceIndex = -1;
+
+            // Remove o listener de movimento
+            document.removeEventListener('mousemove', handleMouseMove);
+        }
     };
 })();
 // --- Fim do Módulo de Filtro de Tabela ---
