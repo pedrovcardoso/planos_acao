@@ -505,6 +505,8 @@ function populateViewNotificacoes(courrentNotificacoesTask) {
     const container = document.getElementById("notifications-list");
     container.innerHTML = "";
 
+    if (courrentNotificacoesTask.length === 0) container.innerHTML = `<span class="text-gray-500 italic">Nenhuma notificação cadastrada</span>`
+
     courrentNotificacoesTask.forEach(notif => {
         const acao = jsonAcoes.find(a => a.ID === notif.idAcao);
         if (!acao) return;
