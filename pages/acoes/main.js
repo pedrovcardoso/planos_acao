@@ -1032,7 +1032,8 @@ async function handleSave() {
 
         const notificationsData = getNotificationsDataFromDOM(id);
         const taskSaveMode = isNewTaskMode ? 'create' : 'update';
-        const taskResponse = await salvarArquivoNoOneDrive(id, 'acoes.txt', taskSaveMode, taskData);
+        console.log(taskSaveMode)
+        const taskResponse = await salvarArquivoNoOneDrive(id || '', 'acoes.txt', taskSaveMode, taskData);
 
         if (!taskResponse || taskResponse.status !== 200) {
             const message = taskResponse ? taskResponse.message : 'Falha ao salvar a tarefa principal.';
