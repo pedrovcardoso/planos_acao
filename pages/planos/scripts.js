@@ -945,7 +945,7 @@ async function handleSave() {
     const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan);
 
     if (response?.status === 200) {
-      setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos");
+      setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos", "planos.txt");
       window.location.reload();
     } else {
       throw new Error(response?.message || 'Erro desconhecido ao salvar');
@@ -973,7 +973,7 @@ async function handleDelete() {
     try {
         const response = await salvarArquivoNoOneDrive(currentPlanId, 'planos.txt', 'delete', '');
         if (response.status === 200) {
-            setSessionMirror('delete', response.data.uuid, null, "jsonPlanos");
+            setSessionMirror('delete', response.data.uuid, null, "jsonPlanos", "planos.txt");
             window.location.reload();
         } else {
             const errorMessage = response.message || `Erro desconhecido (Status: ${response.status})`;

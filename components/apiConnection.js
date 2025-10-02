@@ -85,7 +85,7 @@ async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
   }
 }
 
-function setSessionMirror(event, uuid, data, jsonArrayName) {
+function setSessionMirror(event, uuid, data, jsonArrayName, fileName) {
   let arr = window[jsonArrayName] || [];
 
   if (event === 'create') {
@@ -98,8 +98,7 @@ function setSessionMirror(event, uuid, data, jsonArrayName) {
     arr = arr.filter(item => item.ID !== uuid);
   }
 
-  window[jsonArrayName] = arr;
-  sessionStorage.setItem(jsonArrayName, JSON.stringify(arr));
+  sessionStorage.setItem(fileName, JSON.stringify(arr));
 }
 
 function ordenarJsonAcoes(jsonAcoes) {

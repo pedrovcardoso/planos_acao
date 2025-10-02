@@ -891,7 +891,7 @@ async function handleDeleteTask() {
     try {
         const response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '');
         if(response.status === 200){
-            setSessionMirror('delete', response.data.uuid, null, "jsonAcoes");
+            setSessionMirror('delete', response.data.uuid, null, "jsonAcoes", "acoes.txt");
             window.location.reload();
         } else if(response.status === 400){
             alert(`Erro ao salvar: ${response.message}`);
@@ -1014,7 +1014,6 @@ async function handleSave() {
     try {
         const id = document.getElementById('task-modal-container').getAttribute('data-task-id');
         const form = document.getElementById('modal-edit-form');
-        
         const formData = new FormData(form);
         const taskData = {
             ...Object.fromEntries(formData.entries()),
@@ -1032,7 +1031,6 @@ async function handleSave() {
         }
 
         const notificationsData = getNotificationsDataFromDOM(id);
-
         const taskSaveMode = isNewTaskMode ? 'create' : 'update';
         const taskResponse = await salvarArquivoNoOneDrive(id, 'acoes.txt', taskSaveMode, taskData);
 
@@ -1049,6 +1047,7 @@ async function handleSave() {
                 const message = response ? response.message : `Falha ao salvar a notificação.`;
                 throw new Error(message);
             }
+            setSessionMirror(mode, response.data.uuid, notification, "jsonNotificacoes", "notificacoes.txt");
         }
 
         for (const notificationId of deletedNotificationIds) {
@@ -1057,21 +1056,17 @@ async function handleSave() {
                 const message = response ? response.message : `Falha ao deletar a notificação.`;
                 throw new Error(message);
             }
+            setSessionMirror("delete", notificationId, null, "jsonNotificacoes", "notificacoes.txt");
         }
 
         deletedNotificationIds = [];
-        setSessionMirror(taskSaveMode, taskResponse.data.uuid, taskData, "jsonAcoes");
+        setSessionMirror(taskSaveMode, taskResponse.data.uuid, taskData, "jsonAcoes", "acoes.txt");
         window.location.reload();
 
     } catch (error) {
         console.error("Falha ao salvar:", error);
         alert(`Ocorreu um erro ao salvar: ${error.message}`);
-        
         [btnSave, btnCancel, btnClose].forEach(btn => btn.disabled = false);
         btnSave.textContent = 'Salvar Alterações';
     }
-}
-
-function saveNotificacoes(){
-    document.querySelectorAll('container-notificacao')
 }
