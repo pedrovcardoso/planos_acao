@@ -1,32 +1,18 @@
-function toggleLoading(show) {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) {
-        if (show) {
-            loadingOverlay.classList.remove('hidden');
-        } else {
-            loadingOverlay.classList.add('hidden');
-        }
-    }
-}
-
 document.addEventListener('DOMContentLoaded', async function () {
-    toggleLoading(true);
+  toggleLoading(true);
 
-    jsonAcoes = sessionStorage.getItem("jsonAcoes");
-    jsonPlanos = sessionStorage.getItem("jsonPlanos");
+  try {
+    const requiredData = await obterDados(['acoes.txt', 'planos.txt', 'notificacoes.txt']);
 
-    if (!jsonAcoes || jsonAcoes === "null" || !jsonPlanos || jsonPlanos === "null") {
-        await obterDadosDoOneDrive();
-        sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
-        sessionStorage.setItem("jsonPlanos", JSON.stringify(jsonPlanos));
-        console.log('dados resgatados do onedrive e armazenados no sessionstorage');
-    } else {
-        jsonAcoes = JSON.parse(jsonAcoes);
-        jsonPlanos = JSON.parse(jsonPlanos);
-        console.log('dados resgatados do sessionstorage');
+    if (!requiredData) {
+      throw new Error("Não foi possível obter os dados do projeto.");
     }
+
+    jsonAcoes = requiredData['acoes.txt'];
+    jsonPlanos = requiredData['planos.txt'];
+    jsonNotificacoes = requiredData['notificacoes.txt'];
+
     ordenarJsonAcoes(jsonAcoes);
-    jsonNotificacoes = await obterDadosDoOneDriveNew(['notificacoes.txt']);
 
     function loadScript(src) {
         return new Promise((resolve, reject) => {
@@ -56,7 +42,24 @@ document.addEventListener('DOMContentLoaded', async function () {
     setupViewSwitcher();
     setupModalControls();
     setupGantt();
+
+  } catch (error) {
+    console.error("Ocorreu um erro no carregamento da página:", error);
+  } finally {
+    toggleLoading(false);
+  }
 });
+
+function toggleLoading(show) {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+        if (show) {
+            loadingOverlay.classList.remove('hidden');
+        } else {
+            loadingOverlay.classList.add('hidden');
+        }
+    }
+}
 
 function setupViewSwitcher() {
     const radioButtons = document.querySelectorAll('input[name="option"]');

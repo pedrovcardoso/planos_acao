@@ -5,9 +5,6 @@ if (navEntries.length > 0) {
   // valores possíveis: "navigate", "reload", "back_forward", "prerender"
 }
 
-//================================================================================
-// busca os dados e inicia os scripts
-//================================================================================
 function toggleLoading(show) {
     const loadingOverlay = document.getElementById('loading-overlay');
     if (loadingOverlay) {
@@ -18,26 +15,21 @@ function toggleLoading(show) {
         }
     }
 }
-
 document.addEventListener('DOMContentLoaded', async function () {
-    toggleLoading(true)
+  toggleLoading(true);
 
-    jsonAcoes = sessionStorage.getItem("jsonAcoes");
-    jsonPlanos = sessionStorage.getItem("jsonPlanos");
+  try {
+    const requiredData = await obterDados(['acoes.txt', 'planos.txt', 'notificacoes.txt']);
 
-    // se não existir, busca do OneDrive
-    if (!jsonAcoes || jsonAcoes === "null" || !jsonPlanos || jsonPlanos === "null") {
-      await obterDadosDoOneDrive();
-
-      sessionStorage.setItem("jsonAcoes", JSON.stringify(jsonAcoes));
-      sessionStorage.setItem("jsonPlanos", JSON.stringify(jsonPlanos));
-      console.log('dados resgatados do onedrive e armazenados no sessionstorage')
-    } else {
-      jsonAcoes = JSON.parse(jsonAcoes);
-      jsonPlanos = JSON.parse(jsonPlanos);
-      console.log('dados resgatados do sessionstorage')
+    if (!requiredData) {
+      throw new Error("Não foi possível obter os dados do projeto.");
     }
-    ordenarJsonAcoes(jsonAcoes)
+
+    jsonAcoes = requiredData['acoes.txt'];
+    jsonPlanos = requiredData['planos.txt'];
+    jsonNotificacoes = requiredData['notificacoes.txt'];
+
+    ordenarJsonAcoes(jsonAcoes);
 
     fillStatCards(jsonPlanos)
     fillGanttData(jsonPlanos)
@@ -45,8 +37,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     setupFilters()
     setupModalUI()
 
-    toggleLoading(false)
-})
+  } catch (error) {
+    console.error("Ocorreu um erro no carregamento da página:", error);
+  } finally {
+    toggleLoading(false);
+  }
+});
 
 
 

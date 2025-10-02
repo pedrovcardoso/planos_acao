@@ -1,4 +1,3 @@
-// Adicionada a propriedade 'filterable'
 const tableColumnConfig = [
     { key: 'Número da atividade', label: 'Nº Ativ.', className: 'text-center', width: 100, filterable: true },
     { key: 'Plano de ação', label: 'Plano de Ação', className: '', width: 150, filterable: true },
@@ -11,7 +10,7 @@ const tableColumnConfig = [
     { key: 'Observações', label: 'Observações', className: '', width: 300, filterable: true }
 ];
 
-function populateActionsTable(jsonAcoes) {
+function populateActionsTable(jsonAcoes, jsonPlanos) {
     const container = document.getElementById('table-container');
     if (!container) return;
 
