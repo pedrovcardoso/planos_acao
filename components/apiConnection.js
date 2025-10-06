@@ -59,9 +59,9 @@ async function obterDados(requiredFiles) {
   return { ...dataFromCache, ...newDataFromApi };
 }
 
-async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
+async function salvarArquivoNoOneDrive(uuid, arquivo, evento, conteudo, jsonArrayName) {
   const dadosParaEnviar = {
-    "id": id,
+    "id": uuid,
     "arquivo": arquivo,
     "evento": evento,
     "conteudo": JSON.stringify(conteudo),
@@ -76,6 +76,9 @@ async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
 
     const resultado = await response.json().catch(() => null);
 
+    const finalId = evento === 'create' && resultado && resultado.id ? resultado.uuid : uuid;
+    setSessionMirror(evento, finalId, conteudo, jsonArrayName, arquivo)
+
     return { status: response.status, data: resultado };
 
   } catch (error) {
@@ -85,20 +88,19 @@ async function salvarArquivoNoOneDrive(id, arquivo, evento, conteudo) {
   }
 }
 
-function setSessionMirror(event, uuid, data, jsonArrayName, fileName) {
+function setSessionMirror(evento, uuid, conteudo, jsonArrayName, arquivo) {
   let arr = window[jsonArrayName] || [];
 
-  if (event === 'create') {
-    data.ID = uuid;
-    arr.push(data);
-  } else if (event === 'update') {
-    data.ID = uuid;
-    arr = arr.map(item => item.ID === uuid ? { ...item, ...data } : item);
-  } else if (event === 'delete') {
+  if (evento === 'create') {
+    conteudo.ID = uuid;
+    arr.push(conteudo);
+  } else if (evento === 'update') {
+    conteudo.ID = uuid;
+    arr = arr.map(item => item.ID === uuid ? { ...item, ...conteudo } : item);
+  } else if (evento === 'delete') {
     arr = arr.filter(item => item.ID !== uuid);
   }
-
-  sessionStorage.setItem(fileName, JSON.stringify(arr));
+  sessionStorage.setItem(arquivo, JSON.stringify(arr));
 }
 
 function ordenarJsonAcoes(jsonAcoes) {

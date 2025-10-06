@@ -920,10 +920,9 @@ async function handleDeleteTask() {
     const id = document.getElementById('task-modal-container').getAttribute('data-task-id')
 
     try {
-        const response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '');
+        const response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '', 'jsonAcoes');
         if(response.status === 200){
-            setSessionMirror('delete', response.data.uuid, null, "jsonAcoes", "acoes.txt");
-            window.location.reload();
+            console.log('arquivo acoes.txt salvo com sucesso');
         } else if(response.status === 400){
             alert(`Erro ao salvar: ${response.message}`);
             document.getElementById('modal-btn-save').disabled = false;
@@ -1023,7 +1022,7 @@ function getNotificationsDataFromDOM() {
 
         // Monta o objeto final com os dados da notificação editável.
         notificationsData.push({
-            id: notificationId,
+            ID: notificationId,
             idAcao: document.getElementById('task-modal-container').getAttribute('data-task-id'),
             tipo: tipo,
             data: data,
@@ -1071,7 +1070,7 @@ async function handleSave() {
         const notificationsData = getNotificationsDataFromDOM(id);
         const taskSaveMode = isNewTaskMode ? 'create' : 'update';
         console.log(taskSaveMode)
-        const taskResponse = await salvarArquivoNoOneDrive(id || '', 'acoes.txt', taskSaveMode, taskData);
+        const taskResponse = await salvarArquivoNoOneDrive(id || '', 'acoes.txt', taskSaveMode, taskData, 'jsonAcoes');
 
         if (!taskResponse || taskResponse.status !== 200) {
             const message = taskResponse ? taskResponse.message : 'Falha ao salvar a tarefa principal.';
@@ -1079,27 +1078,24 @@ async function handleSave() {
         }
 
         for (const notification of notificationsData) {
-            const notificationId = notification.id || '';
+            const notificationId = notification.ID || '';
             const mode = notificationId ? 'update' : 'create';
-            const response = await salvarArquivoNoOneDrive(notificationId, 'notificacoes.txt', mode, notification);
+            const response = await salvarArquivoNoOneDrive(notificationId, 'notificacoes.txt', mode, notification, 'jsonNotificacoes');
             if (!response || response.status !== 200) {
                 const message = response ? response.message : `Falha ao salvar a notificação.`;
                 throw new Error(message);
             }
-            setSessionMirror(mode, response.data.uuid, notification, "jsonNotificacoes", "notificacoes.txt");
         }
 
         for (const notificationId of deletedNotificationIds) {
-            const response = await salvarArquivoNoOneDrive(notificationId, 'notificacoes.txt', 'delete', '');
+            const response = await salvarArquivoNoOneDrive(notificationId, 'notificacoes.txt', 'delete', '', 'jsonNotificacoes');
             if (!response || response.status !== 200) {
                 const message = response ? response.message : `Falha ao deletar a notificação.`;
                 throw new Error(message);
             }
-            setSessionMirror("delete", notificationId, null, "jsonNotificacoes", "notificacoes.txt");
         }
 
         deletedNotificationIds = [];
-        setSessionMirror(taskSaveMode, taskResponse.data.uuid, taskData, "jsonAcoes", "acoes.txt");
         window.location.reload();
 
     } catch (error) {

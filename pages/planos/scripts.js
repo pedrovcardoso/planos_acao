@@ -942,10 +942,9 @@ async function handleSave() {
     const action = isNewPlan ? 'create' : 'update';
     const id = isNewPlan ? '' : currentPlanId;
 
-    const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan);
+    const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan, 'jsonPlanos');
 
     if (response?.status === 200) {
-      setSessionMirror(action, response.data.uuid, updatedPlan, "jsonPlanos", "planos.txt");
       window.location.reload();
     } else {
       throw new Error(response?.message || 'Erro desconhecido ao salvar');
@@ -971,9 +970,8 @@ async function handleDelete() {
     confirmButton.textContent = 'Excluindo...';
 
     try {
-        const response = await salvarArquivoNoOneDrive(currentPlanId, 'planos.txt', 'delete', '');
+        const response = await salvarArquivoNoOneDrive(currentPlanId, 'planos.txt', 'delete', '', 'jsonPlanos');
         if (response.status === 200) {
-            setSessionMirror('delete', response.data.uuid, null, "jsonPlanos", "planos.txt");
             window.location.reload();
         } else {
             const errorMessage = response.message || `Erro desconhecido (Status: ${response.status})`;
