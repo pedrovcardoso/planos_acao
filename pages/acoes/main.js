@@ -401,32 +401,6 @@ function setupModalControls() {
     });
 }
 
-function populatePlanosSelect() {
-    const selectPlanos = document.getElementById('edit-plano');
-    // Retorna cedo se o elemento não for encontrado
-    if (!selectPlanos) return;
-
-    // Extrai os nomes únicos dos planos usando map e Set de forma concisa.
-    const nomesDosPlanos = [...new Set(Object.values(jsonPlanos).map(plano => plano.Nome))];
-
-    // Limpa quaisquer opções existentes (importante para evitar duplicatas).
-    selectPlanos.innerHTML = '';
-
-    // Adiciona uma opção padrão "Selecione"
-    const defaultOption = new Option('Selecione um plano', '');
-    defaultOption.selected = true;
-    defaultOption.disabled = true;
-    defaultOption.hidden = true;
-    selectPlanos.add(defaultOption);
-
-    // Adiciona cada plano como uma nova opção.
-    nomesDosPlanos.forEach(nomeDoPlano => {
-        // new Option(textoVisivel, valorDoAtributoValue)
-        const option = new Option(nomeDoPlano, nomeDoPlano);
-        selectPlanos.add(option);
-    });
-}
-
 function openTaskModal(id) {
     isNewTaskMode = false;
     task = jsonAcoes.filter(t => t.ID === id)[0];
@@ -699,6 +673,127 @@ function createNotificacao(notificacao = {}) {
     }
 }
 
+function switchToEditMode() {
+    const container = document.getElementById("notifications-edit-list");
+    [...container.children].forEach(child => {
+        if (child.tagName.toLowerCase() !== "template") {
+            container.removeChild(child);
+        }
+    });
+
+    populateEditMode(currentTask);
+    
+    document.getElementById('modal-view-plano').classList.add('hidden');
+    document.getElementById('modal-view-atividade').innerText = 'Editar Ação';
+
+    document.getElementById('view-mode-content').classList.add('hidden');
+    document.getElementById('view-mode-buttons').classList.add('hidden');
+    
+    document.getElementById('edit-mode-content').classList.remove('hidden');
+    document.getElementById('edit-mode-buttons').classList.remove('hidden');
+
+    hasChanges = false;
+}
+
+function populateEditMode() {
+    const id = document.getElementById('task-modal-container').dataset.taskId;
+    const task = jsonAcoes.find(t => t.ID === id);
+    const form = document.getElementById('modal-edit-form');
+
+    Object.keys(task).forEach(key => {
+        const input = form.querySelector(`[name="${key}"]`);
+        if (input) {
+            input.value = task[key];
+        }
+    });
+
+    populatePlanosSelect();
+    const planoSelect = document.getElementById('edit-plano');
+    if (planoSelect) {
+        planoSelect.value = task['Plano de ação'] || '';
+    }
+
+    atualizarUnidades(task['Plano de ação'], task.Unidades);
+
+    const notificacoes = jsonNotificacoes.filter(n => n.idAcao === id);
+    notificacoes.forEach(createNotificacao);
+}
+
+function populatePlanosSelect() {
+    const selectPlanos = document.getElementById('edit-plano');
+    if (!selectPlanos) return;
+
+    const planOptionsHTML = [...new Set(jsonPlanos.map(plano => plano.Nome).filter(Boolean))]
+        .map(nome => `<option value="${nome}">${nome}</option>`)
+        .join('');
+
+    selectPlanos.innerHTML = `<option value="" selected disabled hidden>Selecione um plano...</option>${planOptionsHTML}`;
+
+    atualizarUnidades('')
+
+    if (!selectPlanos.onchange) {
+        selectPlanos.onchange = event => {
+            atualizarUnidades(event.target.value);
+            populateTabelaNotificacoes([]);
+            hasChanges = true;
+        };
+    }
+}
+
+function atualizarUnidades(nomePlanoSelecionado, unidadesIniciais = []) {
+    const container = document.getElementById('unidades-container');
+    container.innerHTML = '';
+
+    const renderMessage = (message) => {
+        const span = document.createElement('span');
+        span.className = 'text-gray-500 italic';
+        span.textContent = message;
+        container.appendChild(span);
+    };
+
+    if (!nomePlanoSelecionado || nomePlanoSelecionado.trim() === '' || nomePlanoSelecionado.trim() === '-') {
+        renderMessage('Selecione um plano de ação para exibir as unidades');
+        return;
+    }
+
+    const plan = jsonPlanos.find(p => p.Nome === nomePlanoSelecionado);
+    if (!plan || !plan.objPessoas) {
+        renderMessage('Plano de ação não encontrado ou sem responsáveis associados.');
+        return;
+    }
+
+    const uniqueUnidades = [...new Set(plan.objPessoas.map(p => p.Unidade.trim()).filter(u => u && u !== '-'))].sort();
+    if (uniqueUnidades.length === 0) {
+        renderMessage('Nenhuma unidade cadastrada para este plano de ação.');
+        return;
+    }
+
+    const multSelect = document.createElement('select');
+    multSelect.id = 'unidades-multi-select';
+    multSelect.name = 'Unidades';
+    multSelect.multiple = true;
+
+    const fragment = document.createDocumentFragment();
+    const unidadesIniciaisSet = new Set(unidadesIniciais);
+
+    uniqueUnidades.forEach(unidade => {
+        const option = new Option(unidade, unidade);
+        if (unidadesIniciaisSet.has(unidade)) {
+            option.selected = true;
+        }
+        fragment.appendChild(option);
+    });
+
+    multSelect.appendChild(fragment);
+    container.appendChild(multSelect);
+
+    createCustomSelect('unidades-multi-select');
+    onCustomSelectChange('unidades-multi-select', values => {
+        populateTabelaNotificacoes(values);
+        hasChanges = true;
+    });
+}
+
 function populateTabelaNotificacoes(recipientsListElement, mailList = []) {
     // A lógica para obter 'pessoas' permanece a mesma
     const unidades = getCustomSelectValues('unidades-multi-select') || [];
@@ -740,72 +835,6 @@ function populateTabelaNotificacoes(recipientsListElement, mailList = []) {
         }).join('');
         recipientsListElement.innerHTML = listItemsHTML;
     }
-}
-
-function switchToEditMode() {
-    const container = document.getElementById("notifications-edit-list");
-    [...container.children].forEach(child => {
-        if (child.tagName.toLowerCase() !== "template") {
-            container.removeChild(child);
-        }
-    });
-
-    populateEditMode(currentTask);
-    
-    document.getElementById('modal-view-plano').classList.add('hidden');
-    document.getElementById('modal-view-atividade').innerText = 'Editar Ação';
-
-    document.getElementById('view-mode-content').classList.add('hidden');
-    document.getElementById('view-mode-buttons').classList.add('hidden');
-    
-    document.getElementById('edit-mode-content').classList.remove('hidden');
-    document.getElementById('edit-mode-buttons').classList.remove('hidden');
-
-    hasChanges = false;
-}
-
-function populateEditMode() {
-    const id = document.getElementById('task-modal-container').dataset.taskId
-    task = jsonAcoes.find(t => t.ID === id);
-    plan = jsonPlanos.find(t => t.Nome === task["Plano de ação"]);
-
-    const form = document.getElementById('modal-edit-form');
-    Object.keys(task).forEach(key => {
-        const input = form.querySelector(`[name="${key}"]`);
-        if (input) input.value = task[key];
-    });
-
-    const planoSelect = document.getElementById('edit-plano');
-    if (planoSelect) {
-        planoSelect.innerHTML = jsonPlanos.map(plano => `<option value="${plano.Nome}">${plano.Nome}</option>`).join('');
-        planoSelect.value = task['Plano de ação'];
-    }
-
-    const multSelect = document.getElementById('unidades-multi-select')
-    const fragment = document.createDocumentFragment();
-    const uniqueUnidades = [...new Set(plan.objPessoas.map(p => p.Unidade.trim()))].sort();
-
-    uniqueUnidades.forEach(unidade => {
-        const option = document.createElement('option');
-        option.value = unidade;
-        option.innerText = unidade;
-        option.selected = task.Unidades.includes(unidade) ? true : false;
-        fragment.appendChild(option);
-    });
-    multSelect.innerHTML = "";
-    multSelect.appendChild(fragment);
-    
-    createCustomSelect('unidades-multi-select');
-
-    onCustomSelectChange('unidades-multi-select', (values) => {
-        populateTabelaNotificacoes(values);
-        hasChanges = true;
-    });
-
-    const notificacoes = jsonNotificacoes.filter(n => n.idAcao === id);
-    notificacoes.forEach(notificacao => {
-        createNotificacao(notificacao)
-    });
 }
 
 function switchToViewMode(force = false) {
@@ -860,6 +889,8 @@ function openModalForNewTask() {
     // Abre o container principal do modal.
     document.getElementById('task-modal-container').classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
+
+    populatePlanosSelect()
 
     hasChanges = false; // Reseta a flag de alterações.
 }
@@ -927,10 +958,10 @@ function closeModal(force = false) {
     confirmationModal.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 
-    let currentTask = null; 
-    let courrentNotificacoesTask = {}
-    let hasChanges = false;
-    let isNewTaskMode = false
+    currentTask = null; 
+    courrentNotificacoesTask = {}
+    hasChanges = false;
+    isNewTaskMode = false
 }
 
 function clearEditForm() {
@@ -940,6 +971,13 @@ function clearEditForm() {
     document.getElementById('task-modal-container').removeAttribute('data-task-id')
     
     document.getElementById('edit-status'). value = 'Selecione um valor'
+
+    const container = document.getElementById("notifications-edit-list");
+    [...container.children].forEach(child => {
+        if (child.tagName.toLowerCase() !== "template") {
+            container.removeChild(child);
+        }
+    });
 
     populatePlanosSelect()
 }
