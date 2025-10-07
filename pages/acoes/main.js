@@ -1058,7 +1058,7 @@ async function handleSave() {
             Unidades: getCustomSelectValues('unidades-multi-select') || []
         };
 
-        const camposObrigatorios = ['Número da atividade', 'Plano de ação', 'Atividade', 'Status'];
+        const camposObrigatorios = ['Número da atividade', 'Plano de ação', 'Atividade', 'Status', 'Data de início', 'Data fim'];
         const camposInvalidos = camposObrigatorios.filter(campo => !taskData[campo] || taskData[campo].trim() === '');
 
         if (camposInvalidos.length > 0) {

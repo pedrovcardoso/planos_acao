@@ -918,7 +918,7 @@ async function handleSave() {
   updatedPlan.objPessoas = JSON.parse(updatedPlan.objPessoas)
 
   // Validação de campos obrigatórios
-  const camposObrigatorios = ['Nome', 'Status'];
+  const camposObrigatorios = ['Nome', 'Status', 'Data início', 'Data fim'];
   const camposInvalidos = [];
 
   camposObrigatorios.forEach(campo => {
