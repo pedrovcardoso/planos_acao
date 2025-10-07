@@ -10,7 +10,7 @@ const tableColumnConfig = [
     { key: 'Observações', label: 'Observações', className: '', width: 300, filterable: true }
 ];
 
-function populateActionsTable(jsonAcoes, jsonPlanos) {
+function populateActionsTable(jsonAcoes) {
     const container = document.getElementById('table-container');
     if (!container) return;
 
@@ -44,7 +44,6 @@ function populateActionsTable(jsonAcoes, jsonPlanos) {
     }).join('');
 
     const bodyHtml = jsonAcoes.map(task => {
-        // [LÓGICA DE ALERTA RESTAURADA]
         const planUnits = plansUnitMap.get(task['Plano de ação']);
         let showWarning = false;
         if (planUnits && Array.isArray(task.Unidades) && task.Unidades.length > 0) {
@@ -65,7 +64,6 @@ function populateActionsTable(jsonAcoes, jsonPlanos) {
                 const statusClass = 'status-' + (task.Status || '').replace(/\s+/g, '-');
                 const statusBadgeHtml = `<div class="${statusClass} flex justify-center items-center text-sm px-1.5 rounded h-6">${task.Status || '-'}</div>`;
 
-                // [LÓGICA DE ALERTA RESTAURADA]
                 let warningIconHtml = '';
                 if (showWarning) {
                     const tooltipText = "Esta atividade possui unidades que não<br>foram encontradas no plano de ação<br>correspondente.";
