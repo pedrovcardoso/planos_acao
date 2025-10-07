@@ -75,9 +75,12 @@ async function salvarArquivoNoOneDrive(uuid, arquivo, evento, conteudo, jsonArra
     });
 
     const resultado = await response.json().catch(() => null);
+    alert(JSON.stringify(resultado))
 
-    const finalId = evento === 'create' && resultado && resultado.id ? resultado.uuid : uuid;
-    setSessionMirror(evento, finalId, conteudo, jsonArrayName, arquivo)
+    window[jsonArrayName] = resultado.dados
+
+    // const finalId = evento === 'create' && resultado && resultado.id ? resultado.uuid : uuid;
+    // setSessionMirror(evento, finalId, conteudo, jsonArrayName, arquivo)
 
     return { status: response.status, data: resultado };
 
