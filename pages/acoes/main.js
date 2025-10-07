@@ -940,6 +940,7 @@ async function handleDeleteTask() {
         cancelButton.disabled = false;
         confirmButton.textContent = 'Sim, Excluir';
         document.getElementById('delete-confirmation-modal').classList.add('hidden');
+        window.location.reload();
     }
 }
 
