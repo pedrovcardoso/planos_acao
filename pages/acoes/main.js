@@ -399,6 +399,164 @@ function setupModalControls() {
             hasChanges = true;
         }
     });
+    
+    document.getElementById('edit-data-inicio').addEventListener('change', async function(event) {
+        const id = document.getElementById('task-modal-container').dataset.taskId;
+        const novaData = event.target.value;
+    
+        await gerenciarNotificacaoPorData(id, novaData, 'inicio');
+        await verificarNotificacaoLongoPrazo();
+    });
+    
+    document.getElementById('edit-data-fim').addEventListener('change', async function(event) {
+        const id = document.getElementById('task-modal-container').dataset.taskId;
+        const novaData = event.target.value;
+    
+        const calcularDataPendencia = (dataFim) => {
+            const data = new Date(dataFim + 'T00:00:00');
+            data.setDate(data.getDate() + 1);
+            return data.toISOString().split('T')[0];
+        };
+        
+        await gerenciarNotificacaoPorData(id, novaData, 'pendencia', calcularDataPendencia);
+        await verificarNotificacaoLongoPrazo();
+    });       
+}
+
+function showConfirmationNotificacaoModal({ title, message, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
+    const modal = document.getElementById('date-change-confirmation-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const confirmBtn = document.getElementById('modal-btn-confirm-notification');
+    const cancelBtn = document.getElementById('modal-btn-cancel-notification');
+
+    modalTitle.textContent = title;
+    modalMessage.innerHTML = message;
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+
+    modal.classList.remove('hidden');
+
+    return new Promise((resolve) => {
+        let confirmHandler, cancelHandler;
+
+        const cleanupAndClose = (confirmation) => {
+            confirmBtn.removeEventListener('click', confirmHandler);
+            cancelBtn.removeEventListener('click', cancelHandler);
+            modal.classList.add('hidden');
+            resolve(confirmation);
+        };
+
+        confirmHandler = () => cleanupAndClose(true);
+        cancelHandler = () => cleanupAndClose(false);
+
+        confirmBtn.addEventListener('click', confirmHandler);
+        cancelBtn.addEventListener('click', cancelHandler);
+    });
+}
+
+function handleUpdateAndPruneNotifications(tipoNotificacao, novaData) {
+    const allNotificationCards = document.querySelectorAll('#notifications-edit-list .container-notificacao');
+    const matchingCards = Array.from(allNotificationCards).filter(card => {
+        const typeSelect = card.querySelector('.notification-type');
+        return typeSelect && typeSelect.value === tipoNotificacao;
+    });
+
+    if (matchingCards.length === 0) return;
+
+    const cardToKeep = matchingCards[0];
+    const dateInput = cardToKeep.querySelector('.notification-date');
+    if (dateInput) {
+        dateInput.value = novaData;
+    }
+
+    if (matchingCards.length > 1) {
+        const cardsToDelete = matchingCards.slice(1);
+        cardsToDelete.forEach(cardToDelete => {
+            const notificationId = cardToDelete.dataset.notificationId;
+            if (notificationId) {
+                deletedNotificationIds.push(notificationId);
+            }
+            cardToDelete.remove();
+        });
+    }
+
+    hasChanges = true;
+}
+
+async function gerenciarNotificacaoPorData(idAcao, novaData, tipoNotificacao, calculoDataFn = null) {
+    if (!novaData) return;
+
+    const dataNotificacao = calculoDataFn ? calculoDataFn(novaData) : novaData;
+    const dataFormatada = new Date(dataNotificacao + 'T00:00:00').toLocaleDateString('pt-BR');
+
+    const notificacoesNoDOM = getNotificationsDataFromDOM();
+    const existeNotificacaoDoTipo = notificacoesNoDOM.some(n => n.tipo === tipoNotificacao);
+
+    if (existeNotificacaoDoTipo) {
+        const confirmed = await showConfirmationNotificacaoModal({
+            title: 'Atualizar Notificação?',
+            message: `Encontramos notificações do tipo "${tipoNotificacao}".<br>Deseja atualizar a data para ${dataFormatada}? (Apenas uma será mantida)`,
+            confirmText: 'Sim, Atualizar'
+        });
+        if (confirmed) {
+            handleUpdateAndPruneNotifications(tipoNotificacao, dataNotificacao);
+        }
+    } else {
+        const confirmed = await showConfirmationNotificacaoModal({
+            title: 'Criar Notificação?',
+            message: `Não há notificação de "${tipoNotificacao}".<br>Deseja criar uma nova com a data ${dataFormatada}?`,
+            confirmText: 'Sim, Criar'
+        });
+        if (confirmed) {
+            const novaNotificacao = { tipo: tipoNotificacao, data: dataNotificacao, idAcao: idAcao, status: 'editavel', mailList: [] };
+            createNotificacao(novaNotificacao);
+        }
+    }
+}
+
+async function verificarNotificacaoLongoPrazo() {
+    const dataInicioStr = document.getElementById('edit-data-inicio').value;
+    const dataFimStr = document.getElementById('edit-data-fim').value;
+    const idAcao = document.getElementById('task-modal-container').dataset.taskId;
+
+    if (!dataInicioStr || !dataFimStr) return;
+
+    const dataInicio = new Date(dataInicioStr + 'T00:00:00');
+    const dataFim = new Date(dataFimStr + 'T00:00:00');
+    const diffTime = Math.abs(dataFim - dataInicio);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 30) {
+        const dataNotificacao = new Date(dataFim);
+        dataNotificacao.setDate(dataNotificacao.getDate() - 7);
+        const dataNotificacaoStr = dataNotificacao.toISOString().split('T')[0];
+        const dataFormatada = new Date(dataNotificacaoStr + 'T00:00:00').toLocaleDateString('pt-BR');
+
+        const notificacoesNoDOM = getNotificationsDataFromDOM();
+        const existeNotificacaoDoTipo = notificacoesNoDOM.some(n => n.tipo === 'aviso');
+
+        if (existeNotificacaoDoTipo) {
+            const confirmed = await showConfirmationNotificacaoModal({
+                title: 'Atualizar Aviso?',
+                message: `O prazo desta tarefa é longo.<br>Deseja atualizar a data dos avisos para ${dataFormatada}? (Apenas um será mantido)`,
+                confirmText: 'Sim, Atualizar'
+            });
+            if (confirmed) {
+                handleUpdateAndPruneNotifications('aviso', dataNotificacaoStr);
+            }
+        } else {
+            const confirmed = await showConfirmationNotificacaoModal({
+                title: 'Criar Notificação de Aviso?',
+                message: `O prazo desta tarefa é longo.<br>Deseja criar um aviso automático para o dia ${dataFormatada}?`,
+                confirmText: 'Sim, Criar Aviso'
+            });
+            if (confirmed) {
+                const novaNotificacao = { tipo: 'aviso', data: dataNotificacaoStr, idAcao: idAcao, status: 'editavel', mailList: [] };
+                createNotificacao(novaNotificacao);
+            }
+        }
+    }
 }
 
 function openTaskModal(id) {
@@ -998,7 +1156,7 @@ function getNotificationsDataFromDOM() {
         // que este é um card "Enviado" e deve ser ignorado.
         const statusSlot = element.querySelector('.status-slot');
         if (statusSlot && !statusSlot.classList.contains('hidden')) {
-            return; // Pula para a próxima iteração (equivalente a 'continue' em um for loop).
+            return;
         }
 
         // --- ETAPA 2: EXTRAIR DADOS (APENAS DE CARDS EDITÁVEIS) ---
@@ -1027,7 +1185,8 @@ function getNotificationsDataFromDOM() {
             idAcao: document.getElementById('task-modal-container').getAttribute('data-task-id'),
             tipo: tipo,
             data: data,
-            mailList: mailList
+            mailList: mailList,
+            status: "planejado"
         });
     });
 

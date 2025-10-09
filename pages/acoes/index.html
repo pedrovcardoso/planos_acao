@@ -476,6 +476,28 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal de Confirmação para Criação/Atualização de Notificações -->
+            <div id="date-change-confirmation-modal"
+                class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="p-6">
+                        <h3 id="modal-title" class="text-lg font-bold text-slate-800"></h3>
+                        <!-- A classe de cor do texto foi alterada para um tom mais escuro -->
+                        <p id="modal-message" class="mt-2 text-sm text-slate-700"></p>
+                    </div>
+                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                        <button id="modal-btn-cancel-notification" type="button"
+                            class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
+                            Cancelar
+                        </button>
+                        <button id="modal-btn-confirm-notification" type="button"
+                            class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
+                            Confirmar
+                        </button>
+                    </div>
+                </div>      
+            </div>
         </section>
 
 <!--===============================================================================
