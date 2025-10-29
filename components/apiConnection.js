@@ -1,5 +1,5 @@
-const fetchApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9019b15756f14c698b3ea71554389290/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=VNrk0XHX2XqG_nLsuzcYmPJP4kGUFifRX2c4FC_sc4w";
-const saveApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95292f9f4d384f34bd8e385ea59997d3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xpnrIZmY0PJU-hDBaxRwn8w7RpVR5AdlDyx2rl7QSLc";
+const fetchApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9019b15756f14c698b3ea71554389290/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=dQ6jIWoruotdgenr1yJs3KBeW2U-DXndp99PKaYAq0U";
+const saveApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95292f9f4d384f34bd8e385ea59997d3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yXpJccQL1RD_UVZ60_MlBVGmUJlIzWyon4rgX9kL8QM";
 
 async function fetchFromApi(fileNames) {
   try {
@@ -114,4 +114,40 @@ function ordenarJsonAcoes(jsonAcoes) {
     const numB = String(b["Número da atividade"] || "");
     return numA.localeCompare(numB, "pt-BR", { numeric: true });
   });
+}
+
+function ordenarJsonPlanos(jsonPlanos) {
+  // Passo 1: Ordenar a lista de equipes (objPessoas) dentro de cada plano
+  jsonPlanos.forEach(plano => {
+    // Verifica se a propriedade 'objPessoas' existe e é um array com itens
+    if (Array.isArray(plano.objPessoas) && plano.objPessoas.length > 0) {
+      
+      plano.objPessoas.sort((a, b) => {
+        // Critério primário: Ordenar por Unidade
+        const unidadeA = String(a.Unidade || "");
+        const unidadeB = String(b.Unidade || "");
+        const compUnidade = unidadeA.localeCompare(unidadeB, "pt-BR");
+
+        // Se as unidades forem diferentes, retorna o resultado
+        if (compUnidade !== 0) {
+          return compUnidade;
+        }
+
+        // Critério secundário: Se as unidades forem iguais, ordenar por Nome
+        const nomeA = String(a.Nome || "");
+        const nomeB = String(b.Nome || "");
+        return nomeA.localeCompare(nomeB, "pt-BR");
+      });
+    }
+  });
+
+  // Passo 2: Ordenar o array principal de planos pelo nome
+  jsonPlanos.sort((a, b) => {
+    const nomeA = String(a.Nome || "");
+    const nomeB = String(b.Nome || "");
+    return nomeA.localeCompare(nomeB, "pt-BR");
+  });
+
+  // Retorna o array modificado
+  return jsonPlanos;
 }

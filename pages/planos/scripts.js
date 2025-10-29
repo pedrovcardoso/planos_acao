@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     jsonNotificacoes = requiredData['notificacoes.txt'];
 
     ordenarJsonAcoes(jsonAcoes);
+    ordenarJsonPlanos(jsonPlanos)
 
     fillStatCards(jsonPlanos)
     fillGanttData(jsonPlanos)
@@ -43,6 +44,87 @@ document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(false);
   }
 });
+
+async function gerarPDFdaPagina() {
+  console.log("Iniciando a geração do PDF...");
+
+  // Usa sua função de loading para dar feedback visual
+  if (typeof toggleLoading === 'function') {
+    toggleLoading(true);
+  }
+
+  // Elemento que será capturado. document.body captura a página inteira.
+  const elementoParaCapturar = document.body;
+  
+  // Esconde temporariamente o overlay de loading para não aparecer no PDF
+  const loadingOverlay = document.getElementById('loading-overlay');
+  if (loadingOverlay) loadingOverlay.classList.add('hidden');
+
+  try {
+    // Tira a "foto" da página inteira usando html2canvas
+    const canvas = await html2canvas(elementoParaCapturar, {
+      useCORS: true, // Permite carregar imagens de outras origens
+      scale: 2,      // Aumenta a resolução para melhor qualidade
+      logging: false,
+      windowWidth: document.documentElement.offsetWidth,
+      windowHeight: document.documentElement.scrollHeight
+    });
+    
+    console.log("Captura da página concluída, montando o PDF...");
+
+    const imgData = canvas.toDataURL('image/png');
+    const imgWidth = canvas.width;
+    const imgHeight = canvas.height;
+
+    // Configurações do PDF (usando jsPDF)
+    // A orientação 'p' é retrato (portrait), 'l' é paisagem (landscape)
+    const pdf = new window.jspdf.jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4'
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    // Calcula a proporção para a imagem caber na largura do PDF
+    const ratio = imgWidth / pdfWidth;
+    const scaledHeight = imgHeight / ratio;
+
+    let heightLeft = scaledHeight;
+    let position = 0;
+    
+    // Adiciona a primeira página
+    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+    heightLeft -= pdfHeight;
+
+    // Adiciona mais páginas se o conteúdo for maior que uma página A4
+    while (heightLeft > 0) {
+      position = heightLeft - scaledHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
+      heightLeft -= pdfHeight;
+    }
+    
+    // Gera um nome de arquivo dinâmico com a data
+    const dataAtual = new Date().toISOString().slice(0, 10);
+    const nomeArquivo = `relatorio-planos-de-acao-${dataAtual}.pdf`;
+
+    // Salva o arquivo
+    pdf.save(nomeArquivo);
+    console.log(`PDF "${nomeArquivo}" gerado com sucesso!`);
+
+  } catch (error) {
+    console.error("Ocorreu um erro ao gerar o PDF:", error);
+    alert("Não foi possível gerar o PDF. Verifique o console para mais detalhes.");
+  } finally {
+    // Garante que o loading seja desativado e o overlay reexibido se necessário
+    if (typeof toggleLoading === 'function') {
+      toggleLoading(false);
+    }
+  }
+}
+
 
 
 
@@ -433,27 +515,82 @@ function toggleHeatMap(){
 //================================================================================
 /**
  * Cria todos os cards com informações dos planos de ação.
- * @param {object} force - Se true, fecha o modal sem verificar.
+ * @param {object} jsonPlanos - O objeto JSON contendo os dados dos planos.
  */
 function gerarCards(jsonPlanos) {
   const container = document.querySelector('.card-container');
   if (!container) return;
 
   container.innerHTML = jsonPlanos.map(plano => {
-    // Lógica para formatar as datas (sem alterações)
-    const dataInicio = plano["Data início"] 
-      ? plano["Data início"].includes('-') 
-        ? plano["Data início"].split('-').reverse().join('/') 
-        : plano["Data início"] 
+    // Lógica para formatar as datas
+    const dataInicio = plano["Data início"]
+      ? plano["Data início"].includes('-')
+        ? plano["Data início"].split('-').reverse().join('/')
+        : plano["Data início"]
       : '-';
-    const dataFim = plano["Data fim"] 
-      ? typeof plano["Data fim"] === "string" && plano["Data fim"].includes('-') 
-        ? plano["Data fim"].split('-').reverse().join('/') 
-        : plano["Data fim"] 
+    const dataFim = plano["Data fim"]
+      ? typeof plano["Data fim"] === "string" && plano["Data fim"].includes('-')
+        ? plano["Data fim"].split('-').reverse().join('/')
+        : plano["Data fim"]
       : '-';
 
-    // O encodeURIComponent garante que nomes com espaços ou caracteres especiais funcionem na URL
+    // Garante que nomes com espaços ou caracteres especiais funcionem na URL
     const planoNomeEncoded = encodeURIComponent(plano.Nome);
+
+    // --- Lógica para calcular o resumo das ações ---
+    const acoesDoPlano = jsonAcoes.filter(acao => acao["Plano de ação"] === plano.Nome);
+    const totalAcoes = acoesDoPlano.length;
+    const concluidas = acoesDoPlano.filter(acao => acao.Status === 'Implementado').length;
+    const emAndamento = acoesDoPlano.filter(acao => acao.Status === 'Em curso').length;
+    const percentualConclusao = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 0;
+
+    // Mapeia o status a uma cor para a tag, alinhado ao padrão visual original
+    const statusColorMap = {
+      // Baseado em #e0e0e0 (cinza neutro)
+      'Em desenvolvimento': 'bg-gray-100 text-gray-700 border border-gray-200',
+      
+      // Baseado em #cfd4da (cinza frio/azulado)
+      'Planejado': 'bg-slate-100 text-slate-700 border border-slate-200',
+      
+      // Baseado em #17a2b8 (ciano/azul)
+      'Em curso': 'bg-cyan-100 text-cyan-700 border border-cyan-200',
+      
+      // Baseado em #198754 (verde)
+      'Implementado': 'bg-green-100 text-green-700 border border-green-200',
+      
+      // Baseado em #ffdd57 (amarelo)
+      'Pendente': 'bg-yellow-100 text-yellow-700 border border-yellow-200',
+    
+      // Cor para o status Cancelado
+      'Cancelado': 'bg-red-100 text-red-700 border border-red-200'
+    };
+    const statusClass = statusColorMap[plano.Status] || 'bg-gray-100 text-gray-800';
+
+    // --- Lógica condicional para o HTML do resumo das ações ---
+    let resumoAcoesHtml = ''; // Inicia como string vazia
+    if (plano.Status !== 'Em desenvolvimento') {
+        // A seção só é criada se o status NÃO for 'Em desenvolvimento'
+        resumoAcoesHtml = `
+            <div class="pt-2 border-t border-slate-200 space-y-2">
+                <!-- Números das Ações -->
+                <div class="flex justify-between items-center text-sm text-slate-500">
+                    <span class="font-bold">Ações:</span>
+                    <div class="flex items-center gap-4 text-xs font-medium">
+                        <span title="Total de Ações">Total: <strong class="text-slate-700 text-sm">${totalAcoes}</strong></span>
+                        <span title="Ações Concluídas">Concluídas: <strong class="text-slate-700 text-sm">${concluidas}</strong></span>
+                        <span title="Ações Em Curso">Em curso: <strong class="text-slate-700 text-sm">${emAndamento}</strong></span>
+                    </div>
+                </div>
+                <!-- Barra de progresso -->
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-bold text-sky-700 w-10 text-right">${percentualConclusao}%</span>
+                    <div class="w-full bg-slate-200 rounded-full h-1.5">
+                        <div class="bg-sky-600 h-1.5 rounded-full" style="width: ${percentualConclusao}%" title="${percentualConclusao}% Concluído"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
     return `
       <div class="relative bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex flex-col
@@ -468,11 +605,11 @@ function gerarCards(jsonPlanos) {
               </svg>
             </button>
 
-            <!-- O menu suspenso (dropdown), que começa escondido -->
+            <!-- O menu suspenso (dropdown) -->
             <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-10">
               <div class="py-1">
-                ${plano.Status!=='Em desenvolvimento' ? 
-                  `<a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` : 
+                ${plano.Status!=='Em desenvolvimento' ?
+                  `<a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` :
                   '<span class="block w-full text-left px-4 py-2 text-sm text-slate-400 cursor-not-allowed">Ver ações</span>'}
                 
                 <button type="button" 
@@ -491,9 +628,7 @@ function gerarCards(jsonPlanos) {
         </div>
                 
         <div class="flex-grow">
-          <!-- O "pr-8" (padding-right) evita que o título fique embaixo do menu -->
           <h2 class="pr-8 text-lg font-bold text-sky-800 tracking-normal">${plano.Nome}</h2>
-
           <div class="mt-2 space-y-1 text-sm text-slate-500">
             <p><strong class="font-medium text-slate-600">SEI de origem:</strong> ${plano["Processo SEI"]}</p>
             <p><strong class="font-medium text-slate-600">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
@@ -509,11 +644,10 @@ function gerarCards(jsonPlanos) {
             </summary>
             <div class="mt-2 pt-2 pl-2 text-slate-500 border-l-2 border-slate-200 space-y-2">
               <p><strong class="font-medium text-slate-600">Resolução:</strong> ${plano.Resolução || '-'}</p>
-
               <div>
                 <strong class="font-medium text-slate-600">Equipe:</strong>
                 <ul class="ml-4 list-disc space-y-1 text-xs">
-                  ${plano.objPessoas && plano.objPessoas.length > 0 
+                  ${plano.objPessoas && plano.objPessoas.length > 0
                     ? plano.objPessoas.map(pessoa => `
                       <li class="relative">
                         <span 
@@ -528,16 +662,24 @@ function gerarCards(jsonPlanos) {
                   }
                 </ul>
               </div>
-
               <p><strong class="font-medium text-slate-600">SEI relacionados:</strong> ${plano['SEI relacionados'] || '-'}</p>
               <p><strong class="font-medium text-slate-600">Documentos relacionados:</strong> ${plano['Documentos relacionados'] || '-'}</p>
               <p><strong class="font-medium text-slate-600">Observações:</strong> ${plano['Observações'] || '-'}</p>
             </div>
           </details>
         
-          <div class="pt-2 border-t border-slate-200 flex justify-between text-xs">
-            <p class="font-medium text-slate-500"><strong>Início:</strong> <span class="font-semibold text-slate-600">${dataInicio}</span></p>
-            <p class="font-medium text-slate-500"><strong>Fim:</strong> <span class="font-semibold text-slate-600">${dataFim}</span></p>
+          <!-- Resumo das Ações (agora condicional e mais compacto) -->
+          ${resumoAcoesHtml}
+        
+          <!-- Rodapé com Status e Datas -->
+          <div class="pt-3 mt-3 border-t border-slate-200 flex justify-between items-center text-xs">
+              <div>
+                  <span class="px-2 py-1 text-xs font-semibold rounded-md ${statusClass}">${plano.Status}</span>
+              </div>
+              <div class="flex gap-4 text-slate-500 font-medium">
+                  <p><strong>Início:</strong> <span class="font-semibold text-slate-600">${dataInicio}</span></p>
+                  <p><strong>Fim:</strong> <span class="font-semibold text-slate-600">${dataFim}</span></p>
+              </div>
           </div>
         </div>
       </div>

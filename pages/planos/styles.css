@@ -13,6 +13,8 @@
 .status-Em-desenvolvimento { background-color: #e0e0e0; color: #212529; }
 .status-Planejado { background-color: #cfd4da; color: #212529; }
 .status-Pendente { background-color: #ffdd57; color: #664d03; }
+.status-Pendente { background-color: #ffdd57; color: #664d03; }
+.status-Em-revisão { background-color: #ffdd57; color: #664d03; }
 .status-Em-curso { background-color: #17a2b8; color: #ffffff; }
 .status-Implementado { background-color: #198754; color: #ffffff; }
 
