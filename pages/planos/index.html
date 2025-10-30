@@ -19,55 +19,187 @@
 // stat cards, destaques principais
 ===================================================================================-->
     <main class="flex-grow pt-16"><div class="grid p-6 md:py-5 md:px-8 gap-6">
-        <section id="stat-cards" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
-            <div class="flex items-center gap-4">
-                <div class="rounded-lg flex justify-center bg-sky-100 p-3">
-                    <ion-icon name="layers-outline" class="text-2xl text-sky-600"></ion-icon>
+
+        <!-- Adicione estas classes ao seu CSS para uma melhor experiência de impressão -->
+        <style>
+            @media print {
+                body {
+                    -webkit-print-color-adjust: exact;
+                    /* Força a impressão de cores de fundo no Chrome */
+                    print-color-adjust: exact;
+                }
+        
+                section {
+                    break-inside: avoid;
+                    /* Tenta evitar que as seções quebrem entre páginas */
+                }
+            }
+        </style>
+        
+        <!-- ===================== PLANOS DE AÇÃO ===================== -->
+        <section class="space-y-3" aria-labelledby="title-planos">
+            <h2 id="title-planos" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Planos de Ação</h2>
+        
+            <!-- Destaques (com altura maior) -->
+            <div class="grid grid-cols-2 gap-3">
+                <!-- Em curso -->
+                <div class="rounded-xl p-4 py-5 shadow-xl ring-1 ring-sky-100
+                                        bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border">
+                    <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-sky-100 flex items-center justify-center flex-shrink-0">
+                            <ion-icon name="layers-outline" class="text-xl text-sky-600"></ion-icon>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-slate-700 truncate">
+                                <span id="planos-emCurso" class="text-2xl font-bold text-slate-900">12</span>
+                                planos em curso
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Em desenvolvimento -->
+                <div class="rounded-xl p-4 py-5 shadow-xl ring-1 ring-green-100
+                                        bg-gradient-to-r from-white to-green-50 print:shadow-none print:bg-white print:border">
+                    <div class="flex items-center gap-3">
+                        <div class="h-8 w-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                            <ion-icon name="construct-outline" class="text-xl text-green-600"></ion-icon>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-slate-700 truncate">
+                                <span id="planos-emDesenvolvimento" class="text-2xl font-bold text-slate-900">7</span>
+                                em desenvolvimento
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Outras estatísticas -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <!-- Total criados -->
+                <div
+                    class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-lg bg-indigo-50 grid place-items-center flex-shrink-0">
+                        <ion-icon name="albums-outline" class="text-lg text-indigo-700"></ion-icon>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-slate-500">Planos em andamento</p>
-                        <p id="stat-emAndamento" class="text-3xl font-semibold text-slate-800">0</p>
+                        <p class="text-sm text-slate-700 leading-tight">
+                            <span id="planos-totalCriados" class="text-xl font-bold text-slate-800">35</span>
+                            criados
+                        </p>
+                        <p class="text-xs text-slate-600 -mt-0.5">
+                            <span id="planos-totalConcluidosSub" class="font-medium">14</span>
+                            concluídos
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Pendentes -->
+                <div
+                    class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-lg bg-amber-50 grid place-items-center flex-shrink-0">
+                        <ion-icon name="ellipsis-horizontal-circle-outline" class="text-lg text-amber-700"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-700 leading-tight">
+                            <span id="planos-pendentes" class="text-xl font-bold text-slate-800">6</span>
+                            pendentes
+                        </p>
+                        <p class="text-xs text-slate-600 -mt-0.5">
+                            <span id="planos-acoesPendentesSub" class="font-medium">22</span>
+                            ações
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Atrasados -->
+                <div
+                    class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center gap-3">
+                    <div class="h-8 w-8 rounded-lg bg-rose-50 grid place-items-center flex-shrink-0">
+                        <ion-icon name="time-outline" class="text-lg text-rose-700"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-700 leading-tight">
+                            <span id="planos-atrasados" class="text-xl font-bold text-slate-800">3</span>
+                            atrasados
+                        </p>
+                        <p class="text-xs text-slate-600 -mt-0.5">
+                            <span id="planos-comCriticasSub" class="font-medium">2</span>
+                            ações críticas
+                        </p>
                     </div>
                 </div>
             </div>
-
-            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
-            <div class="flex items-center gap-4">
-                <div class="rounded-lg flex justify-center bg-amber-100 p-3">
-                    <ion-icon name="list-circle-outline" class="text-3xl text-amber-600"></ion-icon>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Ações em curso</p>
-                    <p id="stat-acoesEmCurso" class="text-3xl font-semibold text-slate-800">0</p>
-                </div>
-            </div>
-            </div>
-
-            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
-                <div class="flex items-center gap-4">
-                    <div class="rounded-lg flex justify-center bg-green-100 p-3">
-                        <ion-icon name="calendar-outline" class="text-2xl text-green-600"></ion-icon>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Planos em desenvolvimento</p>
-                    <p id="stat-emDesenvolvimento" class="text-3xl font-semibold text-slate-800">0</p>
-                </div>
-            </div>
-            </div>
-
-            <div class="overflow-hidden rounded-xl bg-white p-5 shadow-md transition-all duration-300 hover:shadow-lg">
-                <div class="flex items-center gap-4">
-                    <div class="rounded-lg flex justify-center bg-red-100 p-3">
-                    <ion-icon name="time-outline" class="text-2xl text-red-600"></ion-icon>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500">Ações pendentes</p>
-                    <p id="stat-emAtraso" class="text-3xl font-semibold text-slate-800">0</p>
-                </div>
-            </div>
-            </div>
         </section>
+        
+        <!-- ===================== AÇÕES ===================== -->
+        <section class="space-y-3" aria-labelledby="title-acoes">
+            <h2 id="title-acoes" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Ações</h2>
+        
+            <!-- Cards de Ações (com altura menor) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        
+                <!-- Em curso -->
+                <div class="rounded-xl p-3 shadow-lg ring-1 ring-amber-100 flex items-center gap-3
+                                        bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border">
+                    <div class="h-8 w-8 rounded-lg bg-amber-100 grid place-items-center flex-shrink-0">
+                        <ion-icon name="list-outline" class="text-lg text-amber-700"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-700">Em curso</p>
+                        <p class="text-slate-700 leading-tight">
+                            <span id="acoes-emCurso" class="text-xl font-bold text-slate-800">28</span>
+                            ações
+                        </p>
+                        <p class="text-xs text-slate-600">
+                            <span id="acoes-entregarMesSub" class="font-medium">9</span>
+                            entregas no mês
+                        </p>
+                    </div>
+                </div>
+        
+                <!-- Em atraso -->
+                <div class="rounded-xl p-3 shadow-lg ring-1 ring-rose-100 flex items-center gap-3
+                                        bg-gradient-to-r from-white to-rose-50 print:shadow-none print:bg-white print:border">
+                    <div class="h-8 w-8 rounded-lg bg-rose-100 grid place-items-center flex-shrink-0">
+                        <ion-icon name="alert-circle-outline" class="text-lg text-rose-700"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-700">Em atraso</p>
+                        <p class="text-slate-700 leading-tight">
+                            <span id="acoes-emAtraso" class="text-xl font-bold text-slate-800">5</span>
+                            ações
+                        </p>
+                        <a href="#" class="text-xs text-sky-600 hover:underline">
+                            Visualizar detalhes
+                        </a>
+                    </div>
+                </div>
+        
+                <!-- Planejadas -->
+                <div
+                    class="rounded-xl p-3 shadow-lg ring-1 ring-violet-100 flex items-center gap-3
+                                        bg-gradient-to-r from-white to-violet-50 print:shadow-none print:bg-white print:border">
+                    <div class="h-8 w-8 rounded-lg bg-violet-100 grid place-items-center flex-shrink-0">
+                        <ion-icon name="calendar-outline" class="text-lg text-violet-700"></ion-icon>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-slate-700">Planejadas</p>
+                        <p class="text-slate-700 leading-tight">
+                            <span id="acoes-planejadas" class="text-xl font-bold text-slate-800">18</span>
+                            ações
+                        </p>
+                        <p class="text-xs text-slate-600">
+                            <span id="acoes-totalCriadasSub" class="font-medium">110</span>
+                            criadas • <span id="acoes-totalConcluidasSub" class="font-medium">64</span> concluídas
+                        </p>
+                    </div>
+                </div>
+            </div>
+            </section>
+    
+    
 
 <!--===============================================================================
 // gráfico de gantt
