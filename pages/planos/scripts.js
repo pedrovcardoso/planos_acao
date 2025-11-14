@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     ordenarJsonAcoes(jsonAcoes);
     ordenarJsonPlanos(jsonPlanos)
 
-    fillStatCards(jsonPlanos)
+    setupStatCards(jsonPlanos)
     fillGanttData(jsonPlanos)
     gerarCards(jsonPlanos)
     setupFilters()
@@ -143,39 +143,196 @@ async function gerarPDFdaPagina() {
 //================================================================================
 // cards numéricos da parte inicial da página
 //================================================================================
-function fillStatCards(jsonPlanos) {
-  const statIds = {
-    emAndamento: 'stat-emAndamento',
-    acoesEmCurso: 'stat-acoesEmCurso',
-    emDesenvolvimento: 'stat-emDesenvolvimento',
-    emAtraso: 'stat-emAtraso'
-  }
-
-  const stats = {
-    emAndamento: 0,
-    acoesEmCurso: 0,
-    emDesenvolvimento: 0,
-    emAtraso: 0
-  }
-
-  // Contagem em jsonPlanos
-  Object.values(jsonPlanos).forEach(({ Status }) => {
-    if (Status === 'Em curso') stats.emAndamento++
-    else if (Status === 'Em desenvolvimento') stats.emDesenvolvimento++
-  })
-
-  // Contagem em jsonAcoes
-  Object.values(jsonAcoes).forEach(({ Status }) => {
-    if (Status === 'Em curso') stats.acoesEmCurso++
-    else if (Status === 'Pendente') stats.emAtraso++
-  })
-
-  // Atualiza DOM
-  Object.entries(stats).forEach(([key, value]) => {
-    const el = document.getElementById(statIds[key])
-    if (el) el.innerText = value
-  })
+/**
+ * Função auxiliar para atualizar o conteúdo de texto de um elemento HTML pelo seu ID.
+ * @param {string} id - O ID do elemento a ser atualizado.
+ * @param {string | number} text - O texto a ser inserido no elemento.
+ */
+function updateElementText(id, text) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = text;
+    } else {
+        console.warn(`Elemento com ID "${id}" não encontrado.`);
+    }
 }
+
+/**
+ * Retorna a forma singular ou plural de uma string com base em uma contagem.
+ * @param {number} count - O número para determinar se a string deve ser singular ou plural.
+ * @param {string} singular - A forma singular da palavra (ex: 'plano').
+ * @param {string} plural - A forma plural da palavra (ex: 'planos').
+ * @returns {string}
+ */
+function pluralize(count, singular, plural) {
+    return count === 1 ? singular : plural;
+}
+
+/**
+ * Mostra ou oculta um elemento com base em uma contagem.
+ * @param {number} count - Se 0, o elemento será oculto; caso contrário, será mostrado.
+ * @param {string} elementId - O ID do elemento a ser manipulado.
+ */
+function toggleVisibility(count, elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.style.display = count > 0 ? '' : 'none';
+    }
+}
+
+
+/**
+ * Formata uma duração em dias para uma string mais legível (ex: "15 dias" ou "2 meses").
+ * @param {number} totalDays - O número total de dias.
+ * @returns {string} A duração formatada.
+ */
+function formatarDuracao(totalDays) {
+    if (isNaN(totalDays) || totalDays <= 0) {
+        return 'N/A';
+    }
+    const diasPorMes = 30.44;
+    if (totalDays >= diasPorMes) {
+        const meses = Math.round(totalDays / diasPorMes);
+        return `${meses} ${pluralize(meses, 'mês', 'meses')}`;
+    } else {
+        const dias = Math.round(totalDays);
+        return `${dias} ${pluralize(dias, 'dia', 'dias')}`;
+    }
+}
+
+/**
+ * Processa os dados de planos e atualiza os cards de "Planos de Ação".
+ * @param {Array} planos - O array de dados dos planos. Usa window.jsonPlanos como fallback.
+ * @param {Array} acoes - O array de dados das ações. Usa window.jsonAcoes como fallback.
+ */
+function processPlanosData(planos = window.jsonPlanos, acoes = window.jsonAcoes) {
+    if (!planos || planos.length === 0) return;
+
+    let emCurso = 0, emDesenvolvimento = 0, concluidos = 0, pendentes = 0, aIniciar = 0;
+    let totalDuracaoDias = 0, planosParaCalculoMedia = 0;
+    const idsPlanosPendentes = new Set();
+
+    planos.forEach(plano => {
+        switch (plano.Status) {
+            case 'Em curso': emCurso++; break;
+            case 'Em desenvolvimento': emDesenvolvimento++; break;
+            case 'Implementado': concluidos++; break;
+            case 'Pendente': pendentes++; idsPlanosPendentes.add(plano.ID); break;
+            case 'Planejado': aIniciar++; break;
+        }
+        const dataInicio = new Date(plano['Data início']);
+        const dataFim = new Date(plano['Data fim']);
+        if (!isNaN(dataInicio) && !isNaN(dataFim)) {
+            const duracao = (dataFim - dataInicio) / (1000 * 60 * 60 * 24);
+            if (duracao >= 0) {
+                totalDuracaoDias += duracao;
+                planosParaCalculoMedia++;
+            }
+        }
+    });
+    
+    const acoesPendentes = acoes ? acoes.filter(acao => idsPlanosPendentes.has(acao['Plano de ação'])).length : 0;
+    const tempoMedioDias = planosParaCalculoMedia > 0 ? totalDuracaoDias / planosParaCalculoMedia : 0;
+
+    // Card 1: Em curso
+    updateElementText('planos-emCurso', emCurso);
+    updateElementText('label-planos-emCurso', pluralize(emCurso, 'plano em curso', 'planos em curso'));
+    
+    // Card 2: A Ser Iniciado (com detalhe de 'Em Desenvolvimento')
+    updateElementText('planos-aIniciar', aIniciar);
+    updateElementText('label-planos-aIniciar', pluralize(aIniciar, 'plano a ser iniciado', 'planos a serem iniciados'));
+    updateElementText('planos-emDesenvolvimentoSub', emDesenvolvimento);
+    toggleVisibility(emDesenvolvimento, 'container-emDesenvolvimento');
+    
+    // Cards secundários
+    updateElementText('planos-totalCriados', planos.length);
+    updateElementText('label-totalCriados', pluralize(planos.length, 'criado', 'criados'));
+    
+    updateElementText('planos-totalConcluidosSub', concluidos);
+    updateElementText('label-totalConcluidos', pluralize(concluidos, 'concluído', 'concluídos'));
+    toggleVisibility(concluidos, 'container-concluidos');
+
+    updateElementText('planos-pendentes', pendentes);
+    updateElementText('label-pendentes', pluralize(pendentes, 'pendente', 'pendentes'));
+
+    updateElementText('planos-acoesPendentesSub', acoesPendentes);
+    updateElementText('label-acoesPendentes', pluralize(acoesPendentes, 'ação', 'ações'));
+    toggleVisibility(acoesPendentes, 'container-acoesPendentes');
+    
+    updateElementText('planos-tempoMedio', formatarDuracao(tempoMedioDias));
+}
+
+/**
+ * Processa os dados de ações e atualiza os cards de "Ações".
+ * @param {Array} acoes - O array de dados das ações. Usa window.jsonAcoes como fallback.
+ */
+function processAcoesData(acoes = window.jsonAcoes) {
+    if (!acoes || acoes.length === 0) return;
+    
+    let emCurso = 0, emAtraso = 0, planejadas = 0, concluidas = 0, entregasNoMes = 0;
+    let iniciamProximos30dias = 0;
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const data30dias = new Date();
+    data30dias.setDate(hoje.getDate() + 30);
+    
+    const mesAtual = hoje.getMonth(), anoAtual = hoje.getFullYear();
+
+    acoes.forEach(acao => {
+        const dataFim = new Date(acao['Data fim']);
+        if (dataFim.getMonth() === mesAtual && dataFim.getFullYear() === anoAtual) {
+            entregasNoMes++;
+        }
+        switch (acao.Status) {
+            case 'Em curso': emCurso++; break;
+            case 'Implementado': concluidas++; break;
+            case 'Pendente': emAtraso++; break;
+            case 'Planejado':
+                planejadas++;
+                const dataInicio = new Date(acao['Data de início']);
+                if (!isNaN(dataInicio) && dataInicio >= hoje && dataInicio <= data30dias) {
+                    iniciamProximos30dias++;
+                }
+                break;
+        }
+    });
+
+    // Atualiza os cards da linha de destaque
+    updateElementText('acoes-emCurso', emCurso);
+    updateElementText('label-acoes-emCurso', pluralize(emCurso, 'ação em curso', 'ações em curso'));
+    updateElementText('acoes-entregarMesSub', entregasNoMes);
+    updateElementText('label-entregasMes', pluralize(entregasNoMes, 'entrega este mês', 'entregas este mês'));
+    toggleVisibility(entregasNoMes, 'container-entregas');
+
+    updateElementText('acoes-emAtraso', emAtraso);
+    updateElementText('label-acoes-emAtraso', pluralize(emAtraso, 'ação em atraso', 'ações em atraso'));
+
+    updateElementText('acoes-planejadas', planejadas);
+    updateElementText('label-acoes-aIniciar', pluralize(planejadas, 'a ser iniciada', 'a serem iniciadas'));
+    updateElementText('acoes-iniciam30dias', iniciamProximos30dias);
+    toggleVisibility(iniciamProximos30dias, 'container-iniciam30dias');
+
+    // Atualiza os novos cards de estatísticas
+    updateElementText('acoes-totalCriadas', acoes.length);
+    updateElementText('label-acoes-criadas', pluralize(acoes.length, 'criada', 'criadas'));
+    
+    updateElementText('acoes-totalConcluidas', concluidas);
+    updateElementText('label-acoes-concluidas', pluralize(concluidas, 'concluída', 'concluídas'));
+}
+
+/**
+ * Função principal para configurar e popular os cards de estatísticas.
+ * @param {Array} [planosData=window.jsonPlanos] - Opcional. Dados dos planos.
+ * @param {Array} [acoesData=window.jsonAcoes] - Opcional. Dados das ações.
+ */
+function setupStatCards(planosData = window.jsonPlanos, acoesData = window.jsonAcoes) {
+    processPlanosData(planosData, acoesData);
+    processAcoesData(acoesData);
+}
+
+// Exemplo de chamada:
+// document.addEventListener('DOMContentLoaded', setupStatCards);
 
 
 
@@ -609,7 +766,7 @@ function gerarCards(jsonPlanos) {
             <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-10">
               <div class="py-1">
                 ${plano.Status!=='Em desenvolvimento' ?
-                  `<a href="../acoes/index.html?plano=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` :
+                  `<a href="../acoes/index.html?plano_de_acao=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` :
                   '<span class="block w-full text-left px-4 py-2 text-sm text-slate-400 cursor-not-allowed">Ver ações</span>'}
                 
                 <button type="button" 

@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         populateActionsTable(jsonAcoes);
         populateKanbanBoard(jsonAcoes);
 
-        setPlanoFilterFromUrl();
+        setFilterFromUrl();
         toggleLoading(false);
     }).catch(err => {
         console.error(err);
@@ -91,16 +91,11 @@ function setupViewSwitcher() {
 
 
 
-// =================================================================
-// PAINEL DE FILTROS
-// =================================================================
-
 const filtersConfig = [
-    // [nome do filtro, id do select, está dentro do objPessoa]
-    ["Plano de ação", "filter-planoAcao", false],
-    ["Status", "filter-Status", false],
-    ["Nome", "filter-Nome", true],
-    ["Unidade", "filter-Unidade", true]
+    { nome: "Plano de ação", id: "filter-planoAcao", objPessoa: false },
+    { nome: "Status", id: "filter-Status", objPessoa: false },
+    { nome: "Nome", id: "filter-Nome", objPessoa: true },
+    { nome: "Unidade", id: "filter-Unidade", objPessoa: true }
 ];
 
 function normalizeString(str) {
@@ -114,15 +109,15 @@ function normalizeString(str) {
 }
 
 function setupFilters() {
-    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-        if (isObjPessoa) {
-            fillFilterObjPessoas(chave);
+    filtersConfig.forEach(filter => {
+        if (filter.objPessoa) {
+            fillFilterObjPessoas(filter.nome);
         } else {
-            const selectElement = document.getElementById(elementId);
+            const selectElement = document.getElementById(filter.id);
             if (!selectElement) return;
 
             const opcoes = Object.values(jsonAcoes)
-                .map(value => value[chave])
+                .map(value => value[filter.nome])
                 .filter(Boolean)
                 .flatMap(v => v.split(', ').map(item => item.trim()));
 
@@ -136,8 +131,8 @@ function setupFilters() {
             });
         }
 
-        createCustomSelect(elementId);
-        onCustomSelectChange(elementId, filtrarValores);
+        createCustomSelect(filter.id);
+        onCustomSelectChange(filter.id, filtrarValores);
     });
 
     document.getElementById('filter-periodo').addEventListener('change', function () {
@@ -147,9 +142,10 @@ function setupFilters() {
             filtrarValores();
         }
     });
+
     document.getElementById('filtrar-especifico').addEventListener('click', filtrarValores);
 
-    setPlanoFilterFromUrl();
+    setFilterFromUrl();
 }
 
 function fillFilterObjPessoas(key) {
@@ -157,7 +153,6 @@ function fillFilterObjPessoas(key) {
     if (!filtro) return;
 
     const valores = new Set();
-
     Object.values(jsonPlanos).forEach(plan => {
         const objPessoas = plan.objPessoas || [];
         objPessoas.forEach(pessoa => {
@@ -177,21 +172,29 @@ function fillFilterObjPessoas(key) {
     });
 }
 
-function setPlanoFilterFromUrl() {
+function setFilterFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    const planoNome = params.get('plano');
-    if (!planoNome) return;
+    let filterApplied = false;
 
-    const selectElement = document.getElementById('filter-planoAcao');
-    if (selectElement) {
-        const valorNormalizado = normalizeString(decodeURIComponent(planoNome));
+    filtersConfig.forEach(filter => {
+        const paramValue = params.get(normalizeString(filter.nome));
+        if (!paramValue) return;
+
+        const selectElement = document.getElementById(filter.id);
+        if (!selectElement) return;
+
+        const valorNormalizado = normalizeString(decodeURIComponent(paramValue));
         const optionToSelect = Array.from(selectElement.options).find(opt => opt.value === valorNormalizado);
 
         if (optionToSelect) {
             optionToSelect.selected = true;
-            createCustomSelect('filter-planoAcao');
-            filtrarValores();
+            createCustomSelect(filter.id);
+            filterApplied = true;
         }
+    });
+
+    if (filterApplied) {
+        filtrarValores();
     }
 }
 
@@ -211,21 +214,20 @@ function atualizarVisualizacoes(dados) {
 function filtrarValores() {
     let jsonFiltrado = [...jsonAcoes];
 
-    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-        const selectedValues = getCustomSelectValues(elementId);
-        const customComponent = document.querySelector(`.custom-select-container[data-select-id="${elementId}"]`);
+    filtersConfig.forEach(filter => {
+        const selectedValues = getCustomSelectValues(filter.id);
+        const customComponent = document.querySelector(`.custom-select-container[data-select-id="${filter.id}"]`);
 
         if (!selectedValues || selectedValues.length === 0) {
             if (customComponent) customComponent.querySelector('.relative.z-10').classList.remove('border-sky-500', 'font-semibold');
             return;
         }
 
-        if (isObjPessoa) {
+        if (filter.objPessoa) {
             const validPlanUnitKeys = new Set();
-
             Object.values(jsonPlanos).forEach(plan => {
                 (plan.objPessoas || []).forEach(pessoa => {
-                    if (selectedValues.includes(normalizeString(pessoa[chave]))) {
+                    if (selectedValues.includes(normalizeString(pessoa[filter.nome]))) {
                         const key = `${plan.Nome}|${pessoa.Unidade}`;
                         validPlanUnitKeys.add(key);
                     }
@@ -235,15 +237,13 @@ function filtrarValores() {
             jsonFiltrado = jsonFiltrado.filter(action => {
                 const actionPlan = action['Plano de ação'];
                 const actionUnits = action.Unidades || [];
-
                 return actionUnits.some(unit => {
                     const testKey = `${actionPlan}|${unit}`;
                     return validPlanUnitKeys.has(testKey);
                 });
             });
-
         } else {
-            jsonFiltrado = filterJson(jsonFiltrado, chave, selectedValues);
+            jsonFiltrado = filterJson(jsonFiltrado, filter.nome, selectedValues);
         }
 
         if (customComponent) customComponent.querySelector('.relative.z-10').classList.add('border-sky-500', 'font-semibold');
@@ -254,11 +254,11 @@ function filtrarValores() {
 }
 
 function clearFilters() {
-    filtersConfig.forEach(([chave, elementId]) => {
-        const element = document.getElementById(elementId);
+    filtersConfig.forEach(filter => {
+        const element = document.getElementById(filter.id);
         if (element) {
             Array.from(element.options).forEach(opt => opt.selected = false);
-            createCustomSelect(elementId);
+            createCustomSelect(filter.id);
         }
     });
 
@@ -273,32 +273,28 @@ function clearFilters() {
 }
 
 function filtrarPeriodo(dadosParaFiltrar) {
-    const filterElement = document.getElementById('filter-periodo')
+    const filterElement = document.getElementById('filter-periodo');
     const value = filterElement.value;
     let dataInicio, dataFim;
-
     const agora = new Date();
 
     switch (value) {
         case 'semana':
-            filterElement.classList.add('filter-active')
+            filterElement.classList.add('filter-active');
             const primeiroDia = new Date(agora);
             primeiroDia.setDate(agora.getDate() - agora.getDay() + 1);
             dataInicio = primeiroDia;
-            
             const ultimoDia = new Date(primeiroDia);
             ultimoDia.setDate(primeiroDia.getDate() + 4);
             dataFim = ultimoDia;
             break;
-        
         case 'mes':
-            filterElement.classList.add('filter-active')
+            filterElement.classList.add('filter-active');
             dataInicio = new Date(agora.getFullYear(), agora.getMonth(), 1);
             dataFim = new Date(agora.getFullYear(), agora.getMonth() + 1, 0);
             break;
-
         case 'especifico':
-            filterElement.classList.add('filter-active')
+            filterElement.classList.add('filter-active');
             const inicioInput = document.getElementById('periodo-inicio').value;
             const fimInput = document.getElementById('periodo-fim').value;
             if (inicioInput && fimInput) {
@@ -306,9 +302,8 @@ function filtrarPeriodo(dadosParaFiltrar) {
                 dataFim = new Date(fimInput);
             }
             break;
-
         default:
-            filterElement.classList.remove('filter-active')
+            filterElement.classList.remove('filter-active');
             return dadosParaFiltrar;
     }
 
