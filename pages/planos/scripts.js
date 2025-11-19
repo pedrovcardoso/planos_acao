@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     ordenarJsonAcoes(jsonAcoes);
     ordenarJsonPlanos(jsonPlanos)
 
+    setupSecaoIA()
     setupStatCards(jsonPlanos)
     fillGanttData(jsonPlanos)
     gerarCards(jsonPlanos)
@@ -333,6 +334,255 @@ function setupStatCards(planosData = window.jsonPlanos, acoesData = window.jsonA
 
 // Exemplo de chamada:
 // document.addEventListener('DOMContentLoaded', setupStatCards);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//================================================================================
+// configurações gerais para criar o gantt
+//================================================================================
+function setupSecaoIA() {
+  // ----------------------------------------------------------------
+  // 1. Constantes e Seleção de Elementos
+  // ----------------------------------------------------------------
+  const sessionStorageKey = 'aiSummaryHTML';
+
+  const aiSummarySection = document.getElementById('ai-summary-section');
+  if (!aiSummarySection) {
+      console.warn('Elemento #ai-summary-section não encontrado. A funcionalidade da IA não será carregada.');
+      return;
+  }
+
+  const elements = {
+      section: aiSummarySection,
+      content: document.getElementById('ai-summary-content'),
+      menuContainer: document.getElementById('ai-menu-container'),
+      menuButton: document.getElementById('ai-menu-button'),
+      menuDropdown: document.getElementById('ai-menu-dropdown'),
+      regenerateButton: document.getElementById('ai-regenerate'),
+      showPromptButton: document.getElementById('ai-show-prompt'),
+      // O botão de ocultar foi removido do HTML e do JS
+      promptModal: document.getElementById('prompt-modal'),
+      closeModalButton: document.getElementById('close-modal-button'),
+      promptTextContainer: document.getElementById('prompt-text-container')
+  };
+
+  const promptText = `Você é um assistente de um sistema de controle e organização de grupos de trabalho. Sua tarefa é gerar um resumo HTML conciso e informativo sobre os principais acontecimentos recentes e futuros, com base nos dados fornecidos.
+
+  **Contexto:**
+  
+  O sistema gerencia diversos grupos de trabalho, cada um com um "Plano de Ação" específico. Cada plano de ação é composto por várias "Ações" planejadas. As informações são armazenadas em dois arquivos JSON: 'jsonPlanos' e 'jsonAcoes'.
+  
+  **Estrutura dos Dados:**
+  
+  *   **'jsonPlanos'**: Contém informações sobre cada plano de ação, incluindo nome, status, datas e as pessoas envolvidas com suas respectivas unidades.
+      '''json
+      {
+          "ID": "string",
+          "Nome": "string",
+          "Status": "string",
+          "Resolução": "string",
+          "Data início": "yyyy-mm-dd",
+          "Data fim": "yyyy-mm-dd",
+          "Observações": "",
+          "Processo SEI": "string",
+          "SEI relacionados": "",
+          "Documento TCE": "string",
+          "Documentos relacionados": "string",
+          "objPessoas": [
+              {
+                  "Nome": "string",
+                  "Email": "string",
+                  "Unidade": "string",
+                  "Coordenador": "booleano"
+              }
+          ]
+      }
+      '''
+  
+  *   **'jsonAcoes'**: Detalha cada ação planejada dentro de um plano de ação, incluindo descrição, status, unidades responsáveis e prazos.
+      '''json
+      {
+          "ID": "string",
+          "Plano de ação": "string",
+          "Número da atividade": "string",
+          "Atividade": "string",
+          "Descrição da atividade": "string",
+          "Status": "string",
+          "Unidades": ["array de strings"],
+          "Data de início": "yyyy-mm-dd",
+          "Data fim": "yyyy-mm-dd",
+          "Observações": "string"
+      }
+      '''
+  
+  **Valores de Status:**
+  
+  O campo "Status" pode conter os seguintes valores:
+  *   **Em desenvolvimento**
+  *   **Planejado**
+  *   **Em curso**
+  *   **Em revisão**
+  *   **Pendente**: Indica que a atividade está em atraso.
+  *   **Implementado**: Indica que a atividade foi concluída.
+  
+  **Como relacionar os dados:**
+  
+  1.  O campo 'jsonPlanos["Nome"]' se conecta com o campo 'jsonAcoes["Plano de ação"]'.
+  2.  Para identificar os responsáveis por uma ação, utilize as unidades listadas em 'jsonAcoes["Unidades"]' e filtre as pessoas em 'jsonPlanos["objPessoas"]' que pertencem a essas unidades dentro do plano de ação correspondente.
+  
+  **Sua Tarefa:**
+  
+  Analise os dados dos dois arquivos JSON que serão fornecidos e gere um resumo dos pontos mais importantes que estão acontecendo.
+  
+  **Diretrizes para o Resumo:**
+  
+  *   **Formato de Saída:** Gere apenas o resumo em formato **HTML**.
+  *   **Tags Permitidas:** Utilize as seguintes tags HTML: '<p>', '<br>', '<b>', '<i>', '<ul>', '<li>', '<ol>'. **É recomendado o uso de listas ('<ul>', '<ol>', '<li>') para organizar as informações de forma clara.**
+  *   **Links para Planos de Ação:** Sempre que mencionar o nome de um plano de ação, ele deve estar dentro de uma tag '<a>' com o seguinte formato: '<a href="../acoes/index.html?plano_de_acao=NomePlanoEncoded">NomePlano</a>', onde 'NomePlanoEncoded' é o nome do plano codificado para URL.
+  
+  **Estrutura do Conteúdo:**
+  
+  1.  **Análise do Mês/Semestre:**
+      *   Inicie com uma única frase que transmita um "sentimento" para o período atual, com base na quantidade de ações sendo iniciadas, em curso ou concluídas. Por exemplo: "<i>Este período está movimentado, com diversas ações importantes chegando em sua fase final.</i>".
+  
+  2.  **Principais Alertas:**
+      *   Crie um parágrafo conciso para os alertas mais críticos. Destaque em negrito ('<b>') os pontos de atenção.
+      *   Mencione planos com ações próximas da data de conclusão.
+      *   Aponte planos que possuem ações com o status **Pendente**.
+      *   Informe sobre planos ou ações que foram recentemente concluídos (status **Implementado**).
+  
+  3.  **Resumo dos Acontecimentos:**
+      *   Elabore um resumo um pouco mais detalhado sobre os principais acontecimentos recentes e futuros.
+      *   Foque em ações e planos de ação cujas datas de início ou fim ocorreram aproximadamente no **último mês** ou estão previstas para o **próximo mês**.
+      *   Mencione planos de ação recém-iniciados ou finalizados, e ações importantes que estão em andamento ou prestes a começar.
+  
+  A seguir, estão os dados para sua análise. Gere apenas o resumo em formato HTML.`;
+
+
+  // ----------------------------------------------------------------
+  // 2. Funções Derivadas
+  // ----------------------------------------------------------------
+
+  /**
+   * Aplica estilos Tailwind ao HTML bruto recebido da IA.
+   * @param {string} htmlString - O HTML gerado pela IA.
+   * @returns {string} O HTML com as classes de estilo aplicadas.
+   */
+  const sanitizeAndStyleAIHtml = (htmlString) => {
+      // Cria um elemento temporário para manipular o DOM sem afetar a página
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlString;
+
+      // Adiciona classes para as listas terem marcadores
+      tempDiv.querySelectorAll('ul').forEach(ul => {
+          ul.classList.add('list-disc', 'list-inside', 'space-y-1');
+      });
+      tempDiv.querySelectorAll('ol').forEach(ol => {
+          ol.classList.add('list-decimal', 'list-inside', 'space-y-1');
+      });
+
+      // Adiciona classes para sublinhar os links
+      tempDiv.querySelectorAll('a').forEach(a => {
+          a.classList.add('underline', 'text-sky-600', 'hover:text-sky-800', 'transition-colors');
+      });
+
+      return tempDiv.innerHTML;
+  };
+
+  /**
+   * Busca o resumo da IA, aplica os estilos e salva no cache.
+   */
+  const fetchAiSummary = () => {
+      const url = 'https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM';
+      
+      elements.content.innerHTML = `<div class="flex items-center justify-center p-4"><div class="h-6 w-6 animate-spin rounded-full border-2 border-solid border-sky-600 border-t-transparent mr-3"></div><p class="text-slate-500">Gerando novo resumo, isso pode levar alguns segundos...</p></div>`;
+      
+      fetch(url)
+          .then(response => {
+              if (!response.ok) throw new Error(`Erro na rede: ${response.statusText}`);
+              return response.text();
+          })
+          .then(rawHtml => {
+              const styledHtml = sanitizeAndStyleAIHtml(rawHtml);
+              elements.content.innerHTML = styledHtml;
+              sessionStorage.setItem(sessionStorageKey, styledHtml); // Salva a versão já estilizada
+          })
+          .catch(error => {
+              console.error('Falha ao buscar o resumo da IA:', error);
+              elements.content.innerHTML = `<div class="text-center p-4 bg-red-50 text-red-700 rounded-lg"><p><b>Ocorreu um erro ao gerar o resumo.</b></p><p class="text-sm">Por favor, tente novamente mais tarde.</p></div>`;
+          });
+  };
+
+  /**
+   * Carrega o resumo, priorizando o cache da sessão.
+   */
+  const loadAiSummary = () => {
+      const cachedSummary = sessionStorage.getItem(sessionStorageKey);
+      if (cachedSummary) {
+          elements.content.innerHTML = cachedSummary;
+      } else {
+          fetchAiSummary();
+      }
+  };
+  
+  /**
+   * Configura todos os ouvintes de eventos.
+   */
+  const setupEventListeners = () => {
+      elements.menuButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          elements.menuDropdown.classList.toggle('hidden');
+      });
+
+      elements.regenerateButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          fetchAiSummary();
+          elements.menuDropdown.classList.add('hidden');
+      });
+      
+      elements.showPromptButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          elements.promptModal.classList.remove('hidden');
+          elements.menuDropdown.classList.add('hidden');
+      });
+
+      elements.closeModalButton.addEventListener('click', () => {
+          elements.promptModal.classList.add('hidden');
+      });
+      
+      elements.promptModal.addEventListener('click', (event) => {
+          if (event.target === elements.promptModal) {
+              elements.promptModal.classList.add('hidden');
+          }
+      });
+
+      window.addEventListener('click', (event) => {
+          if (!elements.menuContainer.contains(event.target)) {
+              elements.menuDropdown.classList.add('hidden');
+          }
+      });
+  };
+
+  // ----------------------------------------------------------------
+  // 3. Execução e Inicialização
+  // ----------------------------------------------------------------
+  
+  elements.promptTextContainer.textContent = promptText;
+  setupEventListeners();
+  loadAiSummary();
+}
 
 
 

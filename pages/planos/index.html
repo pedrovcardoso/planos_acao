@@ -212,7 +212,6 @@
             </div>
         </section>
         
-    
 <!--===============================================================================
 // gráfico de gantt
 ===================================================================================-->
@@ -300,6 +299,38 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                     <span>Limpar filtros</span>
                 </button>
+            </div>
+        </section>
+        
+<!--===============================================================================
+// Visão geral por IA
+===================================================================================-->
+        <section id="ai-summary-section" class="bg-white p-5 rounded-xl shadow-md border border-slate-200 transition-all duration-300 hover:shadow-lg">
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2">
+                    <ion-icon name="sparkles-outline" class="text-xl text-sky-600"></ion-icon>
+                    <h2 class="text-lg font-bold text-slate-800">Visão geral criada por IA</h2>
+                </div>
+                
+                <!-- Menu de 3 pontos (Estilo copiado dos cards) -->
+                <div id="ai-menu-container" class="relative">
+                    <button id="ai-menu-button" type="button" class="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                        </svg>
+                    </button>
+                    <div id="ai-menu-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-30">
+                        <div class="py-1">
+                            <a href="#" id="ai-regenerate" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Gerar novamente</a>
+                            <a href="#" id="ai-show-prompt" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Mais detalhes do prompt</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo gerado pela IA (classe text-sm adicionada) -->
+            <div id="ai-summary-content" class="text-slate-700 space-y-3 text-sm">
+                <!-- O loading state e o conteúdo da IA serão injetados aqui -->
             </div>
         </section>
 
@@ -484,6 +515,26 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            <!-- Modal do prompt de visãoi geral -->
+            <div id="prompt-modal"
+                class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+                    <div class="flex justify-between items-center p-4 border-b">
+                        <h3 class="text-lg font-semibold text-slate-800">Detalhes do Prompt</h3>
+                        <button id="close-modal-button"
+                            class="p-1.5 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
+                            <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+                        </button>
+                    </div>
+                    <div class="p-6 overflow-y-auto">
+                        <p class="text-sm text-slate-600 mb-4">
+                            Model: GPT-4.1 mini
+                        </p>
+                        <pre
+                            class="bg-slate-100 text-slate-800 text-xs p-4 rounded-lg whitespace-pre-wrap font-mono"><code id="prompt-text-container"></code></pre>
+                    </div>
+                </div>      
             </div>
         </section>
     </div></main>
