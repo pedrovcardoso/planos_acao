@@ -486,12 +486,21 @@ async function gerenciarNotificacaoPorData(idAcao, novaData, tipoNotificacao, ca
     const dataFormatada = new Date(dataNotificacao + 'T00:00:00').toLocaleDateString('pt-BR');
 
     const notificacoesNoDOM = getNotificationsDataFromDOM();
+
+    const existeNotificacaoIdentica = notificacoesNoDOM.some(
+        n => n.tipo === tipoNotificacao && n.data === dataNotificacao
+    );
+
+    if (existeNotificacaoIdentica) {
+        return;
+    }
+
     const existeNotificacaoDoTipo = notificacoesNoDOM.some(n => n.tipo === tipoNotificacao);
 
     if (existeNotificacaoDoTipo) {
         const confirmed = await showConfirmationNotificacaoModal({
             title: 'Atualizar Notificação?',
-            message: `Encontramos notificações do tipo "${tipoNotificacao}".<br>Deseja atualizar a data para ${dataFormatada}? (Apenas uma será mantida)`,
+            message: `Encontramos notificações do tipo "${tipoNotificacao}".<br>Deseja atualizar a data para ${dataFormatada}? <br><i class="text-slate-400">(Apenas uma será mantida)</i>`,
             confirmText: 'Sim, Atualizar'
         });
         if (confirmed) {
@@ -529,12 +538,22 @@ async function verificarNotificacaoLongoPrazo() {
         const dataFormatada = new Date(dataNotificacaoStr + 'T00:00:00').toLocaleDateString('pt-BR');
 
         const notificacoesNoDOM = getNotificationsDataFromDOM();
+
+        const existeNotificacaoIdentica = notificacoesNoDOM.some(
+            n => n.tipo === 'aviso' && n.data === dataNotificacaoStr
+        );
+
+        if (existeNotificacaoIdentica) {
+            return;
+        }
+
         const existeNotificacaoDoTipo = notificacoesNoDOM.some(n => n.tipo === 'aviso');
 
         if (existeNotificacaoDoTipo) {
+
             const confirmed = await showConfirmationNotificacaoModal({
                 title: 'Atualizar Aviso?',
-                message: `O prazo desta tarefa é longo.<br>Deseja atualizar a data dos avisos para ${dataFormatada}? (Apenas um será mantido)`,
+                message: `O prazo desta tarefa é longo.<br>Deseja atualizar a data dos avisos para ${dataFormatada}, 7 dias antes da conclusão? <br><i class="text-slate-400">(Apenas um será mantido)</i>`,
                 confirmText: 'Sim, Atualizar'
             });
             if (confirmed) {
@@ -543,7 +562,7 @@ async function verificarNotificacaoLongoPrazo() {
         } else {
             const confirmed = await showConfirmationNotificacaoModal({
                 title: 'Criar Notificação de Aviso?',
-                message: `O prazo desta tarefa é longo.<br>Deseja criar um aviso automático para o dia ${dataFormatada}?`,
+                message: `O prazo desta tarefa é longo.<br>Deseja criar um aviso automático para o dia ${dataFormatada}, 7 dias antes da conclusão?`,
                 confirmText: 'Sim, Criar Aviso'
             });
             if (confirmed) {
