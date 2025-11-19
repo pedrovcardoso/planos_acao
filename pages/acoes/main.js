@@ -395,7 +395,7 @@ function setupModalControls() {
         }
     });
     
-    document.getElementById('edit-data-inicio').addEventListener('change', async function(event) {
+    document.getElementById('edit-data-inicio').addEventListener('focusout', async function(event) {
         const id = document.getElementById('task-modal-container').dataset.taskId;
         const novaData = event.target.value;
     
@@ -403,7 +403,7 @@ function setupModalControls() {
         await verificarNotificacaoLongoPrazo();
     });
     
-    document.getElementById('edit-data-fim').addEventListener('change', async function(event) {
+    document.getElementById('edit-data-fim').addEventListener('focusout', async function(event) {
         const id = document.getElementById('task-modal-container').dataset.taskId;
         const novaData = event.target.value;
     
