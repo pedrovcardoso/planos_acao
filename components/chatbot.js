@@ -15,16 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
         chatContainer.id = 'chatbot-container';
         chatContainer.className = 'fixed bottom-5 right-5 z-50';
         chatContainer.innerHTML = `
-            <button id="chatbot-toggle-button" class="bg-sky-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-sky-700 transition-transform duration-300 hover:scale-105">
+            <button id="chatbot-toggle-button" class="bg-sky-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg hover:bg-sky-700 transition-transform duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
                 <ion-icon name="chatbubbles-outline" class="text-3xl"></ion-icon>
             </button>
-            <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-[400px] h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col transition-all duration-300 origin-bottom-right scale-95 opacity-0 border border-slate-200">
+            <div id="chatbot-window" class="hidden absolute bottom-20 right-0 w-[400px] h-[75vh] bg-white rounded-2xl shadow-2xl flex flex-col transition-all duration-300 origin-bottom-right scale-95 opacity-0 border border-slate-200">
                 <div class="flex-shrink-0 bg-slate-100 p-3 flex justify-between items-center rounded-t-2xl border-b border-slate-200">
                     <h3 class="text-lg font-bold text-slate-800">ChatBot</h3>
                     <div class="flex items-center gap-1 text-slate-500">
                         <button id="chatbot-download-btn" title="Baixar conversa" class="p-2 rounded-full hover:bg-slate-200 hover:text-slate-800 transition-colors"><ion-icon name="download-outline" class="text-xl"></ion-icon></button>
                         <button id="chatbot-expand-btn" title="Expandir" class="p-2 rounded-full hover:bg-slate-200 hover:text-slate-800 transition-colors"><ion-icon name="expand-outline" class="text-xl"></ion-icon></button>
                         <button id="chatbot-restart-btn" title="Reiniciar chat" class="p-2 rounded-full hover:bg-slate-200 hover:text-slate-800 transition-colors"><ion-icon name="refresh-outline" class="text-xl"></ion-icon></button>
+                        <button id="chatbot-close-btn" title="Fechar chat" class="p-2 rounded-full hover:bg-slate-200 hover:text-slate-800 transition-colors"><ion-icon name="close-outline" class="text-xl"></ion-icon></button>
                     </div>
                 </div>
                 <div id="chatbot-messages" class="flex-grow p-4 overflow-y-auto space-y-4"></div>
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function attachEventListeners() {
         document.getElementById('chatbot-toggle-button').addEventListener('click', toggleChat);
+        document.getElementById('chatbot-close-btn').addEventListener('click', toggleChat); // Adicione esta linha
         document.getElementById('chatbot-form').addEventListener('submit', handleSendMessage);
         document.getElementById('chatbot-restart-btn').addEventListener('click', handleRestartChat);
         document.getElementById('chatbot-download-btn').addEventListener('click', handleDownloadChat);
@@ -95,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
             windowEl.classList.remove('w-[90vw]', 'h-[80vh]');
             iconEl.setAttribute('name', 'expand-outline');
         }
+        
+        loadHistory();
     }
     
     function parseMarkdownToHTML(text) {
@@ -105,13 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/\*(.*?)\*/g, '<i>$1</i>')
             .replace(/\n/g, '<br>');
 
-        const listRegex = /(?:<br>)*(?:- (.*?)(?=<br>|$))+/g;
+        const listRegex = /(?:<br>)*(?:- (?:.*?)(?=<br>|$))+/g;
         html = html.replace(listRegex, (match) => {
-            const items = match.replace(/<br>/g, '').split('- ').filter(Boolean);
-            if (items.length === 0) return '';
-            const listItems = items.map(item => `<li>${item.trim()}</li>`).join('');
+            const lines = match.split('<br>').filter(line => line.trim().startsWith('- '));
+            if (lines.length === 0) return match; 
+
+            const listItems = lines.map(item => {
+                const content = item.trim().substring(2).trim();
+                return `<li>${content}</li>`;
+            }).join('');
+            
             return `<ul class="list-disc list-inside space-y-1">${listItems}</ul>`;
         });
+        
         return html;
     }
 
@@ -249,6 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function addMessageToUI(message) {
         const messagesContainer = document.getElementById('chatbot-messages');
         const messageDiv = document.createElement('div');
+        const maxWidthClass = state.isExpanded ? 'max-w-2xl' : 'max-w-sm';
+
         messageDiv.className = `flex gap-2.5 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`;
 
         let contentHtml = '';
@@ -273,11 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ? `<button class="regenerate-btn text-slate-400 hover:text-sky-600" title="Gerar novamente"><ion-icon name="reload-outline"></ion-icon></button>` : '';
 
         if (message.sender === 'user') {
-            messageDiv.innerHTML = `<div class="flex flex-col items-end max-w-sm">${contentHtml}${timeStampHtml}</div>`;
+            messageDiv.innerHTML = `<div class="flex flex-col items-end ${maxWidthClass}">${contentHtml}${timeStampHtml}</div>`;
         } else {
             messageDiv.innerHTML = `
                 <div class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-200 grid place-items-center"><ion-icon name="sparkles-outline" class="text-sky-600"></ion-icon></div>
-                <div class="flex flex-col items-start max-w-sm">
+                <div class="flex flex-col items-start ${maxWidthClass}">
                     ${contentHtml}
                     <div class="flex items-center gap-2 mt-1">${timeStampHtml}${regenButtonHtml}</div>
                 </div>`;
