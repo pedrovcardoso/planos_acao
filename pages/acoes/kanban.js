@@ -2,9 +2,10 @@
 const kanbanColumnsConfig = [
     { status: 'Em desenvolvimento', headerClasses: 'bg-gray-200 text-gray-800' },
     { status: 'Planejado', headerClasses: 'bg-slate-300 text-slate-800' },
-    { status: 'Pendente', headerClasses: 'bg-yellow-300 text-yellow-800' },
     { status: 'Em curso', headerClasses: 'bg-cyan-500 text-white' },
-    { status: 'Implementado', headerClasses: 'bg-green-600 text-white' }
+    { status: 'Pendente', headerClasses: 'bg-yellow-300 text-yellow-800' },
+    { status: 'Implementado', headerClasses: 'bg-green-600 text-white' },
+    { status: 'Em revisão', headerClasses: 'bg-orange-300 text-orange-900' }
 ];
 
 /**
