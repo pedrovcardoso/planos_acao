@@ -1,19 +1,19 @@
 const navEntries = performance.getEntriesByType("navigation");
 if (navEntries.length > 0) {
   const navType = navEntries[0].type;
-  console.log("Tipo de navegação:", navType); 
+  console.log("Tipo de navegação:", navType);
   // valores possíveis: "navigate", "reload", "back_forward", "prerender"
 }
 
 function toggleLoading(show) {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) {
-        if (show) {
-            loadingOverlay.classList.remove('hidden');
-        } else {
-            loadingOverlay.classList.add('hidden');
-        }
+  const loadingOverlay = document.getElementById('loading-overlay');
+  if (loadingOverlay) {
+    if (show) {
+      loadingOverlay.classList.remove('hidden');
+    } else {
+      loadingOverlay.classList.add('hidden');
     }
+  }
 }
 document.addEventListener('DOMContentLoaded', async function () {
   toggleLoading(true);
@@ -56,7 +56,7 @@ async function gerarPDFdaPagina() {
 
   // Elemento que será capturado. document.body captura a página inteira.
   const elementoParaCapturar = document.body;
-  
+
   // Esconde temporariamente o overlay de loading para não aparecer no PDF
   const loadingOverlay = document.getElementById('loading-overlay');
   if (loadingOverlay) loadingOverlay.classList.add('hidden');
@@ -70,7 +70,7 @@ async function gerarPDFdaPagina() {
       windowWidth: document.documentElement.offsetWidth,
       windowHeight: document.documentElement.scrollHeight
     });
-    
+
     console.log("Captura da página concluída, montando o PDF...");
 
     const imgData = canvas.toDataURL('image/png');
@@ -94,7 +94,7 @@ async function gerarPDFdaPagina() {
 
     let heightLeft = scaledHeight;
     let position = 0;
-    
+
     // Adiciona a primeira página
     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
     heightLeft -= pdfHeight;
@@ -106,7 +106,7 @@ async function gerarPDFdaPagina() {
       pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
       heightLeft -= pdfHeight;
     }
-    
+
     // Gera um nome de arquivo dinâmico com a data
     const dataAtual = new Date().toISOString().slice(0, 10);
     const nomeArquivo = `relatorio-planos-de-acao-${dataAtual}.pdf`;
@@ -150,12 +150,12 @@ async function gerarPDFdaPagina() {
  * @param {string | number} text - O texto a ser inserido no elemento.
  */
 function updateElementText(id, text) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.textContent = text;
-    } else {
-        console.warn(`Elemento com ID "${id}" não encontrado.`);
-    }
+  const element = document.getElementById(id);
+  if (element) {
+    element.textContent = text;
+  } else {
+    console.warn(`Elemento com ID "${id}" não encontrado.`);
+  }
 }
 
 /**
@@ -166,7 +166,7 @@ function updateElementText(id, text) {
  * @returns {string}
  */
 function pluralize(count, singular, plural) {
-    return count === 1 ? singular : plural;
+  return count === 1 ? singular : plural;
 }
 
 /**
@@ -175,10 +175,10 @@ function pluralize(count, singular, plural) {
  * @param {string} elementId - O ID do elemento a ser manipulado.
  */
 function toggleVisibility(count, elementId) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.style.display = count > 0 ? '' : 'none';
-    }
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.style.display = count > 0 ? '' : 'none';
+  }
 }
 
 
@@ -188,17 +188,17 @@ function toggleVisibility(count, elementId) {
  * @returns {string} A duração formatada.
  */
 function formatarDuracao(totalDays) {
-    if (isNaN(totalDays) || totalDays <= 0) {
-        return 'N/A';
-    }
-    const diasPorMes = 30.44;
-    if (totalDays >= diasPorMes) {
-        const meses = Math.round(totalDays / diasPorMes);
-        return `${meses} ${pluralize(meses, 'mês', 'meses')}`;
-    } else {
-        const dias = Math.round(totalDays);
-        return `${dias} ${pluralize(dias, 'dia', 'dias')}`;
-    }
+  if (isNaN(totalDays) || totalDays <= 0) {
+    return 'N/A';
+  }
+  const diasPorMes = 30.44;
+  if (totalDays >= diasPorMes) {
+    const meses = Math.round(totalDays / diasPorMes);
+    return `${meses} ${pluralize(meses, 'mês', 'meses')}`;
+  } else {
+    const dias = Math.round(totalDays);
+    return `${dias} ${pluralize(dias, 'dia', 'dias')}`;
+  }
 }
 
 /**
@@ -207,60 +207,60 @@ function formatarDuracao(totalDays) {
  * @param {Array} acoes - O array de dados das ações. Usa window.jsonAcoes como fallback.
  */
 function processPlanosData(planos = window.jsonPlanos, acoes = window.jsonAcoes) {
-    if (!planos || planos.length === 0) return;
+  if (!planos || planos.length === 0) return;
 
-    let emCurso = 0, emDesenvolvimento = 0, concluidos = 0, pendentes = 0, aIniciar = 0;
-    let totalDuracaoDias = 0, planosParaCalculoMedia = 0;
-    const idsPlanosPendentes = new Set();
+  let emCurso = 0, emDesenvolvimento = 0, concluidos = 0, pendentes = 0, aIniciar = 0;
+  let totalDuracaoDias = 0, planosParaCalculoMedia = 0;
+  const idsPlanosPendentes = new Set();
 
-    planos.forEach(plano => {
-        switch (plano.Status) {
-            case 'Em curso': emCurso++; break;
-            case 'Em desenvolvimento': emDesenvolvimento++; break;
-            case 'Implementado': concluidos++; break;
-            case 'Pendente': pendentes++; idsPlanosPendentes.add(plano.ID); break;
-            case 'Planejado': aIniciar++; break;
-        }
-        const dataInicio = new Date(plano['Data início']);
-        const dataFim = new Date(plano['Data fim']);
-        if (!isNaN(dataInicio) && !isNaN(dataFim)) {
-            const duracao = (dataFim - dataInicio) / (1000 * 60 * 60 * 24);
-            if (duracao >= 0) {
-                totalDuracaoDias += duracao;
-                planosParaCalculoMedia++;
-            }
-        }
-    });
-    
-    const acoesPendentes = acoes ? acoes.filter(acao => idsPlanosPendentes.has(acao['Plano de ação'])).length : 0;
-    const tempoMedioDias = planosParaCalculoMedia > 0 ? totalDuracaoDias / planosParaCalculoMedia : 0;
+  planos.forEach(plano => {
+    switch (plano.Status) {
+      case 'Em curso': emCurso++; break;
+      case 'Em desenvolvimento': emDesenvolvimento++; break;
+      case 'Implementado': concluidos++; break;
+      case 'Pendente': pendentes++; idsPlanosPendentes.add(plano.ID); break;
+      case 'Planejado': aIniciar++; break;
+    }
+    const dataInicio = new Date(plano['Data início']);
+    const dataFim = new Date(plano['Data fim']);
+    if (!isNaN(dataInicio) && !isNaN(dataFim)) {
+      const duracao = (dataFim - dataInicio) / (1000 * 60 * 60 * 24);
+      if (duracao >= 0) {
+        totalDuracaoDias += duracao;
+        planosParaCalculoMedia++;
+      }
+    }
+  });
 
-    // Card 1: Em curso
-    updateElementText('planos-emCurso', emCurso);
-    updateElementText('label-planos-emCurso', pluralize(emCurso, 'plano em curso', 'planos em curso'));
-    
-    // Card 2: A Ser Iniciado (com detalhe de 'Em Desenvolvimento')
-    updateElementText('planos-aIniciar', aIniciar);
-    updateElementText('label-planos-aIniciar', pluralize(aIniciar, 'plano a ser iniciado', 'planos a serem iniciados'));
-    updateElementText('planos-emDesenvolvimentoSub', emDesenvolvimento);
-    toggleVisibility(emDesenvolvimento, 'container-emDesenvolvimento');
-    
-    // Cards secundários
-    updateElementText('planos-totalCriados', planos.length);
-    updateElementText('label-totalCriados', pluralize(planos.length, 'criado', 'criados'));
-    
-    updateElementText('planos-totalConcluidosSub', concluidos);
-    updateElementText('label-totalConcluidos', pluralize(concluidos, 'concluído', 'concluídos'));
-    toggleVisibility(concluidos, 'container-concluidos');
+  const acoesPendentes = acoes ? acoes.filter(acao => idsPlanosPendentes.has(acao['Plano de ação'])).length : 0;
+  const tempoMedioDias = planosParaCalculoMedia > 0 ? totalDuracaoDias / planosParaCalculoMedia : 0;
 
-    updateElementText('planos-pendentes', pendentes);
-    updateElementText('label-pendentes', pluralize(pendentes, 'pendente', 'pendentes'));
+  // Card 1: Em curso
+  updateElementText('planos-emCurso', emCurso);
+  updateElementText('label-planos-emCurso', pluralize(emCurso, 'plano em curso', 'planos em curso'));
 
-    updateElementText('planos-acoesPendentesSub', acoesPendentes);
-    updateElementText('label-acoesPendentes', pluralize(acoesPendentes, 'ação', 'ações'));
-    toggleVisibility(acoesPendentes, 'container-acoesPendentes');
-    
-    updateElementText('planos-tempoMedio', formatarDuracao(tempoMedioDias));
+  // Card 2: A Ser Iniciado (com detalhe de 'Em Desenvolvimento')
+  updateElementText('planos-aIniciar', aIniciar);
+  updateElementText('label-planos-aIniciar', pluralize(aIniciar, 'plano a ser iniciado', 'planos a serem iniciados'));
+  updateElementText('planos-emDesenvolvimentoSub', emDesenvolvimento);
+  toggleVisibility(emDesenvolvimento, 'container-emDesenvolvimento');
+
+  // Cards secundários
+  updateElementText('planos-totalCriados', planos.length);
+  updateElementText('label-totalCriados', pluralize(planos.length, 'criado', 'criados'));
+
+  updateElementText('planos-totalConcluidosSub', concluidos);
+  updateElementText('label-totalConcluidos', pluralize(concluidos, 'concluído', 'concluídos'));
+  toggleVisibility(concluidos, 'container-concluidos');
+
+  updateElementText('planos-pendentes', pendentes);
+  updateElementText('label-pendentes', pluralize(pendentes, 'pendente', 'pendentes'));
+
+  updateElementText('planos-acoesPendentesSub', acoesPendentes);
+  updateElementText('label-acoesPendentes', pluralize(acoesPendentes, 'ação', 'ações'));
+  toggleVisibility(acoesPendentes, 'container-acoesPendentes');
+
+  updateElementText('planos-tempoMedio', formatarDuracao(tempoMedioDias));
 }
 
 /**
@@ -268,58 +268,58 @@ function processPlanosData(planos = window.jsonPlanos, acoes = window.jsonAcoes)
  * @param {Array} acoes - O array de dados das ações. Usa window.jsonAcoes como fallback.
  */
 function processAcoesData(acoes = window.jsonAcoes) {
-    if (!acoes || acoes.length === 0) return;
-    
-    let emCurso = 0, emAtraso = 0, planejadas = 0, concluidas = 0, entregasNoMes = 0;
-    let iniciamProximos30dias = 0;
+  if (!acoes || acoes.length === 0) return;
 
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
-    const data30dias = new Date();
-    data30dias.setDate(hoje.getDate() + 30);
-    
-    const mesAtual = hoje.getMonth(), anoAtual = hoje.getFullYear();
+  let emCurso = 0, emAtraso = 0, planejadas = 0, concluidas = 0, entregasNoMes = 0;
+  let iniciamProximos30dias = 0;
 
-    acoes.forEach(acao => {
-        const dataFim = new Date(acao['Data fim']);
-        if (dataFim.getMonth() === mesAtual && dataFim.getFullYear() === anoAtual) {
-            entregasNoMes++;
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const data30dias = new Date();
+  data30dias.setDate(hoje.getDate() + 30);
+
+  const mesAtual = hoje.getMonth(), anoAtual = hoje.getFullYear();
+
+  acoes.forEach(acao => {
+    const dataFim = new Date(acao['Data fim']);
+    if (dataFim.getMonth() === mesAtual && dataFim.getFullYear() === anoAtual) {
+      entregasNoMes++;
+    }
+    switch (acao.Status) {
+      case 'Em curso': emCurso++; break;
+      case 'Implementado': concluidas++; break;
+      case 'Pendente': emAtraso++; break;
+      case 'Planejado':
+        planejadas++;
+        const dataInicio = new Date(acao['Data de início']);
+        if (!isNaN(dataInicio) && dataInicio >= hoje && dataInicio <= data30dias) {
+          iniciamProximos30dias++;
         }
-        switch (acao.Status) {
-            case 'Em curso': emCurso++; break;
-            case 'Implementado': concluidas++; break;
-            case 'Pendente': emAtraso++; break;
-            case 'Planejado':
-                planejadas++;
-                const dataInicio = new Date(acao['Data de início']);
-                if (!isNaN(dataInicio) && dataInicio >= hoje && dataInicio <= data30dias) {
-                    iniciamProximos30dias++;
-                }
-                break;
-        }
-    });
+        break;
+    }
+  });
 
-    // Atualiza os cards da linha de destaque
-    updateElementText('acoes-emCurso', emCurso);
-    updateElementText('label-acoes-emCurso', pluralize(emCurso, 'ação em curso', 'ações em curso'));
-    updateElementText('acoes-entregarMesSub', entregasNoMes);
-    updateElementText('label-entregasMes', pluralize(entregasNoMes, 'entrega este mês', 'entregas este mês'));
-    toggleVisibility(entregasNoMes, 'container-entregas');
+  // Atualiza os cards da linha de destaque
+  updateElementText('acoes-emCurso', emCurso);
+  updateElementText('label-acoes-emCurso', pluralize(emCurso, 'ação em curso', 'ações em curso'));
+  updateElementText('acoes-entregarMesSub', entregasNoMes);
+  updateElementText('label-entregasMes', pluralize(entregasNoMes, 'entrega este mês', 'entregas este mês'));
+  toggleVisibility(entregasNoMes, 'container-entregas');
 
-    updateElementText('acoes-emAtraso', emAtraso);
-    updateElementText('label-acoes-emAtraso', pluralize(emAtraso, 'ação em atraso', 'ações em atraso'));
+  updateElementText('acoes-emAtraso', emAtraso);
+  updateElementText('label-acoes-emAtraso', pluralize(emAtraso, 'ação em atraso', 'ações em atraso'));
 
-    updateElementText('acoes-planejadas', planejadas);
-    updateElementText('label-acoes-aIniciar', pluralize(planejadas, 'a ser iniciada', 'a serem iniciadas'));
-    updateElementText('acoes-iniciam30dias', iniciamProximos30dias);
-    toggleVisibility(iniciamProximos30dias, 'container-iniciam30dias');
+  updateElementText('acoes-planejadas', planejadas);
+  updateElementText('label-acoes-aIniciar', pluralize(planejadas, 'a ser iniciada', 'a serem iniciadas'));
+  updateElementText('acoes-iniciam30dias', iniciamProximos30dias);
+  toggleVisibility(iniciamProximos30dias, 'container-iniciam30dias');
 
-    // Atualiza os novos cards de estatísticas
-    updateElementText('acoes-totalCriadas', acoes.length);
-    updateElementText('label-acoes-criadas', pluralize(acoes.length, 'criada', 'criadas'));
-    
-    updateElementText('acoes-totalConcluidas', concluidas);
-    updateElementText('label-acoes-concluidas', pluralize(concluidas, 'concluída', 'concluídas'));
+  // Atualiza os novos cards de estatísticas
+  updateElementText('acoes-totalCriadas', acoes.length);
+  updateElementText('label-acoes-criadas', pluralize(acoes.length, 'criada', 'criadas'));
+
+  updateElementText('acoes-totalConcluidas', concluidas);
+  updateElementText('label-acoes-concluidas', pluralize(concluidas, 'concluída', 'concluídas'));
 }
 
 /**
@@ -328,8 +328,8 @@ function processAcoesData(acoes = window.jsonAcoes) {
  * @param {Array} [acoesData=window.jsonAcoes] - Opcional. Dados das ações.
  */
 function setupStatCards(planosData = window.jsonPlanos, acoesData = window.jsonAcoes) {
-    processPlanosData(planosData, acoesData);
-    processAcoesData(acoesData);
+  processPlanosData(planosData, acoesData);
+  processAcoesData(acoesData);
 }
 
 // Exemplo de chamada:
@@ -360,22 +360,22 @@ function setupSecaoIA() {
 
   const aiSummarySection = document.getElementById('ai-summary-section');
   if (!aiSummarySection) {
-      console.warn('Elemento #ai-summary-section não encontrado. A funcionalidade da IA não será carregada.');
-      return;
+    console.warn('Elemento #ai-summary-section não encontrado. A funcionalidade da IA não será carregada.');
+    return;
   }
 
   const elements = {
-      section: aiSummarySection,
-      content: document.getElementById('ai-summary-content'),
-      menuContainer: document.getElementById('ai-menu-container'),
-      menuButton: document.getElementById('ai-menu-button'),
-      menuDropdown: document.getElementById('ai-menu-dropdown'),
-      regenerateButton: document.getElementById('ai-regenerate'),
-      showPromptButton: document.getElementById('ai-show-prompt'),
-      // O botão de ocultar foi removido do HTML e do JS
-      promptModal: document.getElementById('prompt-modal'),
-      closeModalButton: document.getElementById('close-modal-button'),
-      promptTextContainer: document.getElementById('prompt-text-container')
+    section: aiSummarySection,
+    content: document.getElementById('ai-summary-content'),
+    menuContainer: document.getElementById('ai-menu-container'),
+    menuButton: document.getElementById('ai-menu-button'),
+    menuDropdown: document.getElementById('ai-menu-dropdown'),
+    regenerateButton: document.getElementById('ai-regenerate'),
+    showPromptButton: document.getElementById('ai-show-prompt'),
+    // O botão de ocultar foi removido do HTML e do JS
+    promptModal: document.getElementById('prompt-modal'),
+    closeModalButton: document.getElementById('close-modal-button'),
+    promptTextContainer: document.getElementById('prompt-text-container')
   };
 
   const promptText = `Você é um assistente de um sistema de controle e organização de grupos de trabalho. Sua tarefa é gerar um resumo HTML conciso e informativo sobre os principais acontecimentos recentes e futuros, com base nos dados fornecidos.
@@ -481,104 +481,104 @@ function setupSecaoIA() {
    * @returns {string} O HTML com as classes de estilo aplicadas.
    */
   const sanitizeAndStyleAIHtml = (htmlString) => {
-      // Cria um elemento temporário para manipular o DOM sem afetar a página
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = htmlString;
+    // Cria um elemento temporário para manipular o DOM sem afetar a página
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlString;
 
-      // Adiciona classes para as listas terem marcadores
-      tempDiv.querySelectorAll('ul').forEach(ul => {
-          ul.classList.add('list-disc', 'list-inside', 'space-y-1');
-      });
-      tempDiv.querySelectorAll('ol').forEach(ol => {
-          ol.classList.add('list-decimal', 'list-inside', 'space-y-1');
-      });
+    // Adiciona classes para as listas terem marcadores
+    tempDiv.querySelectorAll('ul').forEach(ul => {
+      ul.classList.add('list-disc', 'list-inside', 'space-y-1');
+    });
+    tempDiv.querySelectorAll('ol').forEach(ol => {
+      ol.classList.add('list-decimal', 'list-inside', 'space-y-1');
+    });
 
-      // Adiciona classes para sublinhar os links
-      tempDiv.querySelectorAll('a').forEach(a => {
-          a.classList.add('underline', 'text-sky-600', 'hover:text-sky-800', 'transition-colors');
-      });
+    // Adiciona classes para sublinhar os links
+    tempDiv.querySelectorAll('a').forEach(a => {
+      a.classList.add('underline', 'text-sky-600', 'hover:text-sky-800', 'transition-colors');
+    });
 
-      return tempDiv.innerHTML;
+    return tempDiv.innerHTML;
   };
 
   /**
    * Busca o resumo da IA, aplica os estilos e salva no cache.
    */
   const fetchAiSummary = () => {
-      const url = 'https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM';
-      
-      elements.content.innerHTML = `<div class="flex items-center justify-center p-4"><div class="h-6 w-6 animate-spin rounded-full border-2 border-solid border-sky-600 border-t-transparent mr-3"></div><p class="text-slate-500">Gerando novo resumo, isso pode levar alguns segundos...</p></div>`;
-      
-      fetch(url)
-          .then(response => {
-              if (!response.ok) throw new Error(`Erro na rede: ${response.statusText}`);
-              return response.text();
-          })
-          .then(rawHtml => {
-              const styledHtml = sanitizeAndStyleAIHtml(rawHtml);
-              elements.content.innerHTML = styledHtml;
-              sessionStorage.setItem(sessionStorageKey, styledHtml); // Salva a versão já estilizada
-          })
-          .catch(error => {
-              console.error('Falha ao buscar o resumo da IA:', error);
-              elements.content.innerHTML = `<div class="text-center p-4 bg-red-50 text-red-700 rounded-lg"><p><b>Ocorreu um erro ao gerar o resumo.</b></p><p class="text-sm">Por favor, tente novamente mais tarde.</p></div>`;
-          });
+    const url = 'https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM';
+
+    elements.content.innerHTML = `<div class="flex items-center justify-center p-4"><div class="h-6 w-6 animate-spin rounded-full border-2 border-solid border-sky-600 border-t-transparent mr-3"></div><p class="text-slate-500">Gerando novo resumo, isso pode levar alguns segundos...</p></div>`;
+
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error(`Erro na rede: ${response.statusText}`);
+        return response.text();
+      })
+      .then(rawHtml => {
+        const styledHtml = sanitizeAndStyleAIHtml(rawHtml);
+        elements.content.innerHTML = styledHtml;
+        sessionStorage.setItem(sessionStorageKey, styledHtml); // Salva a versão já estilizada
+      })
+      .catch(error => {
+        console.error('Falha ao buscar o resumo da IA:', error);
+        elements.content.innerHTML = `<div class="text-center p-4 bg-red-50 text-red-700 rounded-lg"><p><b>Ocorreu um erro ao gerar o resumo.</b></p><p class="text-sm">Por favor, tente novamente mais tarde.</p></div>`;
+      });
   };
 
   /**
    * Carrega o resumo, priorizando o cache da sessão.
    */
   const loadAiSummary = () => {
-      const cachedSummary = sessionStorage.getItem(sessionStorageKey);
-      if (cachedSummary) {
-          elements.content.innerHTML = cachedSummary;
-      } else {
-          fetchAiSummary();
-      }
+    const cachedSummary = sessionStorage.getItem(sessionStorageKey);
+    if (cachedSummary) {
+      elements.content.innerHTML = cachedSummary;
+    } else {
+      fetchAiSummary();
+    }
   };
-  
+
   /**
    * Configura todos os ouvintes de eventos.
    */
   const setupEventListeners = () => {
-      elements.menuButton.addEventListener('click', (event) => {
-          event.stopPropagation();
-          elements.menuDropdown.classList.toggle('hidden');
-      });
+    elements.menuButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      elements.menuDropdown.classList.toggle('hidden');
+    });
 
-      elements.regenerateButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          fetchAiSummary();
-          elements.menuDropdown.classList.add('hidden');
-      });
-      
-      elements.showPromptButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          elements.promptModal.classList.remove('hidden');
-          elements.menuDropdown.classList.add('hidden');
-      });
+    elements.regenerateButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      fetchAiSummary();
+      elements.menuDropdown.classList.add('hidden');
+    });
 
-      elements.closeModalButton.addEventListener('click', () => {
-          elements.promptModal.classList.add('hidden');
-      });
-      
-      elements.promptModal.addEventListener('click', (event) => {
-          if (event.target === elements.promptModal) {
-              elements.promptModal.classList.add('hidden');
-          }
-      });
+    elements.showPromptButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      elements.promptModal.classList.remove('hidden');
+      elements.menuDropdown.classList.add('hidden');
+    });
 
-      window.addEventListener('click', (event) => {
-          if (!elements.menuContainer.contains(event.target)) {
-              elements.menuDropdown.classList.add('hidden');
-          }
-      });
+    elements.closeModalButton.addEventListener('click', () => {
+      elements.promptModal.classList.add('hidden');
+    });
+
+    elements.promptModal.addEventListener('click', (event) => {
+      if (event.target === elements.promptModal) {
+        elements.promptModal.classList.add('hidden');
+      }
+    });
+
+    window.addEventListener('click', (event) => {
+      if (!elements.menuContainer.contains(event.target)) {
+        elements.menuDropdown.classList.add('hidden');
+      }
+    });
   };
 
   // ----------------------------------------------------------------
   // 3. Execução e Inicialização
   // ----------------------------------------------------------------
-  
+
   elements.promptTextContainer.textContent = promptText;
   setupEventListeners();
   loadAiSummary();
@@ -605,154 +605,154 @@ function fillGanttData(jsonPlanos) {
   const root = document.documentElement;
   const monthWidth = parseInt(getComputedStyle(root).getPropertyValue('--month-width'))
 
-    const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    
-    const taskListContainer = document.getElementById('gantt-task-list');
-    const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
-    const monthsHeader = document.getElementById('gantt-months-header');
-    const ganttRowsContainer = document.getElementById('gantt-rows');
+  const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
-    ganttRowsContainer.innerHTML = ""
-    taskListContainer.innerHTML = "";
-    monthsHeader.innerHTML = "";
-    ganttTimelineContainer.scrollLeft = 0;
+  const taskListContainer = document.getElementById('gantt-task-list');
+  const ganttTimelineContainer = document.getElementById('gantt-timeline-container');
+  const monthsHeader = document.getElementById('gantt-months-header');
+  const ganttRowsContainer = document.getElementById('gantt-rows');
 
-//================================================================================
-// Calcula e cria as colunas de meses
-//================================================================================
-    let minDate = new Date(Math.min(
-        ...jsonPlanos
-            .filter(task => task["Data início"])
-            .map(task => new Date(task["Data início"]+'T10:00:00'))
-    ));
-    let maxDate = new Date(Math.max(
-        ...jsonPlanos
-            .filter(task => task["Data fim"] || task["Data início"])
-            .map(task => new Date(task["Data fim"] ? task["Data fim"]+'T10:00:00' : task["Data início"]+'T10:00:00'))
-    ));
+  ganttRowsContainer.innerHTML = ""
+  taskListContainer.innerHTML = "";
+  monthsHeader.innerHTML = "";
+  ganttTimelineContainer.scrollLeft = 0;
 
-    const today = new Date();
-    today.setHours(0,0,0,0);
+  //================================================================================
+  // Calcula e cria as colunas de meses
+  //================================================================================
+  let minDate = new Date(Math.min(
+    ...jsonPlanos
+      .filter(task => task["Data início"])
+      .map(task => new Date(task["Data início"] + 'T10:00:00'))
+  ));
+  let maxDate = new Date(Math.max(
+    ...jsonPlanos
+      .filter(task => task["Data fim"] || task["Data início"])
+      .map(task => new Date(task["Data fim"] ? task["Data fim"] + 'T10:00:00' : task["Data início"] + 'T10:00:00'))
+  ));
 
-    if (minDate > today) minDate = new Date(today);
-    if (maxDate < today) maxDate = new Date(today);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-    minDate.setMonth(minDate.getMonth() - 1);
-    maxDate.setMonth(maxDate.getMonth() + 2);
+  if (minDate > today) minDate = new Date(today);
+  if (maxDate < today) maxDate = new Date(today);
 
-    let firstMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
-    let currentDate = new Date(firstMonth);
-    let timelineWidth = 0;
+  minDate.setMonth(minDate.getMonth() - 1);
+  maxDate.setMonth(maxDate.getMonth() + 2);
 
-    while (currentDate <= maxDate) {
-        const monthElement = document.createElement('div');
-        monthElement.className = 'flex-shrink-0 text-center text-sm font-bold text-slate-700 uppercase tracking-wider whitespace-nowrap py-[10px] border-r border-[#e0e0e0] box-border w-[var(--month-width)]';
-        monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-        monthsHeader.appendChild(monthElement);
-        timelineWidth += monthWidth;
-        currentDate.setMonth(currentDate.getMonth() + 1);
-    }
-    ganttRowsContainer.style.width = `${timelineWidth}px`;
-    monthsHeader.style.width = `${timelineWidth}px`;
-    
-    function calculatePosition(date) {
-        const targetDate = new Date(date+'T10:00:00');
-        const year = targetDate.getFullYear();
-        const month = targetDate.getMonth();
-        const monthsDiff = (year - firstMonth.getFullYear()) * 12 + (month - firstMonth.getMonth());
-        const dayOfMonth = targetDate.getDate();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const dayOffset = (dayOfMonth / daysInMonth) * monthWidth;
-        return (monthsDiff * monthWidth) + dayOffset;
-    }
+  let firstMonth = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+  let currentDate = new Date(firstMonth);
+  let timelineWidth = 0;
 
-    const positionToday = calculatePosition(new Date().toLocaleDateString().split("/").reverse().join("-"));
-    const todayBar = document.createElement('div');
-    todayBar.id = 'todayBar';
-    todayBar.className = 'absolute h-full border-l-2 border-dashed border-[lightcoral] z-[1]';
-    ganttRowsContainer.appendChild(todayBar);
-    todayBar.style.left = `${positionToday}px`;
-    document.getElementById("todayBar").style.left = `${positionToday}px`;
-    ganttTimelineContainer.scrollLeft = positionToday - 100;
+  while (currentDate <= maxDate) {
+    const monthElement = document.createElement('div');
+    monthElement.className = 'flex-shrink-0 text-center text-sm font-bold text-slate-700 uppercase tracking-wider whitespace-nowrap py-[10px] border-r border-[#e0e0e0] box-border w-[var(--month-width)]';
+    monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    monthsHeader.appendChild(monthElement);
+    timelineWidth += monthWidth;
+    currentDate.setMonth(currentDate.getMonth() + 1);
+  }
+  ganttRowsContainer.style.width = `${timelineWidth}px`;
+  monthsHeader.style.width = `${timelineWidth}px`;
 
-//================================================================================
-// Preenche os valores no gantt
-//================================================================================
-    jsonPlanos.forEach((task, index) => {
-        const taskRow = document.createElement('div');
-        taskRow.className = 'gantt-row-task';
-        taskRow.dataset.rowIndex = index;
-        taskRow.innerHTML = `
+  function calculatePosition(date) {
+    const targetDate = new Date(date + 'T10:00:00');
+    const year = targetDate.getFullYear();
+    const month = targetDate.getMonth();
+    const monthsDiff = (year - firstMonth.getFullYear()) * 12 + (month - firstMonth.getMonth());
+    const dayOfMonth = targetDate.getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dayOffset = (dayOfMonth / daysInMonth) * monthWidth;
+    return (monthsDiff * monthWidth) + dayOffset;
+  }
+
+  const positionToday = calculatePosition(new Date().toLocaleDateString().split("/").reverse().join("-"));
+  const todayBar = document.createElement('div');
+  todayBar.id = 'todayBar';
+  todayBar.className = 'absolute h-full border-l-2 border-dashed border-[lightcoral] z-[1]';
+  ganttRowsContainer.appendChild(todayBar);
+  todayBar.style.left = `${positionToday}px`;
+  document.getElementById("todayBar").style.left = `${positionToday}px`;
+  ganttTimelineContainer.scrollLeft = positionToday - 100;
+
+  //================================================================================
+  // Preenche os valores no gantt
+  //================================================================================
+  jsonPlanos.forEach((task, index) => {
+    const taskRow = document.createElement('div');
+    taskRow.className = 'gantt-row-task';
+    taskRow.dataset.rowIndex = index;
+    taskRow.innerHTML = `
             <div>${task.Nome}</div>
             <div class="status-container"><div class="status-${(task.Status || '').replace(/\s+/g, '-')}">${task.Status || '-'}</div></div>
         `;
-        taskListContainer.appendChild(taskRow);
+    taskListContainer.appendChild(taskRow);
 
-        const rowTimeline = document.createElement('div');
-        rowTimeline.className = 'gantt-row-timeline';
-        rowTimeline.dataset.rowIndex = index;
+    const rowTimeline = document.createElement('div');
+    rowTimeline.className = 'gantt-row-timeline';
+    rowTimeline.dataset.rowIndex = index;
 
-        if(task["Data início"] && task["Data fim"]){
-            const startDate = task["Data início"]
-            const endDate = task["Data fim"]
-            const startOffset = calculatePosition(startDate);
-            const endOffset = endDate ? calculatePosition(endDate) : startOffset+10;
-            const durationWidth = endOffset - startOffset;
+    if (task["Data início"] && task["Data fim"]) {
+      const startDate = task["Data início"]
+      const endDate = task["Data fim"]
+      const startOffset = calculatePosition(startDate);
+      const endOffset = endDate ? calculatePosition(endDate) : startOffset + 10;
+      const durationWidth = endOffset - startOffset;
 
-            const bar = document.createElement('div');
-            bar.className = `absolute h-[20px] bg-[#3498db] rounded-[10px] top-1/2 -translate-y-1/2 z-[1] shadow-md`;
-            bar.style.left = `${startOffset}px`;
-            bar.style.width = `${durationWidth}px`;
-            bar.title = `${task.Nome}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
-            const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
-            bar.classList.add(task.colorTag);
+      const bar = document.createElement('div');
+      bar.className = `absolute h-[20px] bg-[#3498db] rounded-[10px] top-1/2 -translate-y-1/2 z-[1] shadow-md`;
+      bar.style.left = `${startOffset}px`;
+      bar.style.width = `${durationWidth}px`;
+      bar.title = `${task.Nome}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
+      const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
+      bar.classList.add(task.colorTag);
 
-            rowTimeline.appendChild(bar);
+      rowTimeline.appendChild(bar);
+    }
+
+    ganttRowsContainer.appendChild(rowTimeline);
+  });
+
+  //================================================================================
+  // resize das colunas
+  //================================================================================
+  const resizers = document.querySelectorAll('.gantt-tasks-header .resizer');
+  let currentResizer;
+  resizers.forEach(resizer => {
+    resizer.addEventListener('mousedown', (e) => {
+      currentResizer = e.target;
+      e.preventDefault();
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+      function onMouseMove(e) {
+        const root = document.documentElement;
+        const prevSibling = currentResizer.parentElement;
+        const rect = prevSibling.getBoundingClientRect();
+        const newWidth = e.clientX - rect.left;
+        if (newWidth > 40) {
+          const colIdentifier = prevSibling.dataset.col;
+          if (colIdentifier === 'num') {
+            root.style.setProperty('--col-num-width', `${newWidth}px`);
+          } else if (colIdentifier === 'plano') {
+            root.style.setProperty('--col-plano-width', `${newWidth}px`);
+          } else if (colIdentifier === 'atividade') {
+            root.style.setProperty('--col-atividade-width', `${newWidth}px`);
+          } else if (colIdentifier === 'status') {
+            root.style.setProperty('--col-status-width', `${newWidth}px`);
+          }
         }
-
-        ganttRowsContainer.appendChild(rowTimeline);
+      }
+      function onMouseUp() {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
     });
+  });
 
-//================================================================================
-// resize das colunas
-//================================================================================
-    const resizers = document.querySelectorAll('.gantt-tasks-header .resizer');
-    let currentResizer;
-    resizers.forEach(resizer => {
-        resizer.addEventListener('mousedown', (e) => {
-            currentResizer = e.target;
-            e.preventDefault(); 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-            function onMouseMove(e) {
-                const root = document.documentElement;
-                const prevSibling = currentResizer.parentElement;
-                const rect = prevSibling.getBoundingClientRect();
-                const newWidth = e.clientX - rect.left;
-                if (newWidth > 40) { 
-                   const colIdentifier = prevSibling.dataset.col;
-                    if (colIdentifier === 'num') {
-                        root.style.setProperty('--col-num-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'plano') {
-                        root.style.setProperty('--col-plano-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'atividade') {
-                        root.style.setProperty('--col-atividade-width', `${newWidth}px`);
-                    } else if (colIdentifier === 'status') {
-                        root.style.setProperty('--col-status-width', `${newWidth}px`);
-                    }
-                }
-            }
-            function onMouseUp() {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-        });
-    });
-
-//================================================================================
-// Cabeçalho da linha de totais do gantt
-//================================================================================
-    taskListContainer.innerHTML += `
+  //================================================================================
+  // Cabeçalho da linha de totais do gantt
+  //================================================================================
+  taskListContainer.innerHTML += `
     <div class="gantt-row-task">
       <div style="grid-column: 1 / 3; color: gray;">
         <span style="font-weight: bold;">Total de ações:</span>
@@ -763,7 +763,7 @@ function fillGanttData(jsonPlanos) {
         </select>
       </div>
     </div>`
-    
+
   document.getElementById('select-heatmap').addEventListener("change", toggleHeatMap)
 
   toggleHeatMap()
@@ -772,14 +772,14 @@ function fillGanttData(jsonPlanos) {
 //================================================================================
 // Heatmap bakground timeline
 //================================================================================
-function toggleHeatMap(){
+function toggleHeatMap() {
   const ganttRowsContainer = document.getElementById('gantt-rows');
   document.querySelectorAll(".gantt-heatmap").forEach(el => el.remove());
   document.querySelectorAll(".gantt-total-row").forEach(el => el.remove());
 
   const estilo = document.getElementById('select-heatmap').value;
 
-  if(estilo == "destivado"){
+  if (estilo == "destivado") {
     return
   }
 
@@ -788,18 +788,18 @@ function toggleHeatMap(){
   const root = document.documentElement;
   const monthWidth = parseInt(getComputedStyle(root).getPropertyValue('--month-width'))
   let minDate = new Date(Math.min(
-      ...jsonPlanos
-          .filter(task => task["Data início"])
-          .map(task => new Date(task["Data início"]+'T10:00:00'))
+    ...jsonPlanos
+      .filter(task => task["Data início"])
+      .map(task => new Date(task["Data início"] + 'T10:00:00'))
   ));
   let maxDate = new Date(Math.max(
-      ...jsonPlanos
-          .filter(task => task["Data fim"] || task["Data início"])
-          .map(task => new Date(task["Data fim"] ? task["Data fim"]+'T10:00:00' : task["Data início"]+'T10:00:00'))
+    ...jsonPlanos
+      .filter(task => task["Data fim"] || task["Data início"])
+      .map(task => new Date(task["Data fim"] ? task["Data fim"] + 'T10:00:00' : task["Data início"] + 'T10:00:00'))
   ));
 
   const today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
 
   if (minDate > today) minDate = new Date(today);
   if (maxDate < today) maxDate = new Date(today);
@@ -813,25 +813,25 @@ function toggleHeatMap(){
 
   while (heatDate <= maxDate) {
     const inicioDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth(), 1, 0, 0);
-    const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0, 23, 59, 59, 999); 
+    const fimDoMes = new Date(heatDate.getFullYear(), heatDate.getMonth() + 1, 0, 23, 59, 59, 999);
 
     let count = 0;
 
     if (estilo === "encerrando") {
-        jsonAcoes.forEach((acao, i) => {
-            if (acao["Data fim"]) {
-                const end = new Date(acao["Data fim"]+'T10:00:00');
-                if (end >= inicioDoMes && end <= fimDoMes) {
-                    count++;
-                }
-            }
-        });
-    }   else if (estilo === "acontecendo") {
+      jsonAcoes.forEach((acao, i) => {
+        if (acao["Data fim"]) {
+          const end = new Date(acao["Data fim"] + 'T10:00:00');
+          if (end >= inicioDoMes && end <= fimDoMes) {
+            count++;
+          }
+        }
+      });
+    } else if (estilo === "acontecendo") {
       // conta quem está ativo em qualquer parte do mês
       jsonAcoes.forEach(acao => {
         if (acao["Data de início"] && acao["Data fim"]) {
-          const start = new Date(acao["Data de início"]+'T10:00:00');
-          const end = new Date(acao["Data fim"]+'T10:00:00');
+          const start = new Date(acao["Data de início"] + 'T10:00:00');
+          const end = new Date(acao["Data fim"] + 'T10:00:00');
           if (start <= fimDoMes && end >= inicioDoMes) {
             count++;
           }
@@ -875,9 +875,9 @@ function toggleHeatMap(){
     monthIndex++;
   }
 
-//================================================================================
-// linha de totais
-//================================================================================
+  //================================================================================
+  // linha de totais
+  //================================================================================
   const totalRow = document.createElement('div');
   totalRow.className = 'flex absolute left-0 top-full h-[30px] bg-[#f8f8f8] border-t border-gray-300 z-[2] text-base items-center';
   totalRow.style.display = 'flex';
@@ -886,19 +886,19 @@ function toggleHeatMap(){
   let totalDate = new Date(firstMonth);
   let totalIndex = 0;
   while (totalDate <= maxDate) {
-      const key = `${totalDate.getFullYear()}-${totalDate.getMonth()}`;
-      const count = heatMap[key] || 0;
+    const key = `${totalDate.getFullYear()}-${totalDate.getMonth()}`;
+    const count = heatMap[key] || 0;
 
-      const cell = document.createElement('div');
-      cell.className = 'h-full flex items-center justify-center font-bold text-gray-500';
-      cell.style.width = `${monthWidth}px`;
-      cell.style.textAlign = 'center';
-      cell.textContent = count;
+    const cell = document.createElement('div');
+    cell.className = 'h-full flex items-center justify-center font-bold text-gray-500';
+    cell.style.width = `${monthWidth}px`;
+    cell.style.textAlign = 'center';
+    cell.textContent = count;
 
-      totalRow.appendChild(cell);
+    totalRow.appendChild(cell);
 
-      totalDate.setMonth(totalDate.getMonth() + 1);
-      totalIndex++;
+    totalDate.setMonth(totalDate.getMonth() + 1);
+    totalIndex++;
   }
   ganttRowsContainer.appendChild(totalRow);
 }
@@ -955,19 +955,19 @@ function gerarCards(jsonPlanos) {
     const statusColorMap = {
       // Baseado em #e0e0e0 (cinza neutro)
       'Em desenvolvimento': 'bg-gray-100 text-gray-700 border border-gray-200',
-      
+
       // Baseado em #cfd4da (cinza frio/azulado)
       'Planejado': 'bg-slate-100 text-slate-700 border border-slate-200',
-      
+
       // Baseado em #17a2b8 (ciano/azul)
       'Em curso': 'bg-cyan-100 text-cyan-700 border border-cyan-200',
-      
+
       // Baseado em #198754 (verde)
       'Implementado': 'bg-green-100 text-green-700 border border-green-200',
-      
+
       // Baseado em #ffdd57 (amarelo)
       'Pendente': 'bg-yellow-100 text-yellow-700 border border-yellow-200',
-    
+
       // Cor para o status Cancelado
       'Cancelado': 'bg-red-100 text-red-700 border border-red-200'
     };
@@ -976,8 +976,8 @@ function gerarCards(jsonPlanos) {
     // --- Lógica condicional para o HTML do resumo das ações ---
     let resumoAcoesHtml = ''; // Inicia como string vazia
     if (plano.Status !== 'Em desenvolvimento') {
-        // A seção só é criada se o status NÃO for 'Em desenvolvimento'
-        resumoAcoesHtml = `
+      // A seção só é criada se o status NÃO for 'Em desenvolvimento'
+      resumoAcoesHtml = `
             <div class="pt-2 border-t border-slate-200 space-y-2">
                 <!-- Números das Ações -->
                 <div class="flex justify-between items-center text-sm text-slate-500">
@@ -1015,9 +1015,9 @@ function gerarCards(jsonPlanos) {
             <!-- O menu suspenso (dropdown) -->
             <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-10">
               <div class="py-1">
-                ${plano.Status!=='Em desenvolvimento' ?
-                  `<a href="../acoes/index.html?plano_de_acao=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` :
-                  '<span class="block w-full text-left px-4 py-2 text-sm text-slate-400 cursor-not-allowed">Ver ações</span>'}
+                ${plano.Status !== 'Em desenvolvimento' ?
+        `<a href="../acoes/index.html?plano_de_acao=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` :
+        '<span class="block w-full text-left px-4 py-2 text-sm text-slate-400 cursor-not-allowed">Ver ações</span>'}
                 
                 <button type="button" 
                         class="edit-plano-button block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
@@ -1055,7 +1055,7 @@ function gerarCards(jsonPlanos) {
                 <strong class="font-medium text-slate-600">Equipe:</strong>
                 <ul class="ml-4 list-disc space-y-1 text-xs">
                   ${plano.objPessoas && plano.objPessoas.length > 0
-                    ? plano.objPessoas.map(pessoa => `
+        ? plano.objPessoas.map(pessoa => `
                       <li class="relative">
                         <span 
                           class="font-medium ${pessoa.Email ? 'text-blue-600 underline cursor-pointer' : 'text-slate-500'}" 
@@ -1065,8 +1065,8 @@ function gerarCards(jsonPlanos) {
                         ${pessoa.Coordenador ? '<span class="text-slate-500 font-medium">[Coordenador]</span>' : ''}
                       </li>
                         `).join('')
-                    : '<li class="text-slate-400">Nenhuma equipe atribuída.</li>'
-                  }
+        : '<li class="text-slate-400">Nenhuma equipe atribuída.</li>'
+      }
                 </ul>
               </div>
               <p><strong class="font-medium text-slate-600">SEI relacionados:</strong> ${plano['SEI relacionados'] || '-'}</p>
@@ -1092,7 +1092,7 @@ function gerarCards(jsonPlanos) {
       </div>
     `;
   }).join('');
-  
+
   const addCardHtml = `
       <button id="add-new-plano-button" type="button" 
               class="relative flex flex-col items-center justify-center 
@@ -1107,11 +1107,11 @@ function gerarCards(jsonPlanos) {
       </button>
     `;
 
-    container.innerHTML += addCardHtml;
+  container.innerHTML += addCardHtml;
 
-    // Ativa a interatividade dos menus e botões
-    setupAddButton();
-    setupCardMenus();
+  // Ativa a interatividade dos menus e botões
+  setupAddButton();
+  setupCardMenus();
 }
 let tooltipElement = null;
 let hideTimeout = null;
@@ -1212,11 +1212,11 @@ function cardCopyEmail(event, email) {
  * Adiciona o listener de clique ao botão "Criar Novo Plano".
  */
 function setupAddButton() {
-    const addButton = document.getElementById('add-new-plano-button');
-    if (addButton) {
-        // Chama a mesma função de abrir o modal, mas sem passar um nome de plano
-        addButton.addEventListener('click', () => {isNewPlan = true; openEditModal();});
-    }
+  const addButton = document.getElementById('add-new-plano-button');
+  if (addButton) {
+    // Chama a mesma função de abrir o modal, mas sem passar um nome de plano
+    addButton.addEventListener('click', () => { isNewPlan = true; openEditModal(); });
+  }
 }
 
 /**
@@ -1229,7 +1229,7 @@ function setupCardMenus() {
     button.addEventListener('click', (event) => {
       // Impede que o clique no botão feche o menu imediatamente (veja o listener do window)
       event.stopPropagation();
-      
+
       const dropdown = button.nextElementSibling;
       const isHidden = dropdown.classList.contains('hidden');
 
@@ -1292,7 +1292,7 @@ function setupModalUI() {
   const deleteModal = document.getElementById('delete-confirmation-modal');
   if (deleteModal) {
     const deleteBtnMap = {
-      'delete-confirm-btn-no': () => {deleteModal.classList.add('hidden'); currentPlanId = ''},
+      'delete-confirm-btn-no': () => { deleteModal.classList.add('hidden'); currentPlanId = '' },
       'delete-confirm-btn-yes': handleDelete
     };
 
@@ -1308,9 +1308,9 @@ function setupModalUI() {
 }
 
 function adicionarLinha(pessoaData = {}) {
-    const corpoTabela = document.getElementById('corpoTabelaPessoas');
-    const novaLinha = document.createElement('tr');
-    novaLinha.innerHTML = `
+  const corpoTabela = document.getElementById('corpoTabelaPessoas');
+  const novaLinha = document.createElement('tr');
+  novaLinha.innerHTML = `
         <td class="px-4 py-2 whitespace-nowrap">
           <input type="text" name="nome" value="${pessoaData.Nome || ''}" 
             class="mt-1 block w-full p-2 border border-slate-150 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500" required>
@@ -1333,31 +1333,31 @@ function adicionarLinha(pessoaData = {}) {
             <ion-icon name="trash" class="text-base"></ion-icon>
           </button>
         </td>`;
-    
-    corpoTabela.appendChild(novaLinha);
-    novaLinha.addEventListener('input', () => (hasChanges = true));
 
-    // Adiciona listener apenas ao botão recém-criado
-    novaLinha.querySelector('.remover-linha').addEventListener('click', function(e) {
-        const btn = e.currentTarget; // garante que seja o botão
-        const linha = btn.closest('tr');
-        linha.remove();
-        hasChanges = true
+  corpoTabela.appendChild(novaLinha);
+  novaLinha.addEventListener('input', () => (hasChanges = true));
 
-        const linhasRestantes = corpoTabela.querySelectorAll('tr');
-        if (linhasRestantes.length === 0) {
-            // adiciona uma linha em branco para a tabela não ficar vazia
-            adicionarLinha();
-        }
-    });
-    
+  // Adiciona listener apenas ao botão recém-criado
+  novaLinha.querySelector('.remover-linha').addEventListener('click', function (e) {
+    const btn = e.currentTarget; // garante que seja o botão
+    const linha = btn.closest('tr');
+    linha.remove();
+    hasChanges = true
+
+    const linhasRestantes = corpoTabela.querySelectorAll('tr');
+    if (linhasRestantes.length === 0) {
+      // adiciona uma linha em branco para a tabela não ficar vazia
+      adicionarLinha();
+    }
+  });
+
 }
 
 function openEditModal(planId) {
   const modal = document.getElementById('edit-modal');
   const form = document.getElementById('modal-form');
   const modalTitle = modal.querySelector('h3');
-  
+
   currentPlanId = planId;
 
   form.reset();
@@ -1380,20 +1380,20 @@ function openEditModal(planId) {
   document.body.classList.add('overflow-hidden');
 }
 
-function fillModalEdicao(planData){
+function fillModalEdicao(planData) {
   const form = document.getElementById('modal-form');
 
   const pessoas = planData.objPessoas || []
-  if(pessoas.length === 0){
+  if (pessoas.length === 0) {
     adicionarLinha()
-  } else{
+  } else {
     pessoas.forEach(pessoa => {
       adicionarLinha(pessoa)
     })
   }
-  
+
   Object.entries(planData).forEach(([key, value]) => {
-    if(key!=='objPessoas'){
+    if (key !== 'objPessoas') {
       const input = form.querySelector(`[name="${key}"]`);
       if (input) input.value = value;
     }
@@ -1401,30 +1401,105 @@ function fillModalEdicao(planData){
 }
 
 function closeEditModal(force = false) {
-    const confirmationModal = document.getElementById('confirmation-modal');
-    const editModal = document.getElementById('edit-modal');
-    const body = document.body;
+  const confirmationModal = document.getElementById('confirmation-modal');
+  const editModal = document.getElementById('edit-modal');
+  const body = document.body;
 
-    // Se houver alterações não salvas e não for forçado o fechamento, abre o modal de confirmação
-    if (hasChanges && !force) {
-        confirmationModal.classList.remove('hidden');
-        return
+  // Se houver alterações não salvas e não for forçado o fechamento, abre o modal de confirmação
+  if (hasChanges && !force) {
+    confirmationModal.classList.remove('hidden');
+    return
+  }
+
+  const form = document.getElementById('modal-form');
+  form.reset();
+
+  editModal.classList.add('hidden');
+  confirmationModal.classList.add('hidden');
+
+  document.getElementById('corpoTabelaPessoas').innerHTML = ''
+
+  hasChanges = false;
+  isNewPlan = false;
+
+  editModal.removeAttribute('data-plan-id');
+
+  body.classList.remove('overflow-hidden');
+}
+
+async function sincronizarNotificacoesComPessoasDoPlano(oldPlan, newPlan) {
+  if (!oldPlan || !newPlan || isNewPlan) return;
+
+  const oldPessoas = oldPlan.objPessoas || [];
+  const newPessoas = newPlan.objPessoas || [];
+
+  // 1. Identifica alterações individuais
+  const added = newPessoas.filter(np => !oldPessoas.some(op => op.Email === np.Email));
+  const removed = oldPessoas.filter(op => !newPessoas.some(np => np.Email === op.Email));
+  const unitChanged = newPessoas.filter(np => {
+    const op = oldPessoas.find(o => o.Email === np.Email);
+    return op && op.Unidade !== np.Unidade;
+  });
+
+  if (added.length === 0 && removed.length === 0 && unitChanged.length === 0) return;
+
+  // 2. Busca todas as ações desse plano
+  const acoesDoPlano = jsonAcoes.filter(a => a['Plano de ação'] === oldPlan.Nome);
+  if (acoesDoPlano.length === 0) return;
+
+  const notificationSaves = [];
+
+  for (const acao of acoesDoPlano) {
+    const actionUnits = acao.Unidades || [];
+    const actionNotifications = jsonNotificacoes.filter(n => n.idAcao === acao.ID && n.status === 'planejado');
+
+    for (const notif of actionNotifications) {
+      let modified = false;
+      let currentMailList = [...(notif.mailList || [])];
+
+      // Trata REMOVIDOS do plano
+      removed.forEach(p => {
+        if (currentMailList.includes(p.Email)) {
+          currentMailList = currentMailList.filter(email => email !== p.Email);
+          modified = true;
+        }
+      });
+
+      // Trata ADICIONADOS ao plano
+      added.forEach(p => {
+        // Se a unidade do novo integrante está nas unidades da ação, adiciona ele
+        if (actionUnits.includes(p.Unidade) && !currentMailList.includes(p.Email)) {
+          currentMailList.push(p.Email);
+          modified = true;
+        }
+      });
+
+      // Trata MUDANÇA DE UNIDADE
+      unitChanged.forEach(p => {
+        const isEmailInList = currentMailList.includes(p.Email);
+        const isNewUnitInAction = actionUnits.includes(p.Unidade);
+
+        if (isEmailInList && !isNewUnitInAction) {
+          // Saiu de uma unidade da ação para uma que não está na ação
+          currentMailList = currentMailList.filter(email => email !== p.Email);
+          modified = true;
+        } else if (!isEmailInList && isNewUnitInAction) {
+          // Entrou em uma unidade que está na ação
+          currentMailList.push(p.Email);
+          modified = true;
+        }
+      });
+
+      if (modified) {
+        notif.mailList = currentMailList;
+        notificationSaves.push(salvarArquivoNoOneDrive(notif.ID, 'notificacoes.txt', 'update', notif, 'jsonNotificacoes'));
+      }
     }
-    
-    const form = document.getElementById('modal-form');
-    form.reset(); 
-    
-    editModal.classList.add('hidden');
-    confirmationModal.classList.add('hidden');
+  }
 
-    document.getElementById('corpoTabelaPessoas').innerHTML = ''
-    
-    hasChanges = false;
-    isNewPlan = false;
-    
-    editModal.removeAttribute('data-plan-id'); 
-    
-    body.classList.remove('overflow-hidden');
+  if (notificationSaves.length > 0) {
+    await Promise.all(notificationSaves);
+  }
 }
 
 async function handleSave() {
@@ -1442,25 +1517,25 @@ async function handleSave() {
   const form = document.getElementById('modal-form');
   const formData = new FormData(form);
 
-  ['nome', 'email', 'unidade', 'coordenador'].forEach(v => {formData.delete(v)})
+  ['nome', 'email', 'unidade', 'coordenador'].forEach(v => { formData.delete(v) })
 
   const corpoTabela = document.getElementById('corpoTabelaPessoas');
   const linhasTabela = corpoTabela.querySelectorAll('tr');
-        const objPessoas = [];
+  const objPessoas = [];
 
-        linhasTabela.forEach(linha => {
-            const nome = linha.querySelector('input[name="nome"]').value;
-            const email = linha.querySelector('input[name="email"]').value;
-            const unidade = linha.querySelector('input[name="unidade"]').value;
-            const coordenador = linha.querySelector('input[name="coordenador"]').checked;
+  linhasTabela.forEach(linha => {
+    const nome = linha.querySelector('input[name="nome"]').value;
+    const email = linha.querySelector('input[name="email"]').value;
+    const unidade = linha.querySelector('input[name="unidade"]').value;
+    const coordenador = linha.querySelector('input[name="coordenador"]').checked;
 
-            objPessoas.push({
-                Nome: nome,
-                Email: email,
-                Unidade: unidade,
-                Coordenador: coordenador
-            });
-        });
+    objPessoas.push({
+      Nome: nome,
+      Email: email,
+      Unidade: unidade,
+      Coordenador: coordenador
+    });
+  });
 
   formData.append('objPessoas', JSON.stringify(objPessoas));
   const updatedPlan = Object.fromEntries(formData.entries());
@@ -1491,9 +1566,12 @@ async function handleSave() {
     const action = isNewPlan ? 'create' : 'update';
     const id = isNewPlan ? '' : currentPlanId;
 
+    const oldPlan = !isNewPlan ? jsonPlanos.find(p => p.ID === currentPlanId) : null;
+
     const response = await salvarArquivoNoOneDrive(id, 'planos.txt', action, updatedPlan, 'jsonPlanos');
 
     if (response?.status === 200) {
+      await sincronizarNotificacoesComPessoasDoPlano(oldPlan, updatedPlan);
       window.location.reload();
     } else {
       throw new Error(response?.message || 'Erro desconhecido ao salvar');
@@ -1507,51 +1585,51 @@ async function handleSave() {
 }
 
 async function handleDelete() {
-    const confirmButton = document.getElementById('delete-confirm-btn-yes');
-    const cancelButton = document.getElementById('delete-confirm-btn-no');
-    const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
+  const confirmButton = document.getElementById('delete-confirm-btn-yes');
+  const cancelButton = document.getElementById('delete-confirm-btn-no');
+  const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
 
-    // Estado inicial dos botões para evitar repetição
-    const originalConfirmText = confirmButton.textContent;
+  // Estado inicial dos botões para evitar repetição
+  const originalConfirmText = confirmButton.textContent;
 
-    // Desabilita botões para prevenir múltiplos cliques e indica o estado de carregamento.
-    [confirmButton, cancelButton].forEach(btn => (btn.disabled = true));
-    confirmButton.textContent = 'Excluindo...';
+  // Desabilita botões para prevenir múltiplos cliques e indica o estado de carregamento.
+  [confirmButton, cancelButton].forEach(btn => (btn.disabled = true));
+  confirmButton.textContent = 'Excluindo...';
 
-    try {
-        const response = await salvarArquivoNoOneDrive(currentPlanId, 'planos.txt', 'delete', '', 'jsonPlanos');
-        if (response.status === 200) {
-            window.location.reload();
-        } else {
-            const errorMessage = response.message || `Erro desconhecido (Status: ${response.status})`;
-            alert(`Erro ao excluir: ${errorMessage}`);
-            
-            document.getElementById('modal-btn-save').disabled = false;
-            document.getElementById('modal-btn-save').textContent = 'Salvar';
-            document.getElementById('modal-btn-cancel').disabled = false;
-            document.getElementById('modal-btn-close').disabled = false;
-        }
-    } catch (error) {
-        console.error("Falha ao excluir a tarefa:", error);
-        alert("Ocorreu um erro inesperado ao excluir a tarefa. Por favor, tente novamente.");
-    } finally {
-        [confirmButton, cancelButton].forEach(btn => (btn.disabled = false));
-        confirmButton.textContent = originalConfirmText;
-        deleteConfirmationModal.classList.add('hidden');
+  try {
+    const response = await salvarArquivoNoOneDrive(currentPlanId, 'planos.txt', 'delete', '', 'jsonPlanos');
+    if (response.status === 200) {
+      window.location.reload();
+    } else {
+      const errorMessage = response.message || `Erro desconhecido (Status: ${response.status})`;
+      alert(`Erro ao excluir: ${errorMessage}`);
+
+      document.getElementById('modal-btn-save').disabled = false;
+      document.getElementById('modal-btn-save').textContent = 'Salvar';
+      document.getElementById('modal-btn-cancel').disabled = false;
+      document.getElementById('modal-btn-close').disabled = false;
     }
+  } catch (error) {
+    console.error("Falha ao excluir a tarefa:", error);
+    alert("Ocorreu um erro inesperado ao excluir a tarefa. Por favor, tente novamente.");
+  } finally {
+    [confirmButton, cancelButton].forEach(btn => (btn.disabled = false));
+    confirmButton.textContent = originalConfirmText;
+    deleteConfirmationModal.classList.add('hidden');
+  }
 }
 
 function openDeleteConfirmationModal(idPlan) {
-    const planData = jsonPlanos.find(p => p.ID === idPlan);
+  const planData = jsonPlanos.find(p => p.ID === idPlan);
 
-    currentPlanId = idPlan
+  currentPlanId = idPlan
 
-    const modal = document.getElementById('delete-confirmation-modal');
-    const nameSpan = document.getElementById('plano-to-delete-name');
+  const modal = document.getElementById('delete-confirmation-modal');
+  const nameSpan = document.getElementById('plano-to-delete-name');
 
-    nameSpan.textContent = `"${planData.Nome}"`;
+  nameSpan.textContent = `"${planData.Nome}"`;
 
-    modal.classList.remove('hidden');
+  modal.classList.remove('hidden');
 }
 
 
@@ -1575,187 +1653,187 @@ function openDeleteConfirmationModal(idPlan) {
 // configurações gerais
 // [nome do filtro, id do select, está dentro do objPessoa]
 const filtersConfig = [
-    ["Unidade", "filter-Unidade", true],
-    ["Nome", "filter-Nome", true]
+  ["Unidade", "filter-Unidade", true],
+  ["Nome", "filter-Nome", true]
 ]
 
 function setupFilters() {
-    // adiciona eventos para todos filtros listados em filtersConfig
-    filtersConfig.forEach(([chave, elementId]) => {
-        fillFilterObjPessoas(chave)
+  // adiciona eventos para todos filtros listados em filtersConfig
+  filtersConfig.forEach(([chave, elementId]) => {
+    fillFilterObjPessoas(chave)
 
-        const el = document.getElementById(elementId)
-        if (el) {
-            el.addEventListener('change', aplicarFiltros)
-        }
+    const el = document.getElementById(elementId)
+    if (el) {
+      el.addEventListener('change', aplicarFiltros)
+    }
+  })
+
+  // período
+  document.getElementById('filter-periodo')
+    .addEventListener('change', function () {
+      const inputsDiv = document.getElementById('periodo-especifico-inputs')
+      inputsDiv.style.display = (this.value === 'especifico') ? 'flex' : 'none'
+      if (this.value !== 'especifico') aplicarFiltros()
     })
 
-    // período
-    document.getElementById('filter-periodo')
-        .addEventListener('change', function () {
-            const inputsDiv = document.getElementById('periodo-especifico-inputs')
-            inputsDiv.style.display = (this.value === 'especifico') ? 'flex' : 'none'
-            if (this.value !== 'especifico') aplicarFiltros()
-        })
-
-    // período específico
-    document.getElementById('filtrar-especifico')
-        .addEventListener('click', aplicarFiltros)
+  // período específico
+  document.getElementById('filtrar-especifico')
+    .addEventListener('click', aplicarFiltros)
 }
 
 /**
  * Normaliza string para comparação
  */
 function normalizeString(str) {
-    if (!str) return ""
-    return str
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, "_")
-        .replace(/[^\w_]/g, "")
+  if (!str) return ""
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/[^\w_]/g, "")
 }
 
 /**
  * Aplica todos os filtros ativos e atualiza as seções
  */
 function aplicarFiltros() {
-    let jsonFiltrado = [...jsonPlanos]
+  let jsonFiltrado = [...jsonPlanos]
 
-    // filtro por unidade
-    filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
-        const filterElement = document.getElementById(elementId);
-        if (!filterElement || filterElement.value === '-'){
-            filterElement.classList.remove('filter-active')
-            return;
-        } else {
-            jsonFiltrado = isObjPessoa
-                ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
-                : filterJson(jsonFiltrado, chave, filterElement.value);
-
-            filterElement.classList.add('filter-active');
-        }
-    });
-
-    // filtro por período
-    const periodoElement = document.getElementById('filter-periodo')
-    const periodo = periodoElement.value
-    if (periodo && periodo !== '-') {
-        jsonFiltrado = filtrarPorPeriodo(jsonFiltrado, periodo)
-        periodoElement.classList.add('filter-active')
+  // filtro por unidade
+  filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+    const filterElement = document.getElementById(elementId);
+    if (!filterElement || filterElement.value === '-') {
+      filterElement.classList.remove('filter-active')
+      return;
     } else {
-        periodoElement.classList.remove('filter-active')
-    }
+      jsonFiltrado = isObjPessoa
+        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
+        : filterJson(jsonFiltrado, chave, filterElement.value);
 
-    // aplica nas seções
-    fillStatCards(jsonFiltrado)
-    fillGanttData(jsonFiltrado)
-    gerarCards(jsonFiltrado)
+      filterElement.classList.add('filter-active');
+    }
+  });
+
+  // filtro por período
+  const periodoElement = document.getElementById('filter-periodo')
+  const periodo = periodoElement.value
+  if (periodo && periodo !== '-') {
+    jsonFiltrado = filtrarPorPeriodo(jsonFiltrado, periodo)
+    periodoElement.classList.add('filter-active')
+  } else {
+    periodoElement.classList.remove('filter-active')
+  }
+
+  // aplica nas seções
+  fillStatCards(jsonFiltrado)
+  fillGanttData(jsonFiltrado)
+  gerarCards(jsonFiltrado)
 }
 
 /**
  * Filtro genérico chave/valor
  */
 function filterJson(json, chave, valor) {
-    return json.filter(item => {
-        if (typeof item[chave] === "string" && typeof valor === "string") {
-            return normalizeString(item[chave]) === normalizeString(valor)
-        }
-        return item[chave] === valor
-    })
+  return json.filter(item => {
+    if (typeof item[chave] === "string" && typeof valor === "string") {
+      return normalizeString(item[chave]) === normalizeString(valor)
+    }
+    return item[chave] === valor
+  })
 }
 
 /**
  * Filtro genérico chave/valor para valores dentro do objeto pessoa
  */
 function filterJsonObjPessoa(json, chave, valor) {
-    return json.filter(item => {
-        const pessoas = item.objPessoas;
-        if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
+  return json.filter(item => {
+    const pessoas = item.objPessoas;
+    if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
 
-        // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
-        return pessoas.some(pessoa => {
-            if (typeof pessoa[chave] === "string" && typeof valor === "string") {
-                return normalizeString(pessoa[chave]) === normalizeString(valor);
-            }
-            return pessoa[chave] === valor;
-        });
+    // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
+    return pessoas.some(pessoa => {
+      if (typeof pessoa[chave] === "string" && typeof valor === "string") {
+        return normalizeString(pessoa[chave]) === normalizeString(valor);
+      }
+      return pessoa[chave] === valor;
     });
+  });
 }
 
 /**
  * Limpa filtros
  */
 function clearFilters() {
-    filtersConfig.forEach(([, elementId]) => {
-        document.getElementById(elementId).value = '-'
-    })
-    document.getElementById('filter-periodo').value = '-'
-    document.getElementById('periodo-especifico-inputs').style.display = 'none'
+  filtersConfig.forEach(([, elementId]) => {
+    document.getElementById(elementId).value = '-'
+  })
+  document.getElementById('filter-periodo').value = '-'
+  document.getElementById('periodo-especifico-inputs').style.display = 'none'
 
-    aplicarFiltros()
+  aplicarFiltros()
 }
 
 /**
  * Preenche filtro de equipe
  */
 function fillFilterObjPessoas(key) {
-    const filtro = document.getElementById(`filter-${key}`)
-    let valores = []
+  const filtro = document.getElementById(`filter-${key}`)
+  let valores = []
 
-    Object.values(jsonPlanos).forEach(item => {
-        const objPessoas = item.objPessoas || [];
-        objPessoas.forEach(pessoa => {
-            valores.push(pessoa[key]);
-        });
+  Object.values(jsonPlanos).forEach(item => {
+    const objPessoas = item.objPessoas || [];
+    objPessoas.forEach(pessoa => {
+      valores.push(pessoa[key]);
     });
+  });
 
-    valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
+  valores = [...new Set(valores)].filter(v => v.trim() !== '').sort()
 
-    valores.forEach(valor => {
-        const option = document.createElement('option')
-        option.value = normalizeString(valor)
-        option.textContent = valor
-        filtro.appendChild(option)
-    })
+  valores.forEach(valor => {
+    const option = document.createElement('option')
+    option.value = normalizeString(valor)
+    option.textContent = valor
+    filtro.appendChild(option)
+  })
 }
 
 /**
  * Filtra lista pelo período selecionado
  */
 function filtrarPorPeriodo(lista, periodo) {
-    let inicio, fim
+  let inicio, fim
 
-    if (periodo === 'mes') {
-        const now = new Date()
-        inicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0)
-        fim = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+  if (periodo === 'mes') {
+    const now = new Date()
+    inicio = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0)
+    fim = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
 
-    } else if (periodo === 'semana') {
-        const now = new Date()
-        inicio = new Date(now)
-        inicio.setDate(now.getDate() - now.getDay() + 1)
-        inicio.setHours(0, 0, 0, 0)
-        fim = new Date(inicio)
-        fim.setDate(inicio.getDate() + 4)
-        fim.setHours(23, 59, 59, 999)
+  } else if (periodo === 'semana') {
+    const now = new Date()
+    inicio = new Date(now)
+    inicio.setDate(now.getDate() - now.getDay() + 1)
+    inicio.setHours(0, 0, 0, 0)
+    fim = new Date(inicio)
+    fim.setDate(inicio.getDate() + 4)
+    fim.setHours(23, 59, 59, 999)
 
-    } else if (periodo === 'especifico') {
-        const inicioVal = document.getElementById('periodo-inicio').value
-        const fimVal = document.getElementById('periodo-fim').value
-        if (!inicioVal || !fimVal) return lista
+  } else if (periodo === 'especifico') {
+    const inicioVal = document.getElementById('periodo-inicio').value
+    const fimVal = document.getElementById('periodo-fim').value
+    if (!inicioVal || !fimVal) return lista
 
-        inicio = new Date(inicioVal); inicio.setHours(0, 0, 0, 0)
-        fim = new Date(fimVal); fim.setHours(23, 59, 59, 999)
-    }
+    inicio = new Date(inicioVal); inicio.setHours(0, 0, 0, 0)
+    fim = new Date(fimVal); fim.setHours(23, 59, 59, 999)
+  }
 
-    if (inicio && fim) {
-        return lista.filter(task => {
-            const start = new Date(task["Data início"])
-            const end = new Date(task["Data fim"])
-            return (start <= fim && end >= inicio)
-        })
-    }
+  if (inicio && fim) {
+    return lista.filter(task => {
+      const start = new Date(task["Data início"])
+      const end = new Date(task["Data fim"])
+      return (start <= fim && end >= inicio)
+    })
+  }
 
-    return lista
+  return lista
 }

@@ -1,53 +1,53 @@
 document.addEventListener('DOMContentLoaded', async function () {
-  toggleLoading(true);
+    toggleLoading(true);
 
-  try {
-    const requiredData = await obterDados(['acoes.txt', 'planos.txt', 'notificacoes.txt']);
+    try {
+        const requiredData = await obterDados(['acoes.txt', 'planos.txt', 'notificacoes.txt']);
 
-    if (!requiredData) {
-      throw new Error("Não foi possível obter os dados do projeto.");
-    }
+        if (!requiredData) {
+            throw new Error("Não foi possível obter os dados do projeto.");
+        }
 
-    jsonAcoes = requiredData['acoes.txt'];
-    jsonPlanos = requiredData['planos.txt'];
-    jsonNotificacoes = requiredData['notificacoes.txt'];
+        jsonAcoes = requiredData['acoes.txt'];
+        jsonPlanos = requiredData['planos.txt'];
+        jsonNotificacoes = requiredData['notificacoes.txt'];
 
-    ordenarJsonAcoes(jsonAcoes);
+        ordenarJsonAcoes(jsonAcoes);
 
-    function loadScript(src) {
-        return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = src;
-            script.onload = () => resolve(src);
-            script.onerror = () => reject(new Error(`Erro ao carregar script: ${src}`));
-            document.head.appendChild(script);
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => resolve(src);
+                script.onerror = () => reject(new Error(`Erro ao carregar script: ${src}`));
+                document.head.appendChild(script);
+            });
+        }
+
+        Promise.all([
+            loadScript('../../components/multiple_select.js'),
+            loadScript('../../components/custom-table.js')
+        ]).then(() => {
+            setupFilters();
+            fillGanttData(jsonAcoes);
+            populateActionsTable(jsonAcoes);
+            populateKanbanBoard(jsonAcoes);
+
+            setFilterFromUrl();
+            toggleLoading(false);
+        }).catch(err => {
+            console.error(err);
         });
-    }
 
-    Promise.all([
-        loadScript('../../components/multiple_select.js'),
-        loadScript('../../components/custom-table.js')
-    ]).then(() => {
-        setupFilters();
-        fillGanttData(jsonAcoes);
-        populateActionsTable(jsonAcoes);
-        populateKanbanBoard(jsonAcoes);
+        setupViewSwitcher();
+        setupModalControls();
+        setupGantt();
 
-        setFilterFromUrl();
+    } catch (error) {
+        console.error("Ocorreu um erro no carregamento da página:", error);
+    } finally {
         toggleLoading(false);
-    }).catch(err => {
-        console.error(err);
-    });      
-
-    setupViewSwitcher();
-    setupModalControls();
-    setupGantt();
-
-  } catch (error) {
-    console.error("Ocorreu um erro no carregamento da página:", error);
-  } finally {
-    toggleLoading(false);
-  }
+    }
 });
 
 function toggleLoading(show) {
@@ -334,7 +334,7 @@ function filtrarPeriodo(dadosParaFiltrar) {
 // LÓGICA REESTRUTURADA E FINAL DO MODAL DE AÇÕES
 // =================================================================
 
-let currentTask = null; 
+let currentTask = null;
 let courrentNotificacoesTask = {}
 let deletedNotificationIds = [];
 let hasChanges = false;
@@ -351,7 +351,7 @@ function setupModalControls() {
     document.getElementById('modal-btn-save').addEventListener('click', handleSave);
     document.getElementById('modal-btn-delete').addEventListener('click', openDeleteConfirmation);
     document.getElementById('btn-nova-atividade').addEventListener('click', openModalForNewTask)
-    
+
     // Detecta alterações no formulário
     document.getElementById('modal-edit-form').addEventListener('input', () => {
         hasChanges = true;
@@ -370,7 +370,7 @@ function setupModalControls() {
     });
     document.getElementById('delete-confirm-btn-yes').addEventListener('click', handleDeleteTask);
 
-    document.getElementById('add-notification-btn').addEventListener('click', function() {
+    document.getElementById('add-notification-btn').addEventListener('click', function () {
         createNotificacao()
         hasChanges = true;
     });
@@ -379,7 +379,7 @@ function setupModalControls() {
 
     if (!containerNotificacao) return;
 
-    containerNotificacao.addEventListener('click', function(event) {
+    containerNotificacao.addEventListener('click', function (event) {
         const deleteButton = event.target.closest('.btn-delete-notification');
         if (deleteButton) {
             const notificationToDelete = deleteButton.closest('.container-notificacao');
@@ -388,34 +388,34 @@ function setupModalControls() {
         }
     });
 
-    containerNotificacao.addEventListener('change', function(event) {
+    containerNotificacao.addEventListener('change', function (event) {
         const target = event.target;
         if (target.matches('.notification-type, .notification-date, .recipients-list input[type="checkbox"]')) {
             hasChanges = true;
         }
     });
-    
-    document.getElementById('edit-data-inicio').addEventListener('focusout', async function(event) {
+
+    document.getElementById('edit-data-inicio').addEventListener('focusout', async function (event) {
         const id = document.getElementById('task-modal-container').dataset.taskId;
         const novaData = event.target.value;
-    
+
         await gerenciarNotificacaoPorData(id, novaData, 'inicio');
         await verificarNotificacaoLongoPrazo();
     });
-    
-    document.getElementById('edit-data-fim').addEventListener('focusout', async function(event) {
+
+    document.getElementById('edit-data-fim').addEventListener('focusout', async function (event) {
         const id = document.getElementById('task-modal-container').dataset.taskId;
         const novaData = event.target.value;
-    
+
         const calcularDataPendencia = (dataFim) => {
             const data = new Date(dataFim + 'T00:00:00');
             data.setDate(data.getDate() + 1);
             return data.toISOString().split('T')[0];
         };
-        
+
         await gerenciarNotificacaoPorData(id, novaData, 'pendencia', calcularDataPendencia);
         await verificarNotificacaoLongoPrazo();
-    });       
+    });
 }
 
 function showConfirmationNotificacaoModal({ title, message, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
@@ -597,7 +597,7 @@ function populateViewMode(task) {
     };
 
     setElementText('modal-view-plano', task['Plano de ação']);
-    setElementText('modal-view-atividade', task['Número da atividade'] +' - '+ task['Atividade']);
+    setElementText('modal-view-atividade', task['Número da atividade'] + ' - ' + task['Atividade']);
     setElementText('modal-view-data-inicio', formatDate(task['Data de início']));
     setElementText('modal-view-data-fim', formatDate(task['Data fim']));
     setElementText('modal-view-descricao', task['Descrição da atividade']);
@@ -620,9 +620,9 @@ function populateViewMode(task) {
             ${unidade}
         </span>
         `;
-            });
-        } else {
-            unidadesContainer.innerHTML = `
+        });
+    } else {
+        unidadesContainer.innerHTML = `
         <span class="text-gray-500 italic">Nenhuma unidade cadastrada</span>
         `;
     }
@@ -643,8 +643,8 @@ function populateViewMode(task) {
 
 function formatarDataExtenso(isoDate) {
     const meses = [
-    "janeiro","fevereiro","março","abril","maio","junho",
-    "julho","agosto","setembro","outubro","novembro","dezembro"
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
     ];
     const [ano, mes, dia] = isoDate.split("-");
     return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
@@ -711,7 +711,17 @@ function populateViewNotificacoes(courrentNotificacoesTask) {
                         <p class="truncate font-semibold text-slate-800" title="${formatarDataExtenso(notif.data)}">
                             ${formatarDataExtenso(notif.data)}
                         </p>
-                        <p class="text-sm text-slate-500">Alerta de ${notif.tipo}</p>
+                        <div class="flex flex-col gap-1">
+                            <p class="text-sm text-slate-500">Alerta de ${notif.tipo}</p>
+                            <div class="flex">
+                            ${notif.status === 'enviado' ?
+                `<span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Enviado</span>` :
+                notif.status === 'cancelado' ?
+                    `<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-700 ring-1 ring-inset ring-red-600/20">Cancelado</span>` :
+                    ''
+            }
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -763,7 +773,7 @@ function populateViewNotificacoes(courrentNotificacoesTask) {
 function deleteNotification(notificationElement) {
     if (notificationElement) {
         const notificationId = notificationElement.dataset.notificationId;
-        
+
         // Se a notificação tinha um ID (ou seja, já existia no banco),
         // adiciona o ID à lista de exclusão.
         if (notificationId) {
@@ -785,6 +795,13 @@ function createNotificacao(notificacao = {}) {
     const status = notificacao.status || "";
     if (notificacao.ID) {
         card.dataset.notificationId = notificacao.ID;
+
+        // Armazena o estado original para comparação posterior
+        card.dataset.originalData = JSON.stringify({
+            tipo: notificacao.tipo,
+            data: notificacao.data,
+            mailList: [...(notificacao.mailList || [])].sort()
+        });
     }
 
     // --- Seletores para alternância de visibilidade ---
@@ -796,8 +813,8 @@ function createNotificacao(notificacao = {}) {
     const recipientsEditable = clone.querySelector('.recipients-list-editable');
     const recipientsSent = clone.querySelector('.recipients-list-sent');
 
-    if (status === "enviado") {
-        // --- MODO ENVIADO (Inalterado) ---
+    if (status === "enviado" || status === "cancelado") {
+        // --- MODO BLOQUEADO (Enviado ou Cancelado) ---
         actionSlot.classList.add('hidden');
         statusSlot.classList.remove('hidden');
         infoTooltip.classList.add('hidden');
@@ -805,6 +822,15 @@ function createNotificacao(notificacao = {}) {
         sentViews.forEach(el => el.classList.remove('hidden'));
         recipientsEditable.classList.add('hidden');
         recipientsSent.classList.remove('hidden');
+
+        const badge = clone.querySelector('.status-badge');
+        if (status === "enviado") {
+            badge.textContent = "Enviado";
+            badge.className = "status-badge bg-emerald-100 text-emerald-800 text-xs font-medium px-2.5 py-0.5 rounded-md";
+        } else if (status === "cancelado") {
+            badge.textContent = "Cancelado";
+            badge.className = "status-badge bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-md";
+        }
 
         const dataFormatada = notificacao.data ? new Date(notificacao.data + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
         clone.querySelector('.sent-type').textContent = notificacao.tipo.charAt(0).toUpperCase() + notificacao.tipo.slice(1);
@@ -818,7 +844,7 @@ function createNotificacao(notificacao = {}) {
                 recipientsSent.appendChild(p);
             });
         } else {
-             recipientsSent.innerHTML = '<p class="px-3 py-2 text-sm text-slate-500 italic">Nenhum destinatário.</p>';
+            recipientsSent.innerHTML = '<p class="px-3 py-2 text-sm text-slate-500 italic">Nenhum destinatário.</p>';
         }
 
     } else {
@@ -837,11 +863,38 @@ function createNotificacao(notificacao = {}) {
         // ALTERAÇÃO AQUI: Passamos a mailList para a função de popular a tabela.
         // Usamos '|| []' para garantir que sempre seja um array, mesmo para notificações novas.
         populateTabelaNotificacoes(recipientsEditable, notificacao.mailList || []);
+
+        const toggleBtn = clone.querySelector('.btn-toggle-all');
+        if (toggleBtn) {
+            const updateToggleText = () => {
+                const checkboxes = recipientsEditable.querySelectorAll('input[type="checkbox"]');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                toggleBtn.textContent = allChecked ? 'Desmarcar todos' : 'Marcar todos';
+            };
+
+            // Inicializa o texto
+            updateToggleText();
+
+            toggleBtn.onclick = () => {
+                const checkboxes = recipientsEditable.querySelectorAll('input[type="checkbox"]');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                checkboxes.forEach(cb => cb.checked = !allChecked);
+                updateToggleText();
+                hasChanges = true;
+            };
+
+            // Atualiza o texto quando qualquer checkbox individual for alterado
+            recipientsEditable.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') {
+                    updateToggleText();
+                }
+            });
+        }
     }
-    
+
     container.appendChild(clone);
     if (!notificacao.ID) {
-        hasChanges = true; 
+        hasChanges = true;
     }
 }
 
@@ -854,13 +907,13 @@ function switchToEditMode() {
     });
 
     populateEditMode(currentTask);
-    
+
     document.getElementById('modal-view-plano').classList.add('hidden');
     document.getElementById('modal-view-atividade').innerText = 'Editar Ação';
 
     document.getElementById('view-mode-content').classList.add('hidden');
     document.getElementById('view-mode-buttons').classList.add('hidden');
-    
+
     document.getElementById('edit-mode-content').classList.remove('hidden');
     document.getElementById('edit-mode-buttons').classList.remove('hidden');
 
@@ -961,25 +1014,31 @@ function atualizarUnidades(nomePlanoSelecionado, unidadesIniciais = []) {
 
     createCustomSelect('unidades-multi-select');
     onCustomSelectChange('unidades-multi-select', values => {
-        populateTabelaNotificacoes(values);
+        // Quando as unidades mudam, precisamos atualizar a lista de destinatários de todas as notificações editáveis
+        const editableLists = document.querySelectorAll('.recipients-list-editable');
+        editableLists.forEach(list => {
+            // Se a lista estiver visível (não for uma notificação já enviada/cancelada)
+            if (!list.closest('.container-notificacao').querySelector('.status-slot').classList.contains('hidden')) return;
+            populateTabelaNotificacoes(list, []);
+        });
         hasChanges = true;
     });
 }
 
 function populateTabelaNotificacoes(recipientsListElement, mailList = []) {
-    // A lógica para obter 'pessoas' permanece a mesma
     const unidades = getCustomSelectValues('unidades-multi-select') || [];
-    const taskContainer = document.getElementById('task-modal-container');
-    if (!taskContainer) return;
+    const editPlano = document.getElementById('edit-plano');
+    const nomePlano = editPlano ? editPlano.value : '';
 
-    const id = taskContainer.dataset.taskId;
-    if (!id) return;
+    if (!nomePlano) {
+        recipientsListElement.innerHTML = `<li class="p-2 text-slate-600 italic text-sm">Selecione um plano de ação primeiro.</li>`;
+        return;
+    }
 
-    const task = jsonAcoes.find(t => t.ID === id);
-    const plan = jsonPlanos.find(t => task && t.Nome === task["Plano de ação"]);
+    const plan = jsonPlanos.find(p => p.Nome === nomePlano);
     const pessoas = plan && plan.objPessoas ? plan.objPessoas.filter(p => unidades.includes(p.Unidade)) : [];
 
-    recipientsListElement.innerHTML = ''; 
+    recipientsListElement.innerHTML = '';
 
     if (pessoas.length === 0) {
         recipientsListElement.innerHTML = `<li class="p-2 text-slate-600 italic text-sm">
@@ -988,8 +1047,8 @@ function populateTabelaNotificacoes(recipientsListElement, mailList = []) {
     } else {
         // ALTERAÇÃO AQUI: A lógica de renderização do checkbox foi atualizada.
         const listItemsHTML = pessoas.map(pessoa => {
-            // Para cada pessoa, verificamos se o email dela está na mailList fornecida.
-            const isChecked = mailList.includes(pessoa.Email);
+            // Se mailList estiver vazia (notificação nova), selecionamos todos por padrão.
+            const isChecked = mailList.length === 0 ? true : mailList.includes(pessoa.Email);
 
             // Usamos a variável 'isChecked' para adicionar ou não o atributo 'checked'.
             return `
@@ -1074,7 +1133,7 @@ function openDeleteConfirmation() {
     // Popula o nome da atividade no modal de confirmação para clareza.
     const taskNameToDelete = document.getElementById('plano-to-delete-name');
     taskNameToDelete.textContent = `"${task['Atividade']}"`;
-    
+
     // Mostra o modal de confirmação de exclusão.
     document.getElementById('delete-confirmation-modal').classList.remove('hidden');
 }
@@ -1093,9 +1152,9 @@ async function handleDeleteTask() {
 
     try {
         const response = await salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '', 'jsonAcoes');
-        if(response.status === 200){
+        if (response.status === 200) {
             console.log('arquivo acoes.txt salvo com sucesso');
-        } else if(response.status === 400){
+        } else if (response.status === 400) {
             alert(`Erro ao salvar: ${response.message}`);
             document.getElementById('modal-btn-save').disabled = false;
             document.getElementById('modal-btn-save').textContent = 'Salvar';
@@ -1130,7 +1189,7 @@ function closeModal(force = false) {
     confirmationModal.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
 
-    currentTask = null; 
+    currentTask = null;
     courrentNotificacoesTask = {}
     hasChanges = false;
     isNewTaskMode = false
@@ -1141,8 +1200,8 @@ function clearEditForm() {
     form.reset();
 
     document.getElementById('task-modal-container').removeAttribute('data-task-id')
-    
-    document.getElementById('edit-status'). value = 'Selecione um valor'
+
+    document.getElementById('edit-status').value = 'Selecione um valor'
 
     const container = document.getElementById("notifications-edit-list");
     [...container.children].forEach(child => {
@@ -1175,7 +1234,7 @@ function getNotificationsDataFromDOM() {
 
         // --- ETAPA 2: EXTRAIR DADOS (APENAS DE CARDS EDITÁVEIS) ---
         const notificationId = element.dataset.notificationId || null;
-        
+
         // Lê os valores dos inputs que estão na visão editável.
         const tipo = element.querySelector('.notification-type').value;
         const data = element.querySelector('.notification-date').value;
@@ -1186,22 +1245,33 @@ function getNotificationsDataFromDOM() {
         const mailList = Array.from(recipientCheckboxes).map(checkbox => {
             const label = checkbox.closest('label');
             if (label) {
-                // A estrutura para encontrar o e-mail dentro do label permanece a mesma.
-                const emailElement = label.querySelector('p.text-slate-600'); 
+                const emailElement = label.querySelector('p.text-slate-600');
                 return emailElement ? emailElement.textContent.trim() : null;
             }
             return null;
         }).filter(email => email !== null);
 
-        // Monta o objeto final com os dados da notificação editável.
-        notificationsData.push({
-            ID: notificationId,
-            idAcao: document.getElementById('task-modal-container').getAttribute('data-task-id'),
+        // --- ETAPA 3: VERIFICAR ALTERAÇÕES ---
+        const currentData = {
             tipo: tipo,
             data: data,
-            mailList: mailList,
-            status: "planejado"
-        });
+            mailList: [...mailList].sort()
+        };
+
+        const isNew = !notificationId;
+        const originalDataStr = element.dataset.originalData;
+        const hasBeenModified = isNew || (originalDataStr !== JSON.stringify(currentData));
+
+        if (hasBeenModified) {
+            notificationsData.push({
+                ID: notificationId,
+                idAcao: document.getElementById('task-modal-container').getAttribute('data-task-id'),
+                tipo: tipo,
+                data: data,
+                mailList: mailList,
+                status: "planejado"
+            });
+        }
     });
 
     return notificationsData;
@@ -1251,7 +1321,20 @@ async function handleSave() {
             throw new Error(message);
         }
 
+        // Se era uma tarefa nova, precisamos do novo ID para as notificações
+        let actionId = id;
+        if (isNewTaskMode) {
+            // Buscamos no jsonAcoes atualizado a tarefa que acabou de ser criada
+            const newTask = jsonAcoes.find(t => t['Atividade'] === taskData['Atividade'] && t['Número da atividade'] === taskData['Número da atividade']);
+            if (newTask) {
+                actionId = newTask.ID;
+            }
+        }
+
         for (const notification of notificationsData) {
+            // Vincula a notificação ao ID correto da ação
+            notification.idAcao = actionId;
+
             const notificationId = notification.ID || '';
             const mode = notificationId ? 'update' : 'create';
             const response = await salvarArquivoNoOneDrive(notificationId, 'notificacoes.txt', mode, notification, 'jsonNotificacoes');
