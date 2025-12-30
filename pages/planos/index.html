@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,543 +8,631 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel='stylesheet' href='styles.css'>
 </head>
+
 <body class="bg-slate-100 flex flex-col min-h-screen">
-    <div id="loading-overlay" class="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center">
-        <div class="h-10 w-10 animate-spin rounded-full border-4 border-solid border-sky-600 border-t-transparent"></div>
-        
+    <div id="loading-overlay"
+        class="fixed inset-0 z-50 bg-white/10 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-solid border-sky-600 border-t-transparent">
+        </div>
+
         <p class="mt-4 text-lg font-semibold text-slate-700">Buscando dados no OneDrive...</p>
     </div>
 
     <header id="header"></header>
-<!--===============================================================================
+    <!--===============================================================================
 // stat cards, destaques principais
 ===================================================================================-->
-    <main class="flex-grow pt-16"><div class="grid p-6 md:py-5 md:px-8 gap-6">
-        <section class="main-container grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- ======================= PLANOS DE AÇÃO ======================= -->
-            <div class="space-y-3" aria-labelledby="title-planos">
-                <h2 id="title-planos" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Planos de Ação</h2>
-        
-                <!-- Linha 1: Destaques -->
-                <div class="grid grid-cols-2 gap-3">
-                    <!-- Em curso -->
-                    <div
-                        class="rounded-xl p-4 shadow-xl ring-1 ring-amber-100 bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border h-full flex items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
-                                <ion-icon name="layers-outline" class="text-xl text-amber-600"></ion-icon>
+    <main class="flex-grow pt-16">
+        <div class="grid p-6 md:py-5 md:px-8 gap-6">
+            <section class="main-container grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- ======================= PLANOS DE AÇÃO ======================= -->
+                <div class="space-y-3" aria-labelledby="title-planos">
+                    <h2 id="title-planos" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Planos de
+                        Ação</h2>
+
+                    <!-- Linha 1: Destaques -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Em curso -->
+                        <div
+                            class="rounded-xl p-4 shadow-xl ring-1 ring-amber-100 bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border h-full flex items-center">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="h-8 w-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                                    <ion-icon name="layers-outline" class="text-xl text-amber-600"></ion-icon>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-slate-800">
+                                        <span id="planos-emCurso" class="text-2xl font-bold">0</span>
+                                        <span id="label-planos-emCurso" class="text-sm font-medium ml-1">planos em
+                                            curso</span>
+                                    </p>
+                                </div>
                             </div>
-                            <div class="min-w-0">
-                                <p class="text-slate-800">
-                                    <span id="planos-emCurso" class="text-2xl font-bold">0</span>
-                                    <span id="label-planos-emCurso" class="text-sm font-medium ml-1">planos em curso</span>
-                                </p>
+                        </div>
+                        <!-- A Ser Iniciado -->
+                        <div
+                            class="rounded-xl p-4 shadow-xl ring-1 ring-sky-100 bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border h-full flex items-center">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="h-8 w-8 rounded-lg bg-sky-100 flex items-center justify-center flex-shrink-0">
+                                    <ion-icon name="calendar-outline" class="text-xl text-sky-600"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="planos-aIniciar" class="text-2xl font-bold">0</span>
+                                        <span id="label-planos-aIniciar" class="text-sm font-medium ml-1">a ser
+                                            iniciado</span>
+                                    </p>
+                                    <p id="container-emDesenvolvimento" class="text-xs text-slate-600 -mt-0.5">
+                                        <span id="planos-emDesenvolvimentoSub" class="font-medium">0</span>
+                                        em desenvolvimento
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- A Ser Iniciado -->
-                    <div
-                        class="rounded-xl p-4 shadow-xl ring-1 ring-sky-100 bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border h-full flex items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-sky-100 flex items-center justify-center flex-shrink-0">
-                                <ion-icon name="calendar-outline" class="text-xl text-sky-600"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="planos-aIniciar" class="text-2xl font-bold">0</span>
-                                    <span id="label-planos-aIniciar" class="text-sm font-medium ml-1">a ser iniciado</span>
-                                </p>
-                                <p id="container-emDesenvolvimento" class="text-xs text-slate-600 -mt-0.5">
-                                    <span id="planos-emDesenvolvimentoSub" class="font-medium">0</span>
-                                    em desenvolvimento
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        
-                <!-- Linha 2: Estatísticas secundárias -->
-                <div class="grid grid-cols-3 gap-3">
-                    <!-- Criados -->
-                    <div
-                        class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-indigo-50 grid place-items-center flex-shrink-0">
-                                <ion-icon name="albums-outline" class="text-lg text-indigo-700"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="planos-totalCriados" class="text-xl font-bold">0</span>
-                                    <span id="label-totalCriados" class="text-sm ml-1">criados</span>
-                                </p>
+
+                    <!-- Linha 2: Estatísticas secundárias -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <!-- Criados -->
+                        <div
+                            class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-indigo-50 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="albums-outline" class="text-lg text-indigo-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="planos-totalCriados" class="text-xl font-bold">0</span>
+                                        <span id="label-totalCriados" class="text-sm ml-1">criados</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Pendentes -->
-                    <div
-                        class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-rose-50 grid place-items-center flex-shrink-0">
-                                <ion-icon name="time-outline" class="text-lg text-rose-700"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="planos-pendentes" class="text-xl font-bold">0</span>
-                                    <span id="label-pendentes" class="text-sm ml-1">pendentes</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Tempo Médio -->
-                    <div
-                        class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-cyan-50 grid place-items-center flex-shrink-0">
-                                <ion-icon name="timer-outline" class="text-lg text-cyan-700"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="planos-tempoMedio" class="text-xl font-bold">N/A</span>
-                                </p>
-                                <p class="text-xs text-slate-600 -mt-0.5">tempo médio de duração</p>
+                        <!-- Pendentes -->
+                        <div
+                            class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-rose-50 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="time-outline" class="text-lg text-rose-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="planos-pendentes" class="text-xl font-bold">0</span>
+                                        <span id="label-pendentes" class="text-sm ml-1">pendentes</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        
-            <!-- ======================= AÇÕES ======================= -->
-            <div class="space-y-3" aria-labelledby="title-acoes">
-                <h2 id="title-acoes" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Ações</h2>
-        
-                <!-- Linha 1: Destaques -->
-                <div class="grid grid-cols-3 gap-3">
-                    <!-- Em curso -->
-                    <div
-                        class="rounded-xl p-3 shadow-lg ring-1 ring-amber-100 bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border h-full flex items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-amber-100 grid place-items-center flex-shrink-0">
-                                <ion-icon name="layers-outline" class="text-lg text-amber-700"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="acoes-emCurso" class="text-2xl font-bold">0</span>
-                                    <span id="label-acoes-emCurso" class="text-sm font-medium ml-1">ações em curso</span>
-                                </p>
-                                <p id="container-entregas" class="text-xs text-slate-600">
-                                    <span id="acoes-entregarMesSub" class="font-medium">0</span>
-                                    <span id="label-entregasMes">entregas este mês</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Em atraso -->
-                    <div
-                        class="rounded-xl p-3 shadow-lg ring-1 ring-rose-100 bg-gradient-to-r from-white to-rose-50 print:shadow-none print:bg-white print:border h-full flex items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-rose-100 grid place-items-center flex-shrink-0">
-                                <ion-icon name="time-outline" class="text-lg text-rose-700"></ion-ikcon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="acoes-emAtraso" class="text-2xl font-bold">0</span>
-                                    <span id="label-acoes-emAtraso" class="text-sm font-medium ml-1">em atraso</span>
-                                </p>
-                                <!-- AQUI ESTÁ A MUDANÇA -->
-                                <a href="../acoes/index.html?status=Pendente" class="text-xs text-sky-600 hover:underline">Visualizar
-                                    detalhes</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- A Ser Iniciado -->
-                    <div
-                        class="rounded-xl p-3 shadow-lg ring-1 ring-sky-100 bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border h-full flex items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-sky-100 grid place-items-center flex-shrink-0">
-                                <ion-icon name="calendar-outline" class="text-lg text-sky-700"></ion-icon>
-                            </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="acoes-planejadas" class="text-2xl font-bold">0</span>
-                                    <span id="label-acoes-aIniciar" class="text-sm font-medium ml-1">a ser iniciada</span>
-                                </p>
-                                <p id="container-iniciam30dias" class="text-xs text-slate-600">
-                                    <span id="acoes-iniciam30dias" class="font-medium">0</span>
-                                    <span id="label-iniciam30dias">nos próximos 30 dias</span>
-                                </p>
+                        <!-- Tempo Médio -->
+                        <div
+                            class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-cyan-50 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="timer-outline" class="text-lg text-cyan-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="planos-tempoMedio" class="text-xl font-bold">N/A</span>
+                                    </p>
+                                    <p class="text-xs text-slate-600 -mt-0.5">tempo médio de duração</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-        
-                <!-- Linha 2: Estatísticas secundárias -->
-                <div class="grid grid-cols-2 gap-3">
-                    <!-- Criadas -->
-                    <div
-                        class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-indigo-50 grid place-items-center flex-shrink-0">
-                                <ion-icon name="albums-outline" class="text-lg text-indigo-700"></ion-icon>
+
+                <!-- ======================= AÇÕES ======================= -->
+                <div class="space-y-3" aria-labelledby="title-acoes">
+                    <h2 id="title-acoes" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Ações</h2>
+
+                    <!-- Linha 1: Destaques -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <!-- Em curso -->
+                        <div
+                            class="rounded-xl p-3 shadow-lg ring-1 ring-amber-100 bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border h-full flex items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-amber-100 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="layers-outline" class="text-lg text-amber-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="acoes-emCurso" class="text-2xl font-bold">0</span>
+                                        <span id="label-acoes-emCurso" class="text-sm font-medium ml-1">ações em
+                                            curso</span>
+                                    </p>
+                                    <p id="container-entregas" class="text-xs text-slate-600">
+                                        <span id="acoes-entregarMesSub" class="font-medium">0</span>
+                                        <span id="label-entregasMes">entregas este mês</span>
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="acoes-totalCriadas" class="text-xl font-bold">0</span>
-                                    <span id="label-acoes-criadas" class="text-sm ml-1">criadas</span>
-                                </p>
+                        </div>
+                        <!-- Em atraso -->
+                        <div
+                            class="rounded-xl p-3 shadow-lg ring-1 ring-rose-100 bg-gradient-to-r from-white to-rose-50 print:shadow-none print:bg-white print:border h-full flex items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-rose-100 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="time-outline" class="text-lg text-rose-700"></ion-ikcon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="acoes-emAtraso" class="text-2xl font-bold">0</span>
+                                        <span id="label-acoes-emAtraso" class="text-sm font-medium ml-1">em
+                                            atraso</span>
+                                    </p>
+                                    <!-- AQUI ESTÁ A MUDANÇA -->
+                                    <a href="../acoes/index.html?status=Pendente"
+                                        class="text-xs text-sky-600 hover:underline">Visualizar
+                                        detalhes</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- A Ser Iniciado -->
+                        <div
+                            class="rounded-xl p-3 shadow-lg ring-1 ring-sky-100 bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border h-full flex items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-sky-100 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="calendar-outline" class="text-lg text-sky-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="acoes-planejadas" class="text-2xl font-bold">0</span>
+                                        <span id="label-acoes-aIniciar" class="text-sm font-medium ml-1">a ser
+                                            iniciada</span>
+                                    </p>
+                                    <p id="container-iniciam30dias" class="text-xs text-slate-600">
+                                        <span id="acoes-iniciam30dias" class="font-medium">0</span>
+                                        <span id="label-iniciam30dias">nos próximos 30 dias</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Concluídas -->
-                    <div
-                        class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
-                        <div class="flex items-center gap-3">
-                            <div class="h-8 w-8 rounded-lg bg-green-100 grid place-items-center flex-shrink-0">
-                                <ion-icon name="checkmark-done-outline" class="text-lg text-green-700"></ion-icon>
+
+                    <!-- Linha 2: Estatísticas secundárias -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Criadas -->
+                        <div
+                            class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-indigo-50 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="albums-outline" class="text-lg text-indigo-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="acoes-totalCriadas" class="text-xl font-bold">0</span>
+                                        <span id="label-acoes-criadas" class="text-sm ml-1">criadas</span>
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-slate-800">
-                                    <span id="acoes-totalConcluidas" class="text-xl font-bold">0</span>
-                                    <span id="label-acoes-concluidas" class="text-sm ml-1">concluídas</span>
-                                </p>
+                        </div>
+                        <!-- Concluídas -->
+                        <div
+                            class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
+                            <div class="flex items-center gap-3">
+                                <div class="h-8 w-8 rounded-lg bg-green-100 grid place-items-center flex-shrink-0">
+                                    <ion-icon name="checkmark-done-outline" class="text-lg text-green-700"></ion-icon>
+                                </div>
+                                <div>
+                                    <p class="text-slate-800">
+                                        <span id="acoes-totalConcluidas" class="text-xl font-bold">0</span>
+                                        <span id="label-acoes-concluidas" class="text-sm ml-1">concluídas</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        
-<!--===============================================================================
+            </section>
+
+            <!--===============================================================================
 // gráfico de gantt
 ===================================================================================-->
-        <section id="gantt">
-            <div class="grid grid-cols-[auto_1fr] overflow-hidden bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
-                <div class="gantt-tasks">
-                    <div class="gantt-tasks-header">
-                        <div data-col="plano">Plano de ação<div class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20"></div></div>
-                        <div data-col="status" class="status-header">Status<div class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20"></div></div>
+            <section id="gantt">
+                <div
+                    class="grid grid-cols-[auto_1fr] overflow-hidden bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
+                    <div class="gantt-tasks">
+                        <div class="gantt-tasks-header">
+                            <div data-col="plano">Plano de ação<div
+                                    class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20">
+                                </div>
+                            </div>
+                            <div data-col="status" class="status-header">Status<div
+                                    class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="gantt-task-list"></div>
                     </div>
-                    <div id="gantt-task-list"></div>
-                </div>
-                <div class="gantt-timeline" id="gantt-timeline-container">
-                    <div class="gantt-months-header" id="gantt-months-header"></div>
-                    <div class="relative" id="gantt-rows">
-                        <div id="todayBar"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-<!--===============================================================================
-// cards de planos de ação
-===================================================================================-->
-        <section id="cards">
-            <div class="card-container 
-                        grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-        </section>
-
-<!--===============================================================================
-// painel de filtros
-===================================================================================-->
-        <section id="filters-container" class="bg-white p-4 rounded-xl shadow-md">
-            <h2 class="text-base font-semibold text-slate-700 mb-3">Painel de filtros</h2>
-
-            <div class="flex flex-wrap items-end gap-x-8 gap-y-3">
-            <div class="flex flex-wrap items-end gap-x-8 gap-y-3">
-                <!-- Filtro de Período -->
-                <div class="flex flex-col w-full sm:w-48">
-                    <label for="filter-periodo" class="text-xs font-medium text-slate-600 mb-1">Período</label>
-                    <select id="filter-periodo" class="w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
-                        <option selected disabled hidden value="-">Selecione</option>
-                        <option value="mes">Este mês</option>
-                        <option value="semana">Esta semana</option>
-                        <option value="especifico">Período específico</option>
-                    </select>
-                </div>
-            
-                <!-- Inputs de Período Específico -->
-                <div id="periodo-especifico-inputs" class="hidden flex items-end gap-2 w-full sm:w-auto">
-                    <div>
-                        <label for="periodo-inicio" class="text-xs font-medium text-slate-600 mb-1">Início</label>
-                        <input type="date" id="periodo-inicio" class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 transition duration-150 hover:border-slate-400" />
-                    </div>
-                    <div>
-                        <label for="periodo-fim" class="text-xs font-medium text-slate-600 mb-1">Fim</label>
-                        <input type="date" id="periodo-fim" class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 transition duration-150 hover:border-slate-400" />
-                    </div>
-                    <div id="filtrar-especifico" class="cursor-pointer bg-sky-600 text-white font-semibold text-sm rounded-md px-3 py-2 whitespace-nowrap hover:bg-sky-700 transition-colors">
-                        Filtrar
-                    </div>
-                </div>
-
-                <!-- quebra de linha -->
-                <div class="w-full"></div>
-
-                <div class="flex flex-col w-full md:w-56">
-                    <label for="filter-Unidade" class="block text-sm font-medium text-slate-700 mb-1">Unidade</label>
-                    <select id="filter-Unidade" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
-                        <option selected disabled hidden value='-'>Selecione</option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col w-full md:w-56">
-                    <label for="filter-Nome" class="block text-sm font-medium text-slate-700 mb-1">Pessoa</label>
-                    <select id="filter-Nome" class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
-                        <option selected disabled hidden value='-'>Selecione</option>
-                    </select>
-                </div>
-
-                <div class="w-full"></div>
-                
-                <!-- Botão de Limpar -->
-                <button onclick="clearFilters()" class="flex items-center gap-1.5 bg-transparent text-slate-500 font-medium text-sm rounded-md px-3 py-2 hover:bg-slate-100 hover:text-slate-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    <span>Limpar filtros</span>
-                </button>
-            </div>
-        </section>
-        
-<!--===============================================================================
-// Visão geral por IA
-===================================================================================-->
-        <section id="ai-summary-section" class="bg-white p-5 rounded-xl shadow-md border border-slate-200 transition-all duration-300 hover:shadow-lg">
-            <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center gap-2">
-                    <ion-icon name="sparkles-outline" class="text-xl text-sky-600"></ion-icon>
-                    <h2 class="text-lg font-bold text-slate-800">Visão geral criada por IA</h2>
-                </div>
-                
-                <!-- Menu de 3 pontos (Estilo copiado dos cards) -->
-                <div id="ai-menu-container" class="relative">
-                    <button id="ai-menu-button" type="button" class="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
-                        </svg>
-                    </button>
-                    <div id="ai-menu-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-30">
-                        <div class="py-1">
-                            <a href="#" id="ai-regenerate" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Gerar novamente</a>
-                            <a href="#" id="ai-show-prompt" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Mais detalhes do prompt</a>
+                    <div class="gantt-timeline" id="gantt-timeline-container">
+                        <div class="gantt-months-header" id="gantt-months-header"></div>
+                        <div class="relative" id="gantt-rows">
+                            <div id="todayBar"></div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Conteúdo gerado pela IA (classe text-sm adicionada) -->
-            <div id="ai-summary-content" class="text-slate-700 space-y-3 text-sm">
-                <!-- O loading state e o conteúdo da IA serão injetados aqui -->
-            </div>
-        </section>
-
-<!--===============================================================================
-// modal
+            <!--===============================================================================
+// cards de planos de ação
 ===================================================================================-->
-        <section id="modal">
-            <!-- Modal de edição -->
-            <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-                    <!-- Cabeçalho do Modal -->
-                    <div class="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
-                        <h3 class="text-xl font-bold text-slate-800">Editar Plano de Ação</h3>
-                        <button id="modal-btn-close" type="button" class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                            <ion-icon name="close-outline" class="text-2xl"></ion-icon>
-                        </button>
+            <section id="cards">
+                <div class="card-container 
+                        grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+            </section>
+
+            <!--===============================================================================
+// painel de filtros
+===================================================================================-->
+            <section id="filters-container" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                        <ion-icon name="filter" class="text-base"></ion-icon> Painel de Filtros
+                    </h2>
+                    <button onclick="clearFilters()"
+                        class="text-xs font-medium text-slate-400 hover:text-sky-600 flex items-center gap-1 transition-colors">
+                        <ion-icon name="refresh-outline"></ion-icon> Limpar
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-end gap-x-8 gap-y-3">
+                    <!-- Filtro de Período -->
+                    <div class="flex flex-col w-full sm:w-48">
+                        <label for="filter-periodo" class="text-xs font-medium text-slate-600 mb-1">Período</label>
+                        <select id="filter-periodo"
+                            class="w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
+                            <option selected disabled hidden value="-">Selecione</option>
+                            <option value="mes">Este mês</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="especifico">Período específico</option>
+                        </select>
                     </div>
 
-                    <!-- Corpo do Modal -->
-                    <div class="p-5 overflow-y-auto">
-                        <form id="modal-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                            <!-- Título Editável -->
-                            <div class="md:col-span-2">
-                                <input type="text" id="edit-Nome" name="Nome" 
-                                    class="w-full bg-transparent border-none p-0 text-2xl font-bold text-sky-700 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
-                                    placeholder="Nome do Plano de Ação">
-                            </div>
-                            <!-- Campos Principais -->
-                            <div>
-                                <label for="edit-Status" class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
-                                <select id="edit-Status" name="Status" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                                    <option value="Em desenvolvimento">Em desenvolvimento</option>
-                                    <option value="Planejado">Planejado</option>
-                                    <option value="Em curso">Em curso</option>
-                                    <option value="Pendente">Pendente</option>
-                                    <option value="Implementado">Implementado</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="edit-Resolução" class="block text-sm font-semibold text-slate-500 mb-1">Resolução</label>
-                                <input type="text" id="edit-Resolução" name="Resolução" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                            </div>
-                            <div>
-                                <label for="edit-Data-inicio" class="block text-sm font-semibold text-slate-500 mb-1">Data de início</label>
-                                <input type="date" id="edit-Data-inicio" name="Data início" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                            </div>
-                            <div>
-                                <label for="edit-Data-fim" class="block text-sm font-semibold text-slate-500 mb-1">Data fim</label>
-                                <input type="date" id="edit-Data-fim" name="Data fim" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="edit-Observacoes" class="block text-sm font-semibold text-slate-500 mb-1">Observações</label>
-                                <textarea id="edit-Observacoes" name="Observações" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
-                            </div>
+                    <!-- Inputs de Período Específico -->
+                    <div id="periodo-especifico-inputs" class="hidden flex items-end gap-2 w-full sm:w-auto">
+                        <div>
+                            <label for="periodo-inicio" class="text-xs font-medium text-slate-600 mb-1">Início</label>
+                            <input type="date" id="periodo-inicio"
+                                class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 transition duration-150 hover:border-slate-400" />
+                        </div>
+                        <div>
+                            <label for="periodo-fim" class="text-xs font-medium text-slate-600 mb-1">Fim</label>
+                            <input type="date" id="periodo-fim"
+                                class="w-full bg-white border border-slate-300 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 transition duration-150 hover:border-slate-400" />
+                        </div>
+                        <div id="filtrar-especifico"
+                            class="cursor-pointer bg-sky-600 text-white font-semibold text-sm rounded-md px-3 py-2 whitespace-nowrap hover:bg-sky-700 transition-colors">
+                            Filtrar
+                        </div>
+                    </div>
 
-                            <!-- Seção SEI -->
-                            <div class="md:col-span-2 flex items-center gap-2 pt-4 border-t border-slate-200 mt-2">
-                                <img src="../../assets/images/logo_sei_mg.png" class="h-6 w-auto object-contain" alt="Logo SEI">
-                            </div>
-                            <div>
-                                <label for="edit-Processo-SEI" class="block text-sm font-semibold text-slate-500 mb-1">Processo SEI de origem</label>
-                                <input type="text" id="edit-Processo-SEI" name="Processo SEI" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="edit-SEI-relacionados" class="block text-sm font-semibold text-slate-500 mb-1">Outros SEI relacionados</label>
-                                <textarea id="edit-SEI-relacionados" name="SEI relacionados" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
-                            </div>
+                    <!-- quebra de linha -->
+                    <div class="w-full"></div>
 
-                            <!-- Seção Equipe -->
-                            <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
-                                <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
-                                    <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
-                                </h4>
+                    <div class="flex flex-col w-full md:w-56">
+                        <label for="filter-Unidade"
+                            class="block text-sm font-medium text-slate-700 mb-1">Unidade</label>
+                        <select id="filter-Unidade" multiple data-placeholder="Todas as unidades"
+                            class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col w-full md:w-56">
+                        <label for="filter-Nome" class="block text-sm font-medium text-slate-700 mb-1">Pessoa</label>
+                        <select id="filter-Nome" multiple data-placeholder="Todas as pessoas"
+                            class="filter-select w-full bg-white border border-slate-300 text-slate-500 text-sm rounded-md focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 p-2 appearance-none transition duration-150 hover:border-slate-400 [&.filter-active]:border-sky-500 [&.filter-active]:font-semibold [&.filter-active]:text-slate-800">
+                        </select>
+                    </div>
+
+                    <div class="w-full"></div>
+                </div>
+            </section>
+
+            <!--===============================================================================
+// Visão geral por IA
+===================================================================================-->
+            <section id="ai-summary-section"
+                class="bg-white p-5 rounded-xl shadow-md border border-slate-200 transition-all duration-300 hover:shadow-lg">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <ion-icon name="sparkles-outline" class="text-xl text-sky-600"></ion-icon>
+                        <h2 class="text-lg font-bold text-slate-800">Visão geral criada por IA</h2>
+                    </div>
+
+                    <!-- Menu de 3 pontos (Estilo copiado dos cards) -->
+                    <div id="ai-menu-container" class="relative">
+                        <button id="ai-menu-button" type="button"
+                            class="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path
+                                    d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z">
+                                </path>
+                            </svg>
+                        </button>
+                        <div id="ai-menu-dropdown"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-30">
+                            <div class="py-1">
+                                <a href="#" id="ai-regenerate"
+                                    class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Gerar
+                                    novamente</a>
+                                <a href="#" id="ai-show-prompt"
+                                    class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Mais
+                                    detalhes do prompt</a>
                             </div>
-                            <div class="md:col-span-2">
-                                <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
-                                    <table id="tabelaPessoas" class="min-w-full divide-y divide-slate-200">
-                                        <thead class="bg-slate-50">
-                                            <tr>
-                                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Nome</th>
-                                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Email</th>
-                                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Unidade</th>
-                                                <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Coordenador</th>
-                                                <th scope="col" class="relative px-4 py-3"><span class="sr-only">Remover</span></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="corpoTabelaPessoas" class="bg-white divide-y divide-slate-200">
-                                            <!-- Linhas da tabela serão inseridas aqui -->
-                                            <!-- <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="nome" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conteúdo gerado pela IA (classe text-sm adicionada) -->
+                <div id="ai-summary-content" class="text-slate-700 space-y-3 text-sm">
+                    <!-- O loading state e o conteúdo da IA serão injetados aqui -->
+                </div>
+            </section>
+
+            <!--===============================================================================
+// modal
+===================================================================================-->
+            <section id="modal">
+                <!-- Modal de edição -->
+                <div id="edit-modal"
+                    class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                        <!-- Cabeçalho do Modal -->
+                        <div class="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
+                            <h3 class="text-xl font-bold text-slate-800">Editar Plano de Ação</h3>
+                            <button id="modal-btn-close" type="button"
+                                class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+                            </button>
+                        </div>
+
+                        <!-- Corpo do Modal -->
+                        <div class="p-5 overflow-y-auto">
+                            <form id="modal-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                                <!-- Título Editável -->
+                                <div class="md:col-span-2">
+                                    <input type="text" id="edit-Nome" name="Nome"
+                                        class="w-full bg-transparent border-none p-0 text-2xl font-bold text-sky-700 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
+                                        placeholder="Nome do Plano de Ação">
+                                </div>
+                                <!-- Campos Principais -->
+                                <div>
+                                    <label for="edit-Status"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
+                                    <select id="edit-Status" name="Status"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                        <option value="Em desenvolvimento">Em desenvolvimento</option>
+                                        <option value="Planejado">Planejado</option>
+                                        <option value="Em curso">Em curso</option>
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Implementado">Implementado</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="edit-Resolução"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Resolução</label>
+                                    <input type="text" id="edit-Resolução" name="Resolução"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                </div>
+                                <div>
+                                    <label for="edit-Data-inicio"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Data de início</label>
+                                    <input type="date" id="edit-Data-inicio" name="Data início"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                </div>
+                                <div>
+                                    <label for="edit-Data-fim"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Data fim</label>
+                                    <input type="date" id="edit-Data-fim" name="Data fim"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="edit-Observacoes"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Observações</label>
+                                    <textarea id="edit-Observacoes" name="Observações" rows="2"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
+                                </div>
+
+                                <!-- Seção SEI -->
+                                <div class="md:col-span-2 flex items-center gap-2 pt-4 border-t border-slate-200 mt-2">
+                                    <img src="../../assets/images/logo_sei_mg.png" class="h-6 w-auto object-contain"
+                                        alt="Logo SEI">
+                                </div>
+                                <div>
+                                    <label for="edit-Processo-SEI"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Processo SEI de
+                                        origem</label>
+                                    <input type="text" id="edit-Processo-SEI" name="Processo SEI"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="edit-SEI-relacionados"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Outros SEI
+                                        relacionados</label>
+                                    <textarea id="edit-SEI-relacionados" name="SEI relacionados" rows="2"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
+                                </div>
+
+                                <!-- Seção Equipe -->
+                                <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                                    <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                        <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
+                                    </h4>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="mt-2 overflow-x-auto rounded-lg border border-slate-200">
+                                        <table id="tabelaPessoas" class="min-w-full divide-y divide-slate-200">
+                                            <thead class="bg-slate-50">
+                                                <tr>
+                                                    <th scope="col"
+                                                        class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                                        Nome</th>
+                                                    <th scope="col"
+                                                        class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                                        Email</th>
+                                                    <th scope="col"
+                                                        class="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                                        Unidade</th>
+                                                    <th scope="col"
+                                                        class="px-4 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
+                                                        Coordenador</th>
+                                                    <th scope="col" class="relative px-4 py-3"><span
+                                                            class="sr-only">Remover</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="corpoTabelaPessoas" class="bg-white divide-y divide-slate-200">
+                                                <!-- Linhas da tabela serão inseridas aqui -->
+                                                <!-- <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="nome" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
                                             <td class="px-4 py-2 whitespace-nowrap"><input type="email" name="email" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
                                             <td class="px-4 py-2 whitespace-nowrap"><input type="text" name="unidade" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500" required></td>
                                             <td class="px-4 py-3 text-center"><input type="checkbox" name="coordenador" class="h-5 w-5 text-sky-600 border border-slate-150 rounded focus:ring-sky-500"></td>
                                             <td class="px-4 py-3 text-center"><button type="button" class="remover-linha text-slate-500 transition-colors hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled><ion-icon name="trash-outline" class="text-lg"></ion-icon></button></td> -->
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-3 text-right">
+                                        <button type="button" id="btnAdicionarPessoa"
+                                            class="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 text-sky-800 text-sm font-medium rounded-md hover:bg-sky-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-sky-300 transition-colors">
+                                            <ion-icon name="add-outline" class="text-base"></ion-icon> Adicionar Pessoa
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="mt-3 text-right">
-                                    <button type="button" id="btnAdicionarPessoa" class="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-100 text-sky-800 text-sm font-medium rounded-md hover:bg-sky-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-sky-300 transition-colors">
-                                        <ion-icon name="add-outline" class="text-base"></ion-icon> Adicionar Pessoa
-                                    </button>
+
+                                <!-- Seção Documentos -->
+                                <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
+                                    <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
+                                        <ion-icon name="documents" class="text-lg"></ion-icon>
+                                        Documentos
+                                    </h4>
                                 </div>
-                            </div>
-
-                            <!-- Seção Documentos -->
-                            <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
-                                <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
-                                    <ion-icon name="documents" class="text-lg"></ion-icon>
-                                    Documentos
-                                </h4>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="edit-Documento-TCE" class="block text-sm font-semibold text-slate-500 mb-1">Documento TCE</label>
-                                <input type="text" id="edit-Documento-TCE" name="Documento TCE" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                            </div>
-                            <div class="md:col-span-2">
-                                <label for="edit-Documentos-relacionados" class="block text-sm font-semibold text-slate-500 mb-1">Documentos relacionados</label>
-                                <textarea id="edit-Documentos-relacionados" name="Documentos relacionados" rows="2" class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Rodapé do Modal -->
-                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3 flex-shrink-0">
-                        <button id="modal-btn-cancel" type="button" class="bg-white text-slate-700 font-semibold py-2 px-5 rounded-lg border border border-slate-150 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
-                            Cancelar
-                        </button>
-                        <button id="modal-btn-save" type="button" class="bg-sky-600 text-white font-semibold py-2 px-5 rounded-lg shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
-                            Salvar Alterações
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de confirmação para descartar alterações -->
-            <div id="confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold text-slate-800">Descartar Alterações?</h3>
-                        <p class="mt-2 text-sm text-slate-600">Você fez alterações que não foram salvas. Tem certeza de que deseja sair?</p>
-                    </div>
-                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="confirm-btn-no" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
-                            Não
-                        </button>
-                        <button id="confirm-btn-yes" type="button" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
-                            Sim, Descartar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal de confirmação de exclusão -->
-            <div id="delete-confirmation-modal" class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
-                    <div class="p-6">
-                        <div class="flex items-center">
-                            <!-- Ícone de Alerta -->
-                            <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                                </svg>
-                            </div>
-                            <div class="ml-4 text-left">
-                                <h3 class="text-lg font-bold text-slate-800">Confirmar Exclusão</h3>
-                            </div>
+                                <div class="md:col-span-2">
+                                    <label for="edit-Documento-TCE"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Documento TCE</label>
+                                    <input type="text" id="edit-Documento-TCE" name="Documento TCE"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="edit-Documentos-relacionados"
+                                        class="block text-sm font-semibold text-slate-500 mb-1">Documentos
+                                        relacionados</label>
+                                    <textarea id="edit-Documentos-relacionados" name="Documentos relacionados" rows="2"
+                                        class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
+                                </div>
+                            </form>
                         </div>
-                        <div class="mt-4">
-                            <p class="text-sm text-slate-600">
-                                Tem certeza de que deseja excluir o plano de ação: <strong id="plano-to-delete-name" class="font-bold text-slate-800"></strong>?
-                            </p>
-                            <p class="mt-2 text-sm font-semibold text-red-700 bg-red-50 p-3 rounded-md">
-                                Esta ação é permanente e não poderá ser revertida pelo usuário.
-                            </p>
+
+                        <!-- Rodapé do Modal -->
+                        <div
+                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3 flex-shrink-0">
+                            <button id="modal-btn-cancel" type="button"
+                                class="bg-white text-slate-700 font-semibold py-2 px-5 rounded-lg border border border-slate-150 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
+                                Cancelar
+                            </button>
+                            <button id="modal-btn-save" type="button"
+                                class="bg-sky-600 text-white font-semibold py-2 px-5 rounded-lg shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
+                                Salvar Alterações
+                            </button>
                         </div>
                     </div>
-                    <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="delete-confirm-btn-no" type="button" class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
-                            Cancelar
-                        </button>
-                        <button id="delete-confirm-btn-yes" type="button" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
-                            Sim, Excluir
-                        </button>
+                </div>
+
+                <!-- Modal de confirmação para descartar alterações -->
+                <div id="confirmation-modal"
+                    class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-slate-800">Descartar Alterações?</h3>
+                            <p class="mt-2 text-sm text-slate-600">Você fez alterações que não foram salvas. Tem certeza
+                                de que deseja sair?</p>
+                        </div>
+                        <div
+                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                            <button id="confirm-btn-no" type="button"
+                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
+                                Não
+                            </button>
+                            <button id="confirm-btn-yes" type="button"
+                                class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
+                                Sim, Descartar
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Modal do prompt de visãoi geral -->
-            <div id="prompt-modal"
-                class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-                <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
-                    <div class="flex justify-between items-center p-4 border-b">
-                        <h3 class="text-lg font-semibold text-slate-800">Detalhes do Prompt</h3>
-                        <button id="close-modal-button"
-                            class="p-1.5 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
-                            <ion-icon name="close-outline" class="text-2xl"></ion-icon>
-                        </button>
+
+                <!-- Modal de confirmação de exclusão -->
+                <div id="delete-confirmation-modal"
+                    class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                        <div class="p-6">
+                            <div class="flex items-center">
+                                <!-- Ícone de Alerta -->
+                                <div
+                                    class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4 text-left">
+                                    <h3 class="text-lg font-bold text-slate-800">Confirmar Exclusão</h3>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-sm text-slate-600">
+                                    Tem certeza de que deseja excluir o plano de ação: <strong id="plano-to-delete-name"
+                                        class="font-bold text-slate-800"></strong>?
+                                </p>
+                                <p class="mt-2 text-sm font-semibold text-red-700 bg-red-50 p-3 rounded-md">
+                                    Esta ação é permanente e não poderá ser revertida pelo usuário.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                            <button id="delete-confirm-btn-no" type="button"
+                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
+                                Cancelar
+                            </button>
+                            <button id="delete-confirm-btn-yes" type="button"
+                                class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
+                                Sim, Excluir
+                            </button>
+                        </div>
                     </div>
-                    <div class="p-6 overflow-y-auto">
-                        <p class="text-sm text-slate-600 mb-4">
-                            Model: GPT-4.1 mini
-                        </p>
-                        <pre
-                            class="bg-slate-100 text-slate-800 text-xs p-4 rounded-lg whitespace-pre-wrap font-mono"><code id="prompt-text-container"></code></pre>
+                </div>
+                <!-- Modal do prompt de visãoi geral -->
+                <div id="prompt-modal"
+                    class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+                        <div class="flex justify-between items-center p-4 border-b">
+                            <h3 class="text-lg font-semibold text-slate-800">Detalhes do Prompt</h3>
+                            <button id="close-modal-button"
+                                class="p-1.5 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
+                                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <p class="text-sm text-slate-600 mb-4">
+                                Model: GPT-4.1 mini
+                            </p>
+                            <pre
+                                class="bg-slate-100 text-slate-800 text-xs p-4 rounded-lg whitespace-pre-wrap font-mono"><code id="prompt-text-container"></code></pre>
+                        </div>
                     </div>
-                </div>      
-            </div>
-        </section>
-    </div></main>
+                </div>
+            </section>
+        </div>
+    </main>
 
     <footer id="footer"></footer>
-<!--===============================================================================
+    <!--===============================================================================
 // scripts
 ===================================================================================-->
     <script src='../../components/layout.js'></script>
+    <script src="../../components/multiple_select.js"></script>
     <script src='../../components/apiConnection.js'></script>
     <script src='../../components/chatbot.js'></script>
     <script src='scripts.js'></script>
@@ -552,4 +641,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
+
 </html>

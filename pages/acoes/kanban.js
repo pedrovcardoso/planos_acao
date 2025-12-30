@@ -30,32 +30,48 @@ function populateKanbanBoard(actionsData) {
     // --- 2. Gera o HTML para cada coluna ---
     const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
         const tasks = tasksByStatus[columnConfig.status] || [];
-        
+
         const formatDate = (dateString) => {
             return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
         };
-        
+
         const cardsHtml = tasks.map(task => `
             <div 
-                class="kanban-card bg-white rounded-lg p-4 shadow cursor-pointer hover:shadow-md transition-shadow" 
+                class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-200 relative overflow-hidden" 
                 data-task-id="${task.ID}">
-                <span class="font-semibold text-slate-800 line-clamp-2">${task['Número da atividade']} - ${task.Atividade}</span>
-                <span class="block text-sm font-semibold text-sky-600">${task['Plano de ação']}</span>
-                <div class="text-xs text-slate-500 flex justify-between">
-                    <p>Início: <strong>${formatDate(task['Data de início'])}</strong></p>
-                    <p>Fim: <strong>${formatDate(task['Data fim'])}</strong></p>
+                
+                <div class="flex flex-col gap-1.5">
+                    <h4 class="font-bold text-slate-800 text-[13px] leading-snug line-clamp-2 group-hover:text-sky-700 transition-colors">
+                        ${task.Atividade}
+                    </h4>
+                    
+                    <div class="flex items-center gap-1.5 text-[11px] font-semibold text-sky-600/80">
+                        <ion-icon name="layers-outline" class="text-xs"></ion-icon>
+                        <span class="truncate">${task['Plano de ação']}</span>
+                    </div>
+
+                    <div class="mt-1 pt-1.5 border-t border-slate-50 flex items-center justify-between text-[10px] text-slate-500">
+                        <div class="flex items-center gap-1">
+                            <ion-icon name="calendar-outline"></ion-icon>
+                            <span>${formatDate(task['Data de início'])}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <ion-icon name="flag-outline"></ion-icon>
+                            <span>${formatDate(task['Data fim'])}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         `).join('');
 
         return `
-            <div class="w-80 flex-shrink-0 flex flex-col">
-                <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center p-3 font-semibold rounded-t-xl ${columnConfig.headerClasses}">
-                    <span>${columnConfig.status}</span>
-                    <span class="text-sm font-bold px-2 py-0.5 bg-black/10 rounded-full">${tasks.length}</span>
+            <div class="w-72 flex-shrink-0 flex flex-col h-full bg-slate-50/50 rounded-xl border border-slate-200/60 shadow-inner">
+                <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center px-3 py-2.5 font-bold rounded-t-xl shadow-sm ${columnConfig.headerClasses}">
+                    <span class="uppercase tracking-wider text-[11px]">${columnConfig.status}</span>
+                    <span class="text-[10px] font-black px-2 py-0.5 bg-black/10 rounded-md backdrop-blur-sm">${tasks.length}</span>
                 </div>
                 <!-- CONTAINER DOS CARDS COM SCROLL VERTICAL -->
-                <div class="kanban-cards-container bg-slate-100 rounded-b-xl flex-grow p-3 overflow-y-auto space-y-3">
+                <div class="kanban-cards-container flex-grow p-2.5 overflow-y-auto space-y-2.5">
                     ${cardsHtml}
                 </div>
             </div>
@@ -64,8 +80,8 @@ function populateKanbanBoard(actionsData) {
 
     // --- 3. Monta a estrutura completa do quadro ---
     const fullKanbanHtml = `
-        <div class="w-full max-h-[600px] flex flex-col bg-white rounded-lg shadow border border-slate-200">
-            <div class="kanban-board flex-grow flex gap-4 overflow-x-scroll p-4">
+        <div class="w-full h-[calc(100vh-280px)] min-h-[500px] flex flex-col">
+            <div class="kanban-board flex-grow flex gap-4 overflow-x-auto pb-4 px-2">
                 ${columnsHtml}
             </div>
         </div>

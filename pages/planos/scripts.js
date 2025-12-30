@@ -678,13 +678,32 @@ function fillGanttData(jsonPlanos) {
   //================================================================================
   // Preenche os valores no gantt
   //================================================================================
+  const statusColorMap = {
+    'Em desenvolvimento': 'bg-gray-100 text-gray-700 border border-gray-200',
+    'Planejado': 'bg-slate-100 text-slate-700 border border-slate-200',
+    'Em curso': 'bg-cyan-100 text-cyan-700 border border-cyan-200',
+    'Implementado': 'bg-green-100 text-green-700 border border-green-200',
+    'Pendente': 'bg-yellow-100 text-yellow-700 border border-yellow-200',
+    'Cancelado': 'bg-red-100 text-red-700 border border-red-200'
+  };
+
   jsonPlanos.forEach((task, index) => {
+    const statusClass = statusColorMap[task.Status] || 'bg-gray-100 text-gray-800';
+
+    // Cálculo de progresso para o plano
+    const acoesDoPlano = jsonAcoes.filter(acao => acao["Plano de ação"] === task.Nome);
+    const totalAcoes = acoesDoPlano.length;
+    const concluidas = acoesDoPlano.filter(acao => acao.Status === 'Implementado').length;
+    const percentualConclusao = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 0;
+
     const taskRow = document.createElement('div');
     taskRow.className = 'gantt-row-task';
     taskRow.dataset.rowIndex = index;
     taskRow.innerHTML = `
-            <div>${task.Nome}</div>
-            <div class="status-container"><div class="status-${(task.Status || '').replace(/\s+/g, '-')}">${task.Status || '-'}</div></div>
+            <div class="font-medium text-slate-700 overflow-hidden text-ellipsis">${task.Nome}</div>
+            <div class="status-container">
+              <div class="${statusClass}">${task.Status || '-'}</div>
+            </div>
         `;
     taskListContainer.appendChild(taskRow);
 
@@ -700,12 +719,17 @@ function fillGanttData(jsonPlanos) {
       const durationWidth = endOffset - startOffset;
 
       const bar = document.createElement('div');
-      bar.className = `absolute h-[20px] bg-[#3498db] rounded-[10px] top-1/2 -translate-y-1/2 z-[1] shadow-md`;
+      // Cores base para a barra (track mais visível no heatmap)
+      bar.className = `absolute h-[22px] gantt-bar-container rounded-[11px] top-1/2 -translate-y-1/2 z-[1] overflow-hidden`;
       bar.style.left = `${startOffset}px`;
       bar.style.width = `${durationWidth}px`;
-      bar.title = `${task.Nome}: ${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()}`;
-      const statusClass = `status-${task.Status.replace(/\s+/g, '-')}`;
-      bar.classList.add(task.colorTag);
+      bar.title = `${task.Nome}: ${percentualConclusao}% concluído (${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()})`;
+
+      // Cria a barra de progresso interno
+      const progressOverlay = document.createElement('div');
+      progressOverlay.className = `gantt-progress-bar bg-sky-600`;
+      progressOverlay.style.width = `${percentualConclusao}%`;
+      bar.appendChild(progressOverlay);
 
       rowTimeline.appendChild(bar);
     }
@@ -1662,9 +1686,13 @@ function setupFilters() {
   filtersConfig.forEach(([chave, elementId]) => {
     fillFilterObjPessoas(chave)
 
-    const el = document.getElementById(elementId)
-    if (el) {
-      el.addEventListener('change', aplicarFiltros)
+    if (window.onCustomSelectChange) {
+      window.onCustomSelectChange(elementId, aplicarFiltros);
+    } else {
+      const el = document.getElementById(elementId)
+      if (el) {
+        el.addEventListener('change', aplicarFiltros)
+      }
     }
   })
 
@@ -1700,18 +1728,25 @@ function normalizeString(str) {
 function aplicarFiltros() {
   let jsonFiltrado = [...jsonPlanos]
 
-  // filtro por unidade
+  // filtros (Unidade, Nome, etc.)
   filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
+    const selectedValues = window.getCustomSelectValues ? window.getCustomSelectValues(elementId) : [];
     const filterElement = document.getElementById(elementId);
-    if (!filterElement || filterElement.value === '-') {
-      filterElement.classList.remove('filter-active')
+    if (!filterElement) return;
+
+    const customComponent = document.querySelector(`.custom-select-container[data-select-id="${elementId}"]`);
+
+    if (selectedValues.length === 0) {
+      filterElement.classList.remove('filter-active');
+      if (customComponent) customComponent.querySelector('.relative.z-10').classList.remove('border-sky-500', 'font-semibold');
       return;
     } else {
       jsonFiltrado = isObjPessoa
-        ? filterJsonObjPessoa(jsonFiltrado, chave, filterElement.value)
-        : filterJson(jsonFiltrado, chave, filterElement.value);
+        ? filterJsonObjPessoa(jsonFiltrado, chave, selectedValues)
+        : filterJson(jsonFiltrado, chave, selectedValues);
 
       filterElement.classList.add('filter-active');
+      if (customComponent) customComponent.querySelector('.relative.z-10').classList.add('border-sky-500', 'font-semibold');
     }
   });
 
@@ -1726,37 +1761,34 @@ function aplicarFiltros() {
   }
 
   // aplica nas seções
-  fillStatCards(jsonFiltrado)
-  fillGanttData(jsonFiltrado)
-  gerarCards(jsonFiltrado)
+  const acoesFiltradas = jsonAcoes.filter(a => jsonFiltrado.some(p => p.Nome === a['Plano de ação']));
+  setupStatCards(jsonFiltrado, acoesFiltradas);
+  fillGanttData(jsonFiltrado);
+  gerarCards(jsonFiltrado);
 }
 
 /**
  * Filtro genérico chave/valor
  */
-function filterJson(json, chave, valor) {
+function filterJson(json, chave, valoresSelecionados) {
   return json.filter(item => {
-    if (typeof item[chave] === "string" && typeof valor === "string") {
-      return normalizeString(item[chave]) === normalizeString(valor)
-    }
-    return item[chave] === valor
+    const val = normalizeString(item[chave]);
+    return valoresSelecionados.includes(val);
   })
 }
 
 /**
  * Filtro genérico chave/valor para valores dentro do objeto pessoa
  */
-function filterJsonObjPessoa(json, chave, valor) {
+function filterJsonObjPessoa(json, chave, valoresSelecionados) {
   return json.filter(item => {
     const pessoas = item.objPessoas;
-    if (!Array.isArray(pessoas)) return false; // garante que objPessoas é um array
+    if (!Array.isArray(pessoas)) return false;
 
-    // verifica se alguma pessoa dentro do array tem a chave com o valor desejado
+    // verifica se alguma pessoa dentro do array tem a chave com algum dos valores selecionados
     return pessoas.some(pessoa => {
-      if (typeof pessoa[chave] === "string" && typeof valor === "string") {
-        return normalizeString(pessoa[chave]) === normalizeString(valor);
-      }
-      return pessoa[chave] === valor;
+      const val = normalizeString(pessoa[chave]);
+      return valoresSelecionados.includes(val);
     });
   });
 }
@@ -1766,7 +1798,11 @@ function filterJsonObjPessoa(json, chave, valor) {
  */
 function clearFilters() {
   filtersConfig.forEach(([, elementId]) => {
-    document.getElementById(elementId).value = '-'
+    const el = document.getElementById(elementId);
+    if (el) {
+      Array.from(el.options).forEach(opt => opt.selected = false);
+      if (window.createCustomSelect) window.createCustomSelect(elementId);
+    }
   })
   document.getElementById('filter-periodo').value = '-'
   document.getElementById('periodo-especifico-inputs').style.display = 'none'
@@ -1796,6 +1832,11 @@ function fillFilterObjPessoas(key) {
     option.textContent = valor
     filtro.appendChild(option)
   })
+
+  // Se o componente de multiple select estiver carregado, inicializa para este filtro
+  if (window.createCustomSelect) {
+    window.createCustomSelect(`filter-${key}`);
+  }
 }
 
 /**
