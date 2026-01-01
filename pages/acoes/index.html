@@ -171,19 +171,23 @@
         <!--===============================================================================
 // switch do modo de visualização
 ===================================================================================-->
+        <!--===============================================================================
+// switch do modo de visualização
+===================================================================================-->
         <section class="flex flex-wrap gap-2 items-center justify-center p-4">
-            <div class="relative flex w-full max-w-sm items-center rounded-full p-1 bg-white shadow">
-                <input type="radio" name="option" id="kanban" class="peer/kanban sr-only" checked />
-                <input type="radio" name="option" id="table" class="peer/table sr-only" />
-
-                <label for="kanban"
-                    class="z-10 w-full cursor-pointer rounded-full py-1.5 text-center text-sm font-medium text-slate-500 transition-colors duration-300 ease-in-out hover:text-slate-800 peer-checked/kanban:text-slate-900">Kanban</label>
-                <label for="table"
-                    class="z-10 w-full cursor-pointer rounded-full py-1.5 text-center text-sm font-medium text-slate-500 transition-colors duration-300 ease-in-out hover:text-slate-800 peer-checked/table:text-slate-900">Tabela</label>
-
-                <div class="absolute inset-0 z-0 h-full w-1/2 transform rounded-full bg-slate-200 transition-transform duration-300 ease-in-out
-                    peer-checked/kanban:translate-x-0
-                    peer-checked/table:translate-x-full"></div>
+            <div class="bg-white p-1 rounded-lg border border-slate-200 flex items-center shadow-sm">
+                <button id="view-kanban-btn"
+                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700">
+                    <ion-icon name="grid-outline" class="mr-2"></ion-icon> Kanban
+                </button>
+                <button id="view-table-btn"
+                    class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
+                    <ion-icon name="list-outline" class="mr-2"></ion-icon> Tabela
+                </button>
+                <button id="view-gantt-btn"
+                    class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
+                    <ion-icon name="calendar-outline" class="mr-2"></ion-icon> Gantt
+                </button>
             </div>
         </section>
 

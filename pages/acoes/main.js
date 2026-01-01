@@ -62,24 +62,50 @@ function toggleLoading(show) {
 }
 
 function setupViewSwitcher() {
-    const radioButtons = document.querySelectorAll('input[name="option"]');
-    const viewSections = document.querySelectorAll('.view-section');
+    const btnKanban = document.getElementById('view-kanban-btn');
+    const btnTable = document.getElementById('view-table-btn');
+    const btnGantt = document.getElementById('view-gantt-btn'); // Se você tiver um botão Gantt, adicionei no HTML anterior
 
-    radioButtons.forEach(radio => {
-        radio.addEventListener('change', function () {
-            // Esconde todas as seções
-            viewSections.forEach(section => {
-                section.style.display = 'none';
-            });
+    const viewKanban = document.getElementById('kanban-view');
+    const viewTable = document.getElementById('table-view');
+    const viewGantt = document.getElementById('gantt-view');
 
-            // Mostra a seção correspondente
-            const selectedViewId = this.id + '-view';
-            const selectedView = document.getElementById(selectedViewId);
-            if (selectedView) {
-                selectedView.style.display = 'block';
-            }
+    const setActive = (activeBtn, ...otherBtns) => {
+        // Estilo ativo
+        activeBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
+        // Estilo inativo
+        otherBtns.forEach(btn => {
+            if (btn) btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
         });
-    });
+    };
+
+    const setView = (activeView, ...otherViews) => {
+        activeView.style.display = 'block';
+        otherViews.forEach(v => {
+            if (v) v.style.display = 'none';
+        });
+    };
+
+    if (btnKanban) {
+        btnKanban.addEventListener('click', () => {
+            setActive(btnKanban, btnTable, btnGantt);
+            setView(viewKanban, viewTable, viewGantt);
+        });
+    }
+
+    if (btnTable) {
+        btnTable.addEventListener('click', () => {
+            setActive(btnTable, btnKanban, btnGantt);
+            setView(viewTable, viewKanban, viewGantt);
+        });
+    }
+
+    if (btnGantt) {
+        btnGantt.addEventListener('click', () => {
+            setActive(btnGantt, btnKanban, btnTable);
+            setView(viewGantt, viewKanban, viewTable);
+        });
+    }
 }
 
 

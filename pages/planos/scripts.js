@@ -1039,10 +1039,12 @@ function gerarCards(jsonPlanos) {
             <!-- O menu suspenso (dropdown) -->
             <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-10">
               <div class="py-1">
-                ${plano.Status !== 'Em desenvolvimento' ?
-        `<a href="../acoes/index.html?plano_de_acao=${planoNomeEncoded}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ver Ações</a>` :
-        '<span class="block w-full text-left px-4 py-2 text-sm text-slate-400 cursor-not-allowed">Ver ações</span>'}
+                <a href="../detalhes_plano/index.html?id=${plano.ID}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 font-semibold text-sky-700 bg-slate-50">
+                    Ver Detalhes do Plano
+                </a>
                 
+                <div class="border-t border-slate-100 my-1"></div>
+
                 <button type="button" 
                         class="edit-plano-button block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                         data-plan-id="${plano.ID}">
