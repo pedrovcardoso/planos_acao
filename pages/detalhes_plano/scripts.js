@@ -77,11 +77,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         const btnEditPlan = document.getElementById('btn-edit-plan');
         if (btnEditPlan) {
             btnEditPlan.addEventListener('click', () => {
-                if (typeof openModalPlanos === 'function') {
+                if (typeof openEditModalPlanos === 'function') {
                     // O modalPlanos espera o ID para editar
-                    openModalPlanos(planData.ID);
+                    openEditModalPlanos(planData.ID);
                 } else {
-                    console.error("Função openModalPlanos não encontrada.");
+                    console.error("Função openEditModalPlanos não encontrada.");
                 }
             });
         }

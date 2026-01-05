@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Plano</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css">
     <style>
         :root {
             --col-num-width: 130px;
@@ -111,7 +110,7 @@
                 </div>
 
                 <!-- Detalhes Estruturados em Linhas -->
-                <div class="space-y-6 border-t border-slate-100 pt-8">
+                <div class="space-y-6">
 
                     <!-- Primeira Linha: SEI, Cronograma e Unidades -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -202,22 +201,22 @@
                     <!-- Quarta Linha: Observações e Docs Relacionados -->
                     <div id="plan-extra-info"
                         class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-50 pt-6">
-                        <div id="plan-obs-container" class="hidden">
-                            <h3
-                                class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
-                                <ion-icon name="chatbox-ellipses-outline"></ion-icon> Observações
-                            </h3>
-                            <div id="plan-observations"
-                                class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100 whitespace-pre-wrap">
-                                --
-                            </div>
-                        </div>
                         <div id="plan-docs-related-container" class="hidden">
                             <h3
                                 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
                                 <ion-icon name="link-outline"></ion-icon> Documentos Relacionados
                             </h3>
                             <div id="plan-docs-related"
+                                class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                --
+                            </div>
+                        </div>
+                        <div id="plan-obs-container">
+                            <h3
+                                class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
+                                <ion-icon name="chatbox-ellipses-outline"></ion-icon> Observações
+                            </h3>
+                            <div id="plan-observations"
                                 class="text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
                                 --
                             </div>
@@ -230,9 +229,14 @@
         <!-- Seção Inferior: Ações do Plano -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <ion-icon name="list-outline"></ion-icon> Ações do Plano
-                </h2>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        Ações do Plano
+                    </h2>
+                    <i class="text-sm text-slate-500">
+                        Para editar uma observação ou alterar o status, clique em cima da ação desejada.
+                    </i>
+                </div>
 
                 <!-- Switcher de Visualização -->
                 <div class="bg-white p-1 rounded-lg border border-slate-200 flex items-center shadow-sm">
@@ -270,19 +274,19 @@
 
     <!-- Scripts -->
     <!-- Reusing components -->
-    <script src='../../components/layout.js'></script>
-    <script src='../../components/apiConnection.js'></script>
-    <script src='../../components/multiple_select.js'></script>
-    <script src='../../components/modalAcoes.js'></script>
-    <script src='../../components/modalPlanos.js'></script>
-    <script src='../../components/chatbot.js'></script>
+    <script defer src='../../components/layout.js'></script>
+    <script defer src='../../components/apiConnection.js'></script>
+    <script defer src='../../components/multiple_select.js'></script>
+    <script defer src='../../components/modalAcoes.js'></script>
+    <script defer src='../../components/modalPlanos.js'></script>
+    <script defer src='../../components/chatbot.js'></script>
 
     <!-- Shared logic for views -->
-    <script src='../acoes/kanban.js'></script>
-    <script src='../acoes/table.js'></script>
+    <script defer src='../acoes/kanban.js'></script>
+    <script defer src='../acoes/table.js'></script>
 
     <!-- Page specific logic -->
-    <script src='scripts.js'></script>
+    <script defer src='scripts.js'></script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

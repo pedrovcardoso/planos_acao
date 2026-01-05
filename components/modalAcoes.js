@@ -11,7 +11,7 @@ function initModalAcoes() {
                             <span id="modal-view-plano" class="block text-sm font-semibold text-sky-600"></span>
                             <h2 id="modal-view-atividade" class="text-2xl font-bold text-slate-800"></h2>
                         </div>
-                        <button id="modal-btn-close" type="button"
+                        <button id="modal-btn-close-task" type="button"
                             class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 ">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -242,7 +242,7 @@ function initModalAcoes() {
                             </div>
 
                             <div class="mt-4">
-                                <button id="add-notification-btn" type="button"
+                                <button id="add-notification-btn-task" type="button"
                                     class="w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 hover:border-slate-400 hover:bg-slate-100 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                         fill="currentColor">
@@ -258,7 +258,7 @@ function initModalAcoes() {
 
                     <div
                         class="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="modal-btn-delete" type="button"
+                        <button id="modal-btn-delete-task" type="button"
                             class=" text-red-700 font-bold py-2 px-4 rounded-lg hover:bg-red-200 hover:text-red-800 disabled:cursor-not-allowed text-sm flex items-center space-x-2">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="currentColor">
@@ -269,22 +269,22 @@ function initModalAcoes() {
                         </button>
                         <div>
                             <div id="view-mode-buttons" class="flex items-center space-x-3">
-                                <button id="modal-btn-view-close" type="button"
+                                <button id="modal-btn-view-close-task" type="button"
                                     class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">Fechar</button>
-                                <button id="modal-btn-edit" type="button"
+                                <button id="modal-btn-edit-task" type="button"
                                     class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700">Editar</button>
                             </div>
                             <div id="edit-mode-buttons" class="hidden">
-                                <button id="modal-btn-cancel" type="button"
+                                <button id="modal-btn-cancel-task" type="button"
                                     class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">Cancelar</button>
-                                <button id="modal-btn-save" type="button"
+                                <button id="modal-btn-save-task" type="button"
                                     class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="confirmation-modal"
+                <div id="confirmation-modal-task"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
@@ -294,11 +294,11 @@ function initModalAcoes() {
                         </div>
                         <div
                             class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                            <button id="confirm-btn-no" type="button"
+                            <button id="confirm-btn-no-task" type="button"
                                 class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
                                 Não
                             </button>
-                            <button id="confirm-btn-yes" type="button"
+                            <button id="confirm-btn-yes-task" type="button"
                                 class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
                                 Sim, Descartar
                             </button>
@@ -306,7 +306,7 @@ function initModalAcoes() {
                     </div>
                 </div>
 
-                <div id="delete-confirmation-modal"
+                <div id="delete-confirmation-modal-task"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
@@ -335,11 +335,11 @@ function initModalAcoes() {
                         </div>
                         <div
                             class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                            <button id="delete-confirm-btn-no" type="button"
+                            <button id="delete-confirm-btn-no-task" type="button"
                                 class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
                                 Cancelar
                             </button>
-                            <button id="delete-confirm-btn-yes" type="button"
+                            <button id="delete-confirm-btn-yes-task" type="button"
                                 class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
                                 Sim, Excluir
                             </button>
@@ -347,20 +347,20 @@ function initModalAcoes() {
                     </div>
                 </div>
 
-                <div id="date-change-confirmation-modal"
+                <div id="date-change-confirmation-modal-task"
                     class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
-                            <h3 id="modal-title" class="text-lg font-bold text-slate-800"></h3>
-                            <p id="modal-message" class="mt-2 text-sm text-slate-700"></p>
+                            <h3 id="modal-title-task" class="text-lg font-bold text-slate-800"></h3>
+                            <p id="modal-message-task" class="mt-2 text-sm text-slate-700"></p>
                         </div>
                         <div
                             class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                            <button id="modal-btn-cancel-notification" type="button"
+                            <button id="modal-btn-cancel-notification-task" type="button"
                                 class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
                                 Cancelar
                             </button>
-                            <button id="modal-btn-confirm-notification" type="button"
+                            <button id="modal-btn-confirm-notification-task" type="button"
                                 class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
                                 Confirmar
                             </button>
@@ -394,17 +394,17 @@ function setupModalAcoesLogic() {
     });
 
     const btnMap = {
-        'modal-btn-close': () => closeModal(),
-        'modal-btn-view-close': () => closeModal(),
-        'modal-btn-edit': switchToEditMode,
-        'modal-btn-cancel': () => switchToViewMode(),
-        'modal-btn-save': handleSaveAction,
-        'modal-btn-delete': openDeleteConfirmation,
-        'confirm-btn-no': () => document.getElementById('confirmation-modal').classList.add('hidden'),
-        'confirm-btn-yes': () => switchToViewMode(true),
-        'delete-confirm-btn-no': () => document.getElementById('delete-confirmation-modal').classList.add('hidden'),
-        'delete-confirm-btn-yes': handleDeleteTask,
-        'add-notification-btn': () => { createNotificacao(); hasChanges = true; }
+        'modal-btn-close-task': () => closeModal(),
+        'modal-btn-view-close-task': () => closeModal(),
+        'modal-btn-edit-task': switchToEditMode,
+        'modal-btn-cancel-task': () => switchToViewMode(),
+        'modal-btn-save-task': handleSaveAction,
+        'modal-btn-delete-task': openDeleteConfirmation,
+        'confirm-btn-no-task': () => document.getElementById('confirmation-modal-task').classList.add('hidden'),
+        'confirm-btn-yes-task': () => switchToViewMode(true),
+        'delete-confirm-btn-no-task': () => document.getElementById('delete-confirmation-modal-task').classList.add('hidden'),
+        'delete-confirm-btn-yes-task': handleDeleteTask,
+        'add-notification-btn-task': () => { createNotificacao(); hasChanges = true; }
     };
 
     Object.entries(btnMap).forEach(([id, handler]) => {
@@ -480,7 +480,7 @@ function openTaskModal(id) {
 }
 
 function switchToViewMode(force = false) {
-    const confirmationModal = document.getElementById('confirmation-modal');
+    const confirmationModal = document.getElementById('confirmation-modal-task');
     if (hasChanges && !force) {
         confirmationModal.classList.remove('hidden');
         return;
@@ -885,7 +885,7 @@ function openDeleteConfirmation() {
     const id = document.getElementById('task-modal-container').dataset.taskId;
     const task = window.jsonAcoes.find(t => t.ID === id);
     document.getElementById('plano-to-delete-name').textContent = `"${task.Atividade}"`;
-    document.getElementById('delete-confirmation-modal').classList.remove('hidden');
+    document.getElementById('delete-confirmation-modal-task').classList.remove('hidden');
 }
 
 async function handleDeleteTask() {

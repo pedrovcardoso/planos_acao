@@ -2,13 +2,13 @@ function initModalPlanos() {
     const modalHtml = `
         <section id="modal">
             <!-- Modal de edição -->
-            <div id="edit-modal"
+            <div id="edit-modal-plan"
                 class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                     <!-- Cabeçalho do Modal -->
                     <div class="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
                         <h3 class="text-xl font-bold text-slate-800">Editar Plano de Ação</h3>
-                        <button id="modal-btn-close" type="button"
+                        <button id="modal-btn-close-plan" type="button"
                             class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                             <ion-icon name="close-outline" class="text-2xl"></ion-icon>
                         </button>
@@ -146,11 +146,11 @@ function initModalPlanos() {
                     <!-- Rodapé do Modal -->
                     <div
                         class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3 flex-shrink-0">
-                        <button id="modal-btn-cancel" type="button"
+                        <button id="modal-btn-cancel-plan" type="button"
                             class="bg-white text-slate-700 font-semibold py-2 px-5 rounded-lg border border border-slate-150 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
                             Cancelar
                         </button>
-                        <button id="modal-btn-save" type="button"
+                        <button id="modal-btn-save-plan" type="button"
                             class="bg-sky-600 text-white font-semibold py-2 px-5 rounded-lg shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
                             Salvar Alterações
                         </button>
@@ -159,7 +159,7 @@ function initModalPlanos() {
             </div>
 
             <!-- Modal de confirmação para descartar alterações -->
-            <div id="confirmation-modal"
+            <div id="confirmation-modal-plan"
                 class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                     <div class="p-6">
@@ -169,11 +169,11 @@ function initModalPlanos() {
                     </div>
                     <div
                         class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="confirm-btn-no" type="button"
+                        <button id="confirm-btn-no-plan" type="button"
                             class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
                             Não
                         </button>
-                        <button id="confirm-btn-yes" type="button"
+                        <button id="confirm-btn-yes-plan" type="button"
                             class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
                             Sim, Descartar
                         </button>
@@ -182,7 +182,7 @@ function initModalPlanos() {
             </div>
 
             <!-- Modal de confirmação de exclusão -->
-            <div id="delete-confirmation-modal"
+            <div id="delete-confirmation-modal-plan"
                 class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                     <div class="p-6">
@@ -212,11 +212,11 @@ function initModalPlanos() {
                     </div>
                     <div
                         class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="delete-confirm-btn-no" type="button"
+                        <button id="delete-confirm-btn-no-plan" type="button"
                             class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
                             Cancelar
                         </button>
-                        <button id="delete-confirm-btn-yes" type="button"
+                        <button id="delete-confirm-btn-yes-plan" type="button"
                             class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
                             Sim, Excluir
                         </button>
@@ -254,7 +254,7 @@ function initModalPlanos() {
 }
 
 let currentPlanId = null;
-let hasChanges = false;
+let hasChangesPlanos = false;
 let isNewPlan = false;
 
 function setupModalPlanosLogic() {
@@ -278,15 +278,15 @@ function setupModalPlanosLogic() {
     // --- Controles do modal de edição ---
     const modalForm = document.getElementById('modal-form');
     if (modalForm) {
-        modalForm.addEventListener('input', () => (hasChanges = true));
+        modalForm.addEventListener('input', () => (hasChangesPlanos = true));
     }
 
     const modalBtnMap = {
-        'modal-btn-close': () => closeEditModal(),
-        'modal-btn-cancel': () => closeEditModal(),
-        'modal-btn-save': handleSave,
-        'confirm-btn-no': () => document.getElementById('confirmation-modal').classList.add('hidden'),
-        'confirm-btn-yes': () => closeEditModal(true)
+        'modal-btn-close-plan': () => closeEditModalPlan(),
+        'modal-btn-cancel-plan': () => closeEditModalPlan(),
+        'modal-btn-save-plan': handleSave,
+        'confirm-btn-no-plan': () => document.getElementById('confirmation-modal-plan').classList.add('hidden'),
+        'confirm-btn-yes-plan': () => closeEditModalPlan(true)
     };
 
     Object.entries(modalBtnMap).forEach(([id, handler]) => {
@@ -296,11 +296,11 @@ function setupModalPlanosLogic() {
 
 
     // --- Controles do modal de confirmação de exclusão ---
-    const deleteModal = document.getElementById('delete-confirmation-modal');
+    const deleteModal = document.getElementById('delete-confirmation-modal-plan');
     if (deleteModal) {
         const deleteBtnMap = {
-            'delete-confirm-btn-no': () => { deleteModal.classList.add('hidden'); currentPlanId = '' },
-            'delete-confirm-btn-yes': handleDelete
+            'delete-confirm-btn-no-plan': () => { deleteModal.classList.add('hidden'); currentPlanId = '' },
+            'delete-confirm-btn-yes-plan': handleDelete
         };
 
         Object.entries(deleteBtnMap).forEach(([id, handler]) => {
@@ -344,13 +344,13 @@ function adicionarLinhaPessoa(pessoaData = {}) {
         </td>`;
 
     corpoTabela.appendChild(novaLinha);
-    novaLinha.addEventListener('input', () => (hasChanges = true));
+    novaLinha.addEventListener('input', () => (hasChangesPlanos = true));
 
     novaLinha.querySelector('.remover-linha').addEventListener('click', function (e) {
         const btn = e.currentTarget;
         const linha = btn.closest('tr');
         linha.remove();
-        hasChanges = true;
+        hasChangesPlanos = true;
 
         const linhasRestantes = corpoTabela.querySelectorAll('tr');
         if (linhasRestantes.length === 0) {
@@ -360,7 +360,7 @@ function adicionarLinhaPessoa(pessoaData = {}) {
 }
 
 function openEditModal(planId) {
-    const modal = document.getElementById('edit-modal');
+    const modal = document.getElementById('edit-modal-plan');
     const form = document.getElementById('modal-form');
     const modalTitle = modal.querySelector('h3');
 
@@ -379,7 +379,7 @@ function openEditModal(planId) {
         fillModalEdicao(planData);
     }
 
-    hasChanges = false;
+    hasChangesPlanos = false;
     modal.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
 }
@@ -406,12 +406,12 @@ function fillModalEdicao(planData) {
     });
 }
 
-function closeEditModal(force = false) {
-    const confirmationModal = document.getElementById('confirmation-modal');
-    const editModal = document.getElementById('edit-modal');
+function closeEditModalPlan(force = false) {
+    const confirmationModal = document.getElementById('confirmation-modal-plan');
+    const editModal = document.getElementById('edit-modal-plan');
     const body = document.body;
 
-    if (hasChanges && !force) {
+    if (hasChangesPlanos && !force) {
         confirmationModal.classList.remove('hidden');
         return;
     }
@@ -424,7 +424,7 @@ function closeEditModal(force = false) {
 
     document.getElementById('corpoTabelaPessoas').innerHTML = '';
 
-    hasChanges = false;
+    hasChangesPlanos = false;
     isNewPlan = false;
 
     editModal.removeAttribute('data-plan-id');
@@ -432,14 +432,14 @@ function closeEditModal(force = false) {
 }
 
 async function handleSave() {
-    if (!hasChanges) {
-        closeEditModal(true);
+    if (!hasChangesPlanos) {
+        closeEditModalPlan(true);
         return;
     }
 
-    const saveBtn = document.getElementById('modal-btn-save');
-    const cancelBtn = document.getElementById('modal-btn-cancel');
-    const closeBtn = document.getElementById('modal-btn-close');
+    const saveBtn = document.getElementById('modal-btn-save-plan');
+    const cancelBtn = document.getElementById('modal-btn-cancel-plan');
+    const closeBtn = document.getElementById('modal-btn-close-plan');
 
     const form = document.getElementById('modal-form');
     const formData = new FormData(form);
@@ -508,9 +508,9 @@ async function handleSave() {
 }
 
 async function handleDelete() {
-    const confirmButton = document.getElementById('delete-confirm-btn-yes');
-    const cancelButton = document.getElementById('delete-confirm-btn-no');
-    const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
+    const confirmButton = document.getElementById('delete-confirm-btn-yes-plan');
+    const cancelButton = document.getElementById('delete-confirm-btn-no-plan');
+    const deleteConfirmationModal = document.getElementById('delete-confirmation-modal-plan');
 
     const originalConfirmText = confirmButton.textContent;
 
@@ -539,7 +539,7 @@ async function handleDelete() {
 function openDeleteConfirmationModal(idPlan) {
     const planData = window.jsonPlanos.find(p => p.ID === idPlan);
     currentPlanId = idPlan;
-    const modal = document.getElementById('delete-confirmation-modal');
+    const modal = document.getElementById('delete-confirmation-modal-plan');
     const nameSpan = document.getElementById('plano-to-delete-name');
     nameSpan.textContent = `"${planData.Nome}"`;
     modal.classList.remove('hidden');
