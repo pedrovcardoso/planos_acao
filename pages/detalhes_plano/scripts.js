@@ -66,13 +66,25 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.warn("populateActionsTable não encontrada.");
         }
 
-        // Setup dos botões de troca de visualização
+        // Setup Mudança de View
         setupViewSwitcher();
 
-        // Setup Modal (o modal precisa de uma função global openTaskModal, 
-        // mas kanban.js pode tentar chamar openTaskModal que está no main.js da outra página.
-        // Precisamos definir um openTaskModal local simples aqui para não quebrar)
-        window.openTaskModal = localOpenTaskModal;
+        // 6. Integrar Modais (Ações e Planos)
+        initModalAcoes();
+        initModalPlanos();
+
+        // Configurar botão de edição do plano
+        const btnEditPlan = document.getElementById('btn-edit-plan');
+        if (btnEditPlan) {
+            btnEditPlan.addEventListener('click', () => {
+                if (typeof openModalPlanos === 'function') {
+                    // O modalPlanos espera o ID para editar
+                    openModalPlanos(planData.ID);
+                } else {
+                    console.error("Função openModalPlanos não encontrada.");
+                }
+            });
+        }
 
     } catch (error) {
         console.error("Erro ao carregar página de detalhes:", error);
@@ -341,32 +353,3 @@ function setupViewSwitcher() {
     });
 }
 
-// Função local para abrir modal (usada pelo click no card do Kanban ou linha da tabela)
-function localOpenTaskModal(id) {
-    // Reutilizar lógica simples de preencher o modal
-    const task = jsonAcoes.find(t => t.ID === id);
-    if (!task) return;
-
-    const modal = document.getElementById('task-modal-container');
-
-    // Preenche campos
-    document.getElementById('modal-view-atividade').innerText = task.Atividade;
-    document.getElementById('modal-view-plano').innerText = task["Plano de ação"];
-    document.getElementById('modal-view-status').innerText = task.Status;
-    document.getElementById('modal-view-descricao').innerText = task["Descrição da atividade"] || '-';
-    document.getElementById('modal-view-observacoes').innerText = task["Observações"] || '-';
-
-    // Mostra modal
-    modal.classList.remove('hidden');
-
-    // Setup close button local
-    const btnClose = document.getElementById('modal-btn-close');
-    btnClose.onclick = () => {
-        modal.classList.add('hidden');
-    };
-
-    // Fecha ao clicar fora
-    modal.onclick = (e) => {
-        if (e.target === modal) modal.classList.add('hidden');
-    };
-}

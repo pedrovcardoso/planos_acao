@@ -176,17 +176,25 @@ function initModalAcoes() {
                                                 </div>
                                             </div>
 
-                                            <div class="editable-view">
-                                                <select
-                                                    class="notification-type w-full appearance-none rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 transition-all focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
-                                                    <option value="inicio">Alerta de início</option>
-                                                    <option value="aviso" selected>Alerta de aviso</option>
-                                                    <option value="pendencia">Alerta de pendência</option>
-                                                </select>
+                                            <div class="editable-view w-full">
+                                                <div class="flex items-center gap-2">
+                                                    <div class="notification-icon-container flex-shrink-0 rounded-full p-2 bg-slate-100 text-slate-500">
+                                                        <!-- Ícone injetado via JS -->
+                                                    </div>
+                                                    <select
+                                                        class="notification-type w-full appearance-none rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 transition-all focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
+                                                        <option value="inicio">Alerta de início</option>
+                                                        <option value="aviso" selected>Alerta de aviso</option>
+                                                        <option value="pendencia">Alerta de pendência</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <p
-                                                class="sent-view-text sent-type hidden w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                                            </p>
+                                            <div class="sent-view-text sent-type hidden w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 flex items-center gap-2">
+                                                <div class="notification-icon-container-locked flex-shrink-0 rounded-full p-1">
+                                                    <!-- Ícone injetado via JS -->
+                                                </div>
+                                                <span class="sent-type-text"></span>
+                                            </div>
                                         </div>
 
                                         <div class="flex flex-col gap-1">
@@ -538,6 +546,8 @@ function populateViewNotificacoes(notificacoes) {
     const container = document.getElementById("notifications-list");
     container.innerHTML = "";
 
+    notificacoes.sort((a, b) => new Date(a.data) - new Date(b.data));
+
     if (notificacoes.length === 0) {
         container.innerHTML = `<span class="text-gray-500 italic">Nenhuma notificação cadastrada</span>`;
         return;
@@ -653,7 +663,8 @@ function populateEditMode() {
     atualizarUnidades(task['Plano de ação'], task.Unidades || []);
 
     if (!isNewTaskMode) {
-        const notificacoes = window.jsonNotificacoes.filter(n => n.idAcao === id);
+        const notificacoes = window.jsonNotificacoes.filter(n => n.idAcao === id)
+            .sort((a, b) => new Date(a.data) - new Date(b.data));
         notificacoes.forEach(createNotificacao);
     }
 }
@@ -750,7 +761,11 @@ function createNotificacao(notificacao = {}) {
         badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
         badge.className = `status-badge text-xs font-medium px-2.5 py-0.5 rounded-md ${status === 'enviado' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`;
 
-        clone.querySelector('.sent-type').textContent = notificacao.tipo;
+        const iconContainerLocked = clone.querySelector('.notification-icon-container-locked');
+
+        clone.querySelector('.sent-type-text').textContent = `Alerta de ${notificacao.tipo}`;
+        updateNotificationIcon(iconContainerLocked, notificacao.tipo);
+
         clone.querySelector('.sent-date').textContent = notificacao.data ? new Date(notificacao.data + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
 
         (notificacao.mailList || []).forEach(email => {
@@ -760,9 +775,16 @@ function createNotificacao(notificacao = {}) {
             recSent.appendChild(p);
         });
     } else {
-        clone.querySelector('.notification-type').value = notificacao.tipo || 'aviso';
+        const typeSelect = clone.querySelector('.notification-type');
+        const iconContainer = clone.querySelector('.notification-icon-container');
+
+        typeSelect.value = notificacao.tipo || 'aviso';
         clone.querySelector('.notification-date').value = notificacao.data || '';
         populateTabelaNotificacoes(recEdit, notificacao.mailList || []);
+
+        const updateIcon = () => updateNotificationIcon(iconContainer, typeSelect.value);
+        typeSelect.addEventListener('change', updateIcon);
+        updateIcon();
 
         const toggleBtn = clone.querySelector('.btn-toggle-all');
         toggleBtn.onclick = () => {
@@ -775,6 +797,32 @@ function createNotificacao(notificacao = {}) {
     }
 
     container.appendChild(clone);
+}
+
+function updateNotificationIcon(container, type) {
+    let colorClasses = "";
+    let iconSVG = "";
+
+    switch (type) {
+        case "inicio":
+            colorClasses = "bg-green-100 text-green-700";
+            iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" /></svg>`;
+            break;
+        case "aviso":
+            colorClasses = "bg-sky-100 text-sky-700";
+            iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-1.707 1.707A1 1 0 003 15h14a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" /></svg>`;
+            break;
+        case "pendencia":
+            colorClasses = "bg-amber-100 text-amber-600";
+            iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.001-1.742 3.001H4.42c-1.532 0-2.492-1.667-1.742-3.001l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>`;
+            break;
+        default:
+            colorClasses = "bg-slate-100 text-slate-700";
+            iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>`;
+    }
+
+    container.innerHTML = iconSVG;
+    container.className = `notification-icon-container flex-shrink-0 rounded-full p-1 ${colorClasses}`; // Reduced padding to p-1 for smaller look
 }
 
 function populateTabelaNotificacoes(listEl, mailList = []) {
