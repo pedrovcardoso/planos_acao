@@ -1057,7 +1057,7 @@ function gerarCards(jsonPlanos) {
         </div>
                 
         <div class="flex-grow">
-          <h2 class="pr-8 text-lg font-bold text-sky-800 tracking-normal">${plano.Nome}</h2>
+          <a href="../detalhes_plano/index.html?id=${plano.ID}" class="pr-8 text-lg font-bold text-sky-800 tracking-normal hover:underline">${plano.Nome}</a>
           <div class="mt-2 space-y-1 text-sm text-slate-500">
             <p><strong class="font-medium text-slate-600">SEI de origem:</strong> ${plano["Processo SEI"]}</p>
             <p><strong class="font-medium text-slate-600">Documento TCE:</strong> ${plano["Documento TCE"]}</p>
