@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     toggleLoading(true);
 
     try {
-        // 1. Obter dados
         const requiredData = await obterDados(['acoes.txt', 'planos.txt', 'notificacoes.txt']);
         if (!requiredData) throw new Error("Não foi possível obter os dados.");
 
@@ -10,7 +9,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         jsonPlanos = requiredData['planos.txt'];
         jsonNotificacoes = requiredData['notificacoes.txt'];
 
-        // 2. Identificar qual plano exibir
         const planId = getPlanIdFromURL();
         if (!planId) {
             alert("Nenhum ID de plano especificado na URL (param 'id').");
@@ -18,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        // Tenta achar com == para cobrir string/number mismatch
         const planData = jsonPlanos.find(p => p.ID == planId);
         if (!planData) {
             alert(`Plano não encontrado com ID: ${planId}`);
@@ -26,20 +23,11 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        // 3. Filtrar ações deste plano (usando o Nome do plano encontrado, já que as ações referenciam pelo Nome)
-        // Atenção: As ações continuam ligadas pelo NOME do plano, não pelo ID, na estrutura atual.
         const planActions = jsonAcoes.filter(a => a["Plano de ação"] === planData.Nome);
+        ordenarJsonAcoes(planActions);
 
-        // 4. Renderizar a parte superior (Detalhes)
         renderPlanDetails(planData, planActions);
 
-        // 5. Renderizar a parte inferior (Ações)
-        // Precisamos garantir que as funções globais existam (carregadas de kanban.js/table.js)
-        // Como importamos kanban.js e table.js no HTML, as funções populateKanbanBoard etc devem estar disponíveis.
-        // Importante: Esses scripts podem depender de IDs específicos no DOM.
-        // O index.html criado tenta replicar os IDs esperados (#kanban-view, #table-container).
-
-        // Carrega dependências de script se necessário (ex: custom-table)
         function loadScript(src) {
             return new Promise((resolve, reject) => {
                 const script = document.createElement('script');

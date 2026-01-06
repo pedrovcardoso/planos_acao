@@ -861,11 +861,11 @@ function deleteNotification(el) {
 
 function closeModal(force = false) {
     if (!document.getElementById('edit-mode-content').classList.contains('hidden') && hasChanges && !force) {
-        document.getElementById('confirmation-modal').classList.remove('hidden');
+        document.getElementById('task-confirmation-modal-task').classList.remove('hidden');
         return;
     }
     document.getElementById('task-modal-container').classList.add('hidden');
-    document.getElementById('confirmation-modal').classList.add('hidden');
+    document.getElementById('confirmation-modal-task').classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
     hasChanges = false;
     isNewTaskMode = false;
