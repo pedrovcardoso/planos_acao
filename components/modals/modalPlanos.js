@@ -475,7 +475,7 @@ async function modalPlanos_handleSave() {
         return;
     }
 
-    [saveBtn, cancelBtn, closeBtn].forEach(btn => (btn.disabled = true));
+    modalPlanos_togglePageInteractivity(false);
     saveBtn.textContent = 'Salvando...';
 
     try {
@@ -495,7 +495,7 @@ async function modalPlanos_handleSave() {
     } catch (error) {
         console.error('Falha ao salvar o plano:', error);
         alert(`Ocorreu um erro ao salvar: ${error.message}`);
-        [saveBtn, cancelBtn, closeBtn].forEach(btn => (btn.disabled = false));
+        modalPlanos_togglePageInteractivity(true);
         saveBtn.textContent = 'Salvar Alterações';
     }
 }
@@ -507,7 +507,7 @@ async function modalPlanos_handleDelete() {
 
     const originalConfirmText = confirmButton.textContent;
 
-    [confirmButton, cancelButton].forEach(btn => (btn.disabled = true));
+    modalPlanos_togglePageInteractivity(false);
     confirmButton.textContent = 'Excluindo...';
 
     try {
@@ -522,7 +522,7 @@ async function modalPlanos_handleDelete() {
     } catch (error) {
         console.error("Falha ao excluir o plano:", error);
         alert("Ocorreu um erro inesperado ao excluir o plano. Por favor, tente novamente.");
-        [confirmButton, cancelButton].forEach(btn => (btn.disabled = false));
+        modalPlanos_togglePageInteractivity(true);
     } finally {
         confirmButton.textContent = originalConfirmText;
         deleteConfirmationModal.classList.add('hidden');
@@ -611,3 +611,19 @@ window.initModalPlanos = initModalPlanos;
 window.openModalForNewPlan = function () {
     openEditModal(); // Abre o modal em modo de criação (sem ID)
 };
+
+function modalPlanos_togglePageInteractivity(enabled) {
+    const elements = document.querySelectorAll('input, select, checkbox, textarea, button');
+    elements.forEach(el => {
+        el.disabled = !enabled;
+    });
+
+    const customSelects = document.querySelectorAll('.custom-select-container');
+    customSelects.forEach(cs => {
+        if (!enabled) {
+            cs.classList.add('pointer-events-none', 'opacity-70', 'grayscale-[0.5]');
+        } else {
+            cs.classList.remove('pointer-events-none', 'opacity-70', 'grayscale-[0.5]');
+        }
+    });
+}
