@@ -283,22 +283,20 @@
 
     </main>
 
-    <!-- Modal (Copiado da estrutura de acoes/index.html para compatibilidade com kanban.js) -->
-
     <footer id="footer"></footer>
 
     <!-- Scripts -->
     <!-- Reusing components -->
-    <script defer src='../../components/layout.js'></script>
-    <script defer src='../../components/apiConnection.js'></script>
-    <script defer src='../../components/multiple_select.js'></script>
-    <script defer src='../../components/modalAcoes.js'></script>
-    <script defer src='../../components/modalPlanos.js'></script>
-    <script defer src='../../components/chatbot.js'></script>
+    <script defer src='../../components/layout/layout.js'></script>
+    <script defer src='../../components/core/apiConnection.js'></script>
+    <script defer src='../../components/ui/multiple_select.js'></script>
+    <script defer src='../../components/modals/modalAcoes.js'></script>
+    <script defer src='../../components/modals/modalPlanos.js'></script>
+    <script defer src='../../components/layout/chatbot.js'></script>
 
     <!-- Shared logic for views -->
-    <script defer src='../acoes/kanban.js'></script>
-    <script defer src='../acoes/table.js'></script>
+    <script defer src='../../components/views/kanbanBoard.js'></script>
+    <script defer src='../../components/views/tableBoard.js'></script>
 
     <!-- Page specific logic -->
     <script defer src='scripts.js'></script>

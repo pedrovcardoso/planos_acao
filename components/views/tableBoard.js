@@ -10,13 +10,18 @@ const tableColumnConfig = [
     { key: 'Observações', label: 'Observações', className: '', width: 300, filterable: true }
 ];
 
-function populateActionsTable(jsonAcoes) {
-    const container = document.getElementById('table-container');
+/**
+ * Cria e popula a tabela de ações.
+ * @param {Array<Object>} actionsData - O array de objetos de ações.
+ * @param {string} containerId - O ID do elemento container (padrão: 'table-container').
+ */
+function populateActionsTable(actionsData, containerId = 'table-container') {
+    const container = document.getElementById(containerId);
     if (!container) return;
 
     const plansUnitMap = new Map();
-    if (Array.isArray(jsonPlanos)) {
-        jsonPlanos.forEach(plan => {
+    if (Array.isArray(window.jsonPlanos)) {
+        window.jsonPlanos.forEach(plan => {
             if (plan.Nome && Array.isArray(plan.objPessoas)) {
                 const units = new Set(plan.objPessoas.map(person => person.Unidade));
                 plansUnitMap.set(plan.Nome, units);
@@ -43,7 +48,7 @@ function populateActionsTable(jsonAcoes) {
                 </th>`;
     }).join('');
 
-    const bodyHtml = jsonAcoes.map(task => {
+    const bodyHtml = actionsData.map(task => {
         const planUnits = plansUnitMap.get(task['Plano de ação']);
         let showWarning = false;
         if (planUnits && Array.isArray(task.Unidades) && task.Unidades.length > 0) {
@@ -86,7 +91,7 @@ function populateActionsTable(jsonAcoes) {
         return `<tr class="cursor-pointer hover:bg-slate-50 transition-colors divide-x divide-slate-200" data-task-id="${task.ID}">${cellsHtml}</tr>`;
     }).join('');
 
-    const fullTableHtml = `<table id="actions-main-table" style="width: ${totalTableWidth}px; table-layout: fixed;">
+    const fullTableHtml = `<table id="actions-main-table-${containerId}" style="width: ${totalTableWidth}px; table-layout: fixed;">
             <colgroup>${colgroupHtml}</colgroup>
             <thead class="bg-slate-50 text-xs text-slate-700 uppercase border-b border-slate-200 sticky top-0 shadow-md z-10">
                 <tr class="divide-x divide-slate-200">${headerHtml}</tr>
@@ -99,11 +104,19 @@ function populateActionsTable(jsonAcoes) {
     container.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('click', (e) => {
             if (e.target.closest('.table-filter-trigger')) return;
-            openTaskModal(row.dataset.taskId);
+            const taskId = row.dataset.taskId;
+            if (typeof openTaskModal === 'function') {
+                openTaskModal(taskId);
+            } else {
+                console.error("Função openTaskModal não encontrada.");
+            }
         });
     });
 
-    initializeTableFilters('actions-main-table');
-    initializeTableResizing('actions-main-table'); 
-    initializeTableReordering('actions-main-table');
+    if (typeof initializeTableFilters === 'function') initializeTableFilters(`actions-main-table-${containerId}`);
+    if (typeof initializeTableResizing === 'function') initializeTableResizing(`actions-main-table-${containerId}`);
+    if (typeof initializeTableReordering === 'function') initializeTableReordering(`actions-main-table-${containerId}`);
 }
+
+// Expondo globalmente
+window.populateActionsTable = populateActionsTable;

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Função para carregar um componente. Agora ela retorna a Promise.
     const loadComponent = (componentPath, elementId) => {
         // Retorna a promise para que possamos encadear ações
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => console.error('Falha ao carregar componente:', error));
     };
 
-    loadComponent('../../components/header.html', 'header')
+    loadComponent('../../components/layout/header.html', 'header')
 
-    loadComponent('../../components/footer.html', 'footer');
+    loadComponent('../../components/layout/footer.html', 'footer');
 });

@@ -25,12 +25,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         await Promise.all([
-            loadScript('../../components/multiple_select.js'),
-            loadScript('../../components/custom-table.js')
+            loadScript('../../components/ui/multiple_select.js'),
+            loadScript('../../components/ui/custom-table.js')
         ]);
         setupFilters();
         initModalAcoes();
-        setupGantt();
         setupViewSwitcher();
 
         const btnNovaAtividade = document.getElementById('btn-nova-atividade');
@@ -61,44 +60,31 @@ function toggleLoading(show) {
 function setupViewSwitcher() {
     const btnKanban = document.getElementById('view-kanban-btn');
     const btnTable = document.getElementById('view-table-btn');
-    const btnGantt = document.getElementById('view-gantt-btn');
 
     const viewKanban = document.getElementById('kanban-view');
     const viewTable = document.getElementById('table-view');
-    const viewGantt = document.getElementById('gantt-view');
 
-    const setActive = (activeBtn, ...otherBtns) => {
+    const setActive = (activeBtn, otherBtn) => {
         activeBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
-        otherBtns.forEach(btn => {
-            if (btn) btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
-        });
+        if (otherBtn) otherBtn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
     };
 
-    const setView = (activeView, ...otherViews) => {
+    const setView = (activeView, otherView) => {
         activeView.style.display = 'block';
-        otherViews.forEach(v => {
-            if (v) v.style.display = 'none';
-        });
+        if (otherView) otherView.style.display = 'none';
     };
 
     if (btnKanban) {
         btnKanban.addEventListener('click', () => {
-            setActive(btnKanban, btnTable, btnGantt);
-            setView(viewKanban, viewTable, viewGantt);
+            setActive(btnKanban, btnTable);
+            setView(viewKanban, viewTable);
         });
     }
 
     if (btnTable) {
         btnTable.addEventListener('click', () => {
-            setActive(btnTable, btnKanban, btnGantt);
-            setView(viewTable, viewKanban, viewGantt);
-        });
-    }
-
-    if (btnGantt) {
-        btnGantt.addEventListener('click', () => {
-            setActive(btnGantt, btnKanban, btnTable);
-            setView(viewGantt, viewKanban, viewTable);
+            setActive(btnTable, btnKanban);
+            setView(viewTable, viewKanban);
         });
     }
 }
@@ -227,7 +213,6 @@ function filterJson(json, chave, valoresSelecionados) {
 }
 
 function atualizarVisualizacoes(dados) {
-    fillGanttData(dados);
     populateKanbanBoard(dados);
     populateActionsTable(dados);
 }

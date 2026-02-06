@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         await Promise.all([
-            loadScript('../../components/custom-table.js')
+            loadScript('../../components/ui/custom-table.js')
         ]);
 
         if (typeof populateKanbanBoard === 'function') {
