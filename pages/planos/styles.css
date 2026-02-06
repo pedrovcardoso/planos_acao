@@ -1,16 +1,8 @@
-/* ===============================================================================
-// tamanho das colunas fixas do gráfico de gantt
-================================================================================== */
 :root {
     --col-plano-width: 250px;
     --col-status-width: 160px;
     --month-width: 80px;
 }
-
-/* ===============================================================================
-// estilos de status
-================================================================================== */
-
 
 .status-container {
     display: flex;
@@ -33,7 +25,6 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo zebrado cinza sobre azul para o progresso no Gantt */
 .gantt-progress-bar {
     height: 100%;
     border-radius: inherit;
@@ -50,18 +41,12 @@
     background-size: 12px 12px;
 }
 
-/* Track da barra: fundo sólido para evitar conflito visual com o heatmap */
 .gantt-bar-container {
     background-color: #3498db;
-    /* Slate 50 */
     border: 1px solid oklch(68.5% 0.169 237.323);
-    /* Slate 300 */
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* ===============================================================================
-// lado esquerdo do gráfico de gantt (lista de planos de ação)
-================================================================================== */
 .gantt-tasks-header {
     display: grid;
     grid-template-columns: var(--col-plano-width)var(--col-status-width);
@@ -121,10 +106,6 @@
     line-height: 40px;
 }
 
-
-/* ===============================================================================
-// lado direito do gráfico de gantt (linha do tempo)
-================================================================================== */
 .gantt-timeline {
     display: grid;
     grid-template-rows: auto 1fr;
