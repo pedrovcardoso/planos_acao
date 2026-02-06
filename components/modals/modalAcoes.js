@@ -1,17 +1,20 @@
 function initModalAcoes() {
     const modalHtml = `
-        <section id="modal-container">
-            <section id="task-modal-container"
+        <section id="acao-modal-container">
+            <section id="acao-task-modal-container"
                 class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
 
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
 
                     <div class="flex items-start justify-between p-4 border-b border-slate-200">
-                        <div>
-                            <span id="modal-view-plano" class="block text-sm font-semibold text-sky-600"></span>
-                            <h2 id="modal-view-atividade" class="text-2xl font-bold text-slate-800"></h2>
+                        <div id="acao-header-view">
+                            <span id="acao-view-plano" class="block text-sm font-semibold text-sky-600"></span>
+                            <h2 id="acao-view-atividade" class="text-2xl font-bold text-slate-800"></h2>
                         </div>
-                        <button id="modal-btn-close-task" type="button"
+                        <div id="acao-header-edit" class="hidden">
+                            <h2 class="text-2xl font-bold text-slate-800">Editar Ação</h2>
+                        </div>
+                        <button id="acao-btn-close-task" type="button"
                             class="text-slate-500 hover:text-red-600 transition-colors rounded-full p-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 ">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -21,29 +24,29 @@ function initModalAcoes() {
                         </button>
                     </div>
 
-                    <div id="view-mode-content" class="p-6 space-y-4 overflow-y-auto">
+                    <div id="acao-view-mode-content" class="p-6 space-y-4 overflow-y-auto">
                         <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
                             <div class="flex items-center gap-2">
                                 <p class="font-medium text-slate-500">Status:</p>
                                 <div class="flex justify-center items-center">
-                                    <div id="modal-view-status"
+                                    <div id="acao-view-status"
                                         class="flex justify-center items-center text-sm px-1.5 rounded h-6">
                                     </div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-4">
-                                <p class="font-medium text-slate-500">Início: <strong id="modal-view-data-inicio"
+                                <p class="font-medium text-slate-500">Início: <strong id="acao-view-data-inicio"
                                         class="font-semibold text-slate-700"></strong></p>
-                                <p class="font-medium text-slate-500">Fim: <strong id="modal-view-data-fim"
+                                <p class="font-medium text-slate-500">Fim: <strong id="acao-view-data-fim"
                                         class="font-semibold text-slate-700"></strong></p>
                             </div>
                         </div>
                         <div class="space-y-4 pt-4 border-t border-slate-200">
                             <div><span class="block text-sm font-medium text-slate-500 mb-1">Descrição da
-                                    ação</span><span id="modal-view-descricao"
+                                    ação</span><span id="acao-view-descricao"
                                     class="block text-base text-slate-800"></span></div>
                             <div><span class="block text-sm font-medium text-slate-500 mb-1">Observações</span><span
-                                    id="modal-view-observacoes"
+                                    id="acao-view-observacoes"
                                     class="block text-base text-slate-800 whitespace-pre-wrap"></span></div>
                         </div>
 
@@ -51,10 +54,10 @@ function initModalAcoes() {
                             <h4 class="mb-2 items-center gap-2 text-base font-semibold text-slate-700">
                                 <ion-icon name="people" class="text-lg"></ion-icon> Unidade responsável
                             </h4>
-                            <div class="flex-1 flex flex-wrap items-center gap-1.5" id="unidades-view-container">
+                            <div class="flex-1 flex flex-wrap items-center gap-1.5" id="acao-unidades-view-container">
                             </div>
                         </div>
-                        <div id="multi-select-container" class="md:col-span-2">
+                        <div id="acao-multi-select-container" class="md:col-span-2">
                         </div>
 
                         <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
@@ -63,35 +66,35 @@ function initModalAcoes() {
                                 Notificações
                             </h4>
                         </div>
-                        <div id="notifications-list" class="space-y-4"></div>
+                        <div id="acao-notifications-list" class="space-y-4"></div>
                     </div>
 
-                    <div id="edit-mode-content" class="hidden p-6 overflow-y-auto">
-                        <form id="modal-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div id="acao-edit-mode-content" class="hidden p-6 overflow-y-auto">
+                        <form id="acao-edit-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                             <div class="md:col-span-2">
-                                <input type="text" id="edit-atividade" name="Atividade"
+                                <input type="text" id="acao-edit-atividade" name="Atividade"
                                     class="w-full bg-transparent border-none p-0 text-2xl font-bold text-slate-800 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
                                     placeholder="Nome da Ação">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="edit-descricao"
+                                <label for="acao-edit-descricao"
                                     class="block text-sm font-semibold text-slate-500 mb-1">Descrição da ação</label>
-                                <textarea id="edit-descricao" name="Descrição da atividade" rows="2"
+                                <textarea id="acao-edit-descricao" name="Descrição da atividade" rows="2"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
 
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6">
                                     <div class="col-span-1">
-                                        <label for="edit-numero-atividade"
+                                        <label for="acao-edit-numero-atividade"
                                             class="block text-sm font-semibold text-slate-500 mb-1">Nº da Ação</label>
-                                        <input type="text" id="edit-numero-atividade" name="Número da atividade"
+                                        <input type="text" id="acao-edit-numero-atividade" name="Número da atividade"
                                             class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                     </div>
                                     <div class="col-span-2">
-                                        <label for="edit-status"
+                                        <label for="acao-edit-status"
                                             class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
-                                        <select id="edit-status" name="Status"
+                                        <select id="acao-edit-status" name="Status"
                                             class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                             <option selected disabled hidden>Selecione um valor</option>
                                             <option>Em desenvolvimento</option>
@@ -106,30 +109,30 @@ function initModalAcoes() {
                             </div>
 
                             <div class="md:col-span-2">
-                                <label for="edit-plano" class="block text-sm font-semibold text-slate-500 mb-1">Plano de
+                                <label for="acao-edit-plano" class="block text-sm font-semibold text-slate-500 mb-1">Plano de
                                     Ação</label>
-                                <select id="edit-plano" name="Plano de ação"
+                                <select id="acao-edit-plano" name="Plano de ação"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                 </select>
                             </div>
 
                             <div>
-                                <label for="edit-data-inicio" class="block text-sm font-semibold text-slate-500 mb-1">Data
+                                <label for="acao-edit-data-inicio" class="block text-sm font-semibold text-slate-500 mb-1">Data
                                     de início</label>
-                                <input type="date" id="edit-data-inicio" name="Data de início"
+                                <input type="date" id="acao-edit-data-inicio" name="Data de início"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
                             <div>
-                                <label for="edit-data-fim" class="block text-sm font-semibold text-slate-500 mb-1">Data
+                                <label for="acao-edit-data-fim" class="block text-sm font-semibold text-slate-500 mb-1">Data
                                     fim</label>
-                                <input type="date" id="edit-data-fim" name="Data fim"
+                                <input type="date" id="acao-edit-data-fim" name="Data fim"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                             </div>
 
                             <div class="md:col-span-2">
-                                <label for="edit-observacoes"
+                                <label for="acao-edit-observacoes"
                                     class="block text-sm font-semibold text-slate-500 mb-1">Observações</label>
-                                <textarea id="edit-observacoes" name="Observações" rows="3"
+                                <textarea id="acao-edit-observacoes" name="Observações" rows="3"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
 
@@ -138,8 +141,8 @@ function initModalAcoes() {
                                     <ion-icon name="people" class="text-lg"></ion-icon> Unidade responsável
                                 </h4>
                             </div>
-                            <div id="unidades-container" class="md:col-span-2">
-                                <select multiple data-placeholder="Selecionar unidades" id="unidades-multi-select">
+                            <div id="acao-unidades-container" class="md:col-span-2">
+                                <select multiple data-placeholder="Selecionar unidades" id="acao-unidades-multi-select">
                                 </select>
                             </div>
 
@@ -149,9 +152,9 @@ function initModalAcoes() {
                                     Notificações
                                 </h4>
                             </div>
-                            <div id="notifications-edit-list"
+                            <div id="acao-notifications-edit-list"
                                 class="w-full col-span-2 pt-2 flex flex-row flex-wrap gap-4 justify-between">
-                                <template id="notification-template">
+                                <template id="acao-notification-template">
                                     <div
                                         class="container-notificacao flex flex-col gap-4 rounded-lg border border-slate-200 bg-white p-4 transition-shadow hover:shadow-md w-full max-w-[340px]">
 
@@ -215,10 +218,10 @@ function initModalAcoes() {
                                                     <div class="info-tooltip relative ml-1 flex items-center">
                                                         <button type="button"
                                                             class="group flex items-center text-slate-500 hover:text-slate-700 focus:outline-none"
-                                                            aria-describedby="tooltip-destinatarios">
+                                                            aria-describedby="acao-tooltip-destinatarios">
                                                             <ion-icon name="information-circle" class="w-4 h-4"></ion-icon>
 
-                                                            <span id="tooltip-destinatarios" role="tooltip"
+                                                            <span id="acao-tooltip-destinatarios" role="tooltip"
                                                                 class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-32 px-3 py-2 text-xs text-white bg-gray-700 rounded shadow-lg whitespace-normal opacity-0 group-hover:opacity-100 transition-opacity before:content-[''] before:absolute before:-top-1  before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-b-gray-700 pointer-events-none">
                                                                 Para adicionar novas pessoas, acrescente na lista dos
                                                                 integrantes do plano de ação.
@@ -242,7 +245,7 @@ function initModalAcoes() {
                             </div>
 
                             <div class="mt-4">
-                                <button id="add-notification-btn-task" type="button"
+                                <button id="acao-add-notification-btn" type="button"
                                     class="w-full flex items-center justify-center gap-2 rounded-md border-2 border-dashed border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 hover:border-slate-400 hover:bg-slate-100 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
                                         fill="currentColor">
@@ -258,7 +261,7 @@ function initModalAcoes() {
 
                     <div
                         class="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                        <button id="modal-btn-delete-task" type="button"
+                        <button id="acao-btn-delete-task" type="button"
                             class=" text-red-700 font-bold py-2 px-4 rounded-lg hover:bg-red-200 hover:text-red-800 disabled:cursor-not-allowed text-sm flex items-center space-x-2">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="currentColor">
@@ -268,23 +271,23 @@ function initModalAcoes() {
                             <span>Excluir</span>
                         </button>
                         <div>
-                            <div id="view-mode-buttons" class="flex items-center space-x-3">
-                                <button id="modal-btn-view-close-task" type="button"
+                            <div id="acao-view-mode-buttons" class="flex items-center space-x-3">
+                                <button id="acao-btn-view-close" type="button"
                                     class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">Fechar</button>
-                                <button id="modal-btn-edit-task" type="button"
+                                <button id="acao-btn-edit-task" type="button"
                                     class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700">Editar</button>
                             </div>
-                            <div id="edit-mode-buttons" class="hidden">
-                                <button id="modal-btn-cancel-task" type="button"
+                            <div id="acao-edit-mode-buttons" class="hidden">
+                                <button id="acao-btn-cancel-task" type="button"
                                     class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">Cancelar</button>
-                                <button id="modal-btn-save-task" type="button"
+                                <button id="acao-btn-save-task" type="button"
                                     class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="confirmation-modal-task"
+                <div id="acao-confirmation-modal"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
@@ -294,11 +297,11 @@ function initModalAcoes() {
                         </div>
                         <div
                             class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                            <button id="confirm-btn-no-task" type="button"
+                            <button id="acao-confirm-btn-no" type="button"
                                 class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
                                 Não
                             </button>
-                            <button id="confirm-btn-yes-task" type="button"
+                            <button id="acao-confirm-btn-yes" type="button"
                                 class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
                                 Sim, Descartar
                             </button>
@@ -306,7 +309,7 @@ function initModalAcoes() {
                     </div>
                 </div>
 
-                <div id="delete-confirmation-modal-task"
+                <div id="acao-delete-confirmation-modal"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
@@ -325,7 +328,7 @@ function initModalAcoes() {
                             </div>
                             <div class="mt-4">
                                 <p class="text-sm text-slate-600">
-                                    Tem certeza de que deseja excluir o plano de ação: <strong id="plano-to-delete-name"
+                                    Tem certeza de que deseja excluir a ação <strong id="acao-to-delete-name"
                                         class="font-bold text-slate-800"></strong>?
                                 </p>
                                 <p class="mt-2 text-sm font-semibold text-red-700 bg-red-50 p-3 rounded-md">
@@ -335,11 +338,11 @@ function initModalAcoes() {
                         </div>
                         <div
                             class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                            <button id="delete-confirm-btn-no-task" type="button"
+                            <button id="acao-delete-confirm-btn-no" type="button"
                                 class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
                                 Cancelar
                             </button>
-                            <button id="delete-confirm-btn-yes-task" type="button"
+                            <button id="acao-delete-confirm-btn-yes" type="button"
                                 class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
                                 Sim, Excluir
                             </button>
@@ -347,20 +350,22 @@ function initModalAcoes() {
                     </div>
                 </div>
 
-                <div id="date-change-confirmation-modal-task"
+                <!-- Modal de Confirmação para Criação/Atualização de Notificações -->
+                <div id="acao-date-change-confirmation-modal"
                     class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
-                            <h3 id="modal-title-task" class="text-lg font-bold text-slate-800"></h3>
-                            <p id="modal-message-task" class="mt-2 text-sm text-slate-700"></p>
+                            <h3 id="acao-modal-title" class="text-lg font-bold text-slate-800"></h3>
+                            <!-- A classe de colite do texto foi alterada para um tom mais escuro -->
+                            <p id="acao-modal-message" class="mt-2 text-sm text-slate-700"></p>
                         </div>
                         <div
                             class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
-                            <button id="modal-btn-cancel-notification-task" type="button"
+                            <button id="acao-modal-btn-cancel-notification" type="button"
                                 class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
                                 Cancelar
                             </button>
-                            <button id="modal-btn-confirm-notification-task" type="button"
+                            <button id="acao-modal-btn-confirm-notification" type="button"
                                 class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
                                 Confirmar
                             </button>
@@ -378,11 +383,11 @@ function initModalAcoes() {
     setupModalAcoesLogic();
 }
 
-let currentTask = null;
-let courrentNotificacoesTask = [];
-let deletedNotificationIds = [];
-let hasChanges = false;
-let isNewTaskMode = false;
+let modalAcoes_currentTask = null;
+let modalAcoes_hasChanges = false;
+let modalAcoes_isNewMode = false;
+let modalAcoes_deletedNotificationIds = [];
+
 
 function setupModalAcoesLogic() {
     document.body.addEventListener('click', (event) => {
@@ -394,17 +399,16 @@ function setupModalAcoesLogic() {
     });
 
     const btnMap = {
-        'modal-btn-close-task': () => closeModal(),
-        'modal-btn-view-close-task': () => closeModal(),
-        'modal-btn-edit-task': switchToEditMode,
-        'modal-btn-cancel-task': () => switchToViewMode(),
-        'modal-btn-save-task': handleSaveAction,
-        'modal-btn-delete-task': openDeleteConfirmation,
-        'confirm-btn-no-task': () => document.getElementById('confirmation-modal-task').classList.add('hidden'),
-        'confirm-btn-yes-task': () => switchToViewMode(true),
-        'delete-confirm-btn-no-task': () => document.getElementById('delete-confirmation-modal-task').classList.add('hidden'),
-        'delete-confirm-btn-yes-task': handleDeleteTask,
-        'add-notification-btn-task': () => { createNotificacao(); hasChanges = true; }
+        'acao-btn-view-close': () => modalAcoes_closeModal(),
+        'acao-btn-edit-task': modalAcoes_switchToEditMode,
+        'acao-btn-cancel-task': () => modalAcoes_switchToViewMode(),
+        'acao-btn-save-task': modalAcoes_handleSave,
+        'acao-btn-delete-task': () => openDeleteConfirmationModalTask(modalAcoes_currentTask),
+        'acao-confirm-btn-no': () => document.getElementById('acao-confirmation-modal').classList.add('hidden'),
+        'acao-confirm-btn-yes': () => modalAcoes_switchToViewMode(true),
+        'acao-delete-confirm-btn-no': () => document.getElementById('acao-delete-confirmation-modal').classList.add('hidden'),
+        'acao-delete-confirm-btn-yes': modalAcoes_handleDeleteTask,
+        'acao-add-notification-btn': () => { modalAcoes_addNotificationItem(); modalAcoes_hasChanges = true; }
     };
 
     Object.entries(btnMap).forEach(([id, handler]) => {
@@ -412,44 +416,44 @@ function setupModalAcoesLogic() {
         if (btn) btn.addEventListener('click', handler);
     });
 
-    const editForm = document.getElementById('modal-edit-form');
+    const editForm = document.getElementById('acao-edit-form');
     if (editForm) {
-        editForm.addEventListener('input', () => (hasChanges = true));
+        editForm.addEventListener('input', () => (modalAcoes_hasChanges = true));
     }
 
-    const containerNotificacao = document.getElementById('notifications-edit-list');
+    const containerNotificacao = document.getElementById('acao-notifications-edit-list');
     if (containerNotificacao) {
         containerNotificacao.addEventListener('click', function (event) {
             const deleteButton = event.target.closest('.btn-delete-notification');
             if (deleteButton) {
                 const notificationToDelete = deleteButton.closest('.container-notificacao');
-                deleteNotification(notificationToDelete);
-                hasChanges = true;
+                modalAcoes_deleteNotification(notificationToDelete);
+                modalAcoes_hasChanges = true;
             }
         });
 
         containerNotificacao.addEventListener('change', function (event) {
             const target = event.target;
             if (target.matches('.notification-type, .notification-date, .recipients-list input[type="checkbox"]')) {
-                hasChanges = true;
+                modalAcoes_hasChanges = true;
             }
         });
     }
 
-    const dataInicioInput = document.getElementById('edit-data-inicio');
+    const dataInicioInput = document.getElementById('acao-edit-data-inicio');
     if (dataInicioInput) {
         dataInicioInput.addEventListener('focusout', async function (event) {
-            const id = document.getElementById('task-modal-container').dataset.taskId;
+            const id = modalAcoes_currentTask.ID;
             const novaData = event.target.value;
-            await gerenciarNotificacaoPorData(id, novaData, 'inicio');
-            await verificarNotificacaoLongoPrazo();
+            await modalAcoes_gerenciarNotificacaoPorData(id, novaData, 'inicio');
+            await modalAcoes_verificarNotificacaoLongoPrazo(id, novaData, document.getElementById('acao-edit-data-fim').value);
         });
     }
 
-    const dataFimInput = document.getElementById('edit-data-fim');
+    const dataFimInput = document.getElementById('acao-edit-data-fim');
     if (dataFimInput) {
         dataFimInput.addEventListener('focusout', async function (event) {
-            const id = document.getElementById('task-modal-container').dataset.taskId;
+            const id = modalAcoes_currentTask.ID;
             const novaData = event.target.value;
 
             const calcularDataPendencia = (dataFim) => {
@@ -458,116 +462,146 @@ function setupModalAcoesLogic() {
                 return data.toISOString().split('T')[0];
             };
 
-            await gerenciarNotificacaoPorData(id, novaData, 'pendencia', calcularDataPendencia);
-            await verificarNotificacaoLongoPrazo();
+            await modalAcoes_gerenciarNotificacaoPorData(id, novaData, 'pendencia', calcularDataPendencia);
+            await modalAcoes_verificarNotificacaoLongoPrazo(id, document.getElementById('acao-edit-data-inicio').value, novaData);
         });
     }
 }
 
-function openTaskModal(id) {
-    const notifications = window.jsonNotificacoes.filter(n => n.idAcao === id).map(n => n.ID);
-    console.log('Abrindo Ação ID:', id, 'Notificações associadas:', notifications);
+function openTaskModal(taskId) {
+    const task = window.jsonAcoes.find(t => t.ID === taskId);
+    if (!task) return;
 
-    isNewTaskMode = false;
-    currentTask = window.jsonAcoes.find(t => t.ID === id);
-    if (!currentTask) return;
+    modalAcoes_currentTask = task;
+    modalAcoes_isNewMode = false;
+    modalAcoes_hasChanges = false;
+    modalAcoes_deletedNotificationIds = [];
 
-    const modalTitle = document.getElementById('modal-view-atividade');
-    if (modalTitle) modalTitle.innerText = (currentTask['Número da atividade'] || '') + ' - ' + (currentTask['Atividade'] || '');
-
-    document.getElementById('task-modal-container').setAttribute('data-task-id', id);
-
-    switchToViewMode(true);
-    document.getElementById('task-modal-container').classList.remove('hidden');
+    modalAcoes_switchToViewMode();
+    document.getElementById('acao-task-modal-container').classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
 }
 
-function switchToViewMode(force = false) {
-    const confirmationModal = document.getElementById('confirmation-modal-task');
-    if (hasChanges && !force) {
+function openCreateTaskModal(defaultPlanoName = '') {
+    modalAcoes_currentTask = {
+        ID: '',
+        Atividade: '',
+        "Descrição da atividade": '',
+        "Número da atividade": '',
+        Status: 'Planejado',
+        "Plano de ação": defaultPlanoName,
+        "Data de início": '',
+        "Data fim": '',
+        Observações: '',
+        Unidades: []
+    };
+    modalAcoes_isNewMode = true;
+    modalAcoes_hasChanges = false;
+    modalAcoes_deletedNotificationIds = [];
+
+    modalAcoes_switchToEditMode();
+    document.getElementById('acao-task-modal-container').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+}
+
+function modalAcoes_switchToViewMode(force = false) {
+    const confirmationModal = document.getElementById('acao-confirmation-modal');
+    if (modalAcoes_hasChanges && !force) {
         confirmationModal.classList.remove('hidden');
         return;
     }
 
-    if (isNewTaskMode) {
-        closeModal(true);
+    if (modalAcoes_isNewMode) {
+        modalAcoes_closeModal(true);
         return;
     }
 
-    populateViewMode(currentTask);
+    const task = modalAcoes_currentTask;
 
-    const modalPlano = document.getElementById('modal-view-plano');
-    if (modalPlano) modalPlano.classList.remove('hidden');
+    document.getElementById('acao-view-mode-content').classList.remove('hidden');
+    document.getElementById('acao-edit-mode-content').classList.add('hidden');
+    document.getElementById('acao-view-mode-buttons').classList.remove('hidden');
+    document.getElementById('acao-edit-mode-buttons').classList.add('hidden');
 
-    document.getElementById('edit-mode-content').classList.add('hidden');
-    document.getElementById('edit-mode-buttons').classList.add('hidden');
-    document.getElementById('view-mode-content').classList.remove('hidden');
-    document.getElementById('view-mode-buttons').classList.remove('hidden');
-    confirmationModal.classList.add('hidden');
-    hasChanges = false;
-}
+    document.getElementById('acao-header-view').classList.remove('hidden');
+    document.getElementById('acao-header-edit').classList.add('hidden');
 
-function populateViewMode(task) {
-    const setElementText = (id, text) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = text || '-';
-    };
-    const formatDate = (dateString) => {
-        return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
-    };
+    document.getElementById('acao-view-plano').textContent = task["Plano de ação"] || 'Sem Plano';
+    document.getElementById('acao-view-atividade').textContent = (task['Número da atividade'] ? task['Número da atividade'] + ' - ' : '') + (task.Atividade || 'Sem Título');
+    document.getElementById('acao-view-data-inicio').textContent = task["Data de início"] ? formatDate(task["Data de início"]) : '-';
+    document.getElementById('acao-view-data-fim').textContent = task["Data fim"] ? formatDate(task["Data fim"]) : '-';
+    document.getElementById('acao-view-descricao').textContent = task["Descrição da atividade"] || '-';
+    document.getElementById('acao-view-observacoes').textContent = task.Observações || '-';
 
-    setElementText('modal-view-plano', task['Plano de ação']);
-    setElementText('modal-view-atividade', (task['Número da atividade'] || '') + ' - ' + (task['Atividade'] || ''));
-    setElementText('modal-view-data-inicio', formatDate(task['Data de início']));
-    setElementText('modal-view-data-fim', formatDate(task['Data fim']));
-    setElementText('modal-view-descricao', task['Descrição da atividade']);
-    setElementText('modal-view-observacoes', task['Observações']);
+    const statusBadge = document.getElementById('acao-view-status');
+    statusBadge.textContent = task.Status || 'N/A';
+    statusBadge.className = `flex justify-center items-center text-sm px-1.5 rounded h-6 ${getStatusClasses(task.Status)}`;
 
-    const statusEl = document.getElementById('modal-view-status');
-    if (statusEl) {
-        statusEl.innerText = task.Status;
-        statusEl.className = 'status-' + (task.Status || '').replace(/\s+/g, '-') + ' flex justify-center items-center text-sm px-1.5 rounded h-6';
-    }
-
-    const unidadesContainer = document.getElementById('unidades-view-container');
-    unidadesContainer.innerHTML = '';
-    const unidades = task['Unidades'] || [];
-    if (unidades.length > 0) {
-        unidades.forEach(unidade => {
-            unidadesContainer.innerHTML += `
-                <span class="flex items-center gap-1.5 bg-gray-200 text-gray-800 text-sm font-medium px-2.5 py-1 rounded">
-                    ${unidade}
-                </span>`;
+    const unitsContainer = document.getElementById('acao-unidades-view-container');
+    unitsContainer.innerHTML = '';
+    if (task.Unidades && Array.isArray(task.Unidades) && task.Unidades.length > 0) {
+        task.Unidades.forEach(unit => {
+            const span = document.createElement('span');
+            span.className = "flex items-center gap-1.5 bg-gray-200 text-gray-800 text-sm font-medium px-2.5 py-1 rounded";
+            span.textContent = unit;
+            unitsContainer.appendChild(span);
         });
     } else {
-        unidadesContainer.innerHTML = `<span class="text-gray-500 italic">Nenhuma unidade cadastrada</span>`;
+        unitsContainer.innerHTML = `<span class="text-gray-500 italic">Nenhuma unidade cadastrada</span>`;
     }
 
-    courrentNotificacoesTask = window.jsonNotificacoes.filter(n => n.idAcao === task.ID);
-    populateViewNotificacoes(courrentNotificacoesTask);
+    renderNotificationsViewList(task.ID);
+    confirmationModal.classList.add('hidden');
+    modalAcoes_hasChanges = false;
 }
 
-function populateViewNotificacoes(notificacoes) {
-    const container = document.getElementById("notifications-list");
-    container.innerHTML = "";
+function getStatusClasses(status) {
+    switch (status) {
+        case 'Concluído': return 'bg-green-100 text-green-800';
+        case 'Em Andamento': return 'bg-blue-100 text-blue-800';
+        case 'Atrasado': return 'bg-red-100 text-red-800';
+        case 'Planejado': return 'bg-yellow-100 text-yellow-800';
+        default: return 'bg-gray-100 text-gray-800';
+    }
+}
 
-    notificacoes.sort((a, b) => new Date(a.data) - new Date(b.data));
+const formatDate = (dateString) => {
+    return dateString ? new Date(dateString + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+};
 
-    if (notificacoes.length === 0) {
-        container.innerHTML = `<span class="text-gray-500 italic">Nenhuma notificação cadastrada</span>`;
+function renderNotificationsViewList(taskId) {
+    const list = document.getElementById('acao-notifications-list');
+    list.innerHTML = '';
+
+    const taskNotifications = window.jsonNotificacoes.filter(n => n.idAcao === taskId)
+        .sort((a, b) => new Date(a.data) - new Date(b.data));
+
+    if (taskNotifications.length === 0) {
+        list.innerHTML = '<p class="text-sm text-slate-500 italic">Nenhuma notificação configurada.</p>';
         return;
     }
 
-    notificacoes.forEach(notif => {
+    taskNotifications.forEach(notif => {
+        const item = document.createElement('div');
+        item.className = "rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md";
+
         const acao = window.jsonAcoes.find(a => a.ID === notif.idAcao);
-        if (!acao) return;
-
         const plano = window.jsonPlanos.find(p => p.Nome === acao["Plano de ação"]);
-        if (!plano) return;
-
-        const destinatarios = (plano.objPessoas || []).filter(pessoa =>
+        const destinatarios = (plano?.objPessoas || []).filter(pessoa =>
             (notif.mailList || []).includes(pessoa.Email)
         );
+
+        const initials = (nome) => {
+            const p = nome.trim().split(" ");
+            return (p[0][0] + p[p.length - 1][0]).toUpperCase();
+        };
+
+        const dataExtenso = (isoDate) => {
+            if (!isoDate) return '-';
+            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+            const [ano, mes, dia] = isoDate.split("-");
+            return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
+        };
 
         let colorClasses = "";
         let iconSVG = "";
@@ -589,22 +623,7 @@ function populateViewNotificacoes(notificacoes) {
                 colorClasses = "bg-slate-100 text-slate-700";
         }
 
-        const notifDiv = document.createElement("div");
-        notifDiv.className = "rounded-lg border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md";
-
-        const initials = (nome) => {
-            const p = nome.trim().split(" ");
-            return (p[0][0] + p[p.length - 1][0]).toUpperCase();
-        };
-
-        const dataExtenso = (isoDate) => {
-            if (!isoDate) return '-';
-            const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-            const [ano, mes, dia] = isoDate.split("-");
-            return `${parseInt(dia)} de ${meses[parseInt(mes) - 1]} de ${ano}`;
-        };
-
-        notifDiv.innerHTML = `
+        item.innerHTML = `
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div class="flex min-w-0 items-center gap-4">
                     <div class="flex-shrink-0 rounded-full ${colorClasses} p-2">${iconSVG}</div>
@@ -625,71 +644,53 @@ function populateViewNotificacoes(notificacoes) {
                     </div>
                 </div>
             </div>`;
-        container.appendChild(notifDiv);
+        list.appendChild(item);
     });
 }
 
-function switchToEditMode() {
-    clearEditList();
-    populateEditMode();
+function modalAcoes_switchToEditMode() {
+    const task = modalAcoes_currentTask;
 
-    document.getElementById('modal-view-plano').classList.add('hidden');
-    document.getElementById('modal-view-atividade').innerText = isNewTaskMode ? 'Criar Nova Ação' : 'Editar Ação';
+    document.getElementById('acao-view-mode-content').classList.add('hidden');
+    document.getElementById('acao-edit-mode-content').classList.remove('hidden');
+    document.getElementById('acao-view-mode-buttons').classList.add('hidden');
+    document.getElementById('acao-edit-mode-buttons').classList.remove('hidden');
 
-    document.getElementById('view-mode-content').classList.add('hidden');
-    document.getElementById('view-mode-buttons').classList.add('hidden');
+    document.getElementById('acao-header-view').classList.add('hidden');
+    document.getElementById('acao-header-edit').classList.remove('hidden');
 
-    document.getElementById('edit-mode-content').classList.remove('hidden');
-    document.getElementById('edit-mode-buttons').classList.remove('hidden');
+    const form = document.getElementById('acao-edit-form');
+    form.querySelector('#acao-edit-atividade').value = task.Atividade || '';
+    form.querySelector('#acao-edit-descricao').value = task["Descrição da atividade"] || '';
+    form.querySelector('#acao-edit-numero-atividade').value = task["Número da atividade"] || '';
+    form.querySelector('#acao-edit-status').value = task.Status || 'Planejado';
+    form.querySelector('#acao-edit-data-inicio').value = task["Data de início"] || '';
+    form.querySelector('#acao-edit-data-fim').value = task["Data fim"] || '';
+    form.querySelector('#acao-edit-observacoes').value = task.Observações || '';
 
-    hasChanges = false;
-}
-
-function clearEditList() {
-    const container = document.getElementById("notifications-edit-list");
-    [...container.children].forEach(child => {
-        if (child.tagName.toLowerCase() !== "template") container.removeChild(child);
-    });
-}
-
-function populateEditMode() {
-    const id = document.getElementById('task-modal-container').dataset.taskId;
-    const task = isNewTaskMode ? (currentTask || {}) : window.jsonAcoes.find(t => t.ID === id);
-    const form = document.getElementById('modal-edit-form');
-
-    if (!isNewTaskMode) {
-        Object.keys(task).forEach(key => {
-            const input = form.querySelector(`[name="${key}"]`);
-            if (input) input.value = task[key];
+    const planSelect = form.querySelector('#acao-edit-plano');
+    planSelect.innerHTML = '<option value="">Selecione um plano...</option>';
+    if (window.jsonPlanos && Array.isArray(window.jsonPlanos)) {
+        window.jsonPlanos.forEach(p => {
+            const option = document.createElement('option');
+            option.value = p.Nome;
+            option.textContent = p.Nome;
+            if (p.Nome === task["Plano de ação"]) option.selected = true;
+            planSelect.appendChild(option);
         });
     }
-
-    populatePlanosSelect(task['Plano de ação']);
-    atualizarUnidades(task['Plano de ação'], task.Unidades || []);
-
-    if (!isNewTaskMode) {
-        const notificacoes = window.jsonNotificacoes.filter(n => n.idAcao === id)
-            .sort((a, b) => new Date(a.data) - new Date(b.data));
-        notificacoes.forEach(createNotificacao);
-    }
-}
-
-function populatePlanosSelect(selectedPlano = '') {
-    const select = document.getElementById('edit-plano');
-    if (!select) return;
-
-    const options = [...new Set(window.jsonPlanos.map(p => p.Nome).filter(Boolean))].sort();
-    select.innerHTML = '<option value="" selected disabled hidden>Selecione um plano...</option>' +
-        options.map(nome => `<option value="${nome}" ${nome === selectedPlano ? 'selected' : ''}>${nome}</option>`).join('');
-
-    select.onchange = (e) => {
-        atualizarUnidades(e.target.value);
-        hasChanges = true;
+    planSelect.onchange = (e) => {
+        modalAcoes_atualizarUnidades(e.target.value);
+        modalAcoes_hasChanges = true;
     };
+    modalAcoes_atualizarUnidades(task["Plano de ação"], task.Unidades || []);
+
+    renderNotificationsEditList(task.ID);
+    modalAcoes_hasChanges = false;
 }
 
-function atualizarUnidades(nomePlano, unidadesIniciais = []) {
-    const container = document.getElementById('unidades-container');
+function modalAcoes_atualizarUnidades(nomePlano, unidadesIniciais = []) {
+    const container = document.getElementById('acao-unidades-container');
     container.innerHTML = '';
 
     if (!nomePlano) {
@@ -706,7 +707,7 @@ function atualizarUnidades(nomePlano, unidadesIniciais = []) {
     }
 
     const select = document.createElement('select');
-    select.id = 'unidades-multi-select';
+    select.id = 'acao-unidades-multi-select';
     select.name = 'Unidades';
     select.multiple = true;
 
@@ -717,21 +718,31 @@ function atualizarUnidades(nomePlano, unidadesIniciais = []) {
     });
 
     container.appendChild(select);
-    window.createCustomSelect('unidades-multi-select');
+    window.createCustomSelect('acao-unidades-multi-select');
 
-    window.onCustomSelectChange('unidades-multi-select', () => {
-        document.querySelectorAll('.recipients-list-editable').forEach(list => {
+    window.onCustomSelectChange('acao-unidades-multi-select', () => {
+        document.querySelectorAll('#acao-notifications-edit-list .recipients-list-editable').forEach(list => {
             if (list.closest('.container-notificacao').querySelector('.status-slot').classList.contains('hidden')) {
-                populateTabelaNotificacoes(list, []);
+                modalAcoes_populateTabelaNotificacoes(list, []);
             }
         });
-        hasChanges = true;
+        modalAcoes_hasChanges = true;
     });
 }
 
-function createNotificacao(notificacao = {}) {
-    const template = document.getElementById('notification-template');
-    const container = document.getElementById('notifications-edit-list');
+function renderNotificationsEditList(taskId) {
+    const container = document.getElementById('acao-notifications-edit-list');
+    container.innerHTML = ''; // Clear existing notifications
+
+    const notificacoes = window.jsonNotificacoes.filter(n => n.idAcao === taskId)
+        .sort((a, b) => new Date(a.data) - new Date(b.data));
+
+    notificacoes.forEach(modalAcoes_addNotificationItem);
+}
+
+function modalAcoes_addNotificationItem(notificacao = {}) {
+    const template = document.getElementById('acao-notification-template');
+    const container = document.getElementById('acao-notifications-edit-list');
     const clone = template.content.cloneNode(true);
     const card = clone.querySelector('.container-notificacao');
 
@@ -769,7 +780,7 @@ function createNotificacao(notificacao = {}) {
         const iconContainerLocked = clone.querySelector('.notification-icon-container-locked');
 
         clone.querySelector('.sent-type-text').textContent = `Alerta de ${notificacao.tipo}`;
-        updateNotificationIcon(iconContainerLocked, notificacao.tipo);
+        modalAcoes_updateNotificationIcon(notificacao.tipo, iconContainerLocked);
 
         clone.querySelector('.sent-date').textContent = notificacao.data ? new Date(notificacao.data + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
 
@@ -782,13 +793,18 @@ function createNotificacao(notificacao = {}) {
     } else {
         const typeSelect = clone.querySelector('.notification-type');
         const iconContainer = clone.querySelector('.notification-icon-container');
+        const dateInput = clone.querySelector('.notification-date');
 
         typeSelect.value = notificacao.tipo || 'aviso';
-        clone.querySelector('.notification-date').value = notificacao.data || '';
-        populateTabelaNotificacoes(recEdit, notificacao.mailList || []);
+        dateInput.value = notificacao.data || '';
+        modalAcoes_populateTabelaNotificacoes(recEdit, notificacao.mailList || []);
 
-        const updateIcon = () => updateNotificationIcon(iconContainer, typeSelect.value);
-        typeSelect.addEventListener('change', updateIcon);
+        const updateIcon = () => modalAcoes_updateNotificationIcon(typeSelect.value, iconContainer);
+        typeSelect.addEventListener('change', (e) => {
+            modalAcoes_updateNotificationIcon(e.target.value, iconContainer);
+            modalAcoes_hasChanges = true;
+        });
+        dateInput.addEventListener('input', () => (modalAcoes_hasChanges = true));
         updateIcon();
 
         const toggleBtn = clone.querySelector('.btn-toggle-all');
@@ -797,14 +813,14 @@ function createNotificacao(notificacao = {}) {
             const all = Array.from(checks).every(c => c.checked);
             checks.forEach(c => c.checked = !all);
             toggleBtn.textContent = !all ? 'Desmarcar todos' : 'Marcar todos';
-            hasChanges = true;
+            modalAcoes_hasChanges = true;
         };
     }
 
     container.appendChild(clone);
 }
 
-function updateNotificationIcon(container, type) {
+function modalAcoes_updateNotificationIcon(type, container) {
     let colorClasses = "";
     let iconSVG = "";
 
@@ -830,9 +846,9 @@ function updateNotificationIcon(container, type) {
     container.className = `notification-icon-container flex-shrink-0 rounded-full p-1 ${colorClasses}`; // Reduced padding to p-1 for smaller look
 }
 
-function populateTabelaNotificacoes(listEl, mailList = []) {
-    const unidades = window.getCustomSelectValues('unidades-multi-select') || [];
-    const planoNome = document.getElementById('edit-plano').value;
+function modalAcoes_populateTabelaNotificacoes(listEl, mailList = []) {
+    const unidades = window.getCustomSelectValues('acao-unidades-multi-select') || [];
+    const planoNome = document.getElementById('acao-edit-plano').value;
     const plan = window.jsonPlanos.find(p => p.Nome === planoNome);
     const pessoas = (plan?.objPessoas || []).filter(p => unidades.includes(p.Unidade));
 
@@ -858,43 +874,37 @@ function populateTabelaNotificacoes(listEl, mailList = []) {
         </li>`).join('');
 }
 
-function deleteNotification(el) {
+function modalAcoes_deleteNotification(el) {
     const id = el.dataset.notificationId;
-    if (id) deletedNotificationIds.push(id);
+    if (id) modalAcoes_deletedNotificationIds.push(id);
     el.remove();
 }
 
-function closeModal(force = false) {
-    if (!document.getElementById('edit-mode-content').classList.contains('hidden') && hasChanges && !force) {
-        document.getElementById('task-confirmation-modal-task').classList.remove('hidden');
+function modalAcoes_closeModal(force = false) {
+    if (modalAcoes_hasChanges && !force) {
+        document.getElementById('acao-confirmation-modal').classList.remove('hidden');
         return;
     }
-    document.getElementById('task-modal-container').classList.add('hidden');
-    document.getElementById('confirmation-modal-task').classList.add('hidden');
+
+    document.getElementById('acao-task-modal-container').classList.add('hidden');
+    document.getElementById('acao-confirmation-modal').classList.add('hidden');
+    document.getElementById('acao-edit-form').reset();
+    modalAcoes_currentTask = null;
+    modalAcoes_hasChanges = false;
+    modalAcoes_isNewMode = false;
+    modalAcoes_deletedNotificationIds = [];
     document.body.classList.remove('overflow-hidden');
-    hasChanges = false;
-    isNewTaskMode = false;
 }
 
-function openModalForNewAction(defaultPlanoName = '') {
-    isNewTaskMode = true;
-    currentTask = { 'Plano de ação': defaultPlanoName };
-    document.getElementById('modal-edit-form').reset();
-    document.getElementById('notifications-edit-list').innerHTML = '';
-    switchToEditMode();
-    document.getElementById('task-modal-container').classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
+function openDeleteConfirmationModalTask(task) {
+    modalAcoes_currentTask = task;
+    const modal = document.getElementById('acao-delete-confirmation-modal');
+    document.getElementById('acao-to-delete-name').textContent = `"${task.Atividade}"`;
+    modal.classList.remove('hidden');
 }
 
-function openDeleteConfirmation() {
-    const id = document.getElementById('task-modal-container').dataset.taskId;
-    const task = window.jsonAcoes.find(t => t.ID === id);
-    document.getElementById('plano-to-delete-name').textContent = `"${task.Atividade}"`;
-    document.getElementById('delete-confirmation-modal-task').classList.remove('hidden');
-}
-
-async function handleDeleteTask() {
-    const id = document.getElementById('task-modal-container').dataset.taskId;
+async function modalAcoes_handleDeleteTask() {
+    const id = modalAcoes_currentTask.ID;
     try {
         const res = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '', 'jsonAcoes');
         if (res.status === 200) window.location.reload();
@@ -903,37 +913,230 @@ async function handleDeleteTask() {
     }
 }
 
-async function handleSaveAction() {
-    const id = document.getElementById('task-modal-container').dataset.taskId;
-    const form = document.getElementById('modal-edit-form');
+async function modalAcoes_handleSave() {
+    const form = document.getElementById('acao-edit-form');
     const formData = new FormData(form);
-    const data = { ...Object.fromEntries(formData.entries()), Unidades: window.getCustomSelectValues('unidades-multi-select') || [] };
+    const updatedTask = Object.fromEntries(formData.entries());
+
+    const unitsSelect = document.getElementById('acao-unidades-multi-select');
+    updatedTask.Unidades = window.getCustomSelectValues ? window.getCustomSelectValues(unitsSelect) : [];
+
+    const notifications = modalAcoes_getNotificationsDataFromDOM();
+
+    const saveBtn = document.getElementById('acao-btn-save-task');
+    const cancelBtn = document.getElementById('acao-btn-cancel-task');
+
+    [saveBtn, cancelBtn].forEach(btn => (btn.disabled = true));
+    saveBtn.textContent = 'Salvando...';
 
     try {
-        const mode = isNewTaskMode ? 'create' : 'update';
-        const res = await window.salvarArquivoNoOneDrive(id || '', 'acoes.txt', mode, data, 'jsonAcoes');
-        if (res.status === 200) {
-            const notifications = getNotificationsFromDOM();
-            for (const n of notifications) {
-                const nMode = n.ID ? 'update' : 'create';
-                await window.salvarArquivoNoOneDrive(n.ID || '', 'notificacoes.txt', nMode, n, 'jsonNotificacoes');
+        const action = modalAcoes_isNewMode ? 'create' : 'update';
+        const id = modalAcoes_isNewMode ? '' : modalAcoes_currentTask.ID;
+
+        const response = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', action, updatedTask, 'jsonAcoes');
+
+        if (response?.status === 200) {
+            const newTaskId = modalAcoes_isNewMode ? response.data.ID : modalAcoes_currentTask.ID;
+
+            // Handle notifications
+            const notificationsToSave = notifications.filter(n => !n.ID); // New notifications
+            const notificationsToUpdate = notifications.filter(n => n.ID); // Existing notifications
+            const notificationsToDelete = modalAcoes_deletedNotificationIds; // Deleted notifications
+
+            // Update existing notifications
+            for (const notif of notificationsToUpdate) {
+                const originalData = JSON.parse(document.querySelector(`[data-notification-id="${notif.ID}"]`).dataset.originalData);
+                const currentData = { tipo: notif.tipo, data: notif.data, mailList: [...notif.mailList].sort() };
+
+                if (JSON.stringify(originalData) !== JSON.stringify(currentData)) {
+                    await window.salvarArquivoNoOneDrive(notif.ID, 'notificacoes.txt', 'update', { ...notif, idAcao: newTaskId }, 'jsonNotificacoes');
+                }
             }
-            for (const nid of deletedNotificationIds) {
-                await window.salvarArquivoNoOneDrive(nid, 'notificacoes.txt', 'delete', '', 'jsonNotificacoes');
+
+            // Create new notifications
+            for (const notif of notificationsToSave) {
+                await window.salvarArquivoNoOneDrive('', 'notificacoes.txt', 'create', { ...notif, idAcao: newTaskId }, 'jsonNotificacoes');
             }
+
+            // Delete notifications
+            for (const notifId of notificationsToDelete) {
+                await window.salvarArquivoNoOneDrive(notifId, 'notificacoes.txt', 'delete', {}, 'jsonNotificacoes');
+            }
+
+            // Re-evaluate and potentially create/update notifications based on dates
+            await modalAcoes_gerenciarNotificacaoPorData(newTaskId, updatedTask["Data de início"], 'inicio');
+            await modalAcoes_gerenciarNotificacaoPorData(newTaskId, updatedTask["Data fim"], 'pendencia');
+            await modalAcoes_verificarNotificacaoLongoPrazo(newTaskId, updatedTask["Data de início"], updatedTask["Data fim"]);
+
             window.location.reload();
+        } else {
+            throw new Error(response?.message || 'Erro ao salvar ação');
         }
-    } catch (e) {
-        alert("Erro ao salvar.");
+    } catch (error) {
+        console.error('Erro ao salvar:', error);
+        alert('Falha ao salvar as alterações: ' + error.message);
+        [saveBtn, cancelBtn].forEach(btn => (btn.disabled = false));
+        saveBtn.textContent = 'Salvar';
     }
 }
 
-function getNotificationsFromDOM() {
-    return Array.from(document.querySelectorAll('#notifications-edit-list .container-notificacao'))
+function modalAcoes_showConfirmationNotificacaoModal({ title, message, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
+    const modal = document.getElementById('acao-date-change-confirmation-modal');
+    const modalTitle = document.getElementById('acao-modal-title');
+    const modalMessage = document.getElementById('acao-modal-message');
+    const confirmBtn = document.getElementById('acao-modal-btn-confirm-notification');
+    const cancelBtn = document.getElementById('acao-modal-btn-cancel-notification');
+
+    modalTitle.textContent = title;
+    modalMessage.innerHTML = message;
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+
+    modal.classList.remove('hidden');
+
+    return new Promise((resolve) => {
+        let confirmHandler, cancelHandler;
+
+        const cleanupAndClose = (confirmation) => {
+            confirmBtn.removeEventListener('click', confirmHandler);
+            cancelBtn.removeEventListener('click', cancelHandler);
+            modal.classList.add('hidden');
+            resolve(confirmation);
+        };
+
+        confirmHandler = () => cleanupAndClose(true);
+        cancelHandler = () => cleanupAndClose(false);
+
+        confirmBtn.addEventListener('click', confirmHandler);
+        cancelBtn.addEventListener('click', cancelHandler);
+    });
+}
+
+function modalAcoes_handleUpdateAndPruneNotifications(tipoNotificacao, novaData) {
+    const allNotificationCards = document.querySelectorAll('#acao-notifications-edit-list .container-notificacao');
+    const matchingCards = Array.from(allNotificationCards).filter(card => {
+        const typeSelect = card.querySelector('.notification-type');
+        return typeSelect && typeSelect.value === tipoNotificacao;
+    });
+
+    if (matchingCards.length === 0) return;
+
+    const cardToKeep = matchingCards[0];
+    const dateInput = cardToKeep.querySelector('.notification-date');
+    if (dateInput) {
+        dateInput.value = novaData;
+    }
+
+    if (matchingCards.length > 1) {
+        const cardsToDelete = matchingCards.slice(1);
+        cardsToDelete.forEach(cardToDelete => {
+            const notificationId = cardToDelete.dataset.notificationId;
+            if (notificationId) {
+                modalAcoes_deletedNotificationIds.push(notificationId);
+            }
+            cardToDelete.remove();
+        });
+    }
+
+    modalAcoes_hasChanges = true;
+}
+
+async function modalAcoes_gerenciarNotificacaoPorData(idAcao, novaData, tipoNotificacao, calculoDataFn = null) {
+    if (!novaData) return;
+
+    const dataNotificacao = calculoDataFn ? calculoDataFn(novaData) : novaData;
+    const dataFormatada = new Date(dataNotificacao + 'T00:00:00').toLocaleDateString('pt-BR');
+
+    const notificacoesNoDOM = modalAcoes_getNotificationsDataFromDOM();
+
+    const existeNotificacaoIdentica = notificacoesNoDOM.some(
+        n => n.tipo === tipoNotificacao && n.data === dataNotificacao
+    );
+
+    if (existeNotificacaoIdentica) {
+        return;
+    }
+
+    const existeNotificacaoDoTipo = notificacoesNoDOM.some(n => n.tipo === tipoNotificacao);
+
+    if (existeNotificacaoDoTipo) {
+        const confirmed = await modalAcoes_showConfirmationNotificacaoModal({
+            title: 'Atualizar Notificação?',
+            message: `Encontramos notificações do tipo "${tipoNotificacao}".<br>Deseja atualizar a data para ${dataFormatada}? <br><i class="text-slate-400">(Apenas uma será mantida)</i>`,
+            confirmText: 'Sim, Atualizar'
+        });
+        if (confirmed) {
+            modalAcoes_handleUpdateAndPruneNotifications(tipoNotificacao, dataNotificacao);
+        }
+    } else {
+        const confirmed = await modalAcoes_showConfirmationNotificacaoModal({
+            title: 'Criar Notificação?',
+            message: `Não há notificação de "${tipoNotificacao}".<br>Deseja criar uma nova com a data ${dataFormatada}?`,
+            confirmText: 'Sim, Criar'
+        });
+        if (confirmed) {
+            const novaNotificacao = { tipo: tipoNotificacao, data: dataNotificacao, idAcao: idAcao, status: 'editavel', mailList: [] };
+            modalAcoes_addNotificationItem(novaNotificacao);
+        }
+    }
+}
+
+async function modalAcoes_verificarNotificacaoLongoPrazo(idAcao, dataInicioStr, dataFimStr) {
+    if (!dataInicioStr || !dataFimStr) return;
+
+    const dataInicio = new Date(dataInicioStr + 'T00:00:00');
+    const dataFim = new Date(dataFimStr + 'T00:00:00');
+    const diffTime = Math.abs(dataFim - dataInicio);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 30) {
+        const dataNotificacao = new Date(dataFim);
+        dataNotificacao.setDate(dataNotificacao.getDate() - 7);
+        const dataNotificacaoStr = dataNotificacao.toISOString().split('T')[0];
+        const dataFormatada = new Date(dataNotificacaoStr + 'T00:00:00').toLocaleDateString('pt-BR');
+
+        const notifications = modalAcoes_getNotificationsDataFromDOM();
+
+        const existeNotificacaoIdentica = notifications.some(
+            n => n.tipo === 'aviso' && n.data === dataNotificacaoStr
+        );
+
+        if (existeNotificacaoIdentica) {
+            return;
+        }
+
+        const existeNotificacaoDoTipo = notifications.some(n => n.tipo === 'aviso');
+
+        if (existeNotificacaoDoTipo) {
+
+            const confirmed = await modalAcoes_showConfirmationNotificacaoModal({
+                title: 'Atualizar Aviso?',
+                message: `O prazo desta tarefa é longo.<br>Deseja atualizar a data dos avisos para ${dataFormatada}, 7 dias antes da conclusão? <br><i class="text-slate-400">(Apenas um será mantido)</i>`,
+                confirmText: 'Sim, Atualizar'
+            });
+            if (confirmed) {
+                modalAcoes_handleUpdateAndPruneNotifications('aviso', dataNotificacaoStr);
+            }
+        } else {
+            const confirmed = await modalAcoes_showConfirmationNotificacaoModal({
+                title: 'Criar Notificação de Aviso?',
+                message: `O prazo desta tarefa é longo.<br>Deseja criar um aviso automático para o dia ${dataFormatada}, 7 dias antes da conclusão?`,
+                confirmText: 'Sim, Criar Aviso'
+            });
+            if (confirmed) {
+                const novaNotificacao = { tipo: 'aviso', data: dataNotificacaoStr, idAcao: idAcao, status: 'editavel', mailList: [] };
+                modalAcoes_addNotificationItem(novaNotificacao);
+            }
+        }
+    }
+}
+
+function modalAcoes_getNotificationsDataFromDOM() {
+    return Array.from(document.querySelectorAll('#acao-notifications-edit-list .container-notificacao'))
         .filter(el => el.querySelector('.status-slot').classList.contains('hidden'))
         .map(el => ({
             ID: el.dataset.notificationId,
-            idAcao: document.getElementById('task-modal-container').dataset.taskId,
+            idAcao: modalAcoes_currentTask.ID,
             tipo: el.querySelector('.notification-type').value,
             data: el.querySelector('.notification-date').value,
             mailList: Array.from(el.querySelectorAll('.recipients-list-editable input:checked')).map(i => i.closest('label').querySelector('.text-slate-600').textContent.trim()),
@@ -941,27 +1144,7 @@ function getNotificationsFromDOM() {
         }));
 }
 
-async function gerenciarNotificacaoPorData(idAcao, novaData, tipo, calcFn) {
-    if (!novaData) return;
-    const targetDate = calcFn ? calcFn(novaData) : novaData;
-    const confirmed = await window.confirm(`Deseja criar/atualizar notificação de ${tipo} para ${targetDate}?`);
-    if (confirmed) {
-        const existing = Array.from(document.querySelectorAll('#notifications-edit-list .container-notificacao'))
-            .find(el => el.querySelector('.notification-type').value === tipo);
-        if (existing) {
-            existing.querySelector('.notification-date').value = targetDate;
-        } else {
-            createNotificacao({ tipo: tipo, data: targetDate, idAcao: idAcao });
-        }
-        hasChanges = true;
-    }
-}
-
-async function verificarNotificacaoLongoPrazo() {
-}
-
 window.openTaskModal = openTaskModal;
 window.initModalAcoes = initModalAcoes;
-window.openModalForNewAction = openModalForNewAction;
-window.switchToEditMode = switchToEditMode;
-window.openDeleteConfirmation = openDeleteConfirmation;
+window.openCreateTaskModal = openCreateTaskModal;
+window.openModalForNewAction = openCreateTaskModal; // Alias for compatibility

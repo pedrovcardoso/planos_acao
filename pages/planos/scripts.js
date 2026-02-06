@@ -348,10 +348,6 @@ function setupStatCards(planosData = window.jsonPlanos, acoesData = window.jsonA
 
 
 
-
-//================================================================================
-// configurações gerais para criar o gantt
-//================================================================================
 function setupSecaoIA() {
   const sessionStorageKey = 'aiSummaryHTML';
 
