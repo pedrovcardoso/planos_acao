@@ -615,3 +615,6 @@ async function sincronizarNotificacoesComPessoasDoPlano(oldPlan, newPlan) {
 // Expondo as funções necessárias globalmente para os botões "Novo Plano" nas páginas
 window.openEditModalPlanos = openEditModal;
 window.initModalPlanos = initModalPlanos;
+window.openModalForNewPlan = function() {
+    openEditModal(); // Abre o modal em modo de criação (sem ID)
+};
