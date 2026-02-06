@@ -40,7 +40,7 @@ function initModalAcoes() {
                         </div>
                         <div class="space-y-4 pt-4 border-t border-slate-200">
                             <div><span class="block text-sm font-medium text-slate-500 mb-1">Descrição da
-                                    atividade</span><span id="modal-view-descricao"
+                                    ação</span><span id="modal-view-descricao"
                                     class="block text-base text-slate-800"></span></div>
                             <div><span class="block text-sm font-medium text-slate-500 mb-1">Observações</span><span
                                     id="modal-view-observacoes"
@@ -71,11 +71,11 @@ function initModalAcoes() {
                             <div class="md:col-span-2">
                                 <input type="text" id="edit-atividade" name="Atividade"
                                     class="w-full bg-transparent border-none p-0 text-2xl font-bold text-slate-800 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
-                                    placeholder="Nome da Atividade">
+                                    placeholder="Nome da Ação">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="edit-descricao"
-                                    class="block text-sm font-semibold text-slate-500 mb-1">Descrição da atividade</label>
+                                    class="block text-sm font-semibold text-slate-500 mb-1">Descrição da ação</label>
                                 <textarea id="edit-descricao" name="Descrição da atividade" rows="2"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
@@ -84,7 +84,7 @@ function initModalAcoes() {
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6">
                                     <div class="col-span-1">
                                         <label for="edit-numero-atividade"
-                                            class="block text-sm font-semibold text-slate-500 mb-1">Nº da Atividade</label>
+                                            class="block text-sm font-semibold text-slate-500 mb-1">Nº da Ação</label>
                                         <input type="text" id="edit-numero-atividade" name="Número da atividade"
                                             class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                     </div>
@@ -472,6 +472,9 @@ function openTaskModal(id) {
     currentTask = window.jsonAcoes.find(t => t.ID === id);
     if (!currentTask) return;
 
+    const modalTitle = document.getElementById('modal-view-atividade');
+    if (modalTitle) modalTitle.innerText = (currentTask['Número da atividade'] || '') + ' - ' + (currentTask['Atividade'] || '');
+
     document.getElementById('task-modal-container').setAttribute('data-task-id', id);
 
     switchToViewMode(true);
@@ -493,7 +496,9 @@ function switchToViewMode(force = false) {
 
     populateViewMode(currentTask);
 
-    document.getElementById('modal-view-plano').classList.remove('hidden');
+    const modalPlano = document.getElementById('modal-view-plano');
+    if (modalPlano) modalPlano.classList.remove('hidden');
+
     document.getElementById('edit-mode-content').classList.add('hidden');
     document.getElementById('edit-mode-buttons').classList.add('hidden');
     document.getElementById('view-mode-content').classList.remove('hidden');
@@ -649,7 +654,7 @@ function clearEditList() {
 
 function populateEditMode() {
     const id = document.getElementById('task-modal-container').dataset.taskId;
-    const task = isNewTaskMode ? {} : window.jsonAcoes.find(t => t.ID === id);
+    const task = isNewTaskMode ? (currentTask || {}) : window.jsonAcoes.find(t => t.ID === id);
     const form = document.getElementById('modal-edit-form');
 
     if (!isNewTaskMode) {
@@ -871,9 +876,9 @@ function closeModal(force = false) {
     isNewTaskMode = false;
 }
 
-function openModalForNewAction() {
+function openModalForNewAction(defaultPlanoName = '') {
     isNewTaskMode = true;
-    currentTask = {};
+    currentTask = { 'Plano de ação': defaultPlanoName };
     document.getElementById('modal-edit-form').reset();
     document.getElementById('notifications-edit-list').innerHTML = '';
     switchToEditMode();

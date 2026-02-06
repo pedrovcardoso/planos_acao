@@ -66,10 +66,21 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (btnEditPlan) {
             btnEditPlan.addEventListener('click', () => {
                 if (typeof openEditModalPlanos === 'function') {
-                    // O modalPlanos espera o ID para editar
                     openEditModalPlanos(planData.ID);
                 } else {
                     console.error("Função openEditModalPlanos não encontrada.");
+                }
+            });
+        }
+
+        // Configurar botão de criar nova ação
+        const btnNewAction = document.getElementById('btn-nova-acao');
+        if (btnNewAction) {
+            btnNewAction.addEventListener('click', () => {
+                if (typeof openModalForNewAction === 'function') {
+                    openModalForNewAction(planData.Nome);
+                } else {
+                    console.error("Função openModalForNewAction não encontrada.");
                 }
             });
         }
