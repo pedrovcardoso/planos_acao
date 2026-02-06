@@ -2,7 +2,6 @@ const navEntries = performance.getEntriesByType("navigation");
 if (navEntries.length > 0) {
   const navType = navEntries[0].type;
   console.log("Tipo de navegação:", navType);
-  // valores possíveis: "navigate", "reload", "back_forward", "prerender"
 }
 
 function toggleLoading(show) {
@@ -49,23 +48,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 async function gerarPDFdaPagina() {
   console.log("Iniciando a geração do PDF...");
 
-  // Usa sua função de loading para dar feedback visual
   if (typeof toggleLoading === 'function') {
     toggleLoading(true);
   }
 
-  // Elemento que será capturado. document.body captura a página inteira.
   const elementoParaCapturar = document.body;
 
-  // Esconde temporariamente o overlay de loading para não aparecer no PDF
   const loadingOverlay = document.getElementById('loading-overlay');
   if (loadingOverlay) loadingOverlay.classList.add('hidden');
 
   try {
-    // Tira a "foto" da página inteira usando html2canvas
     const canvas = await html2canvas(elementoParaCapturar, {
-      useCORS: true, // Permite carregar imagens de outras origens
-      scale: 2,      // Aumenta a resolução para melhor qualidade
+      useCORS: true,
+      scale: 2,
       logging: false,
       windowWidth: document.documentElement.offsetWidth,
       windowHeight: document.documentElement.scrollHeight
@@ -77,8 +72,6 @@ async function gerarPDFdaPagina() {
     const imgWidth = canvas.width;
     const imgHeight = canvas.height;
 
-    // Configurações do PDF (usando jsPDF)
-    // A orientação 'p' é retrato (portrait), 'l' é paisagem (landscape)
     const pdf = new window.jspdf.jsPDF({
       orientation: 'p',
       unit: 'px',
@@ -88,18 +81,15 @@ async function gerarPDFdaPagina() {
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    // Calcula a proporção para a imagem caber na largura do PDF
     const ratio = imgWidth / pdfWidth;
     const scaledHeight = imgHeight / ratio;
 
     let heightLeft = scaledHeight;
     let position = 0;
 
-    // Adiciona a primeira página
     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, scaledHeight);
     heightLeft -= pdfHeight;
 
-    // Adiciona mais páginas se o conteúdo for maior que uma página A4
     while (heightLeft > 0) {
       position = heightLeft - scaledHeight;
       pdf.addPage();
@@ -107,11 +97,9 @@ async function gerarPDFdaPagina() {
       heightLeft -= pdfHeight;
     }
 
-    // Gera um nome de arquivo dinâmico com a data
     const dataAtual = new Date().toISOString().slice(0, 10);
     const nomeArquivo = `relatorio-planos-de-acao-${dataAtual}.pdf`;
 
-    // Salva o arquivo
     pdf.save(nomeArquivo);
     console.log(`PDF "${nomeArquivo}" gerado com sucesso!`);
 
@@ -119,36 +107,12 @@ async function gerarPDFdaPagina() {
     console.error("Ocorreu um erro ao gerar o PDF:", error);
     alert("Não foi possível gerar o PDF. Verifique o console para mais detalhes.");
   } finally {
-    // Garante que o loading seja desativado e o overlay reexibido se necessário
     if (typeof toggleLoading === 'function') {
       toggleLoading(false);
     }
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//================================================================================
-// cards numéricos da parte inicial da página
-//================================================================================
-/**
- * Função auxiliar para atualizar o conteúdo de texto de um elemento HTML pelo seu ID.
- * @param {string} id - O ID do elemento a ser atualizado.
- * @param {string | number} text - O texto a ser inserido no elemento.
- */
 function updateElementText(id, text) {
   const element = document.getElementById(id);
   if (element) {
@@ -158,22 +122,10 @@ function updateElementText(id, text) {
   }
 }
 
-/**
- * Retorna a forma singular ou plural de uma string com base em uma contagem.
- * @param {number} count - O número para determinar se a string deve ser singular ou plural.
- * @param {string} singular - A forma singular da palavra (ex: 'plano').
- * @param {string} plural - A forma plural da palavra (ex: 'planos').
- * @returns {string}
- */
 function pluralize(count, singular, plural) {
   return count === 1 ? singular : plural;
 }
 
-/**
- * Mostra ou oculta um elemento com base em uma contagem.
- * @param {number} count - Se 0, o elemento será oculto; caso contrário, será mostrado.
- * @param {string} elementId - O ID do elemento a ser manipulado.
- */
 function toggleVisibility(count, elementId) {
   const element = document.getElementById(elementId);
   if (element) {
@@ -181,12 +133,6 @@ function toggleVisibility(count, elementId) {
   }
 }
 
-
-/**
- * Formata uma duração em dias para uma string mais legível (ex: "15 dias" ou "2 meses").
- * @param {number} totalDays - O número total de dias.
- * @returns {string} A duração formatada.
- */
 function formatarDuracao(totalDays) {
   if (isNaN(totalDays) || totalDays <= 0) {
     return 'N/A';
@@ -201,11 +147,6 @@ function formatarDuracao(totalDays) {
   }
 }
 
-/**
- * Processa os dados de planos e atualiza os cards de "Planos de Ação".
- * @param {Array} planos - O array de dados dos planos. Usa window.jsonPlanos como fallback.
- * @param {Array} acoes - O array de dados das ações. Usa window.jsonAcoes como fallback.
- */
 function processPlanosData(planos = window.jsonPlanos, acoes = window.jsonAcoes) {
   if (!planos || planos.length === 0) return;
 
@@ -235,17 +176,14 @@ function processPlanosData(planos = window.jsonPlanos, acoes = window.jsonAcoes)
   const acoesPendentes = acoes ? acoes.filter(acao => idsPlanosPendentes.has(acao['Plano de ação'])).length : 0;
   const tempoMedioDias = planosParaCalculoMedia > 0 ? totalDuracaoDias / planosParaCalculoMedia : 0;
 
-  // Card 1: Em curso
   updateElementText('planos-emCurso', emCurso);
   updateElementText('label-planos-emCurso', pluralize(emCurso, 'plano em curso', 'planos em curso'));
 
-  // Card 2: A Ser Iniciado (com detalhe de 'Em Desenvolvimento')
   updateElementText('planos-aIniciar', aIniciar);
   updateElementText('label-planos-aIniciar', pluralize(aIniciar, 'plano a ser iniciado', 'planos a serem iniciados'));
   updateElementText('planos-emDesenvolvimentoSub', emDesenvolvimento);
   toggleVisibility(emDesenvolvimento, 'container-emDesenvolvimento');
 
-  // Cards secundários
   updateElementText('planos-totalCriados', planos.length);
   updateElementText('label-totalCriados', pluralize(planos.length, 'criado', 'criados'));
 
@@ -263,10 +201,6 @@ function processPlanosData(planos = window.jsonPlanos, acoes = window.jsonAcoes)
   updateElementText('planos-tempoMedio', formatarDuracao(tempoMedioDias));
 }
 
-/**
- * Processa os dados de ações e atualiza os cards de "Ações".
- * @param {Array} acoes - O array de dados das ações. Usa window.jsonAcoes como fallback.
- */
 function processAcoesData(acoes = window.jsonAcoes) {
   if (!acoes || acoes.length === 0) return;
 
@@ -299,7 +233,6 @@ function processAcoesData(acoes = window.jsonAcoes) {
     }
   });
 
-  // Atualiza os cards da linha de destaque
   updateElementText('acoes-emCurso', emCurso);
   updateElementText('label-acoes-emCurso', pluralize(emCurso, 'ação em curso', 'ações em curso'));
   updateElementText('acoes-entregarMesSub', entregasNoMes);
@@ -314,7 +247,6 @@ function processAcoesData(acoes = window.jsonAcoes) {
   updateElementText('acoes-iniciam30dias', iniciamProximos30dias);
   toggleVisibility(iniciamProximos30dias, 'container-iniciam30dias');
 
-  // Atualiza os novos cards de estatísticas
   updateElementText('acoes-totalCriadas', acoes.length);
   updateElementText('label-acoes-criadas', pluralize(acoes.length, 'criada', 'criadas'));
 
@@ -322,31 +254,10 @@ function processAcoesData(acoes = window.jsonAcoes) {
   updateElementText('label-acoes-concluidas', pluralize(concluidas, 'concluída', 'concluídas'));
 }
 
-/**
- * Função principal para configurar e popular os cards de estatísticas.
- * @param {Array} [planosData=window.jsonPlanos] - Opcional. Dados dos planos.
- * @param {Array} [acoesData=window.jsonAcoes] - Opcional. Dados das ações.
- */
 function setupStatCards(planosData = window.jsonPlanos, acoesData = window.jsonAcoes) {
   processPlanosData(planosData, acoesData);
   processAcoesData(acoesData);
 }
-
-// Exemplo de chamada:
-// document.addEventListener('DOMContentLoaded', setupStatCards);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function setupSecaoIA() {
   const sessionStorageKey = 'aiSummaryHTML';
@@ -462,22 +373,10 @@ function setupSecaoIA() {
   
   A seguir, estão os dados para sua análise. Gere apenas o resumo em formato HTML.`;
 
-
-  // ----------------------------------------------------------------
-  // 2. Funções Derivadas
-  // ----------------------------------------------------------------
-
-  /**
-   * Aplica estilos Tailwind ao HTML bruto recebido da IA.
-   * @param {string} htmlString - O HTML gerado pela IA.
-   * @returns {string} O HTML com as classes de estilo aplicadas.
-   */
   const sanitizeAndStyleAIHtml = (htmlString) => {
-    // Cria um elemento temporário para manipular o DOM sem afetar a página
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlString;
 
-    // Adiciona classes para as listas terem marcadores
     tempDiv.querySelectorAll('ul').forEach(ul => {
       ul.classList.add('list-disc', 'list-inside', 'space-y-1');
     });
@@ -485,7 +384,6 @@ function setupSecaoIA() {
       ol.classList.add('list-decimal', 'list-inside', 'space-y-1');
     });
 
-    // Adiciona classes para sublinhar os links
     tempDiv.querySelectorAll('a').forEach(a => {
       a.classList.add('underline', 'text-sky-600', 'hover:text-sky-800', 'transition-colors');
     });
@@ -493,9 +391,6 @@ function setupSecaoIA() {
     return tempDiv.innerHTML;
   };
 
-  /**
-   * Busca o resumo da IA, aplica os estilos e salva no cache.
-   */
   const fetchAiSummary = () => {
     const url = 'https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM';
 
@@ -509,7 +404,7 @@ function setupSecaoIA() {
       .then(rawHtml => {
         const styledHtml = sanitizeAndStyleAIHtml(rawHtml);
         elements.content.innerHTML = styledHtml;
-        sessionStorage.setItem(sessionStorageKey, styledHtml); // Salva a versão já estilizada
+        sessionStorage.setItem(sessionStorageKey, styledHtml);
       })
       .catch(error => {
         console.error('Falha ao buscar o resumo da IA:', error);
@@ -517,9 +412,6 @@ function setupSecaoIA() {
       });
   };
 
-  /**
-   * Carrega o resumo, priorizando o cache da sessão.
-   */
   const loadAiSummary = () => {
     const cachedSummary = sessionStorage.getItem(sessionStorageKey);
     if (cachedSummary) {
@@ -529,9 +421,6 @@ function setupSecaoIA() {
     }
   };
 
-  /**
-   * Configura todos os ouvintes de eventos.
-   */
   const setupEventListeners = () => {
     elements.menuButton.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -567,32 +456,11 @@ function setupSecaoIA() {
     });
   };
 
-  // ----------------------------------------------------------------
-  // 3. Execução e Inicialização
-  // ----------------------------------------------------------------
-
   elements.promptTextContainer.textContent = promptText;
   setupEventListeners();
   loadAiSummary();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//================================================================================
-// configurações gerais para criar o gantt
-//================================================================================
 function fillGanttData(jsonPlanos) {
   const root = document.documentElement;
   const monthWidth = parseInt(getComputedStyle(root).getPropertyValue('--month-width'))
@@ -609,9 +477,6 @@ function fillGanttData(jsonPlanos) {
   monthsHeader.innerHTML = "";
   ganttTimelineContainer.scrollLeft = 0;
 
-  //================================================================================
-  // Calcula e cria as colunas de meses
-  //================================================================================
   let minDate = new Date(Math.min(
     ...jsonPlanos
       .filter(task => task["Data início"])
@@ -667,9 +532,6 @@ function fillGanttData(jsonPlanos) {
   document.getElementById("todayBar").style.left = `${positionToday}px`;
   ganttTimelineContainer.scrollLeft = positionToday - 100;
 
-  //================================================================================
-  // Preenche os valores no gantt
-  //================================================================================
   const statusColorMap = {
     'Em desenvolvimento': 'bg-gray-100 text-gray-700 border border-gray-200',
     'Planejado': 'bg-slate-100 text-slate-700 border border-slate-200',
@@ -682,7 +544,6 @@ function fillGanttData(jsonPlanos) {
   jsonPlanos.forEach((task, index) => {
     const statusClass = statusColorMap[task.Status] || 'bg-gray-100 text-gray-800';
 
-    // Cálculo de progresso para o plano
     const acoesDoPlano = jsonAcoes.filter(acao => acao["Plano de ação"] === task.Nome);
     const totalAcoes = acoesDoPlano.length;
     const concluidas = acoesDoPlano.filter(acao => acao.Status === 'Implementado').length;
@@ -711,13 +572,10 @@ function fillGanttData(jsonPlanos) {
       const durationWidth = endOffset - startOffset;
 
       const bar = document.createElement('div');
-      // Cores base para a barra (track mais visível no heatmap)
       bar.className = `absolute h-[22px] gantt-bar-container rounded-[11px] top-1/2 -translate-y-1/2 z-[1] overflow-hidden`;
       bar.style.left = `${startOffset}px`;
       bar.style.width = `${durationWidth}px`;
       bar.title = `${task.Nome}: ${percentualConclusao}% concluído (${new Date(startDate).toLocaleDateString()} a ${new Date(endDate).toLocaleDateString()})`;
-
-      // Cria a barra de progresso interno
       const progressOverlay = document.createElement('div');
       progressOverlay.className = `gantt-progress-bar bg-sky-600`;
       progressOverlay.style.width = `${percentualConclusao}%`;
@@ -729,9 +587,6 @@ function fillGanttData(jsonPlanos) {
     ganttRowsContainer.appendChild(rowTimeline);
   });
 
-  //================================================================================
-  // resize das colunas
-  //================================================================================
   const resizers = document.querySelectorAll('.gantt-tasks-header .resizer');
   let currentResizer;
   resizers.forEach(resizer => {
@@ -765,9 +620,6 @@ function fillGanttData(jsonPlanos) {
     });
   });
 
-  //================================================================================
-  // Cabeçalho da linha de totais do gantt
-  //================================================================================
   taskListContainer.innerHTML += `
     <div class="gantt-row-task">
       <div style="grid-column: 1 / 3; color: gray;">
@@ -785,9 +637,6 @@ function fillGanttData(jsonPlanos) {
   toggleHeatMap()
 }
 
-//================================================================================
-// Heatmap bakground timeline
-//================================================================================
 function toggleHeatMap() {
   const ganttRowsContainer = document.getElementById('gantt-rows');
   document.querySelectorAll(".gantt-heatmap").forEach(el => el.remove());
@@ -843,7 +692,6 @@ function toggleHeatMap() {
         }
       });
     } else if (estilo === "acontecendo") {
-      // conta quem está ativo em qualquer parte do mês
       jsonAcoes.forEach(acao => {
         if (acao["Data de início"] && acao["Data fim"]) {
           const start = new Date(acao["Data de início"] + 'T10:00:00');
@@ -891,9 +739,6 @@ function toggleHeatMap() {
     monthIndex++;
   }
 
-  //================================================================================
-  // linha de totais
-  //================================================================================
   const totalRow = document.createElement('div');
   totalRow.className = 'flex absolute left-0 top-full h-[30px] bg-[#f8f8f8] border-t border-gray-300 z-[2] text-base items-center';
   totalRow.style.display = 'flex';
@@ -919,33 +764,11 @@ function toggleHeatMap() {
   ganttRowsContainer.appendChild(totalRow);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//================================================================================
-// Cria os cards dos planos de ação
-//================================================================================
-/**
- * Cria todos os cards com informações dos planos de ação.
- * @param {object} jsonPlanos - O objeto JSON contendo os dados dos planos.
- */
 function gerarCards(jsonPlanos) {
   const container = document.querySelector('.card-container');
   if (!container) return;
 
   container.innerHTML = jsonPlanos.map(plano => {
-    // Lógica para formatar as datas
     const dataInicio = plano["Data início"]
       ? plano["Data início"].includes('-')
         ? plano["Data início"].split('-').reverse().join('/')
@@ -957,45 +780,27 @@ function gerarCards(jsonPlanos) {
         : plano["Data fim"]
       : '-';
 
-    // Garante que nomes com espaços ou caracteres especiais funcionem na URL
     const planoNomeEncoded = encodeURIComponent(plano.Nome);
 
-    // --- Lógica para calcular o resumo das ações ---
     const acoesDoPlano = jsonAcoes.filter(acao => acao["Plano de ação"] === plano.Nome);
     const totalAcoes = acoesDoPlano.length;
     const concluidas = acoesDoPlano.filter(acao => acao.Status === 'Implementado').length;
     const emAndamento = acoesDoPlano.filter(acao => acao.Status === 'Em curso').length;
     const percentualConclusao = totalAcoes > 0 ? Math.round((concluidas / totalAcoes) * 100) : 0;
 
-    // Mapeia o status a uma cor para a tag, alinhado ao padrão visual original
     const statusColorMap = {
-      // Baseado em #e0e0e0 (cinza neutro)
       'Em desenvolvimento': 'bg-gray-100 text-gray-700 border border-gray-200',
-
-      // Baseado em #cfd4da (cinza frio/azulado)
       'Planejado': 'bg-slate-100 text-slate-700 border border-slate-200',
-
-      // Baseado em #17a2b8 (ciano/azul)
       'Em curso': 'bg-cyan-100 text-cyan-700 border border-cyan-200',
-
-      // Baseado em #198754 (verde)
       'Implementado': 'bg-green-100 text-green-700 border border-green-200',
-
-      // Baseado em #ffdd57 (amarelo)
       'Pendente': 'bg-yellow-100 text-yellow-700 border border-yellow-200',
-
-      // Cor para o status Cancelado
       'Cancelado': 'bg-red-100 text-red-700 border border-red-200'
     };
     const statusClass = statusColorMap[plano.Status] || 'bg-gray-100 text-gray-800';
-
-    // --- Lógica condicional para o HTML do resumo das ações ---
-    let resumoAcoesHtml = ''; // Inicia como string vazia
+    let resumoAcoesHtml = '';
     if (plano.Status !== 'Em desenvolvimento') {
-      // A seção só é criada se o status NÃO for 'Em desenvolvimento'
       resumoAcoesHtml = `
             <div class="pt-2 border-t border-slate-200 space-y-2">
-                <!-- Números das Ações -->
                 <div class="flex justify-between items-center text-sm text-slate-500">
                     <span class="font-bold">Ações:</span>
                     <div class="flex items-center gap-4 text-xs font-medium">
@@ -1004,7 +809,6 @@ function gerarCards(jsonPlanos) {
                         <span title="Ações Em Curso">Em curso: <strong class="text-slate-700 text-sm">${emAndamento}</strong></span>
                     </div>
                 </div>
-                <!-- Barra de progresso -->
                 <div class="flex items-center gap-3">
                     <span class="text-sm font-bold text-sky-700 w-10 text-right">${percentualConclusao}%</span>
                     <div class="w-full bg-slate-200 rounded-full h-1.5">
@@ -1021,14 +825,12 @@ function gerarCards(jsonPlanos) {
         
         <div class="absolute top-0 right-0 p-2">
           <div class="relative">
-            <!-- Botão que abre o menu -->
             <button type="button" class="card-menu-button rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
               </svg>
             </button>
 
-            <!-- O menu suspenso (dropdown) -->
             <div class="card-menu-dropdown hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-slate-200 z-10">
               <div class="py-1">
                 <a href="../detalhes_plano/index.html?id=${plano.ID}" class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 font-semibold text-sky-700 bg-slate-50">
@@ -1093,10 +895,8 @@ function gerarCards(jsonPlanos) {
             </div>
           </details>
         
-          <!-- Resumo das Ações (agora condicional e mais compacto) -->
           ${resumoAcoesHtml}
         
-          <!-- Rodapé com Status e Datas -->
           <div class="pt-3 mt-3 border-t border-slate-200 flex justify-between items-center text-xs">
               <div>
                   <span class="px-2 py-1 text-xs font-semibold rounded-md ${statusClass}">${plano.Status}</span>
@@ -1127,7 +927,6 @@ function gerarCards(jsonPlanos) {
 
   container.innerHTML += addCardHtml;
 
-  // Ativa a interatividade dos menus e botões
   setupAddButton();
   setupCardMenus();
 }
@@ -1151,7 +950,7 @@ function cardShowTooltip(event, email) {
   tooltipElement.style.position = 'fixed';
   tooltipElement.style.left = event.clientX + 10 + 'px';
   tooltipElement.style.top = event.clientY + 20 + 'px';
-  tooltipElement.style.background = '#1e293b'; // slate-700
+  tooltipElement.style.background = '#1e293b';
   tooltipElement.style.color = '#fff';
   tooltipElement.style.padding = '2px 6px';
   tooltipElement.style.borderRadius = '4px';
@@ -1192,15 +991,13 @@ function cardHideTooltip() {
 function cardCopyEmail(event, email) {
   if (!email) return;
 
-  // Copia o email
   navigator.clipboard.writeText(email).then(() => {
-    // Cria tooltip dinamicamente sobre o cursor
     let tooltip = document.createElement('span');
     tooltip.textContent = 'Email copiado!';
     tooltip.style.position = 'fixed';
     tooltip.style.left = event.clientX + 'px';
     tooltip.style.top = (event.clientY - 25) + 'px';
-    tooltip.style.background = '#1e293b'; // slate-700
+    tooltip.style.background = '#1e293b';
     tooltip.style.color = '#fff';
     tooltip.style.padding = '2px 6px';
     tooltip.style.borderRadius = '4px';
@@ -1213,7 +1010,6 @@ function cardCopyEmail(event, email) {
 
     document.body.appendChild(tooltip);
 
-    // Força animação
     requestAnimationFrame(() => {
       tooltip.style.opacity = '1';
     });
@@ -1225,10 +1021,6 @@ function cardCopyEmail(event, email) {
   });
 }
 
-
-/**
- * Adiciona o listener de clique ao botão "Criar Novo Plano".
- */
 function setupAddButton() {
   const addButton = document.getElementById('add-new-plano-button');
   if (addButton) {
@@ -1236,65 +1028,36 @@ function setupAddButton() {
   }
 }
 
-/**
- * Adiciona eventos no menu do card (três pontinhos).
- */
 function setupCardMenus() {
   const allMenuButtons = document.querySelectorAll('.card-menu-button');
 
   allMenuButtons.forEach(button => {
     button.addEventListener('click', (event) => {
-      // Impede que o clique no botão feche o menu imediatamente (veja o listener do window)
+      event.stopPropagation();
       event.stopPropagation();
 
       const dropdown = button.nextElementSibling;
       const isHidden = dropdown.classList.contains('hidden');
 
-      // Primeiro, fecha todos os outros menus abertos
       document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
 
-      // Se o menu clicado estava escondido, mostra ele
       if (isHidden) {
         dropdown.classList.remove('hidden');
       }
     });
   });
 
-  // Listener global para fechar os menus se o usuário clicar fora deles
   window.addEventListener('click', () => {
     document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
   });
 }
 
-// Modal logic handled by modalPlanos.js
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//================================================================================
-// painel de filtros
-//================================================================================
-
-// configurações gerais
-// [nome do filtro, id do select, está dentro do objPessoa]
 const filtersConfig = [
   ["Unidade", "filter-Unidade", true],
   ["Nome", "filter-Nome", true]
 ]
 
 function setupFilters() {
-  // adiciona eventos para todos filtros listados em filtersConfig
   filtersConfig.forEach(([chave, elementId]) => {
     fillFilterObjPessoas(chave)
 
@@ -1308,7 +1071,6 @@ function setupFilters() {
     }
   })
 
-  // período
   document.getElementById('filter-periodo')
     .addEventListener('change', function () {
       const inputsDiv = document.getElementById('periodo-especifico-inputs')
@@ -1316,14 +1078,10 @@ function setupFilters() {
       if (this.value !== 'especifico') aplicarFiltros()
     })
 
-  // período específico
   document.getElementById('filtrar-especifico')
     .addEventListener('click', aplicarFiltros)
 }
 
-/**
- * Normaliza string para comparação
- */
 function normalizeString(str) {
   if (!str) return ""
   return str
@@ -1334,13 +1092,9 @@ function normalizeString(str) {
     .replace(/[^\w_]/g, "")
 }
 
-/**
- * Aplica todos os filtros ativos e atualiza as seções
- */
 function aplicarFiltros() {
   let jsonFiltrado = [...jsonPlanos]
 
-  // filtros (Unidade, Nome, etc.)
   filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
     const selectedValues = window.getCustomSelectValues ? window.getCustomSelectValues(elementId) : [];
     const filterElement = document.getElementById(elementId);
@@ -1362,7 +1116,6 @@ function aplicarFiltros() {
     }
   });
 
-  // filtro por período
   const periodoElement = document.getElementById('filter-periodo')
   const periodo = periodoElement.value
   if (periodo && periodo !== '-') {
@@ -1372,16 +1125,12 @@ function aplicarFiltros() {
     periodoElement.classList.remove('filter-active')
   }
 
-  // aplica nas seções
   const acoesFiltradas = jsonAcoes.filter(a => jsonFiltrado.some(p => p.Nome === a['Plano de ação']));
   setupStatCards(jsonFiltrado, acoesFiltradas);
   fillGanttData(jsonFiltrado);
   gerarCards(jsonFiltrado);
 }
 
-/**
- * Filtro genérico chave/valor
- */
 function filterJson(json, chave, valoresSelecionados) {
   return json.filter(item => {
     const val = normalizeString(item[chave]);
@@ -1389,15 +1138,10 @@ function filterJson(json, chave, valoresSelecionados) {
   })
 }
 
-/**
- * Filtro genérico chave/valor para valores dentro do objeto pessoa
- */
 function filterJsonObjPessoa(json, chave, valoresSelecionados) {
   return json.filter(item => {
     const pessoas = item.objPessoas;
     if (!Array.isArray(pessoas)) return false;
-
-    // verifica se alguma pessoa dentro do array tem a chave com algum dos valores selecionados
     return pessoas.some(pessoa => {
       const val = normalizeString(pessoa[chave]);
       return valoresSelecionados.includes(val);
@@ -1405,9 +1149,6 @@ function filterJsonObjPessoa(json, chave, valoresSelecionados) {
   });
 }
 
-/**
- * Limpa filtros
- */
 function clearFilters() {
   filtersConfig.forEach(([, elementId]) => {
     const el = document.getElementById(elementId);
@@ -1422,9 +1163,6 @@ function clearFilters() {
   aplicarFiltros()
 }
 
-/**
- * Preenche filtro de equipe
- */
 function fillFilterObjPessoas(key) {
   const filtro = document.getElementById(`filter-${key}`)
   let valores = []
@@ -1445,15 +1183,11 @@ function fillFilterObjPessoas(key) {
     filtro.appendChild(option)
   })
 
-  // Se o componente de multiple select estiver carregado, inicializa para este filtro
   if (window.createCustomSelect) {
     window.createCustomSelect(`filter-${key}`);
   }
 }
 
-/**
- * Filtra lista pelo período selecionado
- */
 function filtrarPorPeriodo(lista, periodo) {
   let inicio, fim
 

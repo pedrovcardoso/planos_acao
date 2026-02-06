@@ -1,4 +1,3 @@
-// --- Início do Módulo de Filtro de Tabela (Versão Final com Alinhamento Vertical Corrigido) ---
 (function () {
     let activeFilters = {};
     const CONFIG = { primaryColor: 'sky' };
@@ -60,7 +59,6 @@
         const currentFilterValues = activeFilters[key] || [];
         sortedValues.forEach(value => {
             const isChecked = currentFilterValues.includes(value);
-            // [CORREÇÃO FINAL] Voltando para 'items-center' e removendo a margem.
             listContainer.innerHTML += `
                 <label class="flex items-center p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors overflow-hidden">
                     <input type="checkbox" ${isChecked ? 'checked' : ''} value="${value}" class="peer hidden">
@@ -85,7 +83,6 @@
         menu.append(searchWrapper, listContainer, actionsContainer);
         headerCell.appendChild(menu);
 
-        // --- Eventos ---
         menu.addEventListener('click', e => e.stopPropagation());
         const checkboxes = menu.querySelectorAll('input[type="checkbox"]');
         const searchInput = searchWrapper.querySelector('input');
@@ -201,12 +198,11 @@
             return;
         }
 
-        let sourceTh = null;        // O <th> que está sendo arrastado
-        let sourceIndex = -1;       // O índice da coluna de origem
-        let cloneTh = null;         // O clone visual do <th> que segue o mouse
-        let dropMarker = null;      // O indicador visual de onde a coluna será solta
+        let sourceTh = null;
+        let sourceIndex = -1;
+        let cloneTh = null;
+        let dropMarker = null;
 
-        // --- 1. INICIALIZAÇÃO DOS CABEÇALHOS ARRASTÁVEIS ---
         table.querySelectorAll('thead th .table-span-header').forEach(spanHeader => {
             const th = spanHeader.closest('th');
             if (!th) return;
@@ -214,7 +210,6 @@
             spanHeader.classList.add('cursor-grab');
 
             spanHeader.addEventListener('mousedown', (e) => {
-                // Ignora cliques nos botões de filtro ou nas alças de redimensionamento
                 if (e.target.closest('.table-filter-trigger') || e.target.closest('.resize-handle')) {
                     return;
                 }
@@ -229,20 +224,17 @@
                 createDropMarker();
 
                 document.addEventListener('mousemove', handleMouseMove);
-                document.addEventListener('mouseup', handleMouseUp, { once: true }); // 'once' remove o listener automaticamente após o primeiro evento
+                document.addEventListener('mouseup', handleMouseUp, { once: true });
             });
         });
 
-        // --- 2. CRIAÇÃO DOS ELEMENTOS VISUAIS (CLONE E MARCADOR) ---
         function createClone(e) {
             cloneTh = sourceTh.cloneNode(true);
-            // Aplica classes do Tailwind para o estilo do clone
             cloneTh.classList.add(
-                'absolute', 'z-[1000]', 'pointer-events-none', // Posicionamento e comportamento
-                'bg-white', 'shadow-xl', 'border', 'border-slate-200' // Estilo visual
+                'absolute', 'z-[1000]', 'pointer-events-none',
+                'bg-white', 'shadow-xl', 'border', 'border-slate-200'
             );
 
-            // Define dimensões e anexa ao body
             cloneTh.style.width = `${sourceTh.offsetWidth}px`;
             cloneTh.style.height = `${sourceTh.offsetHeight}px`;
             document.body.appendChild(cloneTh);
@@ -261,15 +253,12 @@
                 'h-[580px]'
             );
 
-            // Anexa o marcador diretamente ao 'body'
             table.appendChild(dropMarker);
         }
 
-        // --- 3. LÓGICA DE MOVIMENTO (DRAG) ---
         function handleMouseMove(e) {
             if (!cloneTh) return;
 
-            // Adiciona classes ao body para feedback visual global
             document.body.classList.add('cursor-grabbing', 'select-none');
 
             updateClonePosition(e);
@@ -277,7 +266,6 @@
         }
 
         function updateClonePosition(e) {
-            // Centraliza o clone na posição do cursor
             cloneTh.style.left = `${e.pageX - cloneTh.offsetWidth / 2}px`;
             cloneTh.style.top = `${e.pageY - cloneTh.offsetHeight / 2}px`;
         }
@@ -287,7 +275,6 @@
             let targetTh = null;
             let insertBefore = false;
 
-            // Encontra sobre qual cabeçalho o cursor está
             for (const th of headers) {
                 if (th === sourceTh) continue;
 
@@ -302,33 +289,26 @@
             }
 
             if (targetTh) {
-                // --- LÓGICA DE ALTURA E POSIÇÃO CORRIGIDA ---
                 const thead = table.querySelector('thead');
                 const tbody = table.querySelector('tbody');
-                if (!thead || !tbody) return; // Garante que a tabela tenha cabeçalho e corpo
+                if (!thead || !tbody) return;
 
                 const theadRect = thead.getBoundingClientRect();
                 const markerTop = theadRect.top;
-                // --- FIM DA CORREÇÃO ---
 
                 const targetRect = targetTh.getBoundingClientRect();
 
-                // Calcula a posição horizontal do marcador
                 const markerX = insertBefore ? targetRect.left : targetRect.right;
+                dropMarker.style.top = `${markerTop + window.scrollY}px`;
+                dropMarker.style.left = `${markerX + window.scrollX - (dropMarker.offsetWidth / 2)}px`;
 
-                // Aplica os novos estilos de altura e posição
-                dropMarker.style.top = `${markerTop + window.scrollY}px`; // Adiciona a rolagem da página
-                dropMarker.style.left = `${markerX + window.scrollX - (dropMarker.offsetWidth / 2)}px`; // Centraliza o marcador
-
-                dropMarker.classList.remove('hidden'); // Mostra o marcador
+                dropMarker.classList.remove('hidden');
             } else {
-                dropMarker.classList.add('hidden'); // Oculta se não estiver sobre um alvo válido
+                dropMarker.classList.add('hidden');
             }
         }
 
-        // --- 4. LÓGICA DE SOLTURA (DROP) E REORDENAÇÃO ---
         function handleMouseUp(e) {
-            // Verifica se a soltura ocorreu sobre um alvo válido
             if (!sourceTh || !dropMarker || dropMarker.classList.contains('hidden')) {
                 cleanup();
                 return;
@@ -338,7 +318,6 @@
             let targetTh = null;
             let insertBefore = false;
 
-            // Re-calcula o alvo no momento do mouseup para garantir precisão
             for (const th of headers) {
                 if (th === sourceTh) continue;
                 const rect = th.getBoundingClientRect();
@@ -358,10 +337,8 @@
         }
 
         function reorderTable(fromIndex, toIndex, insertBefore) {
-            // Impede a movimentação desnecessária
             if (fromIndex === toIndex || (fromIndex === toIndex - 1 && !insertBefore)) return;
 
-            // Reordena as células em cada linha (cabeçalho, corpo, rodapé)
             table.querySelectorAll('tr').forEach(row => {
                 const cells = Array.from(row.children);
                 const sourceCell = cells[fromIndex];
@@ -374,7 +351,6 @@
                 }
             });
 
-            // Reordena o elemento <col> correspondente no <colgroup> para manter a largura
             const colgroup = table.querySelector('colgroup');
             if (colgroup) {
                 const cols = Array.from(colgroup.children);
@@ -389,7 +365,6 @@
             }
         }
 
-        // --- 5. LIMPEZA DOS EVENTOS E ELEMENTOS TEMPORÁRIOS ---
         function cleanup() {
             if (sourceTh) {
                 sourceTh.classList.remove('opacity-50');
@@ -403,15 +378,11 @@
 
             document.body.classList.remove('cursor-grabbing', 'select-none');
 
-            // Reseta as variáveis de estado
             sourceTh = null;
             cloneTh = null;
             dropMarker = null;
             sourceIndex = -1;
-
-            // Remove o listener de movimento
             document.removeEventListener('mousemove', handleMouseMove);
         }
     };
 })();
-// --- Fim do Módulo de Filtro de Tabela ---

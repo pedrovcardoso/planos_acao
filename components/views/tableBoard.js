@@ -10,11 +10,6 @@ const tableColumnConfig = [
     { key: 'Observações', label: 'Observações', className: '', width: 300, filterable: true }
 ];
 
-/**
- * Cria e popula a tabela de ações.
- * @param {Array<Object>} actionsData - O array de objetos de ações.
- * @param {string} containerId - O ID do elemento container (padrão: 'table-container').
- */
 function populateActionsTable(actionsData, containerId = 'table-container') {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -118,5 +113,4 @@ function populateActionsTable(actionsData, containerId = 'table-container') {
     if (typeof initializeTableReordering === 'function') initializeTableReordering(`actions-main-table-${containerId}`);
 }
 
-// Expondo globalmente
 window.populateActionsTable = populateActionsTable;

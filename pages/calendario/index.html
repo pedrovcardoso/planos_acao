@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendário Unificado</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
@@ -36,12 +34,10 @@
             animation: slideUpFade 0.4s ease-out forwards;
         }
 
-        /* Ajuste fino: Hover ainda mais sutil */
         .hover-sutil:hover {
             transform: translateX(2px);
         }
 
-        /* Filtros Ativos */
         .filter-chip.active {
             border-color: transparent;
         }
@@ -75,14 +71,10 @@
         <p class="mt-4 text-sm font-semibold text-slate-600">Carregando calendário...</p>
     </div>
 
-    <!-- Header importado -->
     <header id="header"></header>
 
     <main class="mx-auto w-full max-w-7xl flex-grow p-6 pt-20 md:pt-24 space-y-6">
 
-        <!-- ========================================== -->
-        <!-- PAINEL DE FILTROS -->
-        <!-- ========================================== -->
         <section id="filters-container" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
@@ -95,7 +87,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Filtro Tipo -->
                 <div class="lg:col-span-3 flex flex-col gap-2">
                     <label class="text-xs font-semibold text-slate-400">Exibir eventos de:</label>
                     <div class="flex flex-wrap gap-2">
@@ -116,7 +107,6 @@
                         </button>
                     </div>
                 </div>
-                <!-- Filtros Selects -->
                 <div class="lg:col-span-3">
                     <label class="text-xs font-semibold text-slate-400 mb-1 block">Filtrar por Plano</label>
                     <select id="filter-planos" multiple data-placeholder="Todos os planos" class="hidden"></select>
@@ -133,11 +123,7 @@
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- NAV / HEADER (Branco com borda inferior) -->
-        <!-- ========================================== -->
         <section class="bg-white rounded-t-lg shadow-sm border border-slate-200 border-b-0">
-            <!-- Abas -->
             <div class="flex border-b border-slate-200">
                 <button id="btn-view-list"
                     class="flex-1 py-4 text-center text-sm font-bold uppercase tracking-wider text-sky-600 border-b-2 border-sky-600 transition-colors hover:bg-slate-50">
@@ -149,16 +135,13 @@
                 </button>
             </div>
 
-            <!-- Navegador de Período -->
             <div class="flex items-center justify-between p-4 bg-white rounded-b-lg">
                 <button onclick="changeMonth(-1)"
                     class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
                     <ion-icon name="chevron-back" class="text-xl"></ion-icon>
                 </button>
 
-                <h3 id="current-period-display" class="text-2xl font-bold text-slate-700 capitalize">
-                    <!-- Javascript -->
-                </h3>
+                <h3 id="current-period-display" class="text-2xl font-bold text-slate-700 capitalize"></h3>
 
                 <button onclick="changeMonth(1)"
                     class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
@@ -167,21 +150,8 @@
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- VISUALIZAÇÃO -->
-        <!-- ========================================== -->
         <article class="min-h-[400px]">
-
-            <!-- VISTA: LISTA -->
-            <div id="view-container-list" class="flex flex-col gap-6 pb-10">
-                <!-- Javascript -->
-            </div>
-
-            <!-- VISTA: CALENDÁRIO (GRID FIXED) -->
-            <!-- 
-                Uso gap-px e fundo bg-slate-200 no pai para criar bordas perfeitas de 1px entre as células brancas.
-                Isso remove o espaço duplo e garante alinhamento.
-            -->
+            <div id="view-container-list" class="flex flex-col gap-6 pb-10"></div>
             <div id="view-container-calendar"
                 class="hidden bg-white shadow-sm rounded-b-lg border border-t-0 border-slate-200 overflow-hidden">
                 <div class="grid grid-cols-7 border-b border-slate-200 bg-slate-50">
@@ -195,12 +165,9 @@
                 </div>
 
                 <div id="calendar-grid"
-                    class="grid grid-cols-7 auto-rows-fr bg-slate-100 gap-px border-b border-slate-200">
-                    <!-- Células geradas terão bg-white para criar efeito de grade -->
-                </div>
+                    class="grid grid-cols-7 auto-rows-fr bg-slate-100 gap-px border-b border-slate-200"></div>
             </div>
 
-            <!-- Empty State -->
             <div id="empty-state" class="hidden flex-col items-center justify-center py-20 opacity-60">
                 <ion-icon name="file-tray-outline" class="text-6xl text-slate-300 mb-4"></ion-icon>
                 <p class="text-lg text-slate-500">Nenhum evento neste período.</p>
@@ -209,13 +176,12 @@
     </main>
     <footer id="footer"></footer>
 
-    <!-- MODAL DIA -->
     <div id="day-details-modal"
         class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4">
         <div
             class="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-entry">
             <div class="flex items-center justify-between p-4 border-b border-slate-200 bg-slate-50">
-                <h3 class="text-lg font-bold text-slate-800" id="modal-date-title"><!-- Data Completa com Ano --></h3>
+                <h3 class="text-lg font-bold text-slate-800" id="modal-date-title"></h3>
                 <button onclick="closeDayModal()"
                     class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200 text-slate-500 transition-colors">
                     <ion-icon name="close" class="text-lg"></ion-icon>

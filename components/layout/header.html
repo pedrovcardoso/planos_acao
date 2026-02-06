@@ -1,62 +1,65 @@
-<!--===============================================================================
-// header
-===================================================================================-->
-    <header class="bg-white shadow-md fixed top-0 left-0 w-full z-20 transition-all duration-300 ease-in-out">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between">
-                <div class="flex items-center gap-5">
-                    <a href="../../pages/planos/">
-                        <img src="../../assets/images/logo_sef.png" alt="Logo" width="131" height="41">
-                    </a>
-                    <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
-                </div>
+<header class="bg-white shadow-md fixed top-0 left-0 w-full z-20 transition-all duration-300 ease-in-out">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+            <div class="flex items-center gap-5">
+                <a href="../../pages/planos/">
+                    <img src="../../assets/images/logo_sef.png" alt="Logo" width="131" height="41">
+                </a>
+                <h1 class="text-xl font-semibold text-slate-800 hidden sm:block">Planos de ação</h1>
+            </div>
 
-<!--===============================================================================
-// header para computador
-===================================================================================-->
-                <div class="flex items-center gap-4">
-                    <nav class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="../../pages/planos/" class="nav-link text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Planos de ação</a>
+            <div class="flex items-center gap-4">
+                <nav class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="../../pages/planos/"
+                            class="nav-link text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium"
+                            aria-current="page">Planos de ação</a>
 
-                            <a href="../../pages/acoes/" class="nav-link text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Ações</a>
+                        <a href="../../pages/acoes/"
+                            class="nav-link text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Ações</a>
 
-                            <a href="../../pages/calendario/" class="nav-link text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Calendário</a>
-                        </div>
-                    </nav>
-
-                    <img src="../../assets/images/logo_sccg.png" alt="Logo SCCG" class="h-10 w-auto">
-
-                    <div class="flex md:hidden">
-                        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800" aria-controls="mobile-menu" aria-expanded="false"
-                        onclick="
-                            document.getElementById('mobile-menu').classList.toggle('hidden');
-                            
-                            document.getElementById('mobile-menu').querySelectorAll('svg').classList.toggle('hidden');
-                        ">
-                            <span class="sr-only">Abrir menu principal</span>
-                            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                            </svg>
-                            <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+                        <a href="../../pages/calendario/"
+                            class="nav-link text-slate-500 hover:bg-slate-100 hover:text-slate-700 rounded-md px-3 py-2 text-sm font-medium">Calendário</a>
                     </div>
+                </nav>
+
+                <img src="../../assets/images/logo_sccg.png" alt="Logo SCCG" class="h-10 w-auto">
+
+                <div class="flex md:hidden">
+                    <button type="button" id="mobile-menu-button"
+                        class="inline-flex items-center justify-center rounded-md bg-slate-100 p-2 text-slate-600 hover:bg-slate-200 hover:text-slate-800"
+                        aria-controls="mobile-menu" aria-expanded="false" onclick="
+                        document.getElementById('mobile-menu').classList.toggle('hidden');
+                        
+                        document.getElementById('mobile-menu').querySelectorAll('svg').classList.toggle('hidden');
+                    ">
+                        <span class="sr-only">Abrir menu principal</span>
+                        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-<!--===============================================================================
-// header para mobile
-===================================================================================-->
-        <div class="hidden md:hidden" id="mobile-menu">
-            <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                <a href="../../pages/planos/" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700" aria-current="page">Planos de ação</a>
-                
-                <a href="../../pages/acoes/" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Ações</a>
-                
-                <a href="../../pages/calendario/" class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Calendário</a>
-            </div>
+    <div class="hidden md:hidden" id="mobile-menu">
+        <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+            <a href="../../pages/planos/"
+                class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                aria-current="page">Planos de ação</a>
+
+            <a href="../../pages/acoes/"
+                class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Ações</a>
+
+            <a href="../../pages/calendario/"
+                class="block rounded-md px-3 py-2 text-base font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700">Calendário</a>
         </div>
-    </header>
+    </div>
+</header>

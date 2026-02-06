@@ -1,4 +1,3 @@
-// 1. Objeto de configuração usando classes do Tailwind
 const kanbanColumnsConfig = [
     { status: 'Em desenvolvimento', headerClasses: 'bg-gray-200 text-gray-800' },
     { status: 'Planejado', headerClasses: 'bg-slate-300 text-slate-800' },
@@ -8,11 +7,6 @@ const kanbanColumnsConfig = [
     { status: 'Em revisão', headerClasses: 'bg-orange-300 text-orange-900' }
 ];
 
-/**
- * Cria e popula o quadro Kanban.
- * @param {Array<Object>} actionsData - O array de objetos de ações.
- * @param {string} containerId - O ID do elemento container (padrão: 'kanban-view').
- */
 function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
     const container = document.getElementById(containerId);
     if (!container) {
@@ -20,7 +14,6 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         return;
     }
 
-    // --- 1. Agrupa as tarefas por status ---
     const tasksByStatus = actionsData.reduce((acc, task) => {
         const status = task.Status || 'Sem Status';
         if (!acc[status]) acc[status] = [];
@@ -28,7 +21,6 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         return acc;
     }, {});
 
-    // --- 2. Gera o HTML para cada coluna ---
     const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
         const tasks = tasksByStatus[columnConfig.status] || [];
 
@@ -41,7 +33,6 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
                 class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-200 relative overflow-visible" 
                 data-task-id="${task.ID}">
                 
-                <!-- BOTÃO DE MENU (TRÊS PONTINHOS) -->
                 <div class="absolute top-1 right-1 z-20">
                     <div class="relative">
                         <button type="button" 
@@ -104,7 +95,6 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
                     <span class="uppercase tracking-wider text-[11px]">${columnConfig.status}</span>
                     <span class="text-[10px] font-black px-2 py-0.5 bg-black/10 rounded-md backdrop-blur-sm">${tasks.length}</span>
                 </div>
-                <!-- CONTAINER DOS CARDS COM SCROLL VERTICAL -->
                 <div class="kanban-cards-container flex-grow p-2.5 overflow-y-auto space-y-2.5">
                     ${cardsHtml}
                 </div>
@@ -112,7 +102,6 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         `;
     }).join('');
 
-    // --- 3. Monta a estrutura completa do quadro ---
     const fullKanbanHtml = `
         <div class="w-full h-[calc(100vh-280px)] min-h-[500px] flex flex-col">
             <div class="kanban-board flex-grow flex gap-4 overflow-x-auto pb-4 px-2">
@@ -121,15 +110,12 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         </div>
     `;
 
-    // --- 4. Insere o quadro no container ---
     container.innerHTML = fullKanbanHtml;
 
-    // --- 5. Adiciona os eventos e inicializa menus ---
     setupCardMenus(container);
 
     container.querySelectorAll('.kanban-card').forEach(card => {
         card.addEventListener('click', (e) => {
-            // Não abre o modal se clicou no botão de menu ou no dropdown
             if (e.target.closest('.card-menu-button') || e.target.closest('.card-menu-dropdown')) return;
 
             const taskId = card.dataset.taskId;
@@ -142,10 +128,6 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
     });
 }
 
-/**
- * Configura os menus de overflow dos cards.
- * @param {HTMLElement} container - O container do quadro Kanban.
- */
 function setupCardMenus(container) {
     const allMenuButtons = container.querySelectorAll('.card-menu-button');
 
@@ -156,18 +138,16 @@ function setupCardMenus(container) {
             const isHidden = dropdown.classList.contains('hidden');
             const card = button.closest('.kanban-card');
 
-            // Fecha todos os outros menus e reseta o z-index dos outros cards
             document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
             document.querySelectorAll('.kanban-card').forEach(c => c.classList.remove('z-50'));
 
             if (isHidden) {
                 dropdown.classList.remove('hidden');
-                if (card) card.classList.add('z-50'); // Eleva o card atual
+                if (card) card.classList.add('z-50');
             }
         });
     });
 
-    // Fechar menus ao clicar fora
     const closeMenus = () => {
         document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
         document.querySelectorAll('.kanban-card').forEach(c => c.classList.remove('z-50'));
@@ -175,7 +155,6 @@ function setupCardMenus(container) {
     window.removeEventListener('click', closeMenus);
     window.addEventListener('click', closeMenus);
 
-    // Ações do menu
     container.querySelectorAll('.view-details-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -216,7 +195,6 @@ function setupCardMenus(container) {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const taskId = btn.dataset.taskId;
-            // Para excluir, o modal precisa estar aberto para pegar o dataset.taskId
             openTaskModal(taskId);
             if (typeof openDeleteConfirmation === 'function') {
                 openDeleteConfirmation();
@@ -225,5 +203,4 @@ function setupCardMenus(container) {
     });
 }
 
-// Expondo globalmente
 window.populateKanbanBoard = populateKanbanBoard;

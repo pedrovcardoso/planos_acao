@@ -1,20 +1,12 @@
-// --- Bloco de Configuração Inicial ---
 (function () {
-    // Objeto de configuração global
     const CONFIG = {
         primaryColor: 'sky'
     };
-
-    // Classes de animação do Tailwind para um item sendo removido
     const REMOVING_CLASSES = [
         'transition-all', 'duration-200', 'ease-out',
         'max-h-0', 'opacity-0', '!p-0', '!m-0', '!border-0'
     ];
-
-    // Objeto privado para armazenar os callbacks dos listeners
     const _eventListeners = {};
-
-    // --- Lógica Interna do Componente ---
 
     function _normalizeText(text) {
         if (!text) return '';
@@ -60,7 +52,6 @@
     }
 
     function _toggleDropdown(selectContainer, forceClose = false) {
-        // [MODIFICADO] Seleciona o painel principal do dropdown
         const dropdownPanel = selectContainer.querySelector('.dropdown-panel');
         const arrow = selectContainer.querySelector('.arrow-icon');
         const searchInput = selectContainer.querySelector('.search-input');
@@ -80,8 +71,6 @@
             _updateDropdownMessages(selectContainer);
         }
     }
-
-    // --- Funções Públicas ---
 
     window.createCustomSelect = function (selectId) {
         const selectElement = document.getElementById(selectId);
@@ -103,13 +92,9 @@
         const tagsWrapper = document.createElement('div');
         tagsWrapper.className = 'flex-1 flex flex-wrap items-center gap-1.5 tags-wrapper';
 
-        // --- [ESTRUTURA MODIFICADA] ---
-
-        // 1. Container principal do dropdown (antigo 'list')
         const dropdownPanel = document.createElement('div');
         dropdownPanel.className = 'dropdown-panel absolute z-20 top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 origin-top transform scale-95 opacity-0 invisible transition-all duration-200 ease-out flex flex-col';
 
-        // 2. Container da barra de pesquisa (fixo no topo do painel)
         const searchWrapper = document.createElement('div');
         searchWrapper.className = 'sticky top-0 p-2 bg-white z-10 relative';
         const searchInput = document.createElement('input');
@@ -121,15 +106,12 @@
         clearSearchBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>`;
         searchWrapper.append(searchInput, clearSearchBtn);
 
-        // 3. Container da lista (a parte que terá scroll)
         const listWrapper = document.createElement('div');
         listWrapper.className = 'max-h-60 overflow-y-auto';
 
-        // 4. O elemento <ul> que contém os itens
         const listElement = document.createElement('ul');
         listElement.className = 'p-1';
 
-        // Adiciona as mensagens de feedback ao <ul>
         const noResultsMessage = document.createElement('li');
         noResultsMessage.className = 'no-results-message hidden text-center p-2.5 text-gray-400';
         noResultsMessage.textContent = 'Nenhum resultado encontrado.';
@@ -140,8 +122,6 @@
         allSelectedMessage.textContent = 'Todas as opções foram selecionadas.';
         listElement.appendChild(allSelectedMessage);
 
-        // --- FIM DA ESTRUTURA MODIFICADA ---
-
         const placeholderSpan = document.createElement('span');
         placeholderSpan.className = 'absolute left-3 top-2.5 text-gray-400 transition-opacity duration-200 pointer-events-none';
         placeholderSpan.textContent = selectElement.dataset.placeholder || '';
@@ -151,7 +131,6 @@
                 tagsWrapper.appendChild(_createActiveItem(option.textContent));
                 placeholderSpan.classList.add('opacity-0', 'invisible');
             } else {
-                // Adiciona os itens ao <ul>
                 listElement.appendChild(_createListItem(option.textContent));
             }
         });
@@ -162,7 +141,6 @@
 
         activeSelection.append(placeholderSpan, tagsWrapper, arrow);
 
-        // Monta a nova estrutura
         listWrapper.appendChild(listElement);
         dropdownPanel.append(searchWrapper, listWrapper);
         selectContainer.append(activeSelection, dropdownPanel);
@@ -170,10 +148,8 @@
         selectElement.style.display = 'none';
         parent.insertBefore(selectContainer, selectElement);
 
-        // --- Lógica dos eventos (sem alterações necessárias) ---
         searchInput.addEventListener('input', () => {
             const searchTerm = _normalizeText(searchInput.value);
-            // Seleciona os itens dentro do <ul> específico
             const items = listElement.querySelectorAll('li:not(.no-results-message):not(.all-selected-message)');
             let visibleItems = 0;
 
