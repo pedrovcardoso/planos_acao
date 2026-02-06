@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             loadScript('../../components/ui/custom-table.js')
         ]);
         setupFilters();
-        initModalAcoes();
+        initTaskModal();
         setupViewSwitcher();
 
         const btnNovaAtividade = document.getElementById('btn-nova-atividade');

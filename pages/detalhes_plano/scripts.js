@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         setupViewSwitcher();
 
         // 6. Integrar Modais (Ações e Planos)
-        initModalAcoes();
+        initTaskModal();
         initModalPlanos();
 
         // Configurar botão de edição do plano
