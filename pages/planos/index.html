@@ -19,20 +19,14 @@
     </div>
 
     <header id="header"></header>
-    <!--===============================================================================
-// stat cards, destaques principais
-===================================================================================-->
     <main class="flex-grow pt-16">
         <div class="grid p-6 md:py-5 md:px-8 gap-6">
             <section class="main-container grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- ======================= PLANOS DE AÇÃO ======================= -->
                 <div class="space-y-3" aria-labelledby="title-planos">
                     <h2 id="title-planos" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Planos de
                         Ação</h2>
 
-                    <!-- Linha 1: Destaques -->
                     <div class="grid grid-cols-2 gap-3">
-                        <!-- Em curso -->
                         <div
                             class="rounded-xl p-4 shadow-xl ring-1 ring-amber-100 bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border h-full flex items-center">
                             <div class="flex items-center gap-3">
@@ -49,7 +43,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- A Ser Iniciado -->
                         <div
                             class="rounded-xl p-4 shadow-xl ring-1 ring-sky-100 bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border h-full flex items-center">
                             <div class="flex items-center gap-3">
@@ -72,9 +65,7 @@
                         </div>
                     </div>
 
-                    <!-- Linha 2: Estatísticas secundárias -->
                     <div class="grid grid-cols-3 gap-3">
-                        <!-- Criados -->
                         <div
                             class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
                             <div class="flex items-center gap-3">
@@ -89,7 +80,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Pendentes -->
                         <div
                             class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
                             <div class="flex items-center gap-3">
@@ -104,7 +94,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Tempo Médio -->
                         <div
                             class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
                             <div class="flex items-center gap-3">
@@ -122,13 +111,10 @@
                     </div>
                 </div>
 
-                <!-- ======================= AÇÕES ======================= -->
                 <div class="space-y-3" aria-labelledby="title-acoes">
                     <h2 id="title-acoes" class="text-lg md:text-xl font-bold text-slate-800 print:text-base">Ações</h2>
 
-                    <!-- Linha 1: Destaques -->
                     <div class="grid grid-cols-3 gap-3">
-                        <!-- Em curso -->
                         <div
                             class="rounded-xl p-3 shadow-lg ring-1 ring-amber-100 bg-gradient-to-r from-white to-amber-50 print:shadow-none print:bg-white print:border h-full flex items-center">
                             <div class="flex items-center gap-3">
@@ -148,7 +134,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Em atraso -->
                         <div
                             class="rounded-xl p-3 shadow-lg ring-1 ring-rose-100 bg-gradient-to-r from-white to-rose-50 print:shadow-none print:bg-white print:border h-full flex items-center">
                             <div class="flex items-center gap-3">
@@ -161,14 +146,12 @@
                                         <span id="label-acoes-emAtraso" class="text-sm font-medium ml-1">em
                                             atraso</span>
                                     </p>
-                                    <!-- AQUI ESTÁ A MUDANÇA -->
                                     <a href="../acoes/index.html?status=Pendente"
                                         class="text-xs text-sky-600 hover:underline">Visualizar
                                         detalhes</a>
                                 </div>
                             </div>
                         </div>
-                        <!-- A Ser Iniciado -->
                         <div
                             class="rounded-xl p-3 shadow-lg ring-1 ring-sky-100 bg-gradient-to-r from-white to-sky-50 print:shadow-none print:bg-white print:border h-full flex items-center">
                             <div class="flex items-center gap-3">
@@ -190,9 +173,7 @@
                         </div>
                     </div>
 
-                    <!-- Linha 2: Estatísticas secundárias -->
                     <div class="grid grid-cols-2 gap-3">
-                        <!-- Criadas -->
                         <div
                             class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
                             <div class="flex items-center gap-3">
@@ -207,7 +188,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Concluídas -->
                         <div
                             class="rounded-lg bg-white p-3 shadow-md border border-slate-100 print:shadow-none flex items-center h-full">
                             <div class="flex items-center gap-3">
@@ -226,9 +206,6 @@
                 </div>
             </section>
 
-            <!--===============================================================================
-// gráfico de gantt
-===================================================================================-->
             <section id="gantt">
                 <div
                     class="grid grid-cols-[auto_1fr] overflow-hidden bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg">
@@ -254,17 +231,11 @@
                 </div>
             </section>
 
-            <!--===============================================================================
-// cards de planos de ação
-===================================================================================-->
             <section id="cards">
                 <div class="card-container 
                         grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
             </section>
 
-            <!--===============================================================================
-// painel de filtros
-===================================================================================-->
             <section id="filters-container" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
@@ -277,7 +248,6 @@
                 </div>
 
                 <div class="flex flex-wrap items-end gap-x-8 gap-y-3">
-                    <!-- Filtro de Período -->
                     <div class="flex flex-col w-full sm:w-48">
                         <label for="filter-periodo" class="text-xs font-medium text-slate-600 mb-1">Período</label>
                         <select id="filter-periodo"
@@ -289,7 +259,6 @@
                         </select>
                     </div>
 
-                    <!-- Inputs de Período Específico -->
                     <div id="periodo-especifico-inputs" class="hidden flex items-end gap-2 w-full sm:w-auto">
                         <div>
                             <label for="periodo-inicio" class="text-xs font-medium text-slate-600 mb-1">Início</label>
@@ -307,7 +276,6 @@
                         </div>
                     </div>
 
-                    <!-- quebra de linha -->
                     <div class="w-full"></div>
 
                     <div class="flex flex-col w-full md:w-56">
@@ -329,9 +297,6 @@
                 </div>
             </section>
 
-            <!--===============================================================================
-// Visão geral por IA
-===================================================================================-->
             <section id="ai-summary-section"
                 class="bg-white p-5 rounded-xl shadow-md border border-slate-200 transition-all duration-300 hover:shadow-lg">
                 <div class="flex justify-between items-center mb-3">
@@ -340,7 +305,6 @@
                         <h2 class="text-lg font-bold text-slate-800">Visão geral criada por IA</h2>
                     </div>
 
-                    <!-- Menu de 3 pontos (Estilo copiado dos cards) -->
                     <div id="ai-menu-container" class="relative">
                         <button id="ai-menu-button" type="button"
                             class="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500">
@@ -365,9 +329,7 @@
                     </div>
                 </div>
 
-                <!-- Conteúdo gerado pela IA (classe text-sm adicionada) -->
                 <div id="ai-summary-content" class="text-slate-700 space-y-3 text-sm">
-                    <!-- O loading state e o conteúdo da IA serão injetados aqui -->
                 </div>
             </section>
         </div>
@@ -375,9 +337,6 @@
 
     <footer id="footer"></footer>
 
-    <!--===============================================================================
-    // scripts
-    ===================================================================================-->
     <script src='../../components/layout/layout.js'></script>
     <script src="../../components/ui/multiple_select.js"></script>
     <script src='../../components/core/apiConnection.js'></script>

@@ -59,7 +59,6 @@
 
     <main class="mx-auto w-full max-w-7xl flex-grow p-6 pt-20 md:pt-24 space-y-6">
 
-        <!-- Botão Voltar -->
         <div class="flex items-center justify-between">
             <a href="../planos/index.html"
                 class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">
@@ -71,15 +70,12 @@
             </button>
         </div>
 
-        <!-- Seção Superior: Detalhes do Plano -->
         <section id="plan-details-container"
             class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
-            <!-- Background Decorativo -->
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500">
             </div>
 
             <div class="p-8">
-                <!-- Cabeçalho do Plano -->
                 <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
                     <div class="space-y-2 flex-1">
                         <div class="flex items-center gap-3">
@@ -93,7 +89,6 @@
                         </h1>
                     </div>
 
-                    <!-- Progresso Geral -->
                     <div class="w-full md:w-64 bg-slate-50 p-4 rounded-xl border border-slate-100">
                         <div class="flex justify-between items-end mb-2">
                             <span class="text-sm font-semibold text-slate-500">Progresso</span>
@@ -109,12 +104,8 @@
                     </div>
                 </div>
 
-                <!-- Detalhes Estruturados em Linhas -->
                 <div class="space-y-6">
-
-                    <!-- Primeira Linha: SEI, Cronograma e Unidades -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Coluna 1: SEI -->
                         <div class="space-y-4">
                             <div>
                                 <h3
@@ -133,7 +124,6 @@
                             </div>
                         </div>
 
-                        <!-- Coluna 2: Cronograma -->
                         <div class="space-y-2">
                             <h3
                                 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
@@ -151,7 +141,6 @@
                             </div>
                         </div>
 
-                        <!-- Coluna 3: Unidades Envolvidas -->
                         <div class="space-y-2">
                             <h3
                                 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
@@ -163,7 +152,6 @@
                         </div>
                     </div>
 
-                    <!-- Segunda Linha: Resolução e Documento TCE -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-50 pt-6">
                         <div>
                             <h3
@@ -187,7 +175,6 @@
                         </div>
                     </div>
 
-                    <!-- Terceira Linha: Equipe Responsável -->
                     <div class="border-t border-slate-50 pt-6">
                         <h3
                             class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
@@ -198,7 +185,6 @@
                         </div>
                     </div>
 
-                    <!-- Quarta Linha: Observações e Docs Relacionados -->
                     <div id="plan-extra-info"
                         class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-50 pt-6">
                         <div id="plan-docs-related-container" class="hidden">
@@ -226,7 +212,6 @@
             </div>
         </section>
 
-        <!-- Seção Inferior: Ações do Plano -->
         <section class="space-y-4">
             <div class="flex items-center justify-between">
                 <div>
@@ -238,7 +223,6 @@
                     </i>
                 </div>
 
-                <!-- Switcher de Visualização -->
                 <div class="bg-white p-1 rounded-lg border border-slate-200 flex items-center shadow-sm">
                     <button id="view-kanban-btn"
                         class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700">
@@ -251,14 +235,10 @@
                 </div>
             </div>
 
-            <!-- Contêineres de Visualização -->
             <div id="views-container" class="min-h-[400px]">
-                <!-- Kanban View -->
                 <div id="kanban-view" class="view-section">
                     <div class="p-8 text-center bg-white rounded-lg shadow">Carregando Kanban...</div>
                 </div>
-
-                <!-- Table View -->
                 <div id="table-view" class="view-section hidden">
                     <div id="table-container" class="overflow-x-auto bg-white rounded-lg shadow h-[600px]">
                     </div>
@@ -266,7 +246,6 @@
             </div>
         </section>
 
-        <!-- Botão criar nova ação -->
         <section class="flex justify-center mt-8">
             <button id="btn-nova-acao" type="button" class="relative flex flex-col items-center justify-center 
                             border-2 border-dashed border-slate-300 rounded-xl p-5 
@@ -285,8 +264,6 @@
 
     <footer id="footer"></footer>
 
-    <!-- Scripts -->
-    <!-- Reusing components -->
     <script defer src='../../components/layout/layout.js'></script>
     <script defer src='../../components/core/apiConnection.js'></script>
     <script defer src='../../components/ui/multiple_select.js'></script>
@@ -294,11 +271,9 @@
     <script defer src='../../components/modals/modalPlanos.js'></script>
     <script defer src='../../components/layout/chatbot.js'></script>
 
-    <!-- Shared logic for views -->
     <script defer src='../../components/views/kanbanBoard.js'></script>
     <script defer src='../../components/views/tableBoard.js'></script>
 
-    <!-- Page specific logic -->
     <script defer src='scripts.js'></script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

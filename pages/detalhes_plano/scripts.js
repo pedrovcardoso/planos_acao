@@ -54,14 +54,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.warn("populateActionsTable não encontrada.");
         }
 
-        // Setup Mudança de View
         setupViewSwitcher();
-
-        // 6. Integrar Modais (Ações e Planos)
         initTaskModal();
         initModalPlanos();
 
-        // Configurar botão de edição do plano
         const btnEditPlan = document.getElementById('btn-edit-plan');
         if (btnEditPlan) {
             btnEditPlan.addEventListener('click', () => {
@@ -73,7 +69,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
         }
 
-        // Configurar botão de criar nova ação
         const btnNewAction = document.getElementById('btn-nova-acao');
         if (btnNewAction) {
             btnNewAction.addEventListener('click', () => {
@@ -105,15 +100,10 @@ function getPlanIdFromURL() {
 }
 
 function renderPlanDetails(plan, actions) {
-    // Título
     document.getElementById('plan-title').innerText = plan.Nome || "Sem Título";
-
-    // Status Badge
     const statusEl = document.getElementById('plan-status-badge');
     statusEl.innerText = plan.Status || "Desconhecido";
     statusEl.className = `px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColorClass(plan.Status)}`;
-
-    // Progresso
     const total = actions.length;
     const concluded = actions.filter(a => a.Status === 'Implementado').length;
     const percentage = total > 0 ? Math.round((concluded / total) * 100) : 0;
@@ -123,7 +113,6 @@ function renderPlanDetails(plan, actions) {
     document.getElementById('completed-actions').innerText = concluded;
     document.getElementById('total-actions').innerText = total;
 
-    // Datas
     const formatDate = (str) => {
         if (!str) return '--/--/----';
         const parts = str.split('-');
@@ -133,7 +122,6 @@ function renderPlanDetails(plan, actions) {
     document.getElementById('plan-start-date').innerText = formatDate(plan["Data início"]);
     document.getElementById('plan-end-date').innerText = formatDate(plan["Data fim"]);
 
-    // SEIs
     document.getElementById('plan-sei-main').innerText = plan["Processo SEI"] || "N/A";
     const relatedSeis = plan["SEI relacionados"];
     const relatedContainer = document.getElementById('plan-sei-related-container');
@@ -144,11 +132,9 @@ function renderPlanDetails(plan, actions) {
         relatedContainer.classList.add('hidden');
     }
 
-    // Resolução e TCE
     document.getElementById('plan-resolution').innerText = plan["Resolução"] || "--";
     document.getElementById('plan-tce-doc').innerText = plan["Documento TCE"] || "--";
 
-    // Observações e Docs Relacionados
     const obs = plan["Observações"];
     const docs = plan["Documentos relacionados"];
     const extraInfo = document.getElementById('plan-extra-info');
@@ -166,7 +152,6 @@ function renderPlanDetails(plan, actions) {
     }
     if (hasExtra) extraInfo.classList.remove('hidden');
 
-    // Unidades
     const uniqueUnits = new Set();
     if (plan.objPessoas && Array.isArray(plan.objPessoas)) {
         plan.objPessoas.forEach(p => {
@@ -187,7 +172,6 @@ function renderPlanDetails(plan, actions) {
         unitsContainer.innerHTML = '<span class="text-sm text-slate-500 italic">Nenhuma unidade vinculada</span>';
     }
 
-    // Pessoas com Unidade e Email
     const peopleContainer = document.getElementById('plan-people-list');
     peopleContainer.innerHTML = '';
     if (plan.objPessoas && plan.objPessoas.length > 0) {
@@ -195,7 +179,6 @@ function renderPlanDetails(plan, actions) {
             const div = document.createElement('div');
             const email = p.Email || "";
 
-            // Container do Chip: Mais discreto, sem gradientes fortes
             div.className = "flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 pr-4 hover:bg-white hover:border-sky-400 hover:shadow-sm transition-all cursor-pointer group relative";
 
             if (email) {
@@ -239,7 +222,6 @@ function showEmailTooltip(event, email) {
     tooltipElement = document.createElement('div');
     tooltipElement.className = "fixed pointer-events-none z-[9999] bg-slate-800 text-white text-[11px] font-medium px-2 py-1 rounded shadow-xl opacity-0 transition-opacity duration-200";
     tooltipElement.innerText = email;
-    // Posiciona acima do mouse (Y negativo)
     tooltipElement.style.left = `${event.clientX + 10}px`;
     tooltipElement.style.top = `${event.clientY - 30}px`;
 
@@ -268,21 +250,18 @@ function hideEmailTooltip() {
     }, 200);
 }
 
-// Função de cópia com notificação discreta (Estilo similar ao original do sistema)
 function copyToClipboard(event, text) {
     if (!text) return;
 
     navigator.clipboard.writeText(text).then(() => {
-        // Cria um pequeno balão temporário na posição do clique
         const feedback = document.createElement('div');
         feedback.innerText = 'Copiado!';
         feedback.className = "fixed bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg pointer-events-none z-[1000] transition-all duration-300 opacity-0";
         feedback.style.left = `${event.clientX}px`;
-        feedback.style.top = `${event.clientY - 35}px`; // Subi um pouco mais para não sobrepor o mouse
+        feedback.style.top = `${event.clientY - 35}px`;
 
         document.body.appendChild(feedback);
 
-        // Animação suave
         requestAnimationFrame(() => {
             feedback.style.opacity = '1';
             feedback.style.transform = 'translateY(-5px)';
@@ -297,15 +276,6 @@ function copyToClipboard(event, text) {
 }
 
 function getStatusColorClass(status) {
-    // Mapeamento simples de status para classes tailwind (bg/text)
-    // Se quiser reutilizar o CSS global, pode usar as classes .status-Em-curso etc
-    // Aqui retornando classes utilitárias para ficar independente OU as classes do CSS global se estiverem carregadas
-
-    // Tentando usar as classes do arquivo styles.css se ele estiver carregado (está no head)
-    // As classes lá são tipo .status-Em-curso { background-color: ... }
-    // Mas aqui estamos aplicando num span, então precisamos garantir que funcione.
-    // Para garantir visual bonito com Tailwind, vou mapear manualmente para classes Tailwind similar ao que fiz no script principal
-
     const map = {
         'Em desenvolvimento': 'bg-gray-100 text-gray-700 border border-gray-200',
         'Planejado': 'bg-slate-100 text-slate-700 border border-slate-200',
@@ -332,21 +302,17 @@ function setupViewSwitcher() {
     const viewTable = document.getElementById('table-view');
 
     btnKanban.addEventListener('click', () => {
-        // Toggle Buttons
         btnKanban.className = "px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
         btnTable.className = "px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
 
-        // Toggle Views
         viewKanban.classList.remove('hidden');
         viewTable.classList.add('hidden');
     });
 
     btnTable.addEventListener('click', () => {
-        // Toggle Buttons
         btnTable.className = "px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
         btnKanban.className = "px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
 
-        // Toggle Views
         viewTable.classList.remove('hidden');
         viewKanban.classList.add('hidden');
     });

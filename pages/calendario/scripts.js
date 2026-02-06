@@ -1,4 +1,3 @@
-// --- ESTADO GLOBAL ---
 let currentDate = new Date();
 let rawData = { planos: [], acoes: [], notificacoes: [] };
 let isCalendarMode = false;
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 });
 
-// --- UTILS ---
 function toggleLoading(show) {
     const el = document.getElementById('loading-overlay');
     if (el) el.style.display = show ? 'flex' : 'none';
@@ -44,15 +42,12 @@ function loadScript(src) {
     });
 }
 
-// --- INTERFACE E CONTROLES ---
-
 function setupViewSwitcher() {
     const btnList = document.getElementById('btn-view-list');
     const btnCal = document.getElementById('btn-view-calendar');
     const contList = document.getElementById('view-container-list');
     const contCal = document.getElementById('view-container-calendar');
 
-    // 1. Ler parâmetro da URL na inicialização
     const params = new URLSearchParams(window.location.search);
     if (params.get('view') === 'calendar') {
         isCalendarMode = true;
@@ -60,7 +55,6 @@ function setupViewSwitcher() {
         isCalendarMode = false;
     }
 
-    // 2. Função auxiliar para atualizar a URL sem reload
     const setUrlParam = (mode) => {
         const url = new URL(window.location);
         url.searchParams.set('view', mode);
@@ -87,17 +81,16 @@ function setupViewSwitcher() {
 
     btnList.addEventListener('click', () => {
         isCalendarMode = false;
-        setUrlParam('list'); // Persiste na URL
+        setUrlParam('list');
         updateUI();
     });
 
     btnCal.addEventListener('click', () => {
         isCalendarMode = true;
-        setUrlParam('calendar'); // Persiste na URL
+        setUrlParam('calendar');
         updateUI();
     });
 
-    // 3. Executa atualização inicial da UI baseada no param lido
     updateUI();
 }
 
@@ -116,33 +109,22 @@ window.closeDayModal = function () {
     document.getElementById('day-details-modal').classList.remove('flex');
 }
 
-// --- NORMALIZAÇÃO (COM NOME COMPOSTO) ---
-
 function normalizeEvents(planos, acoes, notificacoes) {
     let events = [];
-
-    // PLANOS
     planos.forEach(p => {
         if (p['Data início']) events.push(createObj(p['Data início'], 'planos', p.Nome, p, { label: 'PLANO', class: 'bg-purple-100 text-purple-700' }, { label: 'INÍCIO', class: 'bg-green-100 text-green-700' }));
         if (p['Data fim']) events.push(createObj(p['Data fim'], 'planos', p.Nome, p, { label: 'PLANO', class: 'bg-purple-100 text-purple-700' }, { label: 'PRAZO', class: 'bg-red-100 text-red-700' }));
     });
-
-    // AÇÕES
     acoes.forEach(a => {
-        // Título Composto: Plano | Ação
         const nomeComposto = `${a['Plano de ação']} | ${a.Atividade}`;
         const bg = { label: 'AÇÃO', class: 'bg-sky-100 text-sky-700' };
 
         if (a['Data de início']) events.push(createObj(a['Data de início'], 'acoes', nomeComposto, a, bg, { label: 'INÍCIO', class: 'bg-green-100 text-green-700' }));
         if (a['Data fim']) events.push(createObj(a['Data fim'], 'acoes', nomeComposto, a, bg, { label: 'PRAZO', class: 'bg-red-100 text-red-700' }));
     });
-
-    // NOTIFICAÇÕES
     notificacoes.forEach(n => {
         if (n.data) {
             const action = acoes.find(a => a.ID === n.idAcao);
-
-            // Título Composto baseado na Ação Pai
             let nomeComposto = 'Ação desconhecida';
             if (action) {
                 nomeComposto = `${action['Plano de ação']} | ${action.Atividade}`;
@@ -169,7 +151,6 @@ function createObj(dateStr, type, title, raw, badge1, badge2) {
     };
 }
 
-// --- LOGICA DE FILTRO ---
 function filterEvents(all) {
     const chips = Array.from(document.querySelectorAll('.filter-chip.active')).map(b => b.dataset.type);
 
@@ -212,8 +193,6 @@ function filterEvents(all) {
     });
 }
 
-// --- RENDERIZAÇÃO GERAL ---
-
 window.applyFiltersAndRender = function () {
     const all = normalizeEvents(rawData.planos, rawData.acoes, rawData.notificacoes);
     const filtered = filterEvents(all);
@@ -225,8 +204,6 @@ window.applyFiltersAndRender = function () {
     const currentEvents = filtered.filter(e => e.dateObj.getMonth() === cM && e.dateObj.getFullYear() === cY);
     currentEvents.sort((a, b) => a.dateObj - b.dateObj);
 
-    // Empty state logic:
-    // Alterado: Só mostra o Empty State se estiver sem eventos E não for o modo Calendário
     const emptyEl = document.getElementById('empty-state');
     if (currentEvents.length === 0 && !isCalendarMode) {
         emptyEl.classList.remove('hidden');
@@ -237,16 +214,12 @@ window.applyFiltersAndRender = function () {
     }
 
     if (!isCalendarMode) {
-        // Se estiver vazio e for lista, o empty-state já cuida do aviso
-        // Se tiver eventos, renderiza a lista normalmente
         renderListView(currentEvents);
     } else {
-        // No modo calendário, renderiza a grade mesmo se vazio
         renderCalendarView(currentEvents, cM, cY);
     }
 }
 
-// === MODO LISTA (UFMG ESTILO LIMPO) ===
 function renderListView(events) {
     const container = document.getElementById('view-container-list');
     container.innerHTML = '';
@@ -263,7 +236,6 @@ function renderListView(events) {
         const dayNum = dateObj.getDate();
         const weekDay = dateObj.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '').toUpperCase();
 
-        // Render itens
         const itemsHtml = dayEvents.map(ev => {
             const unit = (ev.raw.Unidades && ev.raw.Unidades.length > 0) ? ev.raw.Unidades[0] : '';
             return `
@@ -284,7 +256,7 @@ function renderListView(events) {
         }).join('');
 
         const wrapper = document.createElement('div');
-        wrapper.className = "flex animate-entry relative"; // Sem mb-8 pois o gap controla
+        wrapper.className = "flex animate-entry relative";
         wrapper.style.animationDelay = `${idx * 50}ms`;
 
         wrapper.innerHTML = `
@@ -308,7 +280,6 @@ function renderListView(events) {
     });
 }
 
-// === MODO CALENDÁRIO (SEM GAPS ESTRANHOS) ===
 function renderCalendarView(monthEvents, month, year) {
     const grid = document.getElementById('calendar-grid');
     grid.innerHTML = '';
@@ -317,26 +288,22 @@ function renderCalendarView(monthEvents, month, year) {
     const lastD = lastDayInfo.getDate();
     const startWeek = new Date(year, month, 1).getDay();
 
-    // Padding no inicio
     for (let i = 0; i < startWeek; i++) {
         const d = document.createElement('div');
         d.className = "opacity-0";
         grid.appendChild(d);
     }
 
-    // Dias Reais
     for (let d = 1; d <= lastD; d++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         const evs = monthEvents.filter(e => e.dateStr === dateStr);
 
         const cell = document.createElement('div');
-        // min-h-[120px] e h-full para garantir preenchimento. bg-white
         cell.className = "bg-white p-2 min-h-[100px] hover:bg-slate-50 transition cursor-pointer flex flex-col group overflow-hidden relative";
         cell.onclick = () => openDayModal(dateStr, evs);
 
         let content = `<span class="block text-right text-xs font-bold text-slate-400 mb-1 group-hover:text-slate-600">${d}</span>`;
 
-        // Pills compactas
         evs.slice(0, 3).forEach(ev => {
             const color = ev.badge1.class.includes('purple') ? 'bg-purple-500' : (ev.badge1.class.includes('sky') ? 'bg-sky-500' : 'bg-amber-500');
             content += `
@@ -355,8 +322,6 @@ function renderCalendarView(monthEvents, month, year) {
     }
 }
 
-
-// CONFIG INICIAL DOS FILTROS
 function setupFilters(d) {
     const planos = new Set(), resps = new Set(), units = new Set();
     d.planos.forEach(p => {
@@ -394,13 +359,11 @@ window.clearFilters = function () {
     applyFiltersAndRender();
 }
 
-// Modal do Dia - Formatação Corrigida (ANO incluso)
 window.openDayModal = function (dateStr, evs) {
     if (!evs.length) return;
     const modal = document.getElementById('day-details-modal');
     const list = document.getElementById('modal-events-list');
 
-    // Data formato Longo com Ano
     document.getElementById('modal-date-title').textContent = new Date(dateStr + 'T12:00:00')
         .toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 

@@ -89,15 +89,6 @@ function setupViewSwitcher() {
     }
 }
 
-
-
-
-
-
-
-
-
-
 const filtersConfig = [
     { nome: "Plano de ação", id: "filter-planoAcao", objPessoa: false },
     { nome: "Status", id: "filter-Status", objPessoa: false },
@@ -324,16 +315,5 @@ function filtrarPeriodo(dadosParaFiltrar) {
         const start = new Date(task["Data de início"] + 'T00:00:00');
         const end = new Date(task["Data fim"] + 'T23:59:59');
         return start <= dataFim && end >= dataInicio;
-    });
-}
-
-
-
-
-function ordenarJsonAcoes(dados) {
-    dados.sort((a, b) => {
-        const numA = parseFloat(a['Número da atividade']) || 0;
-        const numB = parseFloat(b['Número da atividade']) || 0;
-        return numA - numB;
     });
 }

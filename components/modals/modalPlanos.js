@@ -1,11 +1,9 @@
 function initModalPlanos() {
     const modalHtml = `
         <section id="plan-modal">
-            <!-- Modal de edição -->
             <div id="plan-edit-modal"
                 class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-                    <!-- Cabeçalho do Modal -->
                     <div class="flex items-center justify-between p-4 border-b border-slate-200 flex-shrink-0">
                         <h3 class="text-xl font-bold text-slate-800">Editar Plano de Ação</h3>
                         <button id="plan-modal-btn-close" type="button"
@@ -13,16 +11,13 @@ function initModalPlanos() {
                             <ion-icon name="close-outline" class="text-2xl"></ion-icon>
                         </button>
                     </div>
-                    <!-- Corpo do Modal -->
                     <div class="p-5 overflow-y-auto">
                         <form id="plan-modal-form" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                            <!-- Título Editável -->
                             <div class="md:col-span-2">
                                 <input type="text" id="plan-edit-Nome" name="Nome"
                                     class="w-full bg-transparent border-none p-0 text-2xl font-bold text-sky-700 focus:ring-0 placeholder-slate-400 -mx-2 px-2 hover:bg-slate-50 rounded-lg"
                                     placeholder="Nome do Plano de Ação">
                             </div>
-                            <!-- Campos Principais -->
                             <div>
                                 <label for="plan-edit-Status"
                                     class="block text-sm font-semibold text-slate-500 mb-1">Status</label>
@@ -59,7 +54,6 @@ function initModalPlanos() {
                                 <textarea id="plan-edit-Observacoes" name="Observações" rows="2"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
-                            <!-- Seção SEI -->
                             <div class="md:col-span-2 flex items-center gap-2 pt-4 border-t border-slate-200 mt-2">
                                 <img src="../../assets/images/logo_sei_mg.png" class="h-6 w-auto object-contain"
                                     alt="Logo SEI">
@@ -78,7 +72,6 @@ function initModalPlanos() {
                                 <textarea id="plan-edit-SEI-relacionados" name="SEI relacionados" rows="2"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500"></textarea>
                             </div>
-                            <!-- Seção Equipe -->
                             <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
                                 <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
                                     <ion-icon name="people" class="text-lg"></ion-icon> Equipe responsável
@@ -116,7 +109,6 @@ function initModalPlanos() {
                                     </button>
                                 </div>
                             </div>
-                            <!-- Seção Documentos -->
                             <div class="md:col-span-2 pt-4 border-t border-slate-200 mt-2">
                                 <h4 class="flex items-center gap-2 text-base font-semibold text-slate-700">
                                     <ion-icon name="documents" class="text-lg"></ion-icon>
@@ -138,7 +130,6 @@ function initModalPlanos() {
                             </div>
                         </form>
                     </div>
-                    <!-- Rodapé do Modal -->
                     <div
                         class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3 flex-shrink-0">
                         <button id="plan-modal-btn-cancel" type="button"
@@ -152,7 +143,6 @@ function initModalPlanos() {
                     </div>
                 </div>
             </div>
-            <!-- Modal de confirmação para descartar alterações -->
             <div id="plan-confirmation-modal"
                 class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
@@ -174,13 +164,11 @@ function initModalPlanos() {
                     </div>
                 </div>
             </div>
-            <!-- Modal de confirmação de exclusão -->
             <div id="plan-delete-confirmation-modal"
                 class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                     <div class="p-6">
                         <div class="flex items-center">
-                            <!-- Ícone de Alerta -->
                             <div
                                 class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                 <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -216,7 +204,6 @@ function initModalPlanos() {
                     </div>
                 </div>
             </div>
-            <!-- Modal do prompt de visãoi geral -->
             <div id="prompt-modal"
                 class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
@@ -251,11 +238,6 @@ let modalPlanos_hasChanges = false;
 let modalPlanos_isNew = false;
 
 function setupModalPlanosLogic() {
-    // --- Configuração dos botões de edição ---
-    // Como os botões podem ser gerados dinamicamente nos cards, 
-    // precisamos usar delegação de eventos ou re-atachar.
-    // Para simplificar, vamos expor funções globais ou delegar no body.
-
     document.body.addEventListener('click', (event) => {
         const editBtn = event.target.closest('.edit-plano-button');
         if (editBtn) {
@@ -268,7 +250,6 @@ function setupModalPlanosLogic() {
         }
     });
 
-    // --- Controles do modal de edição ---
     const modalForm = document.getElementById('plan-modal-form');
     if (modalForm) {
         modalForm.addEventListener('input', () => (modalPlanos_hasChanges = true));
@@ -287,8 +268,6 @@ function setupModalPlanosLogic() {
         if (btn) btn.addEventListener('click', handler);
     });
 
-
-    // --- Controles do modal de confirmação de exclusão ---
     const deleteModal = document.getElementById('plan-delete-confirmation-modal');
     if (deleteModal) {
         const deleteBtnMap = {
@@ -302,7 +281,6 @@ function setupModalPlanosLogic() {
         });
     }
 
-    // --- controles da tabela ---
     const btnAdicionar = document.getElementById('plan-btnAdicionarPessoa');
     if (btnAdicionar) {
         btnAdicionar.addEventListener('click', () => adicionarLinhaPessoa());
@@ -605,11 +583,10 @@ async function awaitSincronizarNotificacoesComPessoasDoPlano(oldPlan, newPlan) {
     }
 }
 
-// Expondo as funções necessárias globalmente para os botões "Novo Plano" nas páginas
 window.openEditModalPlanos = openEditModal;
 window.initModalPlanos = initModalPlanos;
 window.openModalForNewPlan = function () {
-    openEditModal(); // Abre o modal em modo de criação (sem ID)
+    openEditModal();
 };
 
 function modalPlanos_togglePageInteractivity(enabled) {

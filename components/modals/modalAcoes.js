@@ -180,7 +180,6 @@ function initTaskModal() {
                                         <div class="editable-view w-full">
                                             <div class="flex items-center gap-2">
                                                 <div class="notification-icon-container flex-shrink-0 rounded-full p-2 bg-slate-100 text-slate-500">
-                                                    <!-- Ícone injetado via JS -->
                                                 </div>
                                                 <select
                                                     class="notification-type w-full appearance-none rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 transition-all focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20">
@@ -192,7 +191,6 @@ function initTaskModal() {
                                         </div>
                                         <div class="sent-view-text sent-type hidden w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 flex items-center gap-2">
                                             <div class="notification-icon-container-locked flex-shrink-0 rounded-full p-1">
-                                                <!-- Ícone injetado via JS -->
                                             </div>
                                             <span class="sent-type-text"></span>
                                         </div>
@@ -350,13 +348,11 @@ function initTaskModal() {
                     </div>
                 </div>
 
-                <!-- Modal de Confirmação para Criação/Atualização de Notificações -->
                 <div id="task-date-change-confirmation-modal"
                     class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
                             <h3 id="task-modal-title" class="text-lg font-bold text-slate-800"></h3>
-                            <!-- A classe de colite do texto foi alterada para um tom mais escuro -->
                             <p id="task-modal-message" class="mt-2 text-sm text-slate-700"></p>
                         </div>
                         <div
@@ -733,7 +729,7 @@ function task_atualizarUnidades(nomePlano, unidadesIniciais = []) {
 
 function task_renderNotificationsEditList(taskId) {
     const container = document.getElementById('task-notifications-edit-list');
-    container.innerHTML = ''; // Clear existing notifications
+    container.innerHTML = '';
 
     const notificacoes = window.jsonNotificacoes.filter(n => n.idAcao === taskId)
         .sort((a, b) => new Date(a.data) - new Date(b.data));
@@ -844,7 +840,7 @@ function task_updateNotificationIcon(type, container) {
     }
 
     container.innerHTML = iconSVG;
-    container.className = `notification-icon-container flex-shrink-0 rounded-full p-1 ${colorClasses}`; // Reduced padding to p-1 for smaller look
+    container.className = `notification-icon-container flex-shrink-0 rounded-full p-1 ${colorClasses}`;
 }
 
 function task_populateTabelaNotificacoes(listEl, mailList = []) {
@@ -925,7 +921,6 @@ async function task_handleSave() {
 
     const notifications = task_getNotificationsDataFromDOM();
 
-    // Validação de datas de notificação em branco
     const hasEmptyDate = notifications.some(n => !n.data);
     if (hasEmptyDate) {
         alert("Por favor, preencha todas as datas de notificação ou remova as notificações pendentes.");
@@ -940,21 +935,15 @@ async function task_handleSave() {
         const action = task_isNewMode ? 'create' : 'update';
         const id = task_isNewMode ? '' : task_current.ID;
 
-        // O usuário solicitou que confirmações de data ocorram ANTES do save no OneDrive.
-        // As confirmações já ocorrem via triggers de input, mas vamos garantir aqui se necessário.
-        // Removendo as chamadas redundantes de gerenciarNotificacaoPorData que ocorriam DEPOIS do save.
-
         const response = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', action, updatedTask, 'jsonAcoes');
 
         if (response?.status === 200) {
             const newTaskId = task_isNewMode ? response.data.ID : task_current.ID;
 
-            // Handle notifications
-            const notificationsToSave = notifications.filter(n => !n.ID); // New notifications
-            const notificationsToUpdate = notifications.filter(n => n.ID); // Existing notifications
-            const notificationsToDelete = task_deletedNotificationIds; // Deleted notifications
+            const notificationsToSave = notifications.filter(n => !n.ID);
+            const notificationsToUpdate = notifications.filter(n => n.ID);
+            const notificationsToDelete = task_deletedNotificationIds;
 
-            // Update existing notifications
             for (const notif of notificationsToUpdate) {
                 const originalDataStr = document.querySelector(`[data-notification-id="${notif.ID}"]`).dataset.originalData;
                 const originalData = JSON.parse(originalDataStr);
@@ -965,12 +954,10 @@ async function task_handleSave() {
                 }
             }
 
-            // Create new notifications
             for (const notif of notificationsToSave) {
                 await window.salvarArquivoNoOneDrive('', 'notificacoes.txt', 'create', { ...notif, idAcao: newTaskId }, 'jsonNotificacoes');
             }
 
-            // Delete notifications
             for (const notifId of notificationsToDelete) {
                 await window.salvarArquivoNoOneDrive(notifId, 'notificacoes.txt', 'delete', {}, 'jsonNotificacoes');
             }
@@ -1154,7 +1141,7 @@ function task_getNotificationsDataFromDOM() {
 window.openTaskModal = openTaskModal;
 window.initTaskModal = initTaskModal;
 window.openCreateTaskModal = openCreateTaskModal;
-window.openModalForNewAction = openCreateTaskModal; // Alias for compatibility
+window.openModalForNewAction = openCreateTaskModal;
 
 function task_togglePageInteractivity(enabled) {
     const elements = document.querySelectorAll('input, select, checkbox, textarea, button');

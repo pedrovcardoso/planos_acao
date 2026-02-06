@@ -117,23 +117,16 @@ function ordenarJsonAcoes(jsonAcoes) {
 }
 
 function ordenarJsonPlanos(jsonPlanos) {
-  // Passo 1: Ordenar a lista de equipes (objPessoas) dentro de cada plano
   jsonPlanos.forEach(plano => {
-    // Verifica se a propriedade 'objPessoas' existe e é um array com itens
     if (Array.isArray(plano.objPessoas) && plano.objPessoas.length > 0) {
-      
       plano.objPessoas.sort((a, b) => {
-        // Critério primário: Ordenar por Unidade
         const unidadeA = String(a.Unidade || "");
         const unidadeB = String(b.Unidade || "");
         const compUnidade = unidadeA.localeCompare(unidadeB, "pt-BR");
-
-        // Se as unidades forem diferentes, retorna o resultado
         if (compUnidade !== 0) {
           return compUnidade;
         }
 
-        // Critério secundário: Se as unidades forem iguais, ordenar por Nome
         const nomeA = String(a.Nome || "");
         const nomeB = String(b.Nome || "");
         return nomeA.localeCompare(nomeB, "pt-BR");
@@ -141,13 +134,11 @@ function ordenarJsonPlanos(jsonPlanos) {
     }
   });
 
-  // Passo 2: Ordenar o array principal de planos pelo nome
   jsonPlanos.sort((a, b) => {
     const nomeA = String(a.Nome || "");
     const nomeB = String(b.Nome || "");
     return nomeA.localeCompare(nomeB, "pt-BR");
   });
 
-  // Retorna o array modificado
   return jsonPlanos;
 }

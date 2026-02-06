@@ -44,9 +44,6 @@
             color: #ffffff;
         }
 
-        /* ===============================================================================
-        // botões do modal (ajuste de breakpoin, o menor do tailwind é de 640px)
-        ================================================================================== */
         @media (max-width: 399px) {
 
             #modal-btn-cancel,
@@ -55,9 +52,6 @@
             }
         }
 
-        /* ===============================================================================
-        // estilos do gantt (ainda não transformado para tailwind)
-        ================================================================================== */
         .gantt-tasks-header .gantt-row-task {
             display: grid;
             grid-template-columns: var(--col-num-width) var(--col-plano-width) var(--col-atividade-width) var(--col-status-width);
@@ -92,9 +86,6 @@
 
     <main class="mx-auto w-full flex-grow p-6 pt-20 md:pt-24">
 
-        <!--===============================================================================
-// painel de filtros
-===================================================================================-->
         <section id="filters-container" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
@@ -107,7 +98,6 @@
             </div>
 
             <div class="flex flex-wrap items-end gap-x-8 gap-y-3">
-                <!-- Filtro de Período -->
                 <div class="flex flex-col w-full sm:w-48">
                     <label for="filter-periodo" class="text-xs font-medium text-slate-600 mb-1">Período</label>
                     <select id="filter-periodo"
@@ -119,7 +109,6 @@
                     </select>
                 </div>
 
-                <!-- Inputs de Período Específico -->
                 <div id="periodo-especifico-inputs" class="hidden flex items-end gap-2 w-full sm:w-auto">
                     <div>
                         <label for="periodo-inicio" class="text-xs font-medium text-slate-600 mb-1">Início</label>
@@ -137,10 +126,8 @@
                     </div>
                 </div>
 
-                <!-- quebra de linha -->
                 <div class="w-full"></div>
 
-                <!-- Outros Filtros -->
                 <div class="flex flex-col flex-1 min-w-[180px]">
                     <label for="filter-planoAcao" class="text-xs font-medium text-slate-600 mb-1">Plano de Ação</label>
                     <select id="filter-planoAcao" multiple data-placeholder="Selecione um Plano">
@@ -168,9 +155,6 @@
             </div>
         </section>
 
-        <!--===============================================================================
-// switch do modo de visualização
-===================================================================================-->
         <section class="flex flex-wrap gap-2 items-center justify-center p-4">
             <div class="bg-white p-1 rounded-lg border border-slate-200 flex items-center shadow-sm">
                 <button id="view-kanban-btn"
@@ -184,25 +168,17 @@
             </div>
         </section>
 
-        <!--===============================================================================
-// visualização dos dados
-===================================================================================-->
         <article id="views-container">
-            <!-- kanban -->
             <section id="kanban-view" class="view-section active">
                 <div class="p-8 text-center bg-white rounded-lg shadow">
                 </div>
             </section>
 
-            <!-- tabela -->
             <section id="table-view" class="view-section" style="display: none;">
                 <div id="table-container" class="overflow-x-auto bg-white rounded-lg shadow h-[600px]"></div>
             </section>
         </article>
 
-        <!--===============================================================================
-// botão criar nova ação
-===================================================================================-->
         <section class="flex justify-center mt-8">
             <button id="btn-nova-atividade" type="button" class="relative flex flex-col items-center justify-center 
                             border-2 border-dashed border-slate-300 rounded-xl p-5 
@@ -219,9 +195,6 @@
     </main>
 
     <footer id="footer"></footer>
-    <!--===============================================================================
-// scripts
-===================================================================================-->
     <script src='../../components/layout/layout.js'></script>
     <script src='../../components/core/apiConnection.js'></script>
     <script src='../../components/layout/chatbot.js'></script>

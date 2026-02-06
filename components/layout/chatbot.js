@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function attachEventListeners() {
         document.getElementById('chatbot-toggle-button').addEventListener('click', toggleChat);
-        document.getElementById('chatbot-close-btn').addEventListener('click', toggleChat); // Adicione esta linha
+        document.getElementById('chatbot-close-btn').addEventListener('click', toggleChat);
         document.getElementById('chatbot-form').addEventListener('submit', handleSendMessage);
         document.getElementById('chatbot-restart-btn').addEventListener('click', handleRestartChat);
         document.getElementById('chatbot-download-btn').addEventListener('click', handleDownloadChat);
@@ -97,10 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
             windowEl.classList.remove('w-[90vw]', 'h-[80vh]');
             iconEl.setAttribute('name', 'expand-outline');
         }
-        
+
         loadHistory();
     }
-    
+
     function parseMarkdownToHTML(text) {
         if (!text) return '';
         let html = text
@@ -112,16 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const listRegex = /(?:<br>)*(?:- (?:.*?)(?=<br>|$))+/g;
         html = html.replace(listRegex, (match) => {
             const lines = match.split('<br>').filter(line => line.trim().startsWith('- '));
-            if (lines.length === 0) return match; 
+            if (lines.length === 0) return match;
 
             const listItems = lines.map(item => {
                 const content = item.trim().substring(2).trim();
                 return `<li>${content}</li>`;
             }).join('');
-            
+
             return `<ul class="list-disc list-inside space-y-1">${listItems}</ul>`;
         });
-        
+
         return html;
     }
 
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.isThinking = true;
         toggleThinkingIndicator(true);
         const startTime = performance.now();
-        
+
         try {
             const response = await callPowerAutomateAPI(userMessageText, JSON.stringify(state.history));
             const endTime = performance.now();
@@ -145,10 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 csvContent: response.csvContent,
                 filename: response.filename
             };
-            
+
             addMessageToUI(aiMessage);
             addMessageToHistory(aiMessage);
-            
+
         } catch (error) {
             console.error("Erro na comunicação com a IA:", error);
             addMessageToUI({
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 state.history = [];
                 state.messageIdCounter = 0;
                 sessionStorage.removeItem(SESSION_STORAGE_KEY_HISTORY);
-                loadHistory(); // Reload to show welcome message
+                loadHistory();
             }
         );
     }
@@ -228,11 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
         messagesContainer.innerHTML = '';
 
         if (state.history.length === 0) {
-            const welcomeMsg = { 
-                id: 0, 
-                sender: 'assistant', 
-                text: 'Olá! Como posso ajudar você a analisar os planos de ação hoje?', 
-                timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) 
+            const welcomeMsg = {
+                id: 0,
+                sender: 'assistant',
+                text: 'Olá! Como posso ajudar você a analisar os planos de ação hoje?',
+                timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
             };
             addMessageToHistory(welcomeMsg);
             addMessageToUI(welcomeMsg);
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return await response.json();
     }
-    
+
     function addMessageToUI(message) {
         const messagesContainer = document.getElementById('chatbot-messages');
         const messageDiv = document.createElement('div');
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 triggerCSVDownload(csvData, fileName);
             });
         }
-        
+
         const regenBtn = messageDiv.querySelector('.regenerate-btn');
         if (regenBtn) {
             document.querySelectorAll('.regenerate-btn').forEach((btn, i, arr) => { if (i < arr.length - 1) btn.remove(); });
@@ -334,17 +334,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleRegenerateLastResponse(messageId) {
         if (state.isThinking || !messageId) return;
-        
+
         const userMessageToRegen = state.history.find(msg => msg.id === messageId && msg.sender === 'user');
         if (!userMessageToRegen) return;
 
         state.history = state.history.filter(msg => !(msg.id === messageId && msg.sender === 'assistant'));
-        
+
         loadHistory();
-        
+
         await processAndSend(userMessageToRegen.text, userMessageToRegen.id);
     }
-    
+
     function triggerCSVDownload(csvContent, filename) {
         const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);

@@ -1,7 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Função para carregar um componente. Agora ela retorna a Promise.
     const loadComponent = (componentPath, elementId) => {
-        // Retorna a promise para que possamos encadear ações
         return fetch(componentPath)
             .then(response => {
                 if (!response.ok) {
