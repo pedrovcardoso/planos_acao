@@ -38,12 +38,45 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
 
         const cardsHtml = tasks.map(task => `
             <div 
-                class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-200 relative overflow-hidden" 
+                class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-200 relative overflow-visible" 
                 data-task-id="${task.ID}">
                 
-                <div class="flex flex-col gap-1.5">
+                <!-- BOTÃO DE MENU (TRÊS PONTINHOS) -->
+                <div class="absolute top-1 right-1 z-20">
+                    <div class="relative">
+                        <button type="button" 
+                                class="card-menu-button p-1 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none transition-colors"
+                                onclick="event.stopPropagation()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                            </svg>
+                        </button>
+
+                        <div class="card-menu-dropdown hidden absolute right-0 mt-1 w-48 bg-white rounded-md shadow-xl border border-slate-200 z-[100]">
+                            <div class="py-1">
+                                <button type="button" class="view-details-btn block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 font-semibold" data-task-id="${task.ID}">
+                                    Ver detalhes
+                                </button>
+                                ${task.Status !== 'Implementado' ? `
+                                <button type="button" class="mark-implemented-btn block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 font-semibold" data-task-id="${task.ID}">
+                                    Marcar como implementado
+                                </button>
+                                ` : ''}
+                                <div class="border-t border-slate-100 my-1"></div>
+                                <button type="button" class="edit-btn block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100" data-task-id="${task.ID}">
+                                    Editar
+                                </button>
+                                <button type="button" class="delete-btn block w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 font-semibold" data-task-id="${task.ID}">
+                                    Excluir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1.5 pt-1">
                     <h4 class="font-bold text-slate-800 text-[13px] leading-snug line-clamp-2 group-hover:text-sky-700 transition-colors">
-                        ${task.Atividade}
+                        ${task["Número da atividade"]} - ${task.Atividade}
                     </h4>
                     
                     <div class="flex items-center gap-1.5 text-[11px] font-semibold text-sky-600/80">
@@ -91,14 +124,102 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
     // --- 4. Insere o quadro no container ---
     container.innerHTML = fullKanbanHtml;
 
-    // --- 5. Adiciona os eventos de clique ---
+    // --- 5. Adiciona os eventos e inicializa menus ---
+    setupCardMenus(container);
+
     container.querySelectorAll('.kanban-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
+            // Não abre o modal se clicou no botão de menu ou no dropdown
+            if (e.target.closest('.card-menu-button') || e.target.closest('.card-menu-dropdown')) return;
+
             const taskId = card.dataset.taskId;
             if (typeof openTaskModal === 'function') {
                 openTaskModal(taskId);
             } else {
                 console.error("Função openTaskModal não encontrada.");
+            }
+        });
+    });
+}
+
+/**
+ * Configura os menus de overflow dos cards.
+ * @param {HTMLElement} container - O container do quadro Kanban.
+ */
+function setupCardMenus(container) {
+    const allMenuButtons = container.querySelectorAll('.card-menu-button');
+
+    allMenuButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const dropdown = button.nextElementSibling;
+            const isHidden = dropdown.classList.contains('hidden');
+            const card = button.closest('.kanban-card');
+
+            // Fecha todos os outros menus e reseta o z-index dos outros cards
+            document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
+            document.querySelectorAll('.kanban-card').forEach(c => c.classList.remove('z-50'));
+
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                if (card) card.classList.add('z-50'); // Eleva o card atual
+            }
+        });
+    });
+
+    // Fechar menus ao clicar fora
+    const closeMenus = () => {
+        document.querySelectorAll('.card-menu-dropdown').forEach(d => d.classList.add('hidden'));
+        document.querySelectorAll('.kanban-card').forEach(c => c.classList.remove('z-50'));
+    };
+    window.removeEventListener('click', closeMenus);
+    window.addEventListener('click', closeMenus);
+
+    // Ações do menu
+    container.querySelectorAll('.view-details-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openTaskModal(btn.dataset.taskId);
+        });
+    });
+
+    container.querySelectorAll('.mark-implemented-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const taskId = btn.dataset.taskId;
+            const task = window.jsonAcoes.find(t => t.ID === taskId);
+            if (task) {
+                const newData = { ...task, Status: 'Implementado' };
+                try {
+                    const res = await window.salvarArquivoNoOneDrive(taskId, 'acoes.txt', 'update', newData, 'jsonAcoes');
+                    if (res.status === 200) window.location.reload();
+                } catch (error) {
+                    console.error("Erro ao atualizar status:", error);
+                    alert("Erro ao marcar como implementado.");
+                }
+            }
+        });
+    });
+
+    container.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const taskId = btn.dataset.taskId;
+            openTaskModal(taskId);
+            if (typeof switchToEditMode === 'function') {
+                switchToEditMode();
+            }
+        });
+    });
+
+    container.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const taskId = btn.dataset.taskId;
+            // Para excluir, o modal precisa estar aberto para pegar o dataset.taskId
+            openTaskModal(taskId);
+            if (typeof openDeleteConfirmation === 'function') {
+                openDeleteConfirmation();
             }
         });
     });

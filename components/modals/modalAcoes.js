@@ -963,3 +963,5 @@ async function verificarNotificacaoLongoPrazo() {
 window.openTaskModal = openTaskModal;
 window.initModalAcoes = initModalAcoes;
 window.openModalForNewAction = openModalForNewAction;
+window.switchToEditMode = switchToEditMode;
+window.openDeleteConfirmation = openDeleteConfirmation;
