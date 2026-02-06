@@ -171,9 +171,6 @@
         <!--===============================================================================
 // switch do modo de visualização
 ===================================================================================-->
-        <!--===============================================================================
-// switch do modo de visualização
-===================================================================================-->
         <section class="flex flex-wrap gap-2 items-center justify-center p-4">
             <div class="bg-white p-1 rounded-lg border border-slate-200 flex items-center shadow-sm">
                 <button id="view-kanban-btn"
@@ -183,10 +180,6 @@
                 <button id="view-table-btn"
                     class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
                     <ion-icon name="list-outline" class="mr-2"></ion-icon> Tabela
-                </button>
-                <button id="view-gantt-btn"
-                    class="hidden px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
-                    <ion-icon name="calendar-outline" class="mr-2"></ion-icon> Gantt
                 </button>
             </div>
         </section>
@@ -205,55 +198,10 @@
             <section id="table-view" class="view-section" style="display: none;">
                 <div id="table-container" class="overflow-x-auto bg-white rounded-lg shadow h-[600px]"></div>
             </section>
-
-            <!-- gantt -->
-            <section id="gantt-view" class="view-section" style="display: none;">
-                <div
-                    class="grid grid-cols-[auto_1fr] overflow-hidden bg-white border border-slate-200 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg h-[600px]">
-                    <div
-                        class="bg-white border-r border-[#e0e0e0] sticky left-0 z-10 grid grid-rows-[auto_1fr] overflow-hidden">
-                        <div
-                            class="gantt-tasks-header items-center font-bold bg-gray-50 border-b border-gray-200 sticky top-0 z-10 h-10 box-border">
-                            <div data-col="num"
-                                class="px-3 border-r border-gray-200 relative whitespace-nowrap overflow-hidden text-ellipsis h-full flex items-center text-gray-500">
-                                Item do Plano<div
-                                    class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20">
-                                </div>
-                            </div>
-                            <div data-col="plano"
-                                class="px-3 border-r border-gray-200 relative whitespace-nowrap overflow-hidden text-ellipsis h-full flex items-center text-gray-500">
-                                Plano de ação<div
-                                    class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20">
-                                </div>
-                            </div>
-                            <div data-col="atividade"
-                                class="px-3 border-r border-gray-200 relative whitespace-nowrap overflow-hidden text-ellipsis h-full flex items-center text-gray-500">
-                                Atividade<div
-                                    class="resizer absolute top-0 -right-[3px] w-[6px] h-full cursor-col-resize z-20">
-                                </div>
-                            </div>
-                            <div data-col="status"
-                                class="status-header px-3 border-r border-gray-200 relative whitespace-nowrap overflow-hidden text-ellipsis h-full flex items-center text-gray-500">
-                                Status<div class="resizer"></div>
-                            </div>
-                        </div>
-                        <div id="gantt-task-list" class="overflow-y-auto overflow-x-hidden pb-7 scrollbar-none"></div>
-                    </div>
-                    <div id="gantt-timeline-container"
-                        class="grid grid-rows-[auto_1fr] overflow-x-auto overflow-y-auto bg-white">
-                        <div id="gantt-months-header"
-                            class="flex bg-gray-50 border-b border-gray-200 sticky top-0 z-10 max-h-10"></div>
-                        <div id="gantt-rows" class="relative">
-                            <div id="todayBar"
-                                class="h-full w-px border-l-2 border-dashed border-[lightcoral] absolute z-10"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </article>
 
         <!--===============================================================================
-// botão criar nova atividade
+// botão criar nova ação
 ===================================================================================-->
         <section class="flex justify-center mt-8">
             <button id="btn-nova-atividade" type="button" class="relative flex flex-col items-center justify-center 
@@ -265,7 +213,7 @@
                     stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                <span class="font-bold text-lg">Criar Nova Atividade</span>
+                <span class="font-bold text-lg">Criar Nova Ação</span>
             </button>
         </section>
     </main>
@@ -274,14 +222,13 @@
     <!--===============================================================================
 // scripts
 ===================================================================================-->
-    <script src='../../components/layout.js'></script>
-    <script src='../../components/apiConnection.js'></script>
-    <script src='../../components/chatbot.js'></script>
-    <script src='../../components/modalAcoes.js'></script>
-    <script src='kanban.js'></script>
-    <script src='table.js'></script>
-    <script src='gantt.js'></script>
-    <script src='main.js'></script>
+    <script src='../../components/layout/layout.js'></script>
+    <script src='../../components/core/apiConnection.js'></script>
+    <script src='../../components/layout/chatbot.js'></script>
+    <script src='../../components/modals/modalAcoes.js'></script>
+    <script src='../../components/views/kanbanBoard.js'></script>
+    <script src='../../components/views/tableBoard.js'></script>
+    <script src='scripts.js'></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 

@@ -9,17 +9,18 @@ const kanbanColumnsConfig = [
 ];
 
 /**
- * Cria e popula o quadro Kanban com altura máxima, cabeçalhos fixos e scrollbar horizontal sempre visível.
- * @param {Array<Object>} actionsData - O array de objetos de ações (jsonAcoes).
+ * Cria e popula o quadro Kanban.
+ * @param {Array<Object>} actionsData - O array de objetos de ações.
+ * @param {string} containerId - O ID do elemento container (padrão: 'kanban-view').
  */
-function populateKanbanBoard(actionsData) {
-    const container = document.getElementById('kanban-view');
+function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
+    const container = document.getElementById(containerId);
     if (!container) {
-        console.error("Container #kanban-view não encontrado.");
+        console.error(`Container #${containerId} não encontrado.`);
         return;
     }
 
-    // --- 1. Agrupa as tarefas por status (sem alterações) ---
+    // --- 1. Agrupa as tarefas por status ---
     const tasksByStatus = actionsData.reduce((acc, task) => {
         const status = task.Status || 'Sem Status';
         if (!acc[status]) acc[status] = [];
@@ -94,7 +95,14 @@ function populateKanbanBoard(actionsData) {
     container.querySelectorAll('.kanban-card').forEach(card => {
         card.addEventListener('click', () => {
             const taskId = card.dataset.taskId;
-            openTaskModal(taskId);
+            if (typeof openTaskModal === 'function') {
+                openTaskModal(taskId);
+            } else {
+                console.error("Função openTaskModal não encontrada.");
+            }
         });
     });
 }
+
+// Expondo globalmente
+window.populateKanbanBoard = populateKanbanBoard;
