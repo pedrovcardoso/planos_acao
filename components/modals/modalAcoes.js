@@ -1,10 +1,28 @@
 function initTaskModal() {
     const modalHtml = `
+        <style>
+            @keyframes slideUpEvident {
+                0% { transform: translateY(30px); }
+                100% { transform: translateY(0); }
+            }
+            @keyframes slideDownEvident {
+                0% { transform: translateY(-30px); }
+                100% { transform: translateY(0); }
+            }
+            .animate-slide-up-evident { animation: slideUpEvident 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; z-index: 10; }
+            .animate-slide-down-evident { animation: slideDownEvident 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; z-index: 10; }
+            
+            .glow-temp { position: relative; }
+            .glow-temp::after {
+                content: ''; position: absolute; inset: -2px; border-radius: 12px;
+                z-index: -1; opacity: 0; animation: 0.8s ease-out;
+            }
+        </style>
         <section id="task-modal-root">
             <section id="task-container"
                 class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
 
-                <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
 
                     <div class="flex items-start justify-between p-4 border-b border-slate-200">
                         <div id="task-header-view">
@@ -25,20 +43,28 @@ function initTaskModal() {
                     </div>
 
                     <div id="task-view-mode-content" class="p-6 space-y-4 overflow-y-auto">
-                        <div class="flex flex-wrap items-center justify-between gap-4 text-sm">
-                            <div class="flex items-center gap-2">
-                                <p class="font-medium text-slate-500">Status:</p>
-                                <div class="flex justify-center items-center">
-                                    <div id="task-view-status"
-                                        class="flex justify-center items-center text-sm px-1.5 rounded h-6">
+                        <div class="flex flex-col items-end w-full">
+                            <div class="w-full flex flex-wrap items-center justify-between gap-4 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <p class="font-medium text-slate-500">Status:</p>
+                                    <div class="flex justify-center items-center">
+                                        <div id="task-view-status"
+                                            class="flex justify-center items-center text-sm px-1.5 rounded h-6">
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="flex items-center gap-4">
+                                    <p class="font-medium text-slate-500">Início: <strong id="task-view-data-inicio"
+                                            class="font-semibold text-slate-700"></strong></p>
+                                    <p class="font-medium text-slate-500">Fim: <strong id="task-view-data-fim"
+                                            class="font-semibold text-slate-700"></strong></p>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-4">
-                                <p class="font-medium text-slate-500">Início: <strong id="task-view-data-inicio"
-                                        class="font-semibold text-slate-700"></strong></p>
-                                <p class="font-medium text-slate-500">Fim: <strong id="task-view-data-fim"
-                                        class="font-semibold text-slate-700"></strong></p>
+                            <div id="task-view-history-trigger-container" class="hidden">
+                                <button id="task-btn-open-history-view" type="button" class="flex items-center gap-1.5 text-sky-600 hover:text-sky-700 text-xs font-semibold py-1 px-2 rounded-md hover:bg-sky-50 transition-colors">
+                                    <ion-icon name="time-outline" class="text-base"></ion-icon>
+                                    Histórico de Datas
+                                </button>
                             </div>
                         </div>
                         <div class="space-y-4 pt-4 border-t border-slate-200">
@@ -67,6 +93,8 @@ function initTaskModal() {
                             </h4>
                         </div>
                         <div id="task-notifications-list" class="space-y-4"></div>
+                        
+
                     </div>
 
                     <div id="task-edit-mode-content" class="hidden p-6 overflow-y-auto">
@@ -127,6 +155,12 @@ function initTaskModal() {
                                     fim</label>
                                 <input type="date" id="task-edit-data-fim" name="Data fim"
                                     class="block w-full rounded-md border border-slate-150 bg-white p-2 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                            </div>
+
+                            <div class="md:col-span-2 text-right">
+                                <button type="button" id="task-btn-manage-history" class="text-sm text-sky-600 hover:text-sky-800 hover:underline flex items-center justify-end gap-1 ml-auto">
+                                    <ion-icon name="time-outline"></ion-icon> Gerenciar Histórico de Datas
+                                </button>
                             </div>
 
                             <div class="md:col-span-2">
@@ -254,13 +288,15 @@ function initTaskModal() {
                                     Adicionar Notificação
                                 </button>
                             </div>
+
+
                         </form>
                     </div>
 
                     <div
-                        class="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                        class="flex items-center justify-between p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl space-x-3">
                         <button id="task-btn-delete-task" type="button"
-                            class=" text-red-700 font-bold py-2 px-4 rounded-lg hover:bg-red-200 hover:text-red-800 disabled:cursor-not-allowed text-sm flex items-center space-x-2">
+                            class=" text-red-700 font-bold py-2 px-4 rounded-xl hover:bg-red-200 hover:text-red-800 disabled:cursor-not-allowed text-sm flex items-center space-x-2">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -275,11 +311,17 @@ function initTaskModal() {
                                 <button id="task-btn-edit-task" type="button"
                                     class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700">Editar</button>
                             </div>
-                            <div id="task-edit-mode-buttons" class="hidden">
-                                <button id="task-btn-cancel-task" type="button"
-                                    class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">Cancelar</button>
-                                <button id="task-btn-save-task" type="button"
-                                    class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed">Salvar</button>
+                            <div id="task-edit-mode-buttons" class="hidden flex flex-col items-end gap-2">
+                                <div class="flex items-center space-x-3">
+                                    <button id="task-btn-cancel-task" type="button"
+                                        class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed text-sm">Cancelar</button>
+                                    <button id="task-btn-save-task" type="button"
+                                        class="bg-sky-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-700 disabled:cursor-not-allowed text-sm">Salvar</button>
+                                </div>
+                                <span id="task-main-msg" class="text-[11px] text-red-500 font-medium hidden italic flex items-center gap-1">
+                                    <ion-icon name="alert-circle"></ion-icon>
+                                    <span class="msg-text"></span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -287,20 +329,20 @@ function initTaskModal() {
 
                 <div id="task-confirmation-modal"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
                             <h3 class="text-lg font-bold text-slate-800">Descartar Alterações?</h3>
                             <p class="mt-2 text-sm text-slate-600">Você fez alterações que não foram salvas. Tem certeza de
                                 que deseja sair?</p>
                         </div>
                         <div
-                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl space-x-3">
                             <button id="task-confirm-btn-no" type="button"
-                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
+                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-xl border border-slate-300 hover:bg-slate-100">
                                 Não
                             </button>
                             <button id="task-confirm-btn-yes" type="button"
-                                class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">
+                                class="bg-red-600 text-white font-bold py-2 px-6 rounded-xl hover:bg-red-700">
                                 Sim, Descartar
                             </button>
                         </div>
@@ -309,7 +351,7 @@ function initTaskModal() {
 
                 <div id="task-delete-confirmation-modal"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
                             <div class="flex items-center">
                                 <div
@@ -329,19 +371,19 @@ function initTaskModal() {
                                     Tem certeza de que deseja excluir a ação <strong id="task-to-delete-name"
                                         class="font-bold text-slate-800"></strong>?
                                 </p>
-                                <p class="mt-2 text-sm font-semibold text-red-700 bg-red-50 p-3 rounded-md">
+                                <p class="mt-2 text-sm font-semibold text-red-700 bg-red-50 p-3 rounded-xl">
                                     Esta ação é permanente e não poderá ser revertida pelo usuário.
                                 </p>
                             </div>
                         </div>
                         <div
-                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl space-x-3">
                             <button id="task-delete-confirm-btn-no" type="button"
-                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
+                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-xl border border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed">
                                 Cancelar
                             </button>
                             <button id="task-delete-confirm-btn-yes" type="button"
-                                class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700 disabled:cursor-not-allowed">
+                                class="bg-red-600 text-white font-bold py-2 px-6 rounded-xl hover:bg-red-700 disabled:cursor-not-allowed">
                                 Sim, Excluir
                             </button>
                         </div>
@@ -350,20 +392,96 @@ function initTaskModal() {
 
                 <div id="task-date-change-confirmation-modal"
                     class="hidden fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
                             <h3 id="task-modal-title" class="text-lg font-bold text-slate-800"></h3>
                             <p id="task-modal-message" class="mt-2 text-sm text-slate-700"></p>
                         </div>
                         <div
-                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-xl space-x-3">
+                            class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl space-x-3">
                             <button id="task-modal-btn-cancel-notification" type="button"
-                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-lg border border-slate-300 hover:bg-slate-100">
+                                class="bg-white text-slate-700 font-bold py-2 px-6 rounded-xl border border-slate-300 hover:bg-slate-100">
                                 Cancelar
                             </button>
                             <button id="task-modal-btn-confirm-notification" type="button"
-                                class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
+                                class="bg-sky-600 text-white font-bold py-2 px-6 rounded-xl hover:bg-sky-700">
                                 Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="task-history-modal"
+                    class="hidden fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]">
+                        <div class="flex items-center justify-between p-5 border-b border-slate-200">
+                             <div class="flex items-center gap-4">
+                                <h3 class="text-xl font-bold text-slate-800">Linha do Tempo</h3>
+                             </div>
+                        </div>
+
+                        <div class="p-6 overflow-y-auto space-y-6">
+                            <div id="task-history-timeline-container" class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                                <!-- Modern Timeline Items -->
+                                <div id="task-history-current-item" class="relative">
+                                    <div class="absolute left-[-25px] top-1.5 w-4 h-4 rounded-full bg-sky-500 border-2 border-white ring-4 ring-sky-100"></div>
+                                    <div class="bg-sky-50 border border-sky-100 rounded-xl p-4 shadow-sm">
+                                         <div class="flex items-center justify-between mb-2">
+                                            <span class="px-2 py-0.5 bg-sky-600 text-white text-[10px] font-bold uppercase rounded-md tracking-wider">Estado Atual</span>
+                                         </div>
+                                         <div class="flex flex-wrap items-center gap-4 text-slate-800">
+                                            <div class="flex flex-col">
+                                                <span class="text-[10px] text-sky-600 font-bold uppercase font-sans">Início</span>
+                                                <span id="task-history-current-start-card" class="text-base font-bold">-</span>
+                                            </div>
+                                            <ion-icon name="arrow-forward-outline" class="text-sky-300 text-xl"></ion-icon>
+                                            <div class="flex flex-col">
+                                                <span class="text-[10px] text-sky-600 font-bold uppercase font-sans">Conclusão</span>
+                                                <span id="task-history-current-end-card" class="text-base font-bold">-</span>
+                                            </div>
+                                         </div>
+                                    </div>
+                                </div>
+
+                                <div id="task-history-list-content" class="space-y-8">
+                                    <!-- History Logic will populate this -->
+                                </div>
+                            </div>
+                            
+                            <div id="task-history-edit-content" class="hidden"></div>
+
+                        </div>
+                        <div id="task-history-footer" class="p-4 border-t border-slate-200 bg-slate-50 text-right rounded-b-2xl">
+                            <button id="task-history-btn-done" type="button" class="bg-white border border-slate-300 text-slate-700 font-bold py-2 px-6 rounded-xl hover:bg-slate-100 transition-colors shadow-sm text-sm">
+                                Concluído
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="task-history-prompt-modal"
+                    class="hidden fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <ion-icon name="alert-circle-outline" class="text-sky-600"></ion-icon> Registrar Mudança?
+                            </h3>
+                            <p class="mt-2 text-sm text-slate-600 leading-relaxed">Deseja salvar as datas anteriores no histórico? Se sim, informe o motivo:</p>
+                            
+                            <div class="mt-4">
+                                <input type="text" id="task-history-prompt-input" 
+                                    class="block w-full rounded-xl border-slate-200 bg-slate-50 text-sm focus:ring-sky-500 focus:border-sky-500 px-4 py-3" 
+                                    placeholder="Ex: Novo cronograma acordado...">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl gap-3">
+                            <button id="task-history-prompt-btn-no" type="button"
+                                class="bg-white text-slate-700 font-bold py-2 px-5 rounded-xl border border-slate-300 hover:bg-slate-100 text-sm transition-colors">
+                                Não Registrar
+                            </button>
+                            <button id="task-history-prompt-btn-yes" type="button"
+                                class="bg-sky-600 text-white font-bold py-2 px-5 rounded-xl hover:bg-sky-700 text-sm shadow-md transition-all">
+                                Confirmar e Salvar
                             </button>
                         </div>
                     </div>
@@ -383,6 +501,10 @@ let task_current = null;
 let task_hasChanges = false;
 let task_isNewMode = false;
 let task_deletedNotificationIds = [];
+let task_initialDates = { inicio: '', fim: '' };
+let task_inlineEditingIndice = null; // null means no item is being edited inline
+let task_historySortDesc = false; // Changed to false by default for manual order
+let task_pendingSaveData = null;
 
 
 function setupTaskModalLogic() {
@@ -405,13 +527,30 @@ function setupTaskModalLogic() {
         'task-confirm-btn-yes': () => task_switchToViewMode(true),
         'task-delete-confirm-btn-no': () => document.getElementById('task-delete-confirmation-modal').classList.add('hidden'),
         'task-delete-confirm-btn-yes': task_handleDeleteTask,
-        'task-add-notification-btn': () => { task_addNotificationItem(); task_hasChanges = true; }
+        'task-add-notification-btn': () => { task_addNotificationItem(); task_hasChanges = true; },
+        'task-btn-open-history-view': () => openTaskHistoryModal(false),
+        'task-btn-manage-history': () => openTaskHistoryModal(true),
+        'task-history-btn-close': closeTaskHistoryModal,
+        'task-history-btn-close-top': closeTaskHistoryModal,
+        'task-history-btn-done': closeTaskHistoryModal,
+        'task-history-btn-toggle-order': task_toggleHistoryOrder
     };
+
 
     Object.entries(btnMap).forEach(([id, handler]) => {
         const btn = document.getElementById(id);
         if (btn) btn.addEventListener('click', handler);
     });
+
+    // History Prompt Buttons
+    const btnPromptYes = document.getElementById('task-history-prompt-btn-yes');
+    const btnPromptNo = document.getElementById('task-history-prompt-btn-no');
+    if (btnPromptYes) btnPromptYes.addEventListener('click', () => task_handleHistoryPrompt(true));
+    if (btnPromptNo) btnPromptNo.addEventListener('click', () => task_handleHistoryPrompt(false));
+
+    // Close History Modal from Top X
+    const btnCloseTaskHistoryTop = document.getElementById('task-history-btn-close-top');
+    if (btnCloseTaskHistoryTop) btnCloseTaskHistoryTop.addEventListener('click', closeTaskHistoryModal);
 
     const editForm = document.getElementById('task-edit-form');
     if (editForm) {
@@ -445,6 +584,7 @@ function setupTaskModalLogic() {
             await task_gerenciarNotificacaoPorData(id, novaData, 'inicio');
             await task_verificarNotificacaoLongoPrazo(id, novaData, document.getElementById('task-edit-data-fim').value);
         });
+        dataInicioInput.addEventListener('change', (e) => task_detectDateChange('inicio', e.target.value));
     }
 
     const dataFimInput = document.getElementById('task-edit-data-fim');
@@ -462,7 +602,46 @@ function setupTaskModalLogic() {
             await task_gerenciarNotificacaoPorData(id, novaData, 'pendencia', calcularDataPendencia);
             await task_verificarNotificacaoLongoPrazo(id, document.getElementById('task-edit-data-inicio').value, novaData);
         });
+        dataFimInput.addEventListener('input', task_syncHistoryCurrentState);
     }
+
+    if (dataInicioInput) {
+        dataInicioInput.addEventListener('input', task_syncHistoryCurrentState);
+    }
+}
+
+function task_syncHistoryCurrentState() {
+    const historyData = task_current["Datas anteriores"] || [];
+
+    const startCard = document.getElementById('task-history-current-start-card');
+    const endCard = document.getElementById('task-history-current-end-card');
+
+    if (historyData.length === 0) {
+        // Se não há histórico, usar datas atuais do formulário
+        const startVal = document.getElementById('task-edit-data-inicio')?.value || task_current["Data de início"];
+        const endVal = document.getElementById('task-edit-data-fim')?.value || task_current["Data fim"];
+
+        if (startCard) startCard.textContent = startVal ? formatDate(startVal) : 'Não definida';
+        if (endCard) endCard.textContent = endVal ? formatDate(endVal) : 'Não definida';
+    } else {
+        // Buscar registro com maior índice (mais recente)
+        const ultimoRegistro = historyData.reduce((max, reg) =>
+            reg.indice > max.indice ? reg : max
+            , historyData[0]);
+
+        if (startCard) startCard.textContent = ultimoRegistro.inicio ? formatDate(ultimoRegistro.inicio) : 'Não definida';
+        if (endCard) endCard.textContent = ultimoRegistro.fim ? formatDate(ultimoRegistro.fim) : 'Não definida';
+    }
+}
+
+function task_toggleHistoryOrder() {
+    task_historySortDesc = !task_historySortDesc;
+    const orderText = document.getElementById('task-history-order-text');
+    if (orderText) {
+        orderText.textContent = task_historySortDesc ? 'Recentes primeiro' : 'Antigos primeiro';
+    }
+    const isEditMode = !document.getElementById('task-history-edit-content').classList.contains('hidden');
+    task_renderHistoryModalContent(isEditMode);
 }
 
 function openTaskModal(taskId) {
@@ -473,6 +652,10 @@ function openTaskModal(taskId) {
     task_isNewMode = false;
     task_hasChanges = false;
     task_deletedNotificationIds = [];
+    task_initialDates = {
+        inicio: task["Data de início"] || '',
+        fim: task["Data fim"] || ''
+    };
 
     task_switchToViewMode();
     document.getElementById('task-container').classList.remove('hidden');
@@ -495,6 +678,7 @@ function openCreateTaskModal(defaultPlanoName = '') {
     task_isNewMode = true;
     task_hasChanges = false;
     task_deletedNotificationIds = [];
+    task_initialDates = { inicio: '', fim: '' };
 
     task_switchToEditMode();
     document.getElementById('task-container').classList.remove('hidden');
@@ -548,6 +732,15 @@ function task_switchToViewMode(force = false) {
     }
 
     task_renderNotificationsViewList(task.ID);
+
+    // Render History
+    // Show history trigger only if it exists
+    const historyTrigger = document.getElementById('task-view-history-trigger-container');
+    if (task["Datas anteriores"] && Array.isArray(task["Datas anteriores"]) && task["Datas anteriores"].length > 0) {
+        historyTrigger.classList.remove('hidden');
+    } else {
+        historyTrigger.classList.add('hidden');
+    }
     confirmationModal.classList.add('hidden');
     task_hasChanges = false;
 }
@@ -683,8 +876,13 @@ function task_switchToEditMode() {
     task_atualizarUnidades(task["Plano de ação"], task.Unidades || []);
 
     task_renderNotificationsEditList(task.ID);
+
+
+
     task_hasChanges = false;
 }
+
+
 
 function task_atualizarUnidades(nomePlano, unidadesIniciais = []) {
     const container = document.getElementById('task-unidades-container');
@@ -923,8 +1121,38 @@ async function task_handleSave() {
 
     const hasEmptyDate = notifications.some(n => !n.data);
     if (hasEmptyDate) {
-        alert("Por favor, preencha todas as datas de notificação ou remova as notificações pendentes.");
+        task_showMainError("Preencha todas as datas de notificação ou remova as pendentes.");
         return;
+    }
+
+    // Check for date changes to trigger history prompt
+    const dateChanged = !task_isNewMode && (
+        updatedTask["Data de início"] !== task_initialDates.inicio ||
+        updatedTask["Data fim"] !== task_initialDates.fim
+    );
+
+    if (dateChanged) {
+        task_pendingSaveData = updatedTask;
+        task_showHistoryPromptModal();
+        return;
+    }
+
+    await task_performSave(updatedTask);
+}
+
+async function task_performSave(updatedTask) {
+    const notifications = task_getNotificationsDataFromDOM();
+
+    // Persist History Data (from memory, manipulated by modal)
+    if (task_isNewMode) {
+        updatedTask["Datas anteriores"] = [{
+            indice: 0,
+            inicio: updatedTask["Data de início"],
+            fim: updatedTask["Data fim"],
+            motivo: 'Registro inicial'
+        }];
+    } else if (task_current["Datas anteriores"]) {
+        updatedTask["Datas anteriores"] = task_current["Datas anteriores"];
     }
 
     const saveBtn = document.getElementById('task-btn-save-task');
@@ -968,11 +1196,343 @@ async function task_handleSave() {
         }
     } catch (error) {
         console.error('Erro ao salvar:', error);
-        alert('Falha ao salvar as alterações: ' + error.message);
+        task_showMainError('Falha ao salvar: ' + error.message);
         task_togglePageInteractivity(true);
         saveBtn.textContent = 'Salvar';
     }
 }
+
+function task_showMainError(msg) {
+    const errorSpan = document.getElementById('task-main-msg');
+    errorSpan.querySelector('.msg-text').textContent = msg;
+    errorSpan.classList.remove('hidden');
+    setTimeout(() => {
+        if (!errorSpan.classList.contains('hidden') && errorSpan.querySelector('.msg-text').textContent === msg) {
+            errorSpan.classList.add('hidden');
+        }
+    }, 5000);
+}
+
+function task_showHistoryPromptModal() {
+    const modal = document.getElementById('task-history-prompt-modal');
+    const input = document.getElementById('task-history-prompt-input');
+
+    input.value = '';
+    modal.classList.remove('hidden');
+    input.focus();
+}
+
+async function task_handleHistoryPrompt(confirmed) {
+    const modal = document.getElementById('task-history-prompt-modal');
+    const input = document.getElementById('task-history-prompt-input');
+
+    if (confirmed && task_pendingSaveData) {
+        const motivo = input.value.trim();
+
+        if (!motivo) {
+            // Exibe erro: Motivo é obrigatório
+            alert('O motivo da alteração é obrigatório.');
+            return;
+        }
+
+        if (!task_current["Datas anteriores"]) {
+            task_current["Datas anteriores"] = [];
+        }
+
+        const isFirstChange = task_current["Datas anteriores"].length === 0;
+
+        if (isFirstChange) {
+            // Primeira alteração: adicionar registro das datas antigas
+            task_current["Datas anteriores"].push({
+                indice: 0,
+                inicio: task_initialDates.inicio,
+                fim: task_initialDates.fim,
+                motivo: "Data inicialmente prevista"
+            });
+        }
+
+        // Adicionar registro das datas novas
+        const proximoIndice = task_current["Datas anteriores"].length;
+
+        task_current["Datas anteriores"].push({
+            indice: proximoIndice,
+            inicio: task_pendingSaveData["Data de início"],
+            fim: task_pendingSaveData["Data fim"],
+            motivo: motivo
+        });
+    }
+
+    modal.classList.add('hidden');
+
+    if (task_pendingSaveData) {
+        const updatedTask = task_pendingSaveData;
+        task_pendingSaveData = null;
+        await task_performSave(updatedTask);
+    }
+}
+
+// --- History Modal Functions ---
+
+let task_tempStart = '';
+let task_tempEnd = '';
+let task_tempReason = '';
+
+function openTaskHistoryModal(isEditMode) {
+    const modal = document.getElementById('task-history-modal');
+    const titleView = modal.querySelector('h3');
+
+    modal.classList.remove('hidden');
+    task_inlineEditingIndice = null; // Reset inline editing state
+
+    if (isEditMode) {
+        titleView.innerHTML = 'Gerenciar Linha do Tempo';
+        task_renderHistoryModalContent(true);
+    } else {
+        titleView.innerHTML = 'Histórico de alteração de datas';
+        task_renderHistoryModalContent(false);
+    }
+}
+
+function closeTaskHistoryModal() {
+    document.getElementById('task-history-modal').classList.add('hidden');
+}
+
+function task_renderHistoryModalContent(isEditMode = false) {
+    const container = document.getElementById('task-history-list-content');
+    const historyData = task_current["Datas anteriores"] || [];
+
+    if (historyData.length === 0) {
+        container.innerHTML = '<p class="text-slate-400 italic text-sm py-4">Nenhum registro anterior encontrado.</p>';
+        return;
+    }
+
+    // Ordenar por índice DECRESCENTE (maior índice primeiro = mais recente no topo)
+    let sortedHistory = [...historyData].sort((a, b) => b.indice - a.indice);
+
+    // Encontrar maior índice
+    const maxIndice = Math.max(...historyData.map(h => h.indice));
+
+    // Variáveis para controlar animação de troca (lidas do contexto global)
+    const movedUp = window.task_lastMovedIndiceUp;
+    const movedDown = window.task_lastMovedIndiceDown;
+
+    // Limpar após ler
+    window.task_lastMovedIndiceUp = null;
+    window.task_lastMovedIndiceDown = null;
+
+    container.innerHTML = sortedHistory.map((h) => {
+        const isPrimeiro = h.indice === 0; // Não pode decrementar mais
+        const isUltimo = h.indice === maxIndice; // Não pode incrementar mais
+        const isEditing = task_inlineEditingIndice === h.indice;
+
+        // Determinar classe de animação
+        let animClass = "";
+        let glowClass = "";
+        if (h.indice === movedUp) {
+            animClass = "animate-slide-up-evident";
+            glowClass = "glow-temp";
+        }
+        if (h.indice === movedDown) {
+            animClass = "animate-slide-down-evident";
+            glowClass = "glow-temp";
+        }
+
+        return `
+            <div class="relative group ${animClass} ${glowClass}">
+                <div class="absolute left-[-25px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-slate-300 group-hover:border-sky-400 transition-colors shadow-sm"></div>
+                <div class="bg-white border ${isEditing ? 'border-sky-400 ring-2 ring-sky-50' : 'border-slate-200'} rounded-xl p-4 shadow-sm hover:shadow-md transition-all group-hover:border-slate-300">
+                    <div class="flex items-start justify-between mb-2">
+                         <div class="flex flex-col gap-2 w-full">
+                              ${isEditing ? `
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-[9px] font-bold text-sky-600 uppercase">Data Início</label>
+                                        <input type="date" id="inline-edit-start-${h.indice}" value="${h.inicio}" class="text-sm border-slate-200 rounded-lg p-1.5 focus:ring-sky-500">
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-[9px] font-bold text-sky-600 uppercase">Data Fim</label>
+                                        <input type="date" id="inline-edit-end-${h.indice}" value="${h.fim}" class="text-sm border-slate-200 rounded-lg p-1.5 focus:ring-sky-500">
+                                    </div>
+                                </div>
+                              ` : `
+                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                                    <span class="px-2 py-0.5 bg-slate-50 rounded border border-slate-100">${formatDate(h.inicio)}</span>
+                                    <ion-icon name="arrow-forward-outline" class="text-slate-300"></ion-icon>
+                                    <span class="px-2 py-0.5 bg-slate-50 rounded border border-slate-100">${formatDate(h.fim)}</span>
+                                </div>
+                              `}
+                          </div>
+                         ${isEditMode ? `
+                            <div class="flex items-center gap-1">
+                                ${isEditing ? `
+                                    <button type="button" class="text-green-500 hover:text-green-600 transition-colors p-1" onclick="task_saveInlineHistoryEdit(${h.indice})" title="Confirmar">
+                                        <ion-icon name="checkmark-circle-outline" class="text-xl"></ion-icon>
+                                    </button>
+                                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors p-1" onclick="task_cancelInlineHistoryEdit()" title="Cancelar">
+                                        <ion-icon name="close-circle-outline" class="text-xl"></ion-icon>
+                                    </button>
+                                ` : `
+                                    ${!isPrimeiro ? `
+                                        <button type="button" class="text-slate-300 hover:text-sky-600 transition-colors p-1" onclick="task_decrementHistoryIndex(${h.indice})" title="Mover para cima (decrementar índice)">
+                                            <ion-icon name="arrow-down-outline" class="text-sm"></ion-icon>
+                                        </button>
+                                    ` : '<span class="w-6"></span>'}
+                                    ${!isUltimo ? `
+                                        <button type="button" class="text-slate-300 hover:text-sky-600 transition-colors p-1" onclick="task_incrementHistoryIndex(${h.indice})" title="Mover para baixo (incrementar índice)">
+                                            <ion-icon name="arrow-up-outline" class="text-sm"></ion-icon>
+                                        </button>
+                                    ` : '<span class="w-6"></span>'}
+                                    <button type="button" class="text-slate-300 hover:text-sky-500 transition-colors p-1" onclick="task_editHistoryItem(${h.indice})" title="Editar">
+                                        <ion-icon name="create-outline" class="text-base"></ion-icon>
+                                    </button>
+                                    <button type="button" class="text-slate-400 hover:text-red-500 transition-colors p-1 ml-1" onclick="task_removeHistoryItem(${h.indice})" title="Remover">
+                                        <ion-icon name="trash-outline" class="text-base"></ion-icon>
+                                    </button>
+                                `}
+                            </div>
+                         ` : ''}
+                    </div>
+                    
+                    <div class="mt-1.5 text-[13px] text-slate-500 leading-relaxed">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase mr-1">Justificativa:</span>
+                        ${isEditing ? `
+                            <input type="text" id="inline-edit-reason-${h.indice}" value="${h.motivo || ''}" class="w-full text-sm border-slate-200 rounded-lg p-1.5 mt-1 focus:ring-sky-500" placeholder="Motivo da alteração...">
+                        ` : `
+                            <span class="text-slate-600">${h.motivo || 'Nenhuma justificativa registrada.'}</span>
+                        `}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    task_syncHistoryCurrentState();
+}
+
+// Incrementar índice (move para baixo visualmente, pois ordem é decrescente)
+window.task_incrementHistoryIndex = function (currentIndex) {
+    const history = task_current["Datas anteriores"];
+    const registroAtual = history.find(h => h.indice === currentIndex);
+
+    if (!registroAtual) return;
+
+    // Encontrar o registro com índice imediatamente superior
+    const proximoIndice = currentIndex + 1;
+    const registroProximo = history.find(h => h.indice === proximoIndice);
+
+    if (!registroProximo) return; // Já é o último (maior índice)
+
+    // Na visualização Decrescente:
+    // Incrementar o índice faz o item SUBIR na lista (maior índice fica em cima)
+    window.task_lastMovedIndiceUp = proximoIndice;
+    window.task_lastMovedIndiceDown = currentIndex;
+
+    // Trocar os índices
+    registroAtual.indice = proximoIndice;
+    registroProximo.indice = currentIndex;
+
+    task_hasChanges = true;
+    task_renderHistoryModalContent(true);
+};
+
+// Decrementar índice (move para cima visualmente, pois ordem é decrescente)
+window.task_decrementHistoryIndex = function (currentIndex) {
+    const history = task_current["Datas anteriores"];
+    const registroAtual = history.find(h => h.indice === currentIndex);
+
+    if (!registroAtual || currentIndex === 0) return; // Já é o primeiro (índice 0)
+
+    // Encontrar o registro com índice imediatamente inferior
+    const indiceAnterior = currentIndex - 1;
+    const registroAnterior = history.find(h => h.indice === indiceAnterior);
+
+    if (!registroAnterior) return;
+
+    // Na visualização Decrescente:
+    // Decrementar o índice faz o item DESCER na lista
+    window.task_lastMovedIndiceDown = indiceAnterior;
+    window.task_lastMovedIndiceUp = currentIndex;
+
+    // Trocar os índices
+    registroAtual.indice = indiceAnterior;
+    registroAnterior.indice = currentIndex;
+
+    task_hasChanges = true;
+    task_renderHistoryModalContent(true);
+};
+
+// Reindexar para garantir sequência 0, 1, 2, 3...
+function task_reindexHistory() {
+    const history = task_current["Datas anteriores"];
+
+    // Ordena por índice atual
+    history.sort((a, b) => a.indice - b.indice);
+
+    // Recalcula índices sequenciais
+    history.forEach((h, i) => {
+        h.indice = i;
+    });
+}
+
+window.task_editHistoryItem = function (indice) {
+    task_inlineEditingIndice = indice;
+    task_renderHistoryModalContent(true);
+};
+
+window.task_saveInlineHistoryEdit = function (indice) {
+    const entry = task_current["Datas anteriores"].find(h => h.indice === indice);
+    if (!entry) return;
+
+    const newStart = document.getElementById(`inline-edit-start-${indice}`).value;
+    const newEnd = document.getElementById(`inline-edit-end-${indice}`).value;
+    const newReason = document.getElementById(`inline-edit-reason-${indice}`).value;
+
+    if (!newStart && !newEnd) {
+        alert("Preencha ao menos uma data.");
+        return;
+    }
+
+    entry.inicio = newStart;
+    entry.fim = newEnd;
+    entry.motivo = newReason;
+
+    task_inlineEditingIndice = null;
+    task_hasChanges = true;
+    task_renderHistoryModalContent(true);
+};
+
+window.task_cancelInlineHistoryEdit = function () {
+    task_inlineEditingIndice = null;
+    task_renderHistoryModalContent(true);
+};
+
+function task_showHistoryError(msg) {
+    const errorSpan = document.getElementById('task-history-msg');
+    errorSpan.querySelector('.msg-text').textContent = msg;
+    errorSpan.classList.remove('hidden');
+
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        if (!errorSpan.classList.contains('hidden') && errorSpan.querySelector('.msg-text').textContent === msg) {
+            errorSpan.classList.add('hidden');
+        }
+    }, 5000);
+}
+
+window.task_removeHistoryItem = function (indice) {
+    const history = task_current["Datas anteriores"];
+    const index = history.findIndex(h => h.indice === indice);
+
+    if (index === -1) return;
+
+    history.splice(index, 1);
+
+    // Reindexar para manter sequência após remoção
+    task_reindexHistory();
+
+    task_hasChanges = true;
+    task_renderHistoryModalContent(true);
+};
 
 function task_showConfirmationNotificacaoModal({ title, message, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
     const modal = document.getElementById('task-date-change-confirmation-modal');
