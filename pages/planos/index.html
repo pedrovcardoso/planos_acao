@@ -329,7 +329,26 @@
                     </div>
                 </div>
 
-                <div id="ai-summary-content" class="text-slate-700 space-y-3 text-sm">
+                <div id="ai-summary-content" class="text-slate-700 space-y-3 text-sm"></div>
+
+                <div id="prompt-modal"
+                    class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+                        <div class="flex justify-between items-center p-4 border-b">
+                            <h3 class="text-lg font-semibold text-slate-800">Detalhes do Prompt</h3>
+                            <button id="close-modal-button"
+                                class="p-1.5 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors">
+                                <ion-icon name="close-outline" class="text-2xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div class="p-6 overflow-y-auto">
+                            <p class="text-sm text-slate-600 mb-4">
+                                Model: GPT-4.1 mini
+                            </p>
+                            <pre
+                                class="bg-slate-100 text-slate-800 text-xs p-4 rounded-lg whitespace-pre-wrap font-mono"><code id="prompt-text-container"></code></pre>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
