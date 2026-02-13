@@ -12,17 +12,29 @@ function initTaskModal() {
             .animate-slide-up-evident { animation: slideUpEvident 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; z-index: 10; }
             .animate-slide-down-evident { animation: slideDownEvident 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; z-index: 10; }
             
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            .animate-spin { animation: spin 1s linear infinite; }
+            
             .glow-temp { position: relative; }
             .glow-temp::after {
                 content: ''; position: absolute; inset: -2px; border-radius: 12px;
                 z-index: -1; opacity: 0; animation: 0.8s ease-out;
+            }
+
+            .loading-overlay {
+                position: absolute; inset: 0; background: rgba(255,255,255,0.5);
+                backdrop-filter: blur(1px); z-index: 100; display: flex;
+                align-items: center; justify-content: center; border-radius: inherit;
             }
         </style>
         <section id="task-modal-root">
             <section id="task-container"
                 class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
 
-                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+                <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
 
                     <div class="flex items-start justify-between p-4 border-b border-slate-200">
                         <div id="task-header-view">
@@ -326,8 +338,9 @@ function initTaskModal() {
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <div id="task-confirmation-modal"
+            <div id="task-confirmation-modal"
                     class="hidden fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
                     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
                         <div class="p-6">
@@ -484,9 +497,8 @@ function initTaskModal() {
                                 Confirmar e Salvar
                             </button>
                         </div>
-                    </div>
                 </div>
-            </section>
+            </div>
         </section>
     `;
 
@@ -1091,7 +1103,7 @@ function task_closeModal(force = false) {
     document.body.classList.remove('overflow-hidden');
 }
 
-function openDeleteConfirmationModalTask(task) {
+window.openDeleteConfirmationModalTask = function (task) {
     task_current = task;
     const modal = document.getElementById('task-delete-confirmation-modal');
     document.getElementById('task-to-delete-name').textContent = `"${task.Atividade}"`;
@@ -1100,13 +1112,29 @@ function openDeleteConfirmationModalTask(task) {
 
 async function task_handleDeleteTask() {
     const id = task_current.ID;
+    const deleteBtn = document.getElementById('task-delete-confirm-btn-yes');
+
     task_togglePageInteractivity(false);
+
+    if (deleteBtn) {
+        deleteBtn.innerHTML = `
+            <div class="flex items-center gap-2">
+                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Excluindo...</span>
+            </div>
+        `;
+    }
+
     try {
         const res = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '', 'jsonAcoes');
         if (res.status === 200) window.location.reload();
     } catch (e) {
         alert("Erro ao excluir.");
         task_togglePageInteractivity(true);
+        if (deleteBtn) deleteBtn.textContent = 'Sim, Excluir';
     }
 }
 
@@ -1114,6 +1142,30 @@ async function task_handleSave() {
     const form = document.getElementById('task-edit-form');
     const formData = new FormData(form);
     const updatedTask = Object.fromEntries(formData.entries());
+
+    // 1. Validar campos obrigatórios
+    const requiredFields = [
+        { key: "Número da atividade", label: "Nº da Ação" },
+        { key: "Plano de ação", label: "Plano de Ação" },
+        { key: "Atividade", label: "Atividade" },
+        { key: "Status", label: "Status" },
+        { key: "Data de início", label: "Data de Início" },
+        { key: "Data fim", label: "Data Fim" }
+    ];
+
+    const missingFields = requiredFields.filter(f => !updatedTask[f.key] || updatedTask[f.key].trim() === "");
+
+    if (missingFields.length > 0) {
+        const labels = missingFields.map(f => f.label).join(", ");
+        task_showMainError(`Os seguintes campos são obrigatórios: ${labels}`);
+        return;
+    }
+
+    // 2. Verificar se houve alterações (apenas se não for modo criação)
+    if (!task_isNewMode && !task_hasChanges) {
+        task_switchToViewMode();
+        return;
+    }
 
     updatedTask.Unidades = window.getCustomSelectValues ? window.getCustomSelectValues('task-unidades-multi-select') : [];
 
@@ -1157,7 +1209,15 @@ async function task_performSave(updatedTask) {
 
     const saveBtn = document.getElementById('task-btn-save-task');
     task_togglePageInteractivity(false);
-    saveBtn.textContent = 'Salvando...';
+    saveBtn.innerHTML = `
+        <div class="flex items-center gap-2">
+            <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Salvando...</span>
+        </div>
+    `;
 
     try {
         const action = task_isNewMode ? 'create' : 'update';
@@ -1700,8 +1760,9 @@ function task_getNotificationsDataFromDOM() {
 
 window.openTaskModal = openTaskModal;
 window.initTaskModal = initTaskModal;
-window.openCreateTaskModal = openCreateTaskModal;
 window.openModalForNewAction = openCreateTaskModal;
+window.openDeleteConfirmationModalTask = window.openDeleteConfirmationModalTask;
+window.task_togglePageInteractivity = task_togglePageInteractivity;
 
 function task_togglePageInteractivity(enabled) {
     const elements = document.querySelectorAll('input, select, checkbox, textarea, button');
