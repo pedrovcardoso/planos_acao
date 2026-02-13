@@ -242,15 +242,34 @@ function initTaskModal() {
                                         </div>
                                     </div>
 
+                                    <div class="recurrence-section hidden flex flex-col gap-2 p-2 rounded-md border border-slate-100 bg-slate-50">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <ion-icon name="repeat-outline" class="text-slate-500"></ion-icon>
+                                                <span class="text-xs font-semibold text-slate-600">Recorrência</span>
+                                            </div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="notification-recorrencia sr-only peer">
+                                                <div class="w-7 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-slate-600"></div>
+                                            </label>
+                                        </div>
+                                        <div class="recurrence-interval-container hidden flex items-center gap-2">
+                                            <span class="text-[10px] text-slate-500">Repetir a cada</span>
+                                            <input type="number" min="1" placeholder="7"
+                                                class="notification-intervalo w-12 rounded border-slate-300 px-1 py-0.5 text-[10px] focus:ring-1 focus:ring-slate-500" />
+                                            <span class="text-[10px] text-slate-500">dias</span>
+                                        </div>
+                                    </div>
+
                                     <div class="flex flex-col gap-1">
                                         <label class="block text-sm font-medium text-slate-500">Data</label>
                                         <div class="editable-view">
                                             <input type="date"
                                                 class="notification-date w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 transition-all focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20" />
                                         </div>
-                                        <p
-                                            class="sent-view-text sent-date hidden w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                                        </p>
+                                        <div class="sent-view-text sent-date hidden w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">
+                                            <span class="sent-date-val"></span>
+                                        </div>
                                     </div>
 
                                     <div class="flex flex-col gap-1">
@@ -259,14 +278,10 @@ function initTaskModal() {
                                                 <h5 class="text-sm font-medium text-slate-500">Destinatários</h5>
                                                 <div class="info-tooltip relative ml-1 flex items-center">
                                                     <button type="button"
-                                                        class="group flex items-center text-slate-500 hover:text-slate-700 focus:outline-none"
-                                                        aria-describedby="task-tooltip-destinatarios">
+                                                        class="group flex items-center text-slate-500 hover:text-slate-700 focus:outline-none">
                                                         <ion-icon name="information-circle" class="w-4 h-4"></ion-icon>
-
-                                                        <span id="task-tooltip-destinatarios" role="tooltip"
-                                                            class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-32 px-3 py-2 text-xs text-white bg-gray-700 rounded shadow-lg whitespace-normal opacity-0 group-hover:opacity-100 transition-opacity before:content-[''] before:absolute before:-top-1  before:left-1/2 before:-translate-x-1/2 before:border-4 before:border-transparent before:border-b-gray-700 pointer-events-none">
-                                                            Para adicionar novas pessoas, acrescente na lista dos
-                                                            integrantes do plano de ação.
+                                                        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-32 px-3 py-2 text-[10px] text-white bg-slate-700 rounded shadow-lg whitespace-normal opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                                            Para adicionar novas pessoas, acrescente na lista dos integrantes do plano de ação.
                                                         </span>
                                                     </button>
                                                 </div>
@@ -435,7 +450,6 @@ function initTaskModal() {
 
                         <div class="p-6 overflow-y-auto space-y-6">
                             <div id="task-history-timeline-container" class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
-                                <!-- Modern Timeline Items -->
                                 <div id="task-history-current-item" class="relative">
                                     <div class="absolute left-[-25px] top-1.5 w-4 h-4 rounded-full bg-sky-500 border-2 border-white ring-4 ring-sky-100"></div>
                                     <div class="bg-sky-50 border border-sky-100 rounded-xl p-4 shadow-sm">
@@ -456,9 +470,7 @@ function initTaskModal() {
                                     </div>
                                 </div>
 
-                                <div id="task-history-list-content" class="space-y-8">
-                                    <!-- History Logic will populate this -->
-                                </div>
+                                <div id="task-history-list-content" class="space-y-8"></div>
                             </div>
                             
                             <div id="task-history-edit-content" class="hidden"></div>
@@ -514,8 +526,8 @@ let task_hasChanges = false;
 let task_isNewMode = false;
 let task_deletedNotificationIds = [];
 let task_initialDates = { inicio: '', fim: '' };
-let task_inlineEditingIndice = null; // null means no item is being edited inline
-let task_historySortDesc = false; // Changed to false by default for manual order
+let task_inlineEditingIndice = null;
+let task_historySortDesc = false;
 let task_pendingSaveData = null;
 
 
@@ -554,13 +566,10 @@ function setupTaskModalLogic() {
         if (btn) btn.addEventListener('click', handler);
     });
 
-    // History Prompt Buttons
     const btnPromptYes = document.getElementById('task-history-prompt-btn-yes');
     const btnPromptNo = document.getElementById('task-history-prompt-btn-no');
     if (btnPromptYes) btnPromptYes.addEventListener('click', () => task_handleHistoryPrompt(true));
     if (btnPromptNo) btnPromptNo.addEventListener('click', () => task_handleHistoryPrompt(false));
-
-    // Close History Modal from Top X
     const btnCloseTaskHistoryTop = document.getElementById('task-history-btn-close-top');
     if (btnCloseTaskHistoryTop) btnCloseTaskHistoryTop.addEventListener('click', closeTaskHistoryModal);
 
@@ -596,7 +605,6 @@ function setupTaskModalLogic() {
             await task_gerenciarNotificacaoPorData(id, novaData, 'inicio');
             await task_verificarNotificacaoLongoPrazo(id, novaData, document.getElementById('task-edit-data-fim').value);
         });
-        dataInicioInput.addEventListener('change', (e) => task_detectDateChange('inicio', e.target.value));
     }
 
     const dataFimInput = document.getElementById('task-edit-data-fim');
@@ -629,14 +637,12 @@ function task_syncHistoryCurrentState() {
     const endCard = document.getElementById('task-history-current-end-card');
 
     if (historyData.length === 0) {
-        // Se não há histórico, usar datas atuais do formulário
         const startVal = document.getElementById('task-edit-data-inicio')?.value || task_current["Data de início"];
         const endVal = document.getElementById('task-edit-data-fim')?.value || task_current["Data fim"];
 
         if (startCard) startCard.textContent = startVal ? formatDate(startVal) : 'Não definida';
         if (endCard) endCard.textContent = endVal ? formatDate(endVal) : 'Não definida';
     } else {
-        // Buscar registro com maior índice (mais recente)
         const ultimoRegistro = historyData.reduce((max, reg) =>
             reg.indice > max.indice ? reg : max
             , historyData[0]);
@@ -745,8 +751,6 @@ function task_switchToViewMode(force = false) {
 
     task_renderNotificationsViewList(task.ID);
 
-    // Render History
-    // Show history trigger only if it exists
     const historyTrigger = document.getElementById('task-view-history-trigger-container');
     if (task["Datas anteriores"] && Array.isArray(task["Datas anteriores"]) && task["Datas anteriores"].length > 0) {
         historyTrigger.classList.remove('hidden');
@@ -825,16 +829,21 @@ function task_renderNotificationsViewList(taskId) {
                 colorClasses = "bg-slate-100 text-slate-700";
         }
 
+        const isRecurrent = notif.tipo === 'pendencia' && (notif.recorrencia === true || notif.recorrencia === 'true');
+
         item.innerHTML = `
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div class="flex min-w-0 items-center gap-4">
                     <div class="flex-shrink-0 rounded-full ${colorClasses} p-2">${iconSVG}</div>
                     <div class="min-w-0">
-                        <p class="truncate font-semibold text-slate-800">${dataExtenso(notif.data)}</p>
+                        <div class="flex items-center gap-2">
+                            <p class="truncate font-semibold text-slate-800">${dataExtenso(notif.data)}</p>
+                            ${isRecurrent ? `<span class="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold text-slate-600 ring-1 ring-inset ring-slate-200"><ion-icon name="repeat"></ion-icon> Recorrente</span>` : ''}
+                        </div>
                         <div class="flex flex-col gap-1">
                             <p class="text-sm text-slate-500">Alerta de ${notif.tipo}</p>
                             <div class="flex">
-                                ${notif.status === 'enviado' ? '<span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Enviado</span>' : (notif.status === 'cancelado' ? '<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-700 ring-1 ring-inset ring-red-600/20">Cancelado</span>' : '')}
+                                ${notif.status === 'enviado' ? '<span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Enviado</span>' : (notif.status === 'cancelado' ? '<span class="inline-flex items-center rounded-md bg-rose-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-rose-600 ring-1 ring-inset ring-rose-500/10">Cancelado</span>' : '')}
                             </div>
                         </div>
                     </div>
@@ -842,7 +851,18 @@ function task_renderNotificationsViewList(taskId) {
                 <div class="w-full md:w-auto md:max-w-xs">
                     <p class="mb-2 text-xs font-medium uppercase text-slate-500 md:text-right">Destinatários</p>
                     <div class="flex items-center md:justify-end">
-                        ${destinatarios.map((p, idx) => `<span title="${p.Nome}" class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700 ring-2 ring-white ${idx > 0 ? "-ml-3" : ""}">${initials(p.Nome)}</span>`).join("")}
+                        ${destinatarios.map((p, idx) => `
+                            <div class="relative group/avatar ${idx > 0 ? "-ml-3" : ""}">
+                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700 ring-2 ring-white cursor-help">
+                                    ${initials(p.Nome)}
+                                </span>
+                                <div class="absolute bottom-full right-0 mb-2 hidden group-hover/avatar:block w-48 p-2 bg-slate-800 text-white text-[10px] rounded shadow-xl z-50 pointer-events-none text-left">
+                                    <p class="font-bold leading-tight">${p.Nome}</p>
+                                    <p class="text-slate-300 mt-0.5">${p.Email}</p>
+                                    <div class="absolute top-full right-3 border-4 border-transparent border-t-slate-800"></div>
+                                </div>
+                            </div>
+                        `).join("")}
                     </div>
                 </div>
             </div>`;
@@ -955,14 +975,20 @@ function task_addNotificationItem(notificacao = {}) {
 
     if (notificacao.ID) {
         card.dataset.notificationId = notificacao.ID;
+        card.dataset.idAcao = notificacao.idAcao;
         card.dataset.originalData = JSON.stringify({
+            idAcao: notificacao.idAcao,
             tipo: notificacao.tipo,
             data: notificacao.data,
+            recorrencia: !!notificacao.recorrencia,
+            diasRecorrencia: notificacao.diasRecorrencia || 7,
             mailList: [...(notificacao.mailList || [])].sort()
         });
+    } else {
+        card.dataset.idAcao = notificacao.idAcao || "";
     }
 
-    const status = notificacao.status || 'planejado';
+    const status = (notificacao.status || 'planejado').toLowerCase();
     const isLocked = status === 'enviado' || status === 'cancelado';
 
     const editViews = clone.querySelectorAll('.editable-view');
@@ -971,6 +997,7 @@ function task_addNotificationItem(notificacao = {}) {
     const statusSlot = clone.querySelector('.status-slot');
     const recEdit = clone.querySelector('.recipients-list-editable');
     const recSent = clone.querySelector('.recipients-list-sent');
+    const recurrenceSection = clone.querySelector('.recurrence-section');
 
     if (isLocked) {
         actionSlot.classList.add('hidden');
@@ -981,38 +1008,98 @@ function task_addNotificationItem(notificacao = {}) {
         recSent.classList.remove('hidden');
 
         const badge = clone.querySelector('.status-badge');
-        badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        badge.className = `status-badge text-xs font-medium px-2.5 py-0.5 rounded-md ${status === 'enviado' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`;
+        badge.textContent = status.toUpperCase();
+
+        let badgeClasses = "";
+        if (status === 'enviado') {
+            badgeClasses = "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20";
+        } else {
+            badgeClasses = "bg-rose-50 text-rose-600 ring-1 ring-inset ring-rose-500/10";
+        }
+        badge.className = `status-badge inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${badgeClasses}`;
 
         const iconContainerLocked = clone.querySelector('.notification-icon-container-locked');
-
-        clone.querySelector('.sent-type-text').textContent = `Alerta de ${notificacao.tipo}`;
+        clone.querySelector('.sent-type-text').textContent = (notificacao.tipo || 'Aviso').toUpperCase();
         task_updateNotificationIcon(notificacao.tipo, iconContainerLocked);
 
-        clone.querySelector('.sent-date').textContent = notificacao.data ? new Date(notificacao.data + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
+        clone.querySelector('.sent-date-val').textContent = notificacao.data ? new Date(notificacao.data + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
 
         (notificacao.mailList || []).forEach(email => {
             const p = document.createElement('p');
-            p.className = 'w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700';
+            p.className = 'w-full rounded-lg border border-slate-150 bg-white/50 px-3 py-2 text-xs font-medium text-slate-700 shadow-sm';
             p.textContent = email;
             recSent.appendChild(p);
         });
+
+        if (notificacao.recorrencia === true || notificacao.recorrencia === 'true') {
+            const recurrenceSection = clone.querySelector('.recurrence-section');
+            if (recurrenceSection) {
+                recurrenceSection.classList.remove('hidden');
+                recurrenceSection.querySelector('.notification-recorrencia').checked = true;
+                recurrenceSection.querySelector('.notification-recorrencia').disabled = true;
+                const intervalCont = recurrenceSection.querySelector('.recurrence-interval-container');
+                intervalCont.classList.remove('hidden');
+                const intervalInput = recurrenceSection.querySelector('.notification-intervalo');
+                intervalInput.value = notificacao.diasRecorrencia;
+                intervalInput.disabled = true;
+            }
+        }
     } else {
         const typeSelect = clone.querySelector('.notification-type');
         const iconContainer = clone.querySelector('.notification-icon-container');
         const dateInput = clone.querySelector('.notification-date');
+        const recurrentCheck = clone.querySelector('.notification-recorrencia');
+        const intervalInput = clone.querySelector('.notification-intervalo');
+        const intervalContainer = clone.querySelector('.recurrence-interval-container');
 
         typeSelect.value = notificacao.tipo || 'aviso';
         dateInput.value = notificacao.data || '';
+
+        if (!notificacao.ID && typeSelect.value === 'pendencia') {
+            recurrentCheck.checked = true;
+            intervalInput.value = 7;
+        } else {
+            recurrentCheck.checked = !!notificacao.recorrencia;
+            intervalInput.value = notificacao.diasRecorrencia || 7;
+        }
+
         task_populateTabelaNotificacoes(recEdit, notificacao.mailList || []);
 
+        const updateRecurringFields = () => {
+            if (typeSelect.value === 'pendencia') {
+                recurrenceSection.classList.remove('hidden');
+                if (recurrentCheck.checked) {
+                    intervalContainer.classList.remove('hidden');
+                } else {
+                    intervalContainer.classList.add('hidden');
+                }
+            } else {
+                recurrenceSection.classList.add('hidden');
+            }
+        };
+
         const updateIcon = () => task_updateNotificationIcon(typeSelect.value, iconContainer);
-        typeSelect.addEventListener('change', (e) => {
-            task_updateNotificationIcon(e.target.value, iconContainer);
+
+        typeSelect.addEventListener('change', () => {
+            if (typeSelect.value === 'pendencia') {
+                recurrentCheck.checked = true;
+                intervalInput.value = 7;
+            }
+            updateIcon();
+            updateRecurringFields();
             task_hasChanges = true;
         });
+
+        recurrentCheck.addEventListener('change', () => {
+            updateRecurringFields();
+            task_hasChanges = true;
+        });
+
+        intervalInput.addEventListener('input', () => (task_hasChanges = true));
         dateInput.addEventListener('input', () => (task_hasChanges = true));
+
         updateIcon();
+        updateRecurringFields();
 
         const toggleBtn = clone.querySelector('.btn-toggle-all');
         toggleBtn.onclick = () => {
@@ -1130,10 +1217,20 @@ async function task_handleDeleteTask() {
 
     try {
         if (typeof toggleLoading === 'function') toggleLoading(true);
+
+        const notificationsToDelete = (window.jsonNotificacoes || []).filter(n => String(n.idAcao) === String(id));
+        for (const notif of notificationsToDelete) {
+            await window.salvarArquivoNoOneDrive(notif.ID, 'notificacoes.txt', 'delete', {}, 'jsonNotificacoes');
+        }
         const res = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '', 'jsonAcoes');
-        if (res.status === 200) window.location.reload();
+        if (res.status === 200) {
+            window.location.reload();
+        } else {
+            throw new Error(res.message || "Erro ao excluir ação");
+        }
     } catch (e) {
-        alert("Erro ao excluir.");
+        console.error("Erro na exclusão:", e);
+        alert("Erro ao excluir: " + e.message);
         if (typeof toggleLoading === 'function') toggleLoading(false);
         task_togglePageInteractivity(true);
         if (deleteBtn) deleteBtn.textContent = 'Sim, Excluir';
@@ -1145,7 +1242,6 @@ async function task_handleSave() {
     const formData = new FormData(form);
     const updatedTask = Object.fromEntries(formData.entries());
 
-    // 1. Validar campos obrigatórios
     const requiredFields = [
         { key: "Número da atividade", label: "Nº da Ação" },
         { key: "Plano de ação", label: "Plano de Ação" },
@@ -1163,7 +1259,6 @@ async function task_handleSave() {
         return;
     }
 
-    // 2. Verificar se houve alterações (apenas se não for modo criação)
     if (!task_isNewMode && !task_hasChanges) {
         task_switchToViewMode();
         return;
@@ -1179,7 +1274,6 @@ async function task_handleSave() {
         return;
     }
 
-    // Check for date changes to trigger history prompt
     const dateChanged = !task_isNewMode && (
         updatedTask["Data de início"] !== task_initialDates.inicio ||
         updatedTask["Data fim"] !== task_initialDates.fim
@@ -1198,7 +1292,6 @@ async function task_performSave(updatedTask) {
     if (typeof toggleLoading === 'function') toggleLoading(true);
     const notifications = task_getNotificationsDataFromDOM();
 
-    // Persist History Data (from memory, manipulated by modal)
     if (task_isNewMode) {
         updatedTask["Datas anteriores"] = [{
             indice: 0,
@@ -1229,24 +1322,76 @@ async function task_performSave(updatedTask) {
         const response = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', action, updatedTask, 'jsonAcoes');
 
         if (response?.status === 200) {
-            const newTaskId = task_isNewMode ? response.data.ID : task_current.ID;
+            if (task_isNewMode) {
+                if (response.data && response.data.ID) {
+                    task_current = response.data;
+                } else {
+                    const savedTask = window.jsonAcoes.find(t =>
+                        t.Atividade === updatedTask.Atividade &&
+                        t["Descrição da atividade"] === updatedTask["Descrição da atividade"] &&
+                        t["Plano de ação"] === updatedTask["Plano de ação"]
+                    );
+
+                    if (savedTask) {
+                        task_current = savedTask;
+                    } else {
+                        task_current = window.jsonAcoes[window.jsonAcoes.length - 1];
+                    }
+                }
+            }
+
+            const newTaskId = task_current?.ID;
+            if (!newTaskId) throw new Error("Não foi possível identificar o ID da nova tarefa para salvar as notificações.");
+
+            const notifications = task_getNotificationsDataFromDOM();
 
             const notificationsToSave = notifications.filter(n => !n.ID);
             const notificationsToUpdate = notifications.filter(n => n.ID);
             const notificationsToDelete = task_deletedNotificationIds;
 
             for (const notif of notificationsToUpdate) {
-                const originalDataStr = document.querySelector(`[data-notification-id="${notif.ID}"]`).dataset.originalData;
-                const originalData = JSON.parse(originalDataStr);
-                const currentData = { tipo: notif.tipo, data: notif.data, mailList: [...notif.mailList].sort() };
+                const card = document.querySelector(`[data-notification-id="${notif.ID}"]`);
+                const originalDataStr = card ? card.dataset.originalData : null;
 
-                if (JSON.stringify(originalData) !== JSON.stringify(currentData)) {
-                    await window.salvarArquivoNoOneDrive(notif.ID, 'notificacoes.txt', 'update', { ...notif, idAcao: newTaskId }, 'jsonNotificacoes');
+                const isPendencia = notif.tipo === 'pendencia';
+                const currentData = {
+                    idAcao: String(newTaskId),
+                    tipo: notif.tipo,
+                    data: notif.data,
+                    mailList: [...notif.mailList].sort()
+                };
+
+                if (isPendencia) {
+                    currentData.recorrencia = !!notif.recorrencia;
+                    currentData.diasRecorrencia = parseInt(notif.diasRecorrencia) || 7;
+                }
+
+                const dataToSave = { ...notif, idAcao: String(newTaskId) };
+                if (!isPendencia) {
+                    delete dataToSave.recorrencia;
+                    delete dataToSave.diasRecorrencia;
+                    delete dataToSave.intervalo_dias_recorrencia;
+                }
+
+                if (!originalDataStr || JSON.stringify(JSON.parse(originalDataStr)) !== JSON.stringify(currentData)) {
+                    await window.salvarArquivoNoOneDrive(notif.ID, 'notificacoes.txt', 'update', dataToSave, 'jsonNotificacoes');
                 }
             }
 
             for (const notif of notificationsToSave) {
-                await window.salvarArquivoNoOneDrive('', 'notificacoes.txt', 'create', { ...notif, idAcao: newTaskId }, 'jsonNotificacoes');
+                const isPendencia = notif.tipo === 'pendencia';
+                const finalNotif = {
+                    ...notif,
+                    idAcao: String(newTaskId),
+                    status: 'planejado'
+                };
+
+                if (!isPendencia) {
+                    delete finalNotif.recorrencia;
+                    delete finalNotif.diasRecorrencia;
+                    delete finalNotif.intervalo_dias_recorrencia;
+                }
+                await window.salvarArquivoNoOneDrive('', 'notificacoes.txt', 'create', finalNotif, 'jsonNotificacoes');
             }
 
             for (const notifId of notificationsToDelete) {
@@ -1294,7 +1439,6 @@ async function task_handleHistoryPrompt(confirmed) {
         const motivo = input.value.trim();
 
         if (!motivo) {
-            // Exibe erro: Motivo é obrigatório
             alert('O motivo da alteração é obrigatório.');
             return;
         }
@@ -1306,7 +1450,6 @@ async function task_handleHistoryPrompt(confirmed) {
         const isFirstChange = task_current["Datas anteriores"].length === 0;
 
         if (isFirstChange) {
-            // Primeira alteração: adicionar registro das datas antigas
             task_current["Datas anteriores"].push({
                 indice: 0,
                 inicio: task_initialDates.inicio,
@@ -1315,7 +1458,6 @@ async function task_handleHistoryPrompt(confirmed) {
             });
         }
 
-        // Adicionar registro das datas novas
         const proximoIndice = task_current["Datas anteriores"].length;
 
         task_current["Datas anteriores"].push({
@@ -1335,8 +1477,6 @@ async function task_handleHistoryPrompt(confirmed) {
     }
 }
 
-// --- History Modal Functions ---
-
 let task_tempStart = '';
 let task_tempEnd = '';
 let task_tempReason = '';
@@ -1346,7 +1486,7 @@ function openTaskHistoryModal(isEditMode) {
     const titleView = modal.querySelector('h3');
 
     modal.classList.remove('hidden');
-    task_inlineEditingIndice = null; // Reset inline editing state
+    task_inlineEditingIndice = null;
 
     if (isEditMode) {
         titleView.innerHTML = 'Gerenciar Linha do Tempo';
@@ -1370,26 +1510,21 @@ function task_renderHistoryModalContent(isEditMode = false) {
         return;
     }
 
-    // Ordenar por índice DECRESCENTE (maior índice primeiro = mais recente no topo)
     let sortedHistory = [...historyData].sort((a, b) => b.indice - a.indice);
 
-    // Encontrar maior índice
     const maxIndice = Math.max(...historyData.map(h => h.indice));
 
-    // Variáveis para controlar animação de troca (lidas do contexto global)
     const movedUp = window.task_lastMovedIndiceUp;
     const movedDown = window.task_lastMovedIndiceDown;
 
-    // Limpar após ler
     window.task_lastMovedIndiceUp = null;
     window.task_lastMovedIndiceDown = null;
 
     container.innerHTML = sortedHistory.map((h) => {
-        const isPrimeiro = h.indice === 0; // Não pode decrementar mais
-        const isUltimo = h.indice === maxIndice; // Não pode incrementar mais
+        const isPrimeiro = h.indice === 0;
+        const isUltimo = h.indice === maxIndice;
         const isEditing = task_inlineEditingIndice === h.indice;
 
-        // Determinar classe de animação
         let animClass = "";
         let glowClass = "";
         if (h.indice === movedUp) {
@@ -1473,25 +1608,20 @@ function task_renderHistoryModalContent(isEditMode = false) {
     task_syncHistoryCurrentState();
 }
 
-// Incrementar índice (move para baixo visualmente, pois ordem é decrescente)
 window.task_incrementHistoryIndex = function (currentIndex) {
     const history = task_current["Datas anteriores"];
     const registroAtual = history.find(h => h.indice === currentIndex);
 
     if (!registroAtual) return;
 
-    // Encontrar o registro com índice imediatamente superior
     const proximoIndice = currentIndex + 1;
     const registroProximo = history.find(h => h.indice === proximoIndice);
 
-    if (!registroProximo) return; // Já é o último (maior índice)
+    if (!registroProximo) return;
 
-    // Na visualização Decrescente:
-    // Incrementar o índice faz o item SUBIR na lista (maior índice fica em cima)
     window.task_lastMovedIndiceUp = proximoIndice;
     window.task_lastMovedIndiceDown = currentIndex;
 
-    // Trocar os índices
     registroAtual.indice = proximoIndice;
     registroProximo.indice = currentIndex;
 
@@ -1499,25 +1629,19 @@ window.task_incrementHistoryIndex = function (currentIndex) {
     task_renderHistoryModalContent(true);
 };
 
-// Decrementar índice (move para cima visualmente, pois ordem é decrescente)
 window.task_decrementHistoryIndex = function (currentIndex) {
     const history = task_current["Datas anteriores"];
     const registroAtual = history.find(h => h.indice === currentIndex);
 
-    if (!registroAtual || currentIndex === 0) return; // Já é o primeiro (índice 0)
+    if (!registroAtual || currentIndex === 0) return;
 
-    // Encontrar o registro com índice imediatamente inferior
     const indiceAnterior = currentIndex - 1;
     const registroAnterior = history.find(h => h.indice === indiceAnterior);
 
     if (!registroAnterior) return;
 
-    // Na visualização Decrescente:
-    // Decrementar o índice faz o item DESCER na lista
     window.task_lastMovedIndiceDown = indiceAnterior;
     window.task_lastMovedIndiceUp = currentIndex;
-
-    // Trocar os índices
     registroAtual.indice = indiceAnterior;
     registroAnterior.indice = currentIndex;
 
@@ -1525,14 +1649,10 @@ window.task_decrementHistoryIndex = function (currentIndex) {
     task_renderHistoryModalContent(true);
 };
 
-// Reindexar para garantir sequência 0, 1, 2, 3...
 function task_reindexHistory() {
     const history = task_current["Datas anteriores"];
 
-    // Ordena por índice atual
     history.sort((a, b) => a.indice - b.indice);
-
-    // Recalcula índices sequenciais
     history.forEach((h, i) => {
         h.indice = i;
     });
@@ -1575,7 +1695,6 @@ function task_showHistoryError(msg) {
     errorSpan.querySelector('.msg-text').textContent = msg;
     errorSpan.classList.remove('hidden');
 
-    // Auto-hide after 5 seconds
     setTimeout(() => {
         if (!errorSpan.classList.contains('hidden') && errorSpan.querySelector('.msg-text').textContent === msg) {
             errorSpan.classList.add('hidden');
@@ -1591,7 +1710,6 @@ window.task_removeHistoryItem = function (indice) {
 
     history.splice(index, 1);
 
-    // Reindexar para manter sequência após remoção
     task_reindexHistory();
 
     task_hasChanges = true;
@@ -1752,14 +1870,26 @@ async function task_verificarNotificacaoLongoPrazo(idAcao, dataInicioStr, dataFi
 function task_getNotificationsDataFromDOM() {
     return Array.from(document.querySelectorAll('#task-notifications-edit-list .container-notificacao'))
         .filter(el => el.querySelector('.status-slot').classList.contains('hidden'))
-        .map(el => ({
-            ID: el.dataset.notificationId,
-            idAcao: task_current.ID,
-            tipo: el.querySelector('.notification-type').value,
-            data: el.querySelector('.notification-date').value,
-            mailList: Array.from(el.querySelectorAll('.recipients-list-editable input:checked')).map(i => i.closest('label').querySelector('.text-slate-600').textContent.trim()),
-            status: 'planejado'
-        }));
+        .map(el => {
+            const type = el.querySelector('.notification-type').value;
+            const isRecurrent = el.querySelector('.notification-recorrencia')?.checked || false;
+
+            const notifObj = {
+                ID: el.dataset.notificationId,
+                idAcao: el.dataset.idAcao || task_current?.ID || null,
+                tipo: type,
+                data: el.querySelector('.notification-date').value,
+                mailList: Array.from(el.querySelectorAll('.recipients-list-editable input:checked')).map(i => i.closest('label').querySelector('.text-slate-600').textContent.trim()),
+                status: 'planejado'
+            };
+
+            if (type === 'pendencia') {
+                notifObj.recorrencia = isRecurrent;
+                notifObj.diasRecorrencia = isRecurrent ? parseInt(el.querySelector('.notification-intervalo').value) || 7 : 0;
+            }
+
+            return notifObj;
+        });
 }
 
 window.openTaskModal = openTaskModal;
