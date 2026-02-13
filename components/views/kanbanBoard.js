@@ -31,7 +31,8 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         const cardsHtml = tasks.map(task => `
             <div 
                 class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-200 relative overflow-visible" 
-                data-task-id="${task.ID}">
+                data-task-id="${task.ID}"
+                draggable="true">
                 
                 <div class="absolute top-1 right-1 z-20">
                     <div class="relative">
@@ -95,7 +96,7 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
                     <span class="uppercase tracking-wider text-[11px]">${columnConfig.status}</span>
                     <span class="text-[10px] font-black px-2 py-0.5 bg-black/10 rounded-md backdrop-blur-sm">${tasks.length}</span>
                 </div>
-                <div class="kanban-cards-container flex-grow p-2.5 overflow-y-auto space-y-2.5">
+                <div class="kanban-cards-container flex-grow p-2.5 overflow-y-auto space-y-2.5" data-status="${columnConfig.status}">
                     ${cardsHtml}
                 </div>
             </div>
@@ -113,6 +114,7 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
     container.innerHTML = fullKanbanHtml;
 
     setupCardMenus(container);
+    setupDragAndDrop(container);
 
     container.querySelectorAll('.kanban-card').forEach(card => {
         card.addEventListener('click', (e) => {
@@ -172,6 +174,9 @@ function setupCardMenus(container) {
                 if (typeof window.task_togglePageInteractivity === 'function') {
                     window.task_togglePageInteractivity(false);
                 }
+                if (typeof window.toggleLoading === 'function') {
+                    window.toggleLoading(true);
+                }
 
                 const originalHtml = btn.innerHTML;
                 btn.innerHTML = `
@@ -199,6 +204,9 @@ function setupCardMenus(container) {
                     if (typeof window.task_togglePageInteractivity === 'function') {
                         window.task_togglePageInteractivity(true);
                     }
+                    if (typeof window.toggleLoading === 'function') {
+                        window.toggleLoading(false);
+                    }
                     btn.innerHTML = originalHtml;
                 }
             }
@@ -223,6 +231,73 @@ function setupCardMenus(container) {
             const task = window.jsonAcoes.find(t => t.ID === taskId);
             if (task && typeof window.openDeleteConfirmationModalTask === 'function') {
                 window.openDeleteConfirmationModalTask(task);
+            }
+        });
+    });
+}
+
+function setupDragAndDrop(container) {
+    const cards = container.querySelectorAll('.kanban-card');
+    const columns = container.querySelectorAll('.kanban-cards-container');
+
+    cards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', card.dataset.taskId);
+            card.classList.add('opacity-50', 'scale-95');
+        });
+
+        card.addEventListener('dragend', () => {
+            card.classList.remove('opacity-50', 'scale-95');
+            columns.forEach(col => col.classList.remove('bg-sky-50/50', 'border-sky-200'));
+        });
+    });
+
+    columns.forEach(column => {
+        column.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            column.classList.add('bg-sky-50/50', 'border-sky-200');
+        });
+
+        column.addEventListener('dragleave', () => {
+            column.classList.remove('bg-sky-50/50', 'border-sky-200');
+        });
+
+        column.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            column.classList.remove('bg-sky-50/50', 'border-sky-200');
+
+            const taskId = e.dataTransfer.getData('text/plain');
+            const newStatus = column.dataset.status;
+
+            const task = window.jsonAcoes.find(t => String(t.ID) === String(taskId));
+
+            if (task && task.Status !== newStatus) {
+                if (typeof window.task_togglePageInteractivity === 'function') {
+                    window.task_togglePageInteractivity(false);
+                }
+                if (typeof window.toggleLoading === 'function') {
+                    window.toggleLoading(true);
+                }
+
+                const newData = { ...task, Status: newStatus };
+
+                try {
+                    const res = await window.salvarArquivoNoOneDrive(taskId, 'acoes.txt', 'update', newData, 'jsonAcoes');
+                    if (res.status === 200) {
+                        window.location.reload();
+                    } else {
+                        throw new Error(res.message || "Erro ao atualizar status");
+                    }
+                } catch (error) {
+                    console.error("Erro no drag and drop:", error);
+                    alert("Erro ao mover card: " + error.message);
+                    if (typeof window.task_togglePageInteractivity === 'function') {
+                        window.task_togglePageInteractivity(true);
+                    }
+                    if (typeof window.toggleLoading === 'function') {
+                        window.toggleLoading(false);
+                    }
+                }
             }
         });
     });

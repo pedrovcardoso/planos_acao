@@ -1129,10 +1129,12 @@ async function task_handleDeleteTask() {
     }
 
     try {
+        if (typeof toggleLoading === 'function') toggleLoading(true);
         const res = await window.salvarArquivoNoOneDrive(id, 'acoes.txt', 'delete', '', 'jsonAcoes');
         if (res.status === 200) window.location.reload();
     } catch (e) {
         alert("Erro ao excluir.");
+        if (typeof toggleLoading === 'function') toggleLoading(false);
         task_togglePageInteractivity(true);
         if (deleteBtn) deleteBtn.textContent = 'Sim, Excluir';
     }
@@ -1193,6 +1195,7 @@ async function task_handleSave() {
 }
 
 async function task_performSave(updatedTask) {
+    if (typeof toggleLoading === 'function') toggleLoading(true);
     const notifications = task_getNotificationsDataFromDOM();
 
     // Persist History Data (from memory, manipulated by modal)
@@ -1258,6 +1261,7 @@ async function task_performSave(updatedTask) {
         console.error('Erro ao salvar:', error);
         task_showMainError('Falha ao salvar: ' + error.message);
         task_togglePageInteractivity(true);
+        if (typeof toggleLoading === 'function') toggleLoading(false);
         saveBtn.textContent = 'Salvar';
     }
 }
