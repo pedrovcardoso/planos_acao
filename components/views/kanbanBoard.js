@@ -7,6 +7,8 @@ const kanbanColumnsConfig = [
     { status: 'Em revisão', headerClasses: 'bg-orange-300 text-orange-900' }
 ];
 
+let hideEmptyColumns = false;
+
 function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
     const container = document.getElementById(containerId);
     if (!container) {
@@ -21,7 +23,11 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         return acc;
     }, {});
 
-    const columnsHtml = kanbanColumnsConfig.map(columnConfig => {
+    const filteredColumnsConfig = hideEmptyColumns
+        ? kanbanColumnsConfig.filter(col => (tasksByStatus[col.status] || []).length > 0)
+        : kanbanColumnsConfig;
+
+    const columnsHtml = filteredColumnsConfig.map(columnConfig => {
         const tasks = tasksByStatus[columnConfig.status] || [];
 
         const formatDate = (dateString) => {
@@ -30,7 +36,7 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
 
         const cardsHtml = tasks.map(task => `
             <div 
-                class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-200 relative overflow-visible" 
+                class="kanban-card group bg-white rounded-lg p-3 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-sky-300 transition-all duration-300 relative overflow-visible transform hover:-translate-y-1 hover:scale-[1.02]" 
                 data-task-id="${task.ID}"
                 draggable="true">
                 
@@ -91,12 +97,24 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
         `).join('');
 
         return `
-            <div class="w-72 flex-shrink-0 flex flex-col h-full bg-slate-50/50 rounded-xl border border-slate-200/60 shadow-inner">
+            <div class="kanban-column w-72 flex-shrink-0 flex flex-col h-full bg-slate-50/50 rounded-xl border border-slate-200/60 shadow-inner transition-all duration-500 ease-in-out opacity-0 translate-y-4 animate-in-active">
+                <style>
+                    @keyframes kanbanSlideIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .animate-in-active {
+                        animation: kanbanSlideIn 0.4s ease-out forwards;
+                    }
+                    .kanban-column {
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    }
+                </style>
                 <div class="sticky top-0 z-10 kanban-column-header flex justify-between items-center px-3 py-2.5 font-bold rounded-t-xl shadow-sm ${columnConfig.headerClasses}">
                     <span class="uppercase tracking-wider text-[11px]">${columnConfig.status}</span>
                     <span class="text-[10px] font-black px-2 py-0.5 bg-black/10 rounded-md backdrop-blur-sm">${tasks.length}</span>
                 </div>
-                <div class="kanban-cards-container flex-grow p-2.5 overflow-y-auto space-y-2.5" data-status="${columnConfig.status}">
+                <div class="kanban-cards-container flex-grow p-2.5 overflow-y-auto space-y-2.5 transition-all duration-300" data-status="${columnConfig.status}">
                     ${cardsHtml}
                 </div>
             </div>
@@ -105,6 +123,15 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
 
     const fullKanbanHtml = `
         <div class="w-full h-[calc(100vh-280px)] min-h-[500px] flex flex-col">
+            <div class="flex justify-end mb-2 px-2">
+                <label class="inline-flex items-center cursor-pointer group">
+                    <span class="mr-2 text-[10px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-slate-600 transition-colors">Ocultar status vazios</span>
+                    <div class="relative inline-flex items-center">
+                        <input type="checkbox" id="hide-empty-columns-check" class="sr-only peer" ${hideEmptyColumns ? 'checked' : ''}>
+                        <div class="w-7 h-4 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-sky-500"></div>
+                    </div>
+                </label>
+            </div>
             <div class="kanban-board flex-grow flex gap-4 overflow-x-auto pb-4 px-2">
                 ${columnsHtml}
             </div>
@@ -112,6 +139,14 @@ function populateKanbanBoard(actionsData, containerId = 'kanban-view') {
     `;
 
     container.innerHTML = fullKanbanHtml;
+
+    const hideCheck = document.getElementById('hide-empty-columns-check');
+    if (hideCheck) {
+        hideCheck.addEventListener('change', (e) => {
+            hideEmptyColumns = e.target.checked;
+            populateKanbanBoard(actionsData, containerId);
+        });
+    }
 
     setupCardMenus(container);
     setupDragAndDrop(container);
