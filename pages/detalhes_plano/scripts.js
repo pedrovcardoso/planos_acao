@@ -188,10 +188,12 @@ function renderPlanDetails(plan, actions) {
                 div.onmouseleave = () => hideEmailTooltip();
             }
 
-            const initials = getInitials(p.Nome);
+            const initials = window.getInitialsFirstLast ? window.getInitialsFirstLast(p.Nome) : getInitials(p.Nome);
 
             div.innerHTML = `
-                <div class="w-8 h-8 rounded bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">
+                <div class="w-8 h-8 rounded-lg text-slate-600 flex items-center justify-center font-bold text-xs overflow-hidden flex-shrink-0 shadow-sm" 
+                     style="background-color: ${window.getUserColor ? window.getUserColor(email) : '#E2E8F0'}"
+                     data-user-email="${email}">
                     ${initials}
                 </div>
                 <div class="flex flex-col leading-tight min-w-0">
@@ -201,6 +203,7 @@ function renderPlanDetails(plan, actions) {
             `;
             peopleContainer.appendChild(div);
         });
+        if (window.loadUserPhotos) window.loadUserPhotos(peopleContainer);
     } else {
         peopleContainer.innerHTML = '<span class="text-sm text-slate-500 italic">Ninguém atribuído</span>';
     }

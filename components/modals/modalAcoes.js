@@ -797,9 +797,9 @@ function task_renderNotificationsViewList(taskId) {
             (notif.mailList || []).includes(pessoa.Email)
         );
 
-        const initials = (nome) => {
-            const p = nome.trim().split(" ");
-            return (p[0][0] + p[p.length - 1][0]).toUpperCase();
+        const getInitialsFromAny = (val) => {
+            if (!val) return '??';
+            return window.getInitialsFirstLast ? window.getInitialsFirstLast(val) : val.substring(0, 2).toUpperCase();
         };
 
         const dataExtenso = (isoDate) => {
@@ -851,23 +851,30 @@ function task_renderNotificationsViewList(taskId) {
                 <div class="w-full md:w-auto md:max-w-xs">
                     <p class="mb-2 text-xs font-medium uppercase text-slate-500 md:text-right">Destinatários</p>
                     <div class="flex items-center md:justify-end">
-                        ${destinatarios.map((p, idx) => `
+                        ${destinatarios.map((p, idx) => {
+            const initialsVal = getInitialsFromAny(p.Nome);
+            const bgColor = window.getUserColor ? window.getUserColor(p.Email) : '#E2E8F0';
+            return `
                             <div class="relative group/avatar ${idx > 0 ? "-ml-3" : ""}">
-                                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-purple-200 text-xs font-bold text-purple-700 ring-2 ring-white cursor-help">
-                                    ${initials(p.Nome)}
-                                </span>
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-slate-600 ring-2 ring-white cursor-help overflow-hidden"
+                                     style="background-color: ${bgColor}"
+                                     data-user-email="${p.Email}">
+                                    ${initialsVal}
+                                </div>
                                 <div class="absolute bottom-full right-0 mb-2 hidden group-hover/avatar:block w-48 p-2 bg-slate-800 text-white text-[10px] rounded shadow-xl z-50 pointer-events-none text-left">
                                     <p class="font-bold leading-tight">${p.Nome}</p>
                                     <p class="text-slate-300 mt-0.5">${p.Email}</p>
                                     <div class="absolute top-full right-3 border-4 border-transparent border-t-slate-800"></div>
                                 </div>
-                            </div>
-                        `).join("")}
+                            </div>`;
+        }).join("")}
                     </div>
                 </div>
             </div>`;
         list.appendChild(item);
     });
+    if (window.loadUserPhotos) window.loadUserPhotos(list);
+
 }
 
 function task_switchToEditMode() {
@@ -1024,12 +1031,40 @@ function task_addNotificationItem(notificacao = {}) {
 
         clone.querySelector('.sent-date-val').textContent = notificacao.data ? new Date(notificacao.data + 'T00:00:00').toLocaleDateString('pt-BR') : '-';
 
+        // Helper to get initials from name or email
+        const getInitialsFromAny = (val) => {
+            if (!val) return '??';
+            if (val.includes('@')) {
+                const parts = val.split('@')[0].split(/[._-]/);
+                if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+                return val.substring(0, 2).toUpperCase();
+            }
+            return window.getInitialsFirstLast ? window.getInitialsFirstLast(val) : val.substring(0, 2).toUpperCase();
+        };
+
         (notificacao.mailList || []).forEach(email => {
-            const p = document.createElement('p');
-            p.className = 'w-full rounded-lg border border-slate-150 bg-white/50 px-3 py-2 text-xs font-medium text-slate-700 shadow-sm';
-            p.textContent = email;
-            recSent.appendChild(p);
+            const wrapper = document.createElement('div');
+            wrapper.className = 'w-full flex items-center gap-2 rounded-lg border border-slate-150 bg-white/50 px-3 py-2 shadow-sm';
+
+            const initials = getInitialsFromAny(email);
+
+            const photoDiv = document.createElement('div');
+            photoDiv.className = 'relative flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-600 overflow-hidden';
+            photoDiv.style.backgroundColor = window.getUserColor ? window.getUserColor(email) : '#E2E8F0';
+            photoDiv.dataset.userEmail = email;
+            photoDiv.textContent = initials;
+
+            const emailSpan = document.createElement('span');
+            emailSpan.className = 'text-xs font-medium text-slate-700 truncate flex-1';
+            emailSpan.textContent = email;
+
+            wrapper.appendChild(photoDiv);
+            wrapper.appendChild(emailSpan);
+            recSent.appendChild(wrapper);
         });
+
+        console.log(`[PhotoAPI] ModalAcoes (LockMode): Carregando fotos para ${notificacao.mailList?.length || 0} destinatários.`);
+        if (window.loadUserPhotos) window.loadUserPhotos(recSent);
 
         if (notificacao.recorrencia === true || notificacao.recorrencia === 'true') {
             const recurrenceSection = clone.querySelector('.recurrence-section');
@@ -1156,16 +1191,27 @@ function task_populateTabelaNotificacoes(listEl, mailList = []) {
         return;
     }
 
-    listEl.innerHTML = pessoas.map(p => `
+    listEl.innerHTML = pessoas.map(p => {
+        const initials = window.getInitialsFirstLast ? window.getInitialsFirstLast(p.Nome) : (p.Nome ? p.Nome.substring(0, 2).toUpperCase() : '??');
+        const bgColor = window.getUserColor ? window.getUserColor(p.Email) : '#E2E8F0';
+        return `
         <li class="p-2 hover:bg-slate-50">
-            <label class="flex items-center justify-between gap-4 cursor-pointer">
+            <label class="flex items-center justify-between gap-3 cursor-pointer">
+                <div class="relative flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-slate-600 overflow-hidden" 
+                     style="background-color: ${bgColor}"
+                     data-user-email="${p.Email}">
+                    ${initials}
+                </div>
                 <div class="text-sm flex-1 min-w-0">
                     <p class="font-semibold text-slate-800 truncate">${p.Nome}</p>
-                    <p class="text-slate-600 truncate">${p.Email}</p>
+                    <p class="text-slate-600 truncate text-xs">${p.Email}</p>
                 </div>
                 <input type="checkbox" ${mailList.length === 0 || mailList.includes(p.Email) ? 'checked' : ''} class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500">
             </label>
-        </li>`).join('');
+        </li>`
+    }).join('');
+
+    if (window.loadUserPhotos) window.loadUserPhotos(listEl);
 }
 
 function task_deleteNotification(el) {

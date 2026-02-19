@@ -876,13 +876,21 @@ function gerarCards(jsonPlanos) {
                 <ul class="ml-4 list-disc space-y-1 text-xs">
                   ${plano.objPessoas && plano.objPessoas.length > 0
         ? plano.objPessoas.map(pessoa => `
-                      <li class="relative">
-                        <span 
-                          class="font-medium ${pessoa.Email ? 'text-blue-600 underline cursor-pointer' : 'text-slate-500'}" 
-                          ${pessoa.Email ? `onmouseenter="cardShowTooltip(event, '${pessoa.Email}')" onmousemove="cardMoveTooltip(event)" onmouseleave="cardHideTooltip()" onclick="cardCopyEmail(event, '${pessoa.Email}')"` : ''}>
-                          ${pessoa.Nome}</span>
-                        <span class="text-slate-400">(${pessoa.Unidade || '-'})</span>
-                        ${pessoa.Coordenador ? '<span class="text-slate-500 font-medium">[Coordenador]</span>' : ''}
+                      <li class="flex items-center gap-2">
+                        <div class="h-7 w-7 rounded-md flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-slate-600 overflow-hidden" 
+                             style="background-color: ${window.getUserColor ? window.getUserColor(pessoa.Email) : '#E2E8F0'}"
+                             data-user-email="${pessoa.Email || ''}"
+                             data-initials-only="true">
+                             ${window.getInitialsFirstLast ? window.getInitialsFirstLast(pessoa.Nome) : (pessoa.Nome ? pessoa.Nome.substring(0, 2).toUpperCase() : '??')}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <span 
+                            class="font-medium ${pessoa.Email ? 'text-blue-600 underline cursor-pointer' : 'text-slate-500'}" 
+                            ${pessoa.Email ? `onmouseenter="cardShowTooltip(event, '${pessoa.Email}')" onmousemove="cardMoveTooltip(event)" onmouseleave="cardHideTooltip()" onclick="cardCopyEmail(event, '${pessoa.Email}')"` : ''}>
+                            ${pessoa.Nome}</span>
+                          <span class="text-slate-400">(${pessoa.Unidade || '-'})</span>
+                          ${pessoa.Coordenador ? '<span class="text-slate-500 font-medium text-[10px]">[Coordenador]</span>' : ''}
+                        </div>
                       </li>
                         `).join('')
         : '<li class="text-slate-400">Nenhuma equipe atribuída.</li>'
@@ -929,6 +937,18 @@ function gerarCards(jsonPlanos) {
 
   setupAddButton();
   setupCardMenus();
+
+  // Delegation for details toggle to load photos on demand
+  container.addEventListener('toggle', (e) => {
+    if (e.target.tagName === 'DETAILS' && e.target.open) {
+      console.log("[PhotoAPI] Details aberto. Carregando fotos da equipe...");
+      const avatars = e.target.querySelectorAll('[data-initials-only]');
+      avatars.forEach(av => av.removeAttribute('data-initials-only'));
+      if (window.loadUserPhotos) window.loadUserPhotos(e.target);
+    }
+  }, true);
+
+  if (window.loadUserPhotos) window.loadUserPhotos(container);
 }
 let tooltipElement = null;
 let hideTimeout = null;
