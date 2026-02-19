@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: APIs do sistema de Planos de ação
+  description: Documentação dos webhooks criados no Power Automate Cloud.
+  version: 1.0.0
+
+servers:
+  - url: https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443
+    description: Power Platform Environment
+
+paths:
+  /powerautomate/automations/direct/workflows/9a780c43ac3a47238ba67aca60a5aa37/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=jBde7qj8if_Kb1YS9lptTceBiEdslV4Bf5agwZ7JjIE:
+    post:
+      summary: User Photo
+      description: Recupera a foto de um usuário pelo e-mail.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Foto em binário.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '204':
+          description: Usuário encontrado, mas sem foto definida.
+        '404':
+          description: Usuário não encontrado.
+
+  /powerautomate/automations/direct/workflows/e1462db6950544dc8d06396f70fa1381/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=O5JM_HnvAP5ubi72Hyz0c8uHBfvbchyANj2K5eFhfJw:
+    post:
+      summary: Filter Log
+      description: Filtra logs baseado em um ID específico.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Array de logs encontrado.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '404':
+          description: ID não encontrado ou log em branco.
+
+  /powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM:
+    get:
+      summary: Overview
+      description: Retorna uma visão geral gerada por IA em formato HTML.
+      responses:
+        '200':
+          description: Resposta em HTML.
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /powerautomate/automations/direct/workflows/36b9c2865eee4a19b73fee977d580e2c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1g4wq1WGZzFDdNQ7cgsycOB-OyH-7ry8bCRPGd6V1zw:
+    post:
+      summary: Chatbot
+      description: Interface de chat de IA que retorna texto ou arquivos CSV.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - currentUserMessage
+                - conversationHistory
+              properties:
+                currentUserMessage:
+                  type: string
+                  description: A mensagem mais recente enviada pelo usuário.
+                conversationHistory:
+                  type: string
+                  description: O histórico completo da conversa, formatado como uma string JSON.
+      responses:
+        '200':
+          description: Sucesso no processamento da mensagem.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - type
+                properties:
+                  type:
+                    type: string
+                    description: "O tipo de resposta: 'text' para mensagem ou 'file' para CSV."
+                  content:
+                    type: string
+                    description: Resposta em Markdown (usado se type='text').
+                  message:
+                    type: string
+                    description: Confirmação para o usuário (usado se type='file').
+                  csvContent:
+                    type: string
+                    description: Conteúdo do arquivo CSV (usado se type='file').
+                  filename:
+                    type: string
+                    description: Nome sugerido para o arquivo (usado se type='file').
+
+  /powerautomate/automations/direct/workflows/95292f9f4d384f34bd8e385ea59997d3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yXpJccQL1RD_UVZ60_MlBVGmUJlIzWyon4rgX9kL8QM:
+    post:
+      summary: CRUD
+      description: Cria ou atualiza registros IDs dos arquivos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                evento:
+                  type: string
+                arquivo:
+                  type: string
+                conteudo:
+                  type: string
+      responses:
+        '200':
+          description: Arquivo processado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  mensagem:
+                    type: string
+                  uuid:
+                    type: string
+                  dados:
+                    type: object
+
+  /powerautomate/automations/direct/workflows/9019b15756f14c698b3ea71554389290/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=dQ6jIWoruotdgenr1yJs3KBeW2U-DXndp99PKaYAq0U:
+    post:
+      summary: Get File Content
+      description: Recupera o conteúdo de uma lista de arquivos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Lista com o conteúdo dos arquivos na mesma ordem enviada.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
