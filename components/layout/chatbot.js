@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const CHAT_API_URL = 'https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/36b9c2865eee4a19b73fee977d580e2c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1g4wq1WGZzFDdNQ7cgsycOB-OyH-7ry8bCRPGd6V1zw';
     const SESSION_STORAGE_KEY_HISTORY = 'chatbot_history';
 
     let state = {
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const startTime = performance.now();
 
         try {
-            const response = await callPowerAutomateAPI(userMessageText, JSON.stringify(state.history));
+            const response = await callChatApi(userMessageText, JSON.stringify(state.history));
             const endTime = performance.now();
             const responseTime = ((endTime - startTime) / 1000).toFixed(1);
 
@@ -241,19 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastMessage = state.history[state.history.length - 1];
             state.messageIdCounter = lastMessage ? lastMessage.id : 0;
         }
-    }
-
-    async function callPowerAutomateAPI(currentUserMessage, conversationHistory) {
-        const response = await fetch(CHAT_API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ currentUserMessage, conversationHistory })
-        });
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(`API Error: ${response.statusText} - ${errorBody}`);
-        }
-        return await response.json();
     }
 
     function addMessageToUI(message) {

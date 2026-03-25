@@ -1,0 +1,1223 @@
+[
+  {
+      "ID": "notif_4f3lpjnay_1773688008647",
+      "idAcao": "a1c9d3e1-4b2f-4c8e-9d11-001a20260001",
+      "tipo": "inicio",
+      "data": "2025-07-26",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_ppvtnwqqf_1773688008647",
+      "idAcao": "a1c9d3e1-4b2f-4c8e-9d11-001a20260001",
+      "tipo": "inicio",
+      "data": "2025-03-15",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_hr273mmmq_1773688008647",
+      "idAcao": "a1c9d3e1-4b2f-4c8e-9d11-001a20260001",
+      "tipo": "inicio",
+      "data": "2025-05-22",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_nc4hu9ju8_1773688008647",
+      "idAcao": "a1c9d3e1-4b2f-4c8e-9d11-001a20260001",
+      "tipo": "aviso",
+      "data": "2025-05-27",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_697htud7d_1773688008647",
+      "idAcao": "b2d8e5f2-5c3e-4d1f-9e22-002a20260002",
+      "tipo": "inicio",
+      "data": "2025-09-01",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_k6oh0jssc_1773688008647",
+      "idAcao": "b2d8e5f2-5c3e-4d1f-9e22-002a20260002",
+      "tipo": "pendencia",
+      "data": "2025-04-26",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_ffnqm5ek3_1773688008647",
+      "idAcao": "b2d8e5f2-5c3e-4d1f-9e22-002a20260002",
+      "tipo": "inicio",
+      "data": "2025-01-11",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_um5u6d1ep_1773688008647",
+      "idAcao": "b2d8e5f2-5c3e-4d1f-9e22-002a20260002",
+      "tipo": "aviso",
+      "data": "2025-10-07",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_lippv6kyd_1773688008647",
+      "idAcao": "c3e7f6a3-6d4f-4e2a-9f33-003a20260003",
+      "tipo": "inicio",
+      "data": "2025-10-20",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_d5smwt5jm_1773688008647",
+      "idAcao": "c3e7f6a3-6d4f-4e2a-9f33-003a20260003",
+      "tipo": "pendencia",
+      "data": "2025-08-08",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_zk7uf5khd_1773688008647",
+      "idAcao": "c3e7f6a3-6d4f-4e2a-9f33-003a20260003",
+      "tipo": "inicio",
+      "data": "2025-05-06",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_ydizosgee_1773688008647",
+      "idAcao": "c3e7f6a3-6d4f-4e2a-9f33-003a20260003",
+      "tipo": "aviso",
+      "data": "2025-09-25",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_gf2ch9245_1773688008647",
+      "idAcao": "d4f6a7b4-7e5a-4f3b-a044-004a20260004",
+      "tipo": "pendencia",
+      "data": "2025-02-08",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_xpz3mbzl1_1773688008647",
+      "idAcao": "d4f6a7b4-7e5a-4f3b-a044-004a20260004",
+      "tipo": "inicio",
+      "data": "2025-12-15",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_vwzdnmv1d_1773688008647",
+      "idAcao": "e5a7b8c5-8f6b-4a4c-b155-005a20260005",
+      "tipo": "aviso",
+      "data": "2025-02-08",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_ovi4mnx9a_1773688008647",
+      "idAcao": "e5a7b8c5-8f6b-4a4c-b155-005a20260005",
+      "tipo": "pendencia",
+      "data": "2025-05-12",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_all16ejke_1773688008647",
+      "idAcao": "e5a7b8c5-8f6b-4a4c-b155-005a20260005",
+      "tipo": "inicio",
+      "data": "2025-10-03",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_wb5rjpeum_1773688008647",
+      "idAcao": "e5a7b8c5-8f6b-4a4c-b155-005a20260005",
+      "tipo": "pendencia",
+      "data": "2025-03-08",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_972pkgm8r_1773688008647",
+      "idAcao": "f6b8c9d6-9a7c-4b5d-c266-006a20260006",
+      "tipo": "aviso",
+      "data": "2025-09-23",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_jv2obm17k_1773688008647",
+      "idAcao": "f6b8c9d6-9a7c-4b5d-c266-006a20260006",
+      "tipo": "aviso",
+      "data": "2025-11-02",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_pcih21764_1773688008647",
+      "idAcao": "f6b8c9d6-9a7c-4b5d-c266-006a20260006",
+      "tipo": "inicio",
+      "data": "2025-11-22",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_56084i1qi_1773688008647",
+      "idAcao": "f6b8c9d6-9a7c-4b5d-c266-006a20260006",
+      "tipo": "aviso",
+      "data": "2025-02-15",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_0g1r17yen_1773688008647",
+      "idAcao": "07c9dae7-ab8d-4c6e-d377-007a20260007",
+      "tipo": "aviso",
+      "data": "2025-03-19",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_5dgowljds_1773688008647",
+      "idAcao": "07c9dae7-ab8d-4c6e-d377-007a20260007",
+      "tipo": "pendencia",
+      "data": "2025-12-26",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_7mjedzlec_1773688008647",
+      "idAcao": "18dadbf8-bc9e-4d7f-e488-008a20260008",
+      "tipo": "aviso",
+      "data": "2025-07-26",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_kdrgh5woh_1773688008647",
+      "idAcao": "18dadbf8-bc9e-4d7f-e488-008a20260008",
+      "tipo": "pendencia",
+      "data": "2025-02-05",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_fhvv0bqt2_1773688008647",
+      "idAcao": "29ebec09-cdaf-4e80-f599-009a20260009",
+      "tipo": "pendencia",
+      "data": "2025-04-04",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_zpkk7n3hl_1773688008647",
+      "idAcao": "29ebec09-cdaf-4e80-f599-009a20260009",
+      "tipo": "pendencia",
+      "data": "2025-05-05",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_pwrvgbe5a_1773688008647",
+      "idAcao": "29ebec09-cdaf-4e80-f599-009a20260009",
+      "tipo": "aviso",
+      "data": "2025-07-23",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_d3puhvpga_1773688008647",
+      "idAcao": "29ebec09-cdaf-4e80-f599-009a20260009",
+      "tipo": "aviso",
+      "data": "2025-06-20",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_qxt90jg5a_1773688008647",
+      "idAcao": "401e6caa-9d5a-4c80-b9a1-400420260001",
+      "tipo": "inicio",
+      "data": "2025-09-16",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_u3kjw48d8_1773688008647",
+      "idAcao": "401e6caa-9d5a-4c80-b9a1-400420260001",
+      "tipo": "inicio",
+      "data": "2025-06-09",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_jvv3h82gd_1773688008647",
+      "idAcao": "401e6caa-9d5a-4c80-b9a1-400420260001",
+      "tipo": "pendencia",
+      "data": "2025-04-07",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_d16tiqfs6_1773688008647",
+      "idAcao": "401e6caa-9d5a-4c80-b9a1-400420260001",
+      "tipo": "inicio",
+      "data": "2025-07-17",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_w5m14qixz_1773688008647",
+      "idAcao": "42b1cdb3-6b63-46c7-9bb2-400420260002",
+      "tipo": "pendencia",
+      "data": "2025-02-10",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_x06e8chue_1773688008647",
+      "idAcao": "42b1cdb3-6b63-46c7-9bb2-400420260002",
+      "tipo": "aviso",
+      "data": "2025-09-27",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_e4ajvllof_1773688008647",
+      "idAcao": "4d9e8e2a-64d0-4e0c-a3a1-400420260003",
+      "tipo": "inicio",
+      "data": "2025-01-03",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_hbffhr2cx_1773688008647",
+      "idAcao": "4d9e8e2a-64d0-4e0c-a3a1-400420260003",
+      "tipo": "aviso",
+      "data": "2025-04-23",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_ospldkmz6_1773688008647",
+      "idAcao": "4d9e8e2a-64d0-4e0c-a3a1-400420260003",
+      "tipo": "aviso",
+      "data": "2025-05-15",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_xuo7ljkrw_1773688008647",
+      "idAcao": "4d9e8e2a-64d0-4e0c-a3a1-400420260003",
+      "tipo": "inicio",
+      "data": "2025-11-01",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_4sskzdwqw_1773688008647",
+      "idAcao": "45a9b3dd-3e4b-48f8-a4f1-400420260004",
+      "tipo": "inicio",
+      "data": "2025-05-17",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_wksyace9w_1773688008647",
+      "idAcao": "45a9b3dd-3e4b-48f8-a4f1-400420260004",
+      "tipo": "aviso",
+      "data": "2025-12-24",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_c5e5q8x35_1773688008647",
+      "idAcao": "45a9b3dd-3e4b-48f8-a4f1-400420260004",
+      "tipo": "inicio",
+      "data": "2025-08-23",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_5dm69dslj_1773688008647",
+      "idAcao": "4fa1e9f2-73b5-4cb2-96c7-400420260005",
+      "tipo": "pendencia",
+      "data": "2025-05-08",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_z4tg8xt2l_1773688008647",
+      "idAcao": "4fa1e9f2-73b5-4cb2-96c7-400420260005",
+      "tipo": "inicio",
+      "data": "2025-03-09",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_g9iw4lh71_1773688008647",
+      "idAcao": "501c9e11-1f60-4c7b-8fd8-500520260001",
+      "tipo": "pendencia",
+      "data": "2025-06-20",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_ykfhc5itg_1773688008647",
+      "idAcao": "501c9e11-1f60-4c7b-8fd8-500520260001",
+      "tipo": "pendencia",
+      "data": "2025-04-18",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_jl3uecs8i_1773688008647",
+      "idAcao": "501c9e11-1f60-4c7b-8fd8-500520260001",
+      "tipo": "pendencia",
+      "data": "2025-12-25",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_nhtjmwxdh_1773688008647",
+      "idAcao": "501c9e11-1f60-4c7b-8fd8-500520260001",
+      "tipo": "inicio",
+      "data": "2025-05-18",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_mpuklkcgl_1773688008647",
+      "idAcao": "51a6f9bb-22c0-48e3-8a9b-500520260002",
+      "tipo": "inicio",
+      "data": "2025-04-16",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_sxpiix5fn_1773688008647",
+      "idAcao": "51a6f9bb-22c0-48e3-8a9b-500520260002",
+      "tipo": "inicio",
+      "data": "2025-11-27",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_fputknuux_1773688008647",
+      "idAcao": "51a6f9bb-22c0-48e3-8a9b-500520260002",
+      "tipo": "pendencia",
+      "data": "2025-01-07",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_40y79kiar_1773688008647",
+      "idAcao": "51a6f9bb-22c0-48e3-8a9b-500520260002",
+      "tipo": "pendencia",
+      "data": "2025-11-05",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_vtpr37cvv_1773688008647",
+      "idAcao": "5bc6d6e1-4e2f-4e6b-92d5-500520260003",
+      "tipo": "inicio",
+      "data": "2025-08-06",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_7nlwbl53m_1773688008647",
+      "idAcao": "5e91c5f7-52b3-46fa-8e76-500520260004",
+      "tipo": "aviso",
+      "data": "2025-01-24",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_ok756y1do_1773688008647",
+      "idAcao": "5f6e3c3d-3e45-4bfb-8c1e-500520260005",
+      "tipo": "pendencia",
+      "data": "2025-02-14",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_zpv0hn1lv_1773688008647",
+      "idAcao": "5f6e3c3d-3e45-4bfb-8c1e-500520260005",
+      "tipo": "pendencia",
+      "data": "2025-01-14",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_4aw3dmtrq_1773688008647",
+      "idAcao": "602f8cde-6c1b-46c0-8d8a-600620260001",
+      "tipo": "pendencia",
+      "data": "2025-09-21",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_nzpsdqjuz_1773688008647",
+      "idAcao": "602f8cde-6c1b-46c0-8d8a-600620260001",
+      "tipo": "aviso",
+      "data": "2025-01-12",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_igmeoy4if_1773688008647",
+      "idAcao": "611d3c6f-9a4c-4a92-9a51-600620260002",
+      "tipo": "inicio",
+      "data": "2025-02-14",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_0dstjnxa9_1773688008647",
+      "idAcao": "62a5e17e-7e89-4d92-8d0a-600620260003",
+      "tipo": "aviso",
+      "data": "2025-03-03",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_poptlw25s_1773688008647",
+      "idAcao": "63bc51d1-92df-4a3d-90be-600620260004",
+      "tipo": "pendencia",
+      "data": "2025-04-16",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_pnsshz13b_1773688008647",
+      "idAcao": "63bc51d1-92df-4a3d-90be-600620260004",
+      "tipo": "pendencia",
+      "data": "2025-09-03",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_8x3u1opmq_1773688008647",
+      "idAcao": "64f82c3b-4a6c-4c72-9a65-600620260005",
+      "tipo": "inicio",
+      "data": "2025-10-18",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_x0o1s59qc_1773688008647",
+      "idAcao": "64f82c3b-4a6c-4c72-9a65-600620260005",
+      "tipo": "inicio",
+      "data": "2025-12-16",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_143eg3ex0_1773688008647",
+      "idAcao": "64f82c3b-4a6c-4c72-9a65-600620260005",
+      "tipo": "aviso",
+      "data": "2025-08-20",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_lf0f9w7o3_1773688008647",
+      "idAcao": "64f82c3b-4a6c-4c72-9a65-600620260005",
+      "tipo": "pendencia",
+      "data": "2025-03-10",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_1k18n8lpb_1773688008647",
+      "idAcao": "701a4b21-4b61-4e52-8c1a-700720260001",
+      "tipo": "aviso",
+      "data": "2025-10-14",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_7ngkbly2i_1773688008647",
+      "idAcao": "71b9e2d3-7c9f-4c91-8b2e-700720260002",
+      "tipo": "inicio",
+      "data": "2025-12-09",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_tf0g67tfh_1773688008647",
+      "idAcao": "71b9e2d3-7c9f-4c91-8b2e-700720260002",
+      "tipo": "aviso",
+      "data": "2025-01-06",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_p50qy85d3_1773688008647",
+      "idAcao": "71b9e2d3-7c9f-4c91-8b2e-700720260002",
+      "tipo": "inicio",
+      "data": "2025-01-28",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_haakjinag_1773688008647",
+      "idAcao": "72c45d6e-98d1-4e1b-9e40-700720260003",
+      "tipo": "pendencia",
+      "data": "2025-03-08",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_k53jcqh4x_1773688008647",
+      "idAcao": "72c45d6e-98d1-4e1b-9e40-700720260003",
+      "tipo": "pendencia",
+      "data": "2025-09-03",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_ub6m8l73b_1773688008647",
+      "idAcao": "72c45d6e-98d1-4e1b-9e40-700720260003",
+      "tipo": "aviso",
+      "data": "2025-09-20",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_3cc7xn17y_1773688008647",
+      "idAcao": "73d28ef0-7f0d-4a1f-8f01-700720260004",
+      "tipo": "inicio",
+      "data": "2025-05-09",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_80481e88n_1773688008647",
+      "idAcao": "73d28ef0-7f0d-4a1f-8f01-700720260004",
+      "tipo": "pendencia",
+      "data": "2025-03-04",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_9dqoorgje_1773688008647",
+      "idAcao": "74e6f3d8-7f4c-4e1e-9f6d-700720260005",
+      "tipo": "aviso",
+      "data": "2025-10-04",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_mkq994in0_1773688008647",
+      "idAcao": "74e6f3d8-7f4c-4e1e-9f6d-700720260005",
+      "tipo": "aviso",
+      "data": "2025-01-01",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_izgi93xzz_1773688008647",
+      "idAcao": "74e6f3d8-7f4c-4e1e-9f6d-700720260005",
+      "tipo": "aviso",
+      "data": "2025-10-21",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_tavcktm0p_1773688008647",
+      "idAcao": "801f5e61-0a2e-4a7d-9d10-800820260001",
+      "tipo": "inicio",
+      "data": "2025-10-13",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_9mky98irz_1773688008647",
+      "idAcao": "801f5e61-0a2e-4a7d-9d10-800820260001",
+      "tipo": "pendencia",
+      "data": "2025-09-21",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_tcoglhjdm_1773688008647",
+      "idAcao": "801f5e61-0a2e-4a7d-9d10-800820260001",
+      "tipo": "aviso",
+      "data": "2025-10-08",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_oet5lkwk2_1773688008647",
+      "idAcao": "801f5e61-0a2e-4a7d-9d10-800820260001",
+      "tipo": "aviso",
+      "data": "2025-09-09",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_76v38ibwf_1773688008647",
+      "idAcao": "812e0d17-2c49-4d8e-bd6a-800820260002",
+      "tipo": "inicio",
+      "data": "2025-07-28",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_xiioyt2i8_1773688008647",
+      "idAcao": "82f8c1c0-6a93-4b4e-9fa4-800820260003",
+      "tipo": "inicio",
+      "data": "2025-02-18",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_3r61pbkr7_1773688008647",
+      "idAcao": "82f8c1c0-6a93-4b4e-9fa4-800820260003",
+      "tipo": "inicio",
+      "data": "2025-07-02",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_iydehvyjf_1773688008647",
+      "idAcao": "83cbd6d7-4f38-4a5b-b3e1-800820260004",
+      "tipo": "inicio",
+      "data": "2025-03-27",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_2d9lz7bwb_1773688008647",
+      "idAcao": "83cbd6d7-4f38-4a5b-b3e1-800820260004",
+      "tipo": "aviso",
+      "data": "2025-02-19",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_zh4038r0z_1773688008647",
+      "idAcao": "83cbd6d7-4f38-4a5b-b3e1-800820260004",
+      "tipo": "aviso",
+      "data": "2025-12-13",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_eg67o2qtk_1773688008647",
+      "idAcao": "84d7a6a1-9c2c-4d61-b6a0-800820260005",
+      "tipo": "pendencia",
+      "data": "2025-03-28",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_hu66n7525_1773688008647",
+      "idAcao": "84d7a6a1-9c2c-4d61-b6a0-800820260005",
+      "tipo": "inicio",
+      "data": "2025-10-13",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_9ldq0mc84_1773688008647",
+      "idAcao": "84d7a6a1-9c2c-4d61-b6a0-800820260005",
+      "tipo": "inicio",
+      "data": "2025-12-01",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_vjz1thy8s_1773688008647",
+      "idAcao": "901a6c72-7e51-4e89-8c0d-900920260001",
+      "tipo": "aviso",
+      "data": "2025-02-09",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_i0le1tnx9_1773688008647",
+      "idAcao": "901a6c72-7e51-4e89-8c0d-900920260001",
+      "tipo": "inicio",
+      "data": "2025-11-09",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_pq3sz53xi_1773688008647",
+      "idAcao": "91bfa14c-6f8b-4d21-9c51-900920260002",
+      "tipo": "pendencia",
+      "data": "2025-02-19",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_j7y300a50_1773688008647",
+      "idAcao": "91bfa14c-6f8b-4d21-9c51-900920260002",
+      "tipo": "pendencia",
+      "data": "2025-09-01",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_4k2ay89lf_1773688008647",
+      "idAcao": "91bfa14c-6f8b-4d21-9c51-900920260002",
+      "tipo": "aviso",
+      "data": "2025-04-09",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_8w9btdmu0_1773688008647",
+      "idAcao": "91bfa14c-6f8b-4d21-9c51-900920260002",
+      "tipo": "pendencia",
+      "data": "2025-06-03",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_1oiht8gd4_1773688008647",
+      "idAcao": "92d0b0e5-2b8d-4e11-9f71-900920260003",
+      "tipo": "inicio",
+      "data": "2025-09-15",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_0m1dgutid_1773688008647",
+      "idAcao": "92d0b0e5-2b8d-4e11-9f71-900920260003",
+      "tipo": "pendencia",
+      "data": "2025-06-05",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "antonio.amorim@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_5t4xd11eh_1773688008647",
+      "idAcao": "92d0b0e5-2b8d-4e11-9f71-900920260003",
+      "tipo": "aviso",
+      "data": "2025-09-20",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_oe7a7mgex_1773688008647",
+      "idAcao": "92d0b0e5-2b8d-4e11-9f71-900920260003",
+      "tipo": "aviso",
+      "data": "2025-11-07",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_1bxfd2rqw_1773688008647",
+      "idAcao": "93e1fdd4-0e0b-4c9c-a9fa-900920260004",
+      "tipo": "inicio",
+      "data": "2025-03-05",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_teuv2yewh_1773688008647",
+      "idAcao": "93e1fdd4-0e0b-4c9c-a9fa-900920260004",
+      "tipo": "inicio",
+      "data": "2025-08-10",
+      "mailList": [
+          "antonio.amorim@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_i3dquqwzr_1773688008647",
+      "idAcao": "93e1fdd4-0e0b-4c9c-a9fa-900920260004",
+      "tipo": "inicio",
+      "data": "2025-12-28",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_6d8lnbttg_1773688008647",
+      "idAcao": "94f2d1b8-1c44-4f71-9c6c-900920260005",
+      "tipo": "inicio",
+      "data": "2025-12-12",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_vzlj7pxga_1773688008647",
+      "idAcao": "94f2d1b8-1c44-4f71-9c6c-900920260005",
+      "tipo": "inicio",
+      "data": "2025-07-25",
+      "mailList": [
+          "tania.sahione@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  },
+  {
+      "ID": "notif_nlx5mmw0s_1773688008647",
+      "idAcao": "94f2d1b8-1c44-4f71-9c6c-900920260005",
+      "tipo": "inicio",
+      "data": "2025-08-25",
+      "mailList": [
+          "ricardo.sousa@fazenda.mg.gov.br",
+          "tania.sahione@fazenda.mg.gov.br",
+          "adriana.martins@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_dq9p15dt7_1773688008647",
+      "tipo": "pendencia",
+      "data": "2025-04-13",
+      "mailList": [
+          "hudson.botelho@fazenda.mg.gov.br",
+          "ricardo.sousa@fazenda.mg.gov.br"
+      ],
+      "status": "pendente"
+  },
+  {
+      "ID": "notif_bk5oo64x4_1773688008647",
+      "tipo": "pendencia",
+      "data": "2025-09-03",
+      "mailList": [
+          "adriana.martins@fazenda.mg.gov.br",
+          "hudson.botelho@fazenda.mg.gov.br"
+      ],
+      "status": "enviado"
+  }
+]

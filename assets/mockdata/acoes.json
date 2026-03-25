@@ -1,0 +1,1061 @@
+[
+  {
+    "ID": "401e6caa-9d5a-4c80-b9a1-400420260001",
+    "Atividade": "Levantamento das rotinas de conciliação",
+    "Descrição da atividade": "Identificar e documentar as rotinas atuais de conciliação contábil realizadas pelas unidades.",
+    "Número da atividade": "4.1",
+    "Status": "Implementado",
+    "Plano de ação": "Mapeamento de Rotinas de Conciliação Contábil",
+    "Data de início": "2026-03-01",
+    "Data fim": "2026-03-20",
+    "Observações": "",
+    "Unidades": [
+      "CCC",
+      "GOF"
+    ]
+  },
+  {
+    "ID": "42b1cdb3-6b63-46c7-9bb2-400420260002",
+    "Atividade": "Análise de divergências recorrentes",
+    "Descrição da atividade": "Avaliar inconsistências frequentes observadas durante os processos de conciliação.",
+    "Número da atividade": "4.2",
+    "Status": "Em curso",
+    "Plano de ação": "Mapeamento de Rotinas de Conciliação Contábil",
+    "Data de início": "2026-03-21",
+    "Data fim": "2026-04-15",
+    "Observações": "",
+    "Unidades": [
+      "CCC",
+      "GNF"
+    ]
+  },
+  {
+    "ID": "4d9e8e2a-64d0-4e0c-a3a1-400420260003",
+    "Atividade": "Proposição de melhorias operacionais",
+    "Descrição da atividade": "Elaborar proposta de ajustes para melhoria das rotinas de conciliação contábil.",
+    "Número da atividade": "4.3",
+    "Status": "Planejado",
+    "Plano de ação": "Mapeamento de Rotinas de Conciliação Contábil",
+    "Data de início": "2026-04-16",
+    "Data fim": "2026-05-10",
+    "Observações": "",
+    "Unidades": [
+      "CCC",
+      "GPC"
+    ]
+  },
+  {
+    "ID": "45a9b3dd-3e4b-48f8-a4f1-400420260004",
+    "Atividade": "Validação das propostas",
+    "Descrição da atividade": "Submeter propostas de melhoria às áreas responsáveis para validação técnica.",
+    "Número da atividade": "4.4",
+    "Status": "Planejado",
+    "Plano de ação": "Mapeamento de Rotinas de Conciliação Contábil",
+    "Data de início": "2026-05-11",
+    "Data fim": "2026-06-10",
+    "Observações": "",
+    "Unidades": [
+      "CCC",
+      "GCI"
+    ]
+  },
+  {
+    "ID": "4fa1e9f2-73b5-4cb2-96c7-400420260005",
+    "Atividade": "Formalização das rotinas revisadas",
+    "Descrição da atividade": "Documentar e divulgar as rotinas de conciliação atualizadas para as unidades envolvidas.",
+    "Número da atividade": "4.5",
+    "Status": "Implementado",
+    "Plano de ação": "Mapeamento de Rotinas de Conciliação Contábil",
+    "Data de início": "2026-06-11",
+    "Data fim": "2026-07-30",
+    "Observações": "",
+    "Unidades": [
+      "CCC"
+    ]
+  },
+  {
+    "ID": "501c9e11-1f60-4c7b-8fd8-500520260001",
+    "Atividade": "Levantamento de indicadores existentes",
+    "Descrição da atividade": "Catalogar indicadores contábeis atualmente utilizados para monitoramento institucional.",
+    "Número da atividade": "5.1",
+    "Status": "Implementado",
+    "Plano de ação": "Aprimoramento dos Indicadores de Gestão Contábil",
+    "Data de início": "2026-02-05",
+    "Data fim": "2026-02-20",
+    "Observações": "",
+    "Unidades": [
+      "GPC",
+      "NIF"
+    ]
+  },
+  {
+    "ID": "51a6f9bb-22c0-48e3-8a9b-500520260002",
+    "Atividade": "Definição de critérios de avaliação",
+    "Descrição da atividade": "Estabelecer critérios técnicos para análise de desempenho dos indicadores.",
+    "Número da atividade": "5.2",
+    "Status": "Em curso",
+    "Plano de ação": "Aprimoramento dos Indicadores de Gestão Contábil",
+    "Data de início": "2026-02-21",
+    "Data fim": "2026-03-25",
+    "Observações": "",
+    "Unidades": [
+      "GPC",
+      "DPF"
+    ]
+  },
+  {
+    "ID": "5bc6d6e1-4e2f-4e6b-92d5-500520260003",
+    "Atividade": "Proposição de novos indicadores",
+    "Descrição da atividade": "Definir indicadores adicionais para apoiar o monitoramento da gestão contábil.",
+    "Número da atividade": "5.3",
+    "Status": "Planejado",
+    "Plano de ação": "Aprimoramento dos Indicadores de Gestão Contábil",
+    "Data de início": "2026-03-26",
+    "Data fim": "2026-05-01",
+    "Observações": "",
+    "Unidades": [
+      "GPC",
+      "NIF"
+    ]
+  },
+  {
+    "ID": "5e91c5f7-52b3-46fa-8e76-500520260004",
+    "Atividade": "Validação institucional",
+    "Descrição da atividade": "Apresentar os indicadores propostos para validação das áreas técnicas.",
+    "Número da atividade": "5.4",
+    "Status": "Planejado",
+    "Plano de ação": "Aprimoramento dos Indicadores de Gestão Contábil",
+    "Data de início": "2026-05-02",
+    "Data fim": "2026-06-15",
+    "Observações": "",
+    "Unidades": [
+      "GPC",
+      "GCI"
+    ]
+  },
+  {
+    "ID": "5f6e3c3d-3e45-4bfb-8c1e-500520260005",
+    "Atividade": "Publicação dos indicadores revisados",
+    "Descrição da atividade": "Disponibilizar o conjunto revisado de indicadores para utilização institucional.",
+    "Número da atividade": "5.5",
+    "Status": "Planejado",
+    "Plano de ação": "Aprimoramento dos Indicadores de Gestão Contábil",
+    "Data de início": "2026-06-16",
+    "Data fim": "2026-08-20",
+    "Observações": "",
+    "Unidades": [
+      "GPC"
+    ]
+  },
+  {
+    "ID": "602f8cde-6c1b-46c0-8d8a-600620260001",
+    "Atividade": "Mapeamento das bases de dados existentes",
+    "Descrição da atividade": "Identificar as bases de dados orçamentárias disponíveis nas áreas responsáveis.",
+    "Número da atividade": "6.1",
+    "Status": "Implementado",
+    "Plano de ação": "Integração de Bases de Dados Orçamentárias",
+    "Data de início": "2026-03-18",
+    "Data fim": "2026-04-05",
+    "Observações": "",
+    "Unidades": [
+      "STI",
+      "GIS"
+    ]
+  },
+  {
+    "ID": "611d3c6f-9a4c-4a92-9a51-600620260002",
+    "Atividade": "Definição da arquitetura de integração",
+    "Descrição da atividade": "Estabelecer arquitetura tecnológica para integração das bases identificadas.",
+    "Número da atividade": "6.2",
+    "Status": "Em curso",
+    "Plano de ação": "Integração de Bases de Dados Orçamentárias",
+    "Data de início": "2026-04-06",
+    "Data fim": "2026-05-10",
+    "Observações": "",
+    "Unidades": [
+      "STI",
+      "NAD"
+    ]
+  },
+  {
+    "ID": "62a5e17e-7e89-4d92-8d0a-600620260003",
+    "Atividade": "Desenvolvimento das rotinas de integração",
+    "Descrição da atividade": "Desenvolver rotinas técnicas para integração automatizada das bases orçamentárias.",
+    "Número da atividade": "6.3",
+    "Status": "Planejado",
+    "Plano de ação": "Integração de Bases de Dados Orçamentárias",
+    "Data de início": "2026-05-11",
+    "Data fim": "2026-06-20",
+    "Observações": "",
+    "Unidades": [
+      "STI",
+      "GIS"
+    ]
+  },
+  {
+    "ID": "63bc51d1-92df-4a3d-90be-600620260004",
+    "Atividade": "Testes de integração",
+    "Descrição da atividade": "Executar testes técnicos para verificar consistência da integração entre sistemas.",
+    "Número da atividade": "6.4",
+    "Status": "Planejado",
+    "Plano de ação": "Integração de Bases de Dados Orçamentárias",
+    "Data de início": "2026-06-21",
+    "Data fim": "2026-08-01",
+    "Observações": "",
+    "Unidades": [
+      "STI",
+      "GIS",
+      "NAD"
+    ]
+  },
+  {
+    "ID": "64f82c3b-4a6c-4c72-9a65-600620260005",
+    "Atividade": "Implantação da integração institucional",
+    "Descrição da atividade": "Disponibilizar integração das bases de dados orçamentárias para uso institucional.",
+    "Número da atividade": "6.5",
+    "Status": "Planejado",
+    "Plano de ação": "Integração de Bases de Dados Orçamentárias",
+    "Data de início": "2026-08-02",
+    "Data fim": "2026-09-30",
+    "Observações": "",
+    "Unidades": [
+      "STI"
+    ]
+  },
+  {
+    "ID": "701a4b21-4b61-4e52-8c1a-700720260001",
+    "Atividade": "Levantamento dos procedimentos atuais de auditoria",
+    "Descrição da atividade": "Identificar e documentar os procedimentos atualmente utilizados nas auditorias contábeis internas.",
+    "Número da atividade": "7.1",
+    "Status": "Implementado",
+    "Plano de ação": "Revisão de Procedimentos de Auditoria Contábil",
+    "Data de início": "2026-01-25",
+    "Data fim": "2026-02-10",
+    "Observações": "",
+    "Unidades": [
+      "CAC",
+      "GCI"
+    ]
+  },
+  {
+    "ID": "71b9e2d3-7c9f-4c91-8b2e-700720260002",
+    "Atividade": "Identificação de lacunas nos procedimentos",
+    "Descrição da atividade": "Avaliar os procedimentos mapeados e identificar lacunas ou fragilidades operacionais.",
+    "Número da atividade": "7.2",
+    "Status": "Em curso",
+    "Plano de ação": "Revisão de Procedimentos de Auditoria Contábil",
+    "Data de início": "2026-02-11",
+    "Data fim": "2026-03-05",
+    "Observações": "",
+    "Unidades": [
+      "CAC",
+      "GCI"
+    ]
+  },
+  {
+    "ID": "72c45d6e-98d1-4e1b-9e40-700720260003",
+    "Atividade": "Proposição de ajustes metodológicos",
+    "Descrição da atividade": "Elaborar propostas de melhoria metodológica para execução das auditorias contábeis.",
+    "Número da atividade": "7.3",
+    "Status": "Planejado",
+    "Plano de ação": "Revisão de Procedimentos de Auditoria Contábil",
+    "Data de início": "2026-03-06",
+    "Data fim": "2026-04-10",
+    "Observações": "",
+    "Unidades": [
+      "CAC"
+    ]
+  },
+  {
+    "ID": "73d28ef0-7f0d-4a1f-8f01-700720260004",
+    "Atividade": "Validação das propostas de melhoria",
+    "Descrição da atividade": "Submeter os ajustes metodológicos propostos às áreas técnicas envolvidas.",
+    "Número da atividade": "7.4",
+    "Status": "Planejado",
+    "Plano de ação": "Revisão de Procedimentos de Auditoria Contábil",
+    "Data de início": "2026-04-11",
+    "Data fim": "2026-05-20",
+    "Observações": "",
+    "Unidades": [
+      "CAC",
+      "GCI"
+    ]
+  },
+  {
+    "ID": "74e6f3d8-7f4c-4e1e-9f6d-700720260005",
+    "Atividade": "Formalização dos novos procedimentos",
+    "Descrição da atividade": "Documentar e divulgar os procedimentos revisados para as unidades responsáveis.",
+    "Número da atividade": "7.5",
+    "Status": "Planejado",
+    "Plano de ação": "Revisão de Procedimentos de Auditoria Contábil",
+    "Data de início": "2026-05-21",
+    "Data fim": "2026-07-10",
+    "Observações": "",
+    "Unidades": [
+      "CAC"
+    ]
+  },
+  {
+    "ID": "801f5e61-0a2e-4a7d-9d10-800820260001",
+    "Atividade": "Definição de requisitos do painel",
+    "Descrição da atividade": "Levantar requisitos funcionais e informacionais para o desenvolvimento do painel gerencial.",
+    "Número da atividade": "8.1",
+    "Status": "Implementado",
+    "Plano de ação": "Estruturação de Painel Gerencial de Acompanhamento",
+    "Data de início": "2026-04-15",
+    "Data fim": "2026-05-05",
+    "Observações": "",
+    "Unidades": [
+      "LDI",
+      "GEO"
+    ]
+  },
+  {
+    "ID": "812e0d17-2c49-4d8e-bd6a-800820260002",
+    "Atividade": "Modelagem dos indicadores do painel",
+    "Descrição da atividade": "Definir indicadores e métricas que comporão o painel gerencial.",
+    "Número da atividade": "8.2",
+    "Status": "Em curso",
+    "Plano de ação": "Estruturação de Painel Gerencial de Acompanhamento",
+    "Data de início": "2026-05-06",
+    "Data fim": "2026-06-01",
+    "Observações": "",
+    "Unidades": [
+      "LDI",
+      "GII"
+    ]
+  },
+  {
+    "ID": "82f8c1c0-6a93-4b4e-9fa4-800820260003",
+    "Atividade": "Desenvolvimento do protótipo do painel",
+    "Descrição da atividade": "Criar protótipo inicial do painel gerencial para testes de usabilidade.",
+    "Número da atividade": "8.3",
+    "Status": "Pendente",
+    "Plano de ação": "Estruturação de Painel Gerencial de Acompanhamento",
+    "Data de início": "2026-06-02",
+    "Data fim": "2026-07-10",
+    "Observações": "",
+    "Unidades": [
+      "LDI"
+    ]
+  },
+  {
+    "ID": "83cbd6d7-4f38-4a5b-b3e1-800820260004",
+    "Atividade": "Realização de testes piloto",
+    "Descrição da atividade": "Executar testes piloto do painel com dados institucionais para validação.",
+    "Número da atividade": "8.4",
+    "Status": "Pendente",
+    "Plano de ação": "Estruturação de Painel Gerencial de Acompanhamento",
+    "Data de início": "2026-07-11",
+    "Data fim": "2026-08-30",
+    "Observações": "",
+    "Unidades": [
+      "LDI",
+      "GII"
+    ]
+  },
+  {
+    "ID": "84d7a6a1-9c2c-4d61-b6a0-800820260005",
+    "Atividade": "Implantação institucional do painel",
+    "Descrição da atividade": "Disponibilizar o painel gerencial para utilização pelas áreas institucionais.",
+    "Número da atividade": "8.5",
+    "Status": "Pendente",
+    "Plano de ação": "Estruturação de Painel Gerencial de Acompanhamento",
+    "Data de início": "2026-09-01",
+    "Data fim": "2026-10-20",
+    "Observações": "",
+    "Unidades": [
+      "LDI"
+    ]
+  },
+  {
+    "ID": "901a6c72-7e51-4e89-8c0d-900920260001",
+    "Atividade": "Levantamento das rotinas de consolidação fiscal",
+    "Descrição da atividade": "Identificar e documentar os procedimentos atualmente utilizados na consolidação fiscal.",
+    "Número da atividade": "9.1",
+    "Status": "Implementado",
+    "Plano de ação": "Atualização das Rotinas de Consolidação Fiscal",
+    "Data de início": "2026-05-05",
+    "Data fim": "2026-05-25",
+    "Observações": "",
+    "Unidades": [
+      "DCF",
+      "GMF"
+    ]
+  },
+  {
+    "ID": "91bfa14c-6f8b-4d21-9c51-900920260002",
+    "Atividade": "Identificação de inconsistências",
+    "Descrição da atividade": "Analisar rotinas mapeadas e identificar inconsistências ou etapas redundantes.",
+    "Número da atividade": "9.2",
+    "Status": "Em curso",
+    "Plano de ação": "Atualização das Rotinas de Consolidação Fiscal",
+    "Data de início": "2026-05-26",
+    "Data fim": "2026-06-20",
+    "Observações": "",
+    "Unidades": [
+      "DCF",
+      "GMF"
+    ]
+  },
+  {
+    "ID": "92d0b0e5-2b8d-4e11-9f71-900920260003",
+    "Atividade": "Proposição de melhorias nos fluxos",
+    "Descrição da atividade": "Elaborar propostas de melhoria para os fluxos de consolidação fiscal.",
+    "Número da atividade": "9.3",
+    "Status": "Pendente",
+    "Plano de ação": "Atualização das Rotinas de Consolidação Fiscal",
+    "Data de início": "2026-06-21",
+    "Data fim": "2026-07-25",
+    "Observações": "",
+    "Unidades": [
+      "DCF"
+    ]
+  },
+  {
+    "ID": "93e1fdd4-0e0b-4c9c-a9fa-900920260004",
+    "Atividade": "Validação institucional das melhorias",
+    "Descrição da atividade": "Submeter as melhorias propostas às áreas técnicas envolvidas.",
+    "Número da atividade": "9.4",
+    "Status": "Pendente",
+    "Plano de ação": "Atualização das Rotinas de Consolidação Fiscal",
+    "Data de início": "2026-07-26",
+    "Data fim": "2026-08-25",
+    "Observações": "",
+    "Unidades": [
+      "DCF",
+      "GCI"
+    ]
+  },
+  {
+    "ID": "94f2d1b8-1c44-4f71-9c6c-900920260005",
+    "Atividade": "Publicação das rotinas atualizadas",
+    "Descrição da atividade": "Formalizar e divulgar as rotinas revisadas de consolidação fiscal.",
+    "Número da atividade": "9.5",
+    "Status": "Pendente",
+    "Plano de ação": "Atualização das Rotinas de Consolidação Fiscal",
+    "Data de início": "2026-08-26",
+    "Data fim": "2026-09-30",
+    "Observações": "",
+    "Unidades": [
+      "DCF"
+    ]
+  },
+  {
+    "ID": "e5a7b8c5-8f6b-4a4c-b155-005a20260005",
+    "Atividade": "Aprimoramento dos Indicadores de Gestão Contábil",
+    "Número da atividade": "7.5",
+    "Status": "Em curso",
+    "Resolução": "RESOLUÇÃO TÉCNICA Nº 19/2026",
+    "Data início": "2026-02-05",
+    "Data fim": "2026-08-20",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-IG-08230",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Analítico 2026-IG-05",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Eduardo Carvalho Menezes",
+        "Email": "eduardo.menezes@institucional.gov",
+        "Unidade": "GPC",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Priscila Barros Lins",
+        "Email": "priscila.lins@institucional.gov",
+        "Unidade": "GPC",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "André Tavares Nascimento",
+        "Email": "andre.nascimento@institucional.gov",
+        "Unidade": "NIF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Helena Cardoso Figueira",
+        "Email": "helena.figueira@institucional.gov",
+        "Unidade": "NIF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Ricardo Velasco Matos",
+        "Email": "ricardo.matos@institucional.gov",
+        "Unidade": "DPF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Larissa Cunha Batista",
+        "Email": "larissa.batista@institucional.gov",
+        "Unidade": "DPF",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "a1c9d3e1-4b2f-4c8e-9d11-001a20260001",
+    "Atividade": "Consolidação das Demonstrações Contábeis Anuais",
+    "Número da atividade": "7.4",
+    "Status": "Em curso",
+    "Resolução": "RESOLUÇÃO ADMINISTRATIVA Nº 14/2026",
+    "Data início": "2026-01-05",
+    "Data fim": "2026-04-30",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-DC-04821",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Técnico 2026-DC-01",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Henrique Valença Duarte",
+        "Email": "henrique.duarte@institucional.gov",
+        "Unidade": "DCO",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Patrícia Mendonça Fialho",
+        "Email": "patricia.fialho@institucional.gov",
+        "Unidade": "DCO",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Otávio Lacerda Ramos",
+        "Email": "otavio.ramos@institucional.gov",
+        "Unidade": "GNF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Luana Tavares Pinto",
+        "Email": "luana.pinto@institucional.gov",
+        "Unidade": "GNF",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "c3e7f6a3-6d4f-4e2a-9f33-003a20260003",
+    "Atividade": "Padronização de Relatórios de Execução Financeira",
+    "Número da atividade": "7.5",
+    "Status": "Em curso",
+    "Resolução": "INSTRUÇÃO NORMATIVA Nº 08/2026",
+    "Data início": "2026-01-20",
+    "Data fim": "2026-06-10",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-PR-06144",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Analítico 2026-PR-03",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Renata Alencar Pires",
+        "Email": "renata.pires@institucional.gov",
+        "Unidade": "SIF",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Gustavo Mendonça Freire",
+        "Email": "gustavo.freire@institucional.gov",
+        "Unidade": "SIF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Leonardo Paiva Brito",
+        "Email": "leonardo.brito@institucional.gov",
+        "Unidade": "GRE",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Cláudia Torres Lacerda",
+        "Email": "claudia.lacerda@institucional.gov",
+        "Unidade": "GRE",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Henrique Valença Duarte",
+        "Email": "henrique.duarte@institucional.gov",
+        "Unidade": "DCO",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "07c9dae7-ab8d-4c6e-d377-007a20260007",
+    "Atividade": "Revisão de Procedimentos de Auditoria Contábil",
+    "Número da atividade": "7.6",
+    "Status": "Em curso",
+    "Resolução": "INSTRUÇÃO TÉCNICA Nº 12/2026",
+    "Data início": "2026-01-25",
+    "Data fim": "2026-07-10",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-AC-10190",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório de Auditoria 2026-AC-07",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Thiago Valente Braga",
+        "Email": "thiago.braga@institucional.gov",
+        "Unidade": "CAC",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Isabela Pires Cardoso",
+        "Email": "isabela.cardoso@institucional.gov",
+        "Unidade": "CAC",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Felipe Teixeira Lobo",
+        "Email": "felipe.lobo@institucional.gov",
+        "Unidade": "GCI",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Mariana Duarte Campos",
+        "Email": "mariana.campos@institucional.gov",
+        "Unidade": "GCI",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Renata Alencar Pires",
+        "Email": "renata.pires@institucional.gov",
+        "Unidade": "SIF",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "f6b8c9d6-9a7c-4b5d-c266-006a20260006",
+    "Atividade": "Integração de Bases de Dados Orçamentárias",
+    "Número da atividade": "4.2",
+    "Status": "Implementado",
+    "Resolução": "PORTARIA OPERACIONAL Nº 05/2026",
+    "Data início": "2026-03-18",
+    "Data fim": "2026-09-30",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-BO-09450",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Técnico 2026-BO-06",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Igor Mendonça Vieira",
+        "Email": "igor.vieira@institucional.gov",
+        "Unidade": "STI",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Camila Pacheco Nunes",
+        "Email": "camila.nunes@institucional.gov",
+        "Unidade": "STI",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Bruno Andrade Lacerda",
+        "Email": "bruno.lacerda@institucional.gov",
+        "Unidade": "GIS",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Natalia Freire Duarte",
+        "Email": "natalia.duarte@institucional.gov",
+        "Unidade": "GIS",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Victor Campos Rezende",
+        "Email": "victor.rezende@institucional.gov",
+        "Unidade": "NAD",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Henrique Valença Duarte",
+        "Email": "henrique.duarte@institucional.gov",
+        "Unidade": "DCO",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "d4f6a7b4-7e5a-4f3b-a044-004a20260004",
+    "Atividade": "Mapeamento de Rotinas de Conciliação Contábil",
+    "Número da atividade": "4.8",
+    "Status": "Implementado",
+    "Resolução": "ATO ADMINISTRATIVO Nº 11/2026",
+    "Data início": "2026-03-01",
+    "Data fim": "2026-07-30",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-MC-07122",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Técnico 2026-MC-04",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Fábio Siqueira Monteiro",
+        "Email": "fabio.monteiro@institucional.gov",
+        "Unidade": "CCC",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Amanda Queiroz Tavares",
+        "Email": "amanda.tavares@institucional.gov",
+        "Unidade": "CCC",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Paulo Vitor Lemos Rocha",
+        "Email": "paulo.rocha@institucional.gov",
+        "Unidade": "GOF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Juliana Ferraz Bastos",
+        "Email": "juliana.bastos@institucional.gov",
+        "Unidade": "GOF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Otávio Lacerda Ramos",
+        "Email": "otavio.ramos@institucional.gov",
+        "Unidade": "GNF",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "b2d8e5f2-5c3e-4d1f-9e22-002a20260002",
+    "Atividade": "Revisão de Procedimentos de Encerramento Contábil",
+    "Número da atividade": "4.1",
+    "Status": "Implementado",
+    "Resolução": "PORTARIA TÉCNICA Nº 03/2026",
+    "Data início": "2026-02-10",
+    "Data fim": "2026-05-15",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-RC-05210",
+    "SEI relacionados": "",
+    "Documento TCE": "Nota Técnica 2026-RC-02",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Marcelo Nogueira Furtado",
+        "Email": "marcelo.furtado@institucional.gov",
+        "Unidade": "CPC",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Carolina Duarte Mota",
+        "Email": "carolina.mota@institucional.gov",
+        "Unidade": "CPC",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Patrícia Mendonça Fialho",
+        "Email": "patricia.fialho@institucional.gov",
+        "Unidade": "DCO",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Daniel Sampaio Veloso",
+        "Email": "daniel.veloso@institucional.gov",
+        "Unidade": "GCF",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "29ebec09-cdaf-4e80-f599-009a20260009",
+    "Atividade": "Atualização das Rotinas de Consolidação Fiscal",
+    "Status": "Planejado",
+    "Número da atividade": "7.9",
+    "Resolução": "RESOLUÇÃO ADMINISTRATIVA Nº 21/2026",
+    "Data início": "2026-05-05",
+    "Data fim": "2026-09-30",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-CF-12488",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Técnico 2026-CF-09",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Renato Guedes Barreto",
+        "Email": "renato.barreto@institucional.gov",
+        "Unidade": "DCF",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Paula Ferraz Bastos",
+        "Email": "paula.bastos@institucional.gov",
+        "Unidade": "DCF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Lucas Figueiredo Paes",
+        "Email": "lucas.paes@institucional.gov",
+        "Unidade": "GMF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Viviane Duarte Salgado",
+        "Email": "viviane.salgado@institucional.gov",
+        "Unidade": "GMF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Bruno Mendonça Prado",
+        "Email": "bruno.prado@institucional.gov",
+        "Unidade": "GMF",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Eduardo Carvalho Menezes",
+        "Email": "eduardo.menezes@institucional.gov",
+        "Unidade": "GPC",
+        "Coordenador": false
+      }
+    ]
+  },
+  {
+    "ID": "18dadbf8-bc9e-4d7f-e488-008a20260008",
+    "Atividade": "Estruturação de Painel Gerencial de Acompanhamento",
+    "Status": "Planejado",
+    "Número da atividade": "8.1",
+    "Resolução": "ATO ORGANIZACIONAL Nº 16/2026",
+    "Data início": "2026-04-15",
+    "Data fim": "2026-10-20",
+    "Observações": "",
+    "Processo SEI": "SEI-2026-PG-11320",
+    "SEI relacionados": "",
+    "Documento TCE": "Relatório Gerencial 2026-PG-08",
+    "Documentos relacionados": "",
+    "objPessoas": [
+      {
+        "Atividade": "Guilherme Sampaio Rocha",
+        "Email": "guilherme.rocha@institucional.gov",
+        "Unidade": "LDI",
+        "Coordenador": true
+      },
+      {
+        "Atividade": "Larissa Monteiro Brito",
+        "Email": "larissa.brito@institucional.gov",
+        "Unidade": "LDI",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Diego Freitas Veloso",
+        "Email": "diego.veloso@institucional.gov",
+        "Unidade": "GEO",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Aline Barros Menezes",
+        "Email": "aline.menezes@institucional.gov",
+        "Unidade": "GEO",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Rafael Tavares Paiva",
+        "Email": "rafael.paiva@institucional.gov",
+        "Unidade": "GII",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Clara Lemos Andrade",
+        "Email": "clara.andrade@institucional.gov",
+        "Unidade": "GII",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Otávio Neves Fialho",
+        "Email": "otavio.fialho@institucional.gov",
+        "Unidade": "GII",
+        "Coordenador": false
+      },
+      {
+        "Atividade": "Bianca Teodoro Lacerda",
+        "Email": "bianca.lacerda@institucional.gov",
+        "Unidade": "GII",
+        "Coordenador": false
+      }
+    ]
+  },
+  [
+    {
+      "ID": "1a22f7d1-4b0b-4b0f-9a11-110120260002",
+      "Atividade": "Coleta de informações das unidades gestoras",
+      "Descrição da atividade": "Solicitar às unidades gestoras o envio das informações contábeis necessárias para consolidação anual.",
+      "Número da atividade": "1.2",
+      "Status": "Implementado",
+      "Plano de ação": "Consolidação das Demonstrações Contábeis Anuais",
+      "Data de início": "2026-01-10",
+      "Data fim": "2026-01-25",
+      "Observações": "",
+      "Unidades": [
+        "DCO",
+        "GNF"
+      ]
+    },
+    {
+      "ID": "1b93a1b4-6c21-4c83-9a11-110120260003",
+      "Atividade": "Validação preliminar das informações recebidas",
+      "Descrição da atividade": "Realizar conferência preliminar das bases contábeis enviadas pelas unidades.",
+      "Número da atividade": "1.3",
+      "Status": "Em curso",
+      "Plano de ação": "Consolidação das Demonstrações Contábeis Anuais",
+      "Data de início": "2026-01-26",
+      "Data fim": "2026-02-20",
+      "Observações": "",
+      "Unidades": [
+        "DCO",
+        "GNF"
+      ]
+    },
+    {
+      "ID": "1c1b0e1c-3b4c-4c8b-9a11-110120260004",
+      "Atividade": "Ajustes de inconsistências contábeis",
+      "Descrição da atividade": "Efetuar ajustes decorrentes das inconsistências identificadas na fase de validação.",
+      "Número da atividade": "1.4",
+      "Status": "Planejado",
+      "Plano de ação": "Consolidação das Demonstrações Contábeis Anuais",
+      "Data de início": "2026-02-21",
+      "Data fim": "2026-03-25",
+      "Observações": "",
+      "Unidades": [
+        "DCO"
+      ]
+    },
+    {
+      "ID": "1d4e44e5-12a3-4c5a-9a11-110120260005",
+      "Atividade": "Consolidação final das demonstrações",
+      "Descrição da atividade": "Gerar versão final consolidada das demonstrações contábeis para envio institucional.",
+      "Número da atividade": "1.5",
+      "Status": "Planejado",
+      "Plano de ação": "Consolidação das Demonstrações Contábeis Anuais",
+      "Data de início": "2026-03-26",
+      "Data fim": "2026-04-30",
+      "Observações": "",
+      "Unidades": [
+        "DCO",
+        "GNF"
+      ]
+    },
+    {
+      "ID": "2a6e1f61-2b11-4f92-9e22-120220260002",
+      "Atividade": "Mapeamento dos procedimentos atuais",
+      "Descrição da atividade": "Levantar e documentar os procedimentos atualmente utilizados no encerramento contábil.",
+      "Número da atividade": "2.2",
+      "Status": "Implementado",
+      "Plano de ação": "Revisão de Procedimentos de Encerramento Contábil",
+      "Data de início": "2026-02-10",
+      "Data fim": "2026-02-28",
+      "Observações": "",
+      "Unidades": [
+        "CPC",
+        "GCF"
+      ]
+    },
+    {
+      "ID": "2b71a0f8-2d94-4cfa-9e22-120220260003",
+      "Atividade": "Identificação de melhorias nos fluxos",
+      "Descrição da atividade": "Avaliar fluxos atuais e identificar oportunidades de melhoria nos procedimentos de encerramento.",
+      "Número da atividade": "2.3",
+      "Status": "Em curso",
+      "Plano de ação": "Revisão de Procedimentos de Encerramento Contábil",
+      "Data de início": "2026-03-01",
+      "Data fim": "2026-03-20",
+      "Observações": "",
+      "Unidades": [
+        "CPC",
+        "GCF"
+      ]
+    },
+    {
+      "ID": "2c82bb03-1b9c-49c8-9e22-120220260004",
+      "Atividade": "Elaboração de proposta de atualização",
+      "Descrição da atividade": "Elaborar minuta de atualização dos procedimentos de encerramento contábil.",
+      "Número da atividade": "2.4",
+      "Status": "Planejado",
+      "Plano de ação": "Revisão de Procedimentos de Encerramento Contábil",
+      "Data de início": "2026-03-21",
+      "Data fim": "2026-04-20",
+      "Observações": "",
+      "Unidades": [
+        "CPC"
+      ]
+    },
+    {
+      "ID": "2d93e35a-6f83-4d6e-9e22-120220260005",
+      "Atividade": "Validação institucional dos novos procedimentos",
+      "Descrição da atividade": "Submeter os procedimentos revisados à validação das áreas responsáveis.",
+      "Número da atividade": "2.5",
+      "Status": "Planejado",
+      "Plano de ação": "Revisão de Procedimentos de Encerramento Contábil",
+      "Data de início": "2026-04-21",
+      "Data fim": "2026-05-15",
+      "Observações": "",
+      "Unidades": [
+        "CPC",
+        "GCF"
+      ]
+    },
+    {
+      "ID": "3a1f03d2-4d0b-4c99-9f33-130320260002",
+      "Atividade": "Levantamento dos relatórios existentes",
+      "Descrição da atividade": "Catalogar os relatórios de execução financeira atualmente utilizados pelas áreas.",
+      "Número da atividade": "3.2",
+      "Status": "Implementado",
+      "Plano de ação": "Padronização de Relatórios de Execução Financeira",
+      "Data de início": "2026-01-20",
+      "Data fim": "2026-02-05",
+      "Observações": "",
+      "Unidades": [
+        "SIF",
+        "GRE"
+      ]
+    },
+    {
+      "ID": "3b2c62b4-cc1f-44d7-9f33-130320260003",
+      "Atividade": "Definição de estrutura padrão",
+      "Descrição da atividade": "Definir modelo padrão de relatório para utilização institucional.",
+      "Número da atividade": "3.3",
+      "Status": "Em curso",
+      "Plano de ação": "Padronização de Relatórios de Execução Financeira",
+      "Data de início": "2026-02-06",
+      "Data fim": "2026-03-10",
+      "Observações": "",
+      "Unidades": [
+        "SIF",
+        "GRE"
+      ]
+    },
+    {
+      "ID": "3c3a6d52-3e7c-49f8-9f33-130320260004",
+      "Atividade": "Testes de aplicação do modelo",
+      "Descrição da atividade": "Aplicar o modelo de relatório padronizado em relatórios piloto para validação.",
+      "Número da atividade": "3.4",
+      "Status": "Planejado",
+      "Plano de ação": "Padronização de Relatórios de Execução Financeira",
+      "Data de início": "2026-03-11",
+      "Data fim": "2026-04-30",
+      "Observações": "",
+      "Unidades": [
+        "GRE"
+      ]
+    },
+    {
+      "ID": "3d48a7a1-0e2a-4b8f-9f33-130320260005",
+      "Atividade": "Implementação do padrão institucional",
+      "Descrição da atividade": "Disponibilizar e orientar as unidades quanto ao uso do modelo padronizado de relatórios.",
+      "Número da atividade": "3.5",
+      "Status": "Planejado",
+      "Plano de ação": "Padronização de Relatórios de Execução Financeira",
+      "Data de início": "2026-05-01",
+      "Data fim": "2026-06-10",
+      "Observações": "",
+      "Unidades": [
+        "SIF",
+        "GRE"
+      ]
+    }
+  ]
+]

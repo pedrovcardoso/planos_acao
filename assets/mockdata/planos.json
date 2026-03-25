@@ -1,0 +1,186 @@
+[
+    {
+      "ID": "a1c9d3e1-4b2f-4c8e-9d11-001a20260001",
+      "Nome": "Consolidação das Demonstrações Contábeis Anuais",
+      "Status": "Em curso",
+      "Resolução": "RESOLUÇÃO ADMINISTRATIVA Nº 14/2026",
+      "Data início": "2026-01-05",
+      "Data fim": "2026-04-30",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-DC-04821",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Técnico 2026-DC-01",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Henrique Valença Duarte","Email": "henrique.duarte@institucional.gov","Unidade": "DCO","Coordenador": true},
+        {"Nome": "Patrícia Mendonça Fialho","Email": "patricia.fialho@institucional.gov","Unidade": "DCO","Coordenador": false},
+        {"Nome": "Otávio Lacerda Ramos","Email": "otavio.ramos@institucional.gov","Unidade": "GNF","Coordenador": false},
+        {"Nome": "Luana Tavares Pinto","Email": "luana.pinto@institucional.gov","Unidade": "GNF","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "b2d8e5f2-5c3e-4d1f-9e22-002a20260002",
+      "Nome": "Revisão de Procedimentos de Encerramento Contábil",
+      "Status": "Planejado",
+      "Resolução": "PORTARIA TÉCNICA Nº 03/2026",
+      "Data início": "2026-02-10",
+      "Data fim": "2026-05-15",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-RC-05210",
+      "SEI relacionados": "",
+      "Documento TCE": "Nota Técnica 2026-RC-02",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Marcelo Nogueira Furtado","Email": "marcelo.furtado@institucional.gov","Unidade": "CPC","Coordenador": true},
+        {"Nome": "Carolina Duarte Mota","Email": "carolina.mota@institucional.gov","Unidade": "CPC","Coordenador": false},
+        {"Nome": "Patrícia Mendonça Fialho","Email": "patricia.fialho@institucional.gov","Unidade": "DCO","Coordenador": false},
+        {"Nome": "Daniel Sampaio Veloso","Email": "daniel.veloso@institucional.gov","Unidade": "GCF","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "c3e7f6a3-6d4f-4e2a-9f33-003a20260003",
+      "Nome": "Padronização de Relatórios de Execução Financeira",
+      "Status": "Em curso",
+      "Resolução": "INSTRUÇÃO NORMATIVA Nº 08/2026",
+      "Data início": "2026-01-20",
+      "Data fim": "2026-06-10",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-PR-06144",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Analítico 2026-PR-03",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Renata Alencar Pires","Email": "renata.pires@institucional.gov","Unidade": "SIF","Coordenador": true},
+        {"Nome": "Gustavo Mendonça Freire","Email": "gustavo.freire@institucional.gov","Unidade": "SIF","Coordenador": false},
+        {"Nome": "Leonardo Paiva Brito","Email": "leonardo.brito@institucional.gov","Unidade": "GRE","Coordenador": false},
+        {"Nome": "Cláudia Torres Lacerda","Email": "claudia.lacerda@institucional.gov","Unidade": "GRE","Coordenador": false},
+        {"Nome": "Henrique Valença Duarte","Email": "henrique.duarte@institucional.gov","Unidade": "DCO","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "d4f6a7b4-7e5a-4f3b-a044-004a20260004",
+      "Nome": "Mapeamento de Rotinas de Conciliação Contábil",
+      "Status": "Planejado",
+      "Resolução": "ATO ADMINISTRATIVO Nº 11/2026",
+      "Data início": "2026-03-01",
+      "Data fim": "2026-07-30",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-MC-07122",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Técnico 2026-MC-04",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Fábio Siqueira Monteiro","Email": "fabio.monteiro@institucional.gov","Unidade": "CCC","Coordenador": true},
+        {"Nome": "Amanda Queiroz Tavares","Email": "amanda.tavares@institucional.gov","Unidade": "CCC","Coordenador": false},
+        {"Nome": "Paulo Vitor Lemos Rocha","Email": "paulo.rocha@institucional.gov","Unidade": "GOF","Coordenador": false},
+        {"Nome": "Juliana Ferraz Bastos","Email": "juliana.bastos@institucional.gov","Unidade": "GOF","Coordenador": false},
+        {"Nome": "Otávio Lacerda Ramos","Email": "otavio.ramos@institucional.gov","Unidade": "GNF","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "e5a7b8c5-8f6b-4a4c-b155-005a20260005",
+      "Nome": "Aprimoramento dos Indicadores de Gestão Contábil",
+      "Status": "Em curso",
+      "Resolução": "RESOLUÇÃO TÉCNICA Nº 19/2026",
+      "Data início": "2026-02-05",
+      "Data fim": "2026-08-20",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-IG-08230",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Analítico 2026-IG-05",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Eduardo Carvalho Menezes","Email": "eduardo.menezes@institucional.gov","Unidade": "GPC","Coordenador": true},
+        {"Nome": "Priscila Barros Lins","Email": "priscila.lins@institucional.gov","Unidade": "GPC","Coordenador": false},
+        {"Nome": "André Tavares Nascimento","Email": "andre.nascimento@institucional.gov","Unidade": "NIF","Coordenador": false},
+        {"Nome": "Helena Cardoso Figueira","Email": "helena.figueira@institucional.gov","Unidade": "NIF","Coordenador": false},
+        {"Nome": "Ricardo Velasco Matos","Email": "ricardo.matos@institucional.gov","Unidade": "DPF","Coordenador": false},
+        {"Nome": "Larissa Cunha Batista","Email": "larissa.batista@institucional.gov","Unidade": "DPF","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "f6b8c9d6-9a7c-4b5d-c266-006a20260006",
+      "Nome": "Integração de Bases de Dados Orçamentárias",
+      "Status": "Planejado",
+      "Resolução": "PORTARIA OPERACIONAL Nº 05/2026",
+      "Data início": "2026-03-18",
+      "Data fim": "2026-09-30",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-BO-09450",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Técnico 2026-BO-06",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Igor Mendonça Vieira","Email": "igor.vieira@institucional.gov","Unidade": "STI","Coordenador": true},
+        {"Nome": "Camila Pacheco Nunes","Email": "camila.nunes@institucional.gov","Unidade": "STI","Coordenador": false},
+        {"Nome": "Bruno Andrade Lacerda","Email": "bruno.lacerda@institucional.gov","Unidade": "GIS","Coordenador": false},
+        {"Nome": "Natalia Freire Duarte","Email": "natalia.duarte@institucional.gov","Unidade": "GIS","Coordenador": false},
+        {"Nome": "Victor Campos Rezende","Email": "victor.rezende@institucional.gov","Unidade": "NAD","Coordenador": false},
+        {"Nome": "Henrique Valença Duarte","Email": "henrique.duarte@institucional.gov","Unidade": "DCO","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "07c9dae7-ab8d-4c6e-d377-007a20260007",
+      "Nome": "Revisão de Procedimentos de Auditoria Contábil",
+      "Status": "Em curso",
+      "Resolução": "INSTRUÇÃO TÉCNICA Nº 12/2026",
+      "Data início": "2026-01-25",
+      "Data fim": "2026-07-10",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-AC-10190",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório de Auditoria 2026-AC-07",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Thiago Valente Braga","Email": "thiago.braga@institucional.gov","Unidade": "CAC","Coordenador": true},
+        {"Nome": "Isabela Pires Cardoso","Email": "isabela.cardoso@institucional.gov","Unidade": "CAC","Coordenador": false},
+        {"Nome": "Felipe Teixeira Lobo","Email": "felipe.lobo@institucional.gov","Unidade": "GCI","Coordenador": false},
+        {"Nome": "Mariana Duarte Campos","Email": "mariana.campos@institucional.gov","Unidade": "GCI","Coordenador": false},
+        {"Nome": "Renata Alencar Pires","Email": "renata.pires@institucional.gov","Unidade": "SIF","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "18dadbf8-bc9e-4d7f-e488-008a20260008",
+      "Nome": "Estruturação de Painel Gerencial de Acompanhamento",
+      "Status": "Implementado",
+      "Resolução": "ATO ORGANIZACIONAL Nº 16/2026",
+      "Data início": "2026-04-15",
+      "Data fim": "2026-10-20",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-PG-11320",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Gerencial 2026-PG-08",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Guilherme Sampaio Rocha","Email": "guilherme.rocha@institucional.gov","Unidade": "LDI","Coordenador": true},
+        {"Nome": "Larissa Monteiro Brito","Email": "larissa.brito@institucional.gov","Unidade": "LDI","Coordenador": false},
+        {"Nome": "Diego Freitas Veloso","Email": "diego.veloso@institucional.gov","Unidade": "GEO","Coordenador": false},
+        {"Nome": "Aline Barros Menezes","Email": "aline.menezes@institucional.gov","Unidade": "GEO","Coordenador": false},
+        {"Nome": "Rafael Tavares Paiva","Email": "rafael.paiva@institucional.gov","Unidade": "GII","Coordenador": false},
+        {"Nome": "Clara Lemos Andrade","Email": "clara.andrade@institucional.gov","Unidade": "GII","Coordenador": false},
+        {"Nome": "Otávio Neves Fialho","Email": "otavio.fialho@institucional.gov","Unidade": "GII","Coordenador": false},
+        {"Nome": "Bianca Teodoro Lacerda","Email": "bianca.lacerda@institucional.gov","Unidade": "GII","Coordenador": false}
+      ]
+    },
+    {
+      "ID": "29ebec09-cdaf-4e80-f599-009a20260009",
+      "Nome": "Atualização das Rotinas de Consolidação Fiscal",
+      "Status": "Planejado",
+      "Resolução": "RESOLUÇÃO ADMINISTRATIVA Nº 21/2026",
+      "Data início": "2026-05-05",
+      "Data fim": "2026-09-30",
+      "Observações": "",
+      "Processo SEI": "SEI-2026-CF-12488",
+      "SEI relacionados": "",
+      "Documento TCE": "Relatório Técnico 2026-CF-09",
+      "Documentos relacionados": "",
+      "objPessoas": [
+        {"Nome": "Renato Guedes Barreto","Email": "renato.barreto@institucional.gov","Unidade": "DCF","Coordenador": true},
+        {"Nome": "Paula Ferraz Bastos","Email": "paula.bastos@institucional.gov","Unidade": "DCF","Coordenador": false},
+        {"Nome": "Lucas Figueiredo Paes","Email": "lucas.paes@institucional.gov","Unidade": "GMF","Coordenador": false},
+        {"Nome": "Viviane Duarte Salgado","Email": "viviane.salgado@institucional.gov","Unidade": "GMF","Coordenador": false},
+        {"Nome": "Bruno Mendonça Prado","Email": "bruno.prado@institucional.gov","Unidade": "GMF","Coordenador": false},
+        {"Nome": "Eduardo Carvalho Menezes","Email": "eduardo.menezes@institucional.gov","Unidade": "GPC","Coordenador": false}
+      ]
+    }
+  ]

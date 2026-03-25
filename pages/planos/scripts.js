@@ -392,15 +392,9 @@ function setupSecaoIA() {
   };
 
   const fetchAiSummary = () => {
-    const url = 'https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM';
-
     elements.content.innerHTML = `<div class="flex items-center justify-center p-4"><div class="h-6 w-6 animate-spin rounded-full border-2 border-solid border-sky-600 border-t-transparent mr-3"></div><p class="text-slate-500">Gerando novo resumo, isso pode levar alguns segundos...</p></div>`;
 
-    fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error(`Erro na rede: ${response.statusText}`);
-        return response.text();
-      })
+    fetchAiSummaryApi()
       .then(rawHtml => {
         const styledHtml = sanitizeAndStyleAIHtml(rawHtml);
         elements.content.innerHTML = styledHtml;
@@ -938,7 +932,6 @@ function gerarCards(jsonPlanos) {
   setupAddButton();
   setupCardMenus();
 
-  // Delegation for details toggle to load photos on demand
   container.addEventListener('toggle', (e) => {
     if (e.target.tagName === 'DETAILS' && e.target.open) {
       console.log("[PhotoAPI] Details aberto. Carregando fotos da equipe...");

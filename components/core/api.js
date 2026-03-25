@@ -1,6 +1,8 @@
 const fetchApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9019b15756f14c698b3ea71554389290/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=dQ6jIWoruotdgenr1yJs3KBeW2U-DXndp99PKaYAq0U";
 const saveApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95292f9f4d384f34bd8e385ea59997d3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yXpJccQL1RD_UVZ60_MlBVGmUJlIzWyon4rgX9kL8QM";
 const photoApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9a780c43ac3a47238ba67aca60a5aa37/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=jBde7qj8if_Kb1YS9lptTceBiEdslV4Bf5agwZ7JjIE";
+const chatApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/36b9c2865eee4a19b73fee977d580e2c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1g4wq1WGZzFDdNQ7cgsycOB-OyH-7ry8bCRPGd6V1zw";
+const aiSummaryApiUrl = "https://default4c86fd71d0164231a16057311d68b9.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/0bed85406ecc44c5977d05a3336e9b2b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=L4sL4qFUHHIMnbwunw0baFlcBknWeelupnxfboF4MBM";
 
 async function fetchFromApi(fileNames) {
   try {
@@ -258,3 +260,24 @@ window.loadUserPhotos = async function (container = document) {
 document.addEventListener('DOMContentLoaded', () => {
   window.loadUserPhotos();
 });
+
+async function callChatApi(currentUserMessage, conversationHistory) {
+  const response = await fetch(chatApiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ currentUserMessage, conversationHistory })
+  });
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`API Error: ${response.statusText} - ${errorBody}`);
+  }
+  return await response.json();
+}
+
+async function fetchAiSummaryApi() {
+  const response = await fetch(aiSummaryApiUrl);
+  if (!response.ok) {
+    throw new Error(`Erro na rede: ${response.statusText}`);
+  }
+  return await response.text();
+}
