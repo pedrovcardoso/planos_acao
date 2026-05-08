@@ -1093,6 +1093,20 @@ function setupFilters() {
 
   document.getElementById('filtrar-especifico')
     .addEventListener('click', aplicarFiltros)
+
+  document.getElementById('toggle-filters').addEventListener('click', function () {
+    const filtersContainer = document.getElementById('filters-container');
+    const chevron = document.getElementById('filter-chevron');
+    const isHidden = filtersContainer.classList.toggle('hidden');
+    
+    if (isHidden) {
+      chevron.style.transform = 'rotate(0deg)';
+    } else {
+      chevron.style.transform = 'rotate(180deg)';
+    }
+  });
+
+  document.getElementById('search-gt').addEventListener('input', aplicarFiltros);
 }
 
 function normalizeString(str) {
@@ -1107,6 +1121,14 @@ function normalizeString(str) {
 
 function aplicarFiltros() {
   let jsonFiltrado = [...jsonPlanos]
+
+  const searchVal = document.getElementById('search-gt').value.toLowerCase();
+  if (searchVal) {
+    jsonFiltrado = jsonFiltrado.filter(p => 
+      p.Nome.toLowerCase().includes(searchVal) || 
+      (p.Resolução && p.Resolução.toLowerCase().includes(searchVal))
+    );
+  }
 
   filtersConfig.forEach(([chave, elementId, isObjPessoa]) => {
     const selectedValues = window.getCustomSelectValues ? window.getCustomSelectValues(elementId) : [];

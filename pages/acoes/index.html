@@ -84,9 +84,28 @@
     </div>
     <header id="header"></header>
 
-    <main class="mx-auto w-full flex-grow p-6 pt-20 md:pt-24">
+    <main class="mx-auto w-full flex-grow p-6 pt-20 md:pt-24 max-w-7xl space-y-6">
+        <header class="space-y-1">
+            <h1 class="text-3xl font-bold text-slate-800">Gestão de ações</h1>
+            <p class="text-sm text-slate-500">Para editar uma observação ou alterar o status, clique em cima da ação desejada.</p>
+        </header>
 
-        <section id="filters-container" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <section id="search-filter-bar" class="flex flex-col md:flex-row gap-4 items-center">
+            <div class="relative flex-grow w-full">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <ion-icon name="search-outline" class="text-slate-400 text-lg"></ion-icon>
+                </div>
+                <input type="text" id="search-atividades" placeholder="Pesquisar por Atividade ou Grupo de Trabalho..." 
+                       class="block w-full pl-10 pr-3 py-3 border border-slate-200 rounded-xl bg-white shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-slate-700 transition-all">
+            </div>
+            <button id="toggle-filters" class="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all whitespace-nowrap">
+                <ion-icon name="options-outline" class="text-xl"></ion-icon>
+                Filtros
+                <ion-icon name="chevron-down-outline" id="filter-chevron" class="text-slate-400 transition-transform duration-300"></ion-icon>
+            </button>
+        </section>
+
+        <section id="filters-container" class="hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                     <ion-icon name="filter" class="text-base"></ion-icon> Painel de Filtros

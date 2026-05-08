@@ -143,6 +143,20 @@ function setupFilters() {
 
     document.getElementById('filtrar-especifico').addEventListener('click', filtrarValores);
 
+    document.getElementById('toggle-filters').addEventListener('click', function () {
+        const filtersContainer = document.getElementById('filters-container');
+        const chevron = document.getElementById('filter-chevron');
+        const isHidden = filtersContainer.classList.toggle('hidden');
+        
+        if (isHidden) {
+            chevron.style.transform = 'rotate(0deg)';
+        } else {
+            chevron.style.transform = 'rotate(180deg)';
+        }
+    });
+
+    document.getElementById('search-atividades').addEventListener('input', filtrarValores);
+
     setFilterFromUrl();
 }
 
@@ -210,6 +224,14 @@ function atualizarVisualizacoes(dados) {
 
 function filtrarValores() {
     let jsonFiltrado = [...jsonAcoes];
+
+    const searchVal = document.getElementById('search-atividades').value.toLowerCase();
+    if (searchVal) {
+        jsonFiltrado = jsonFiltrado.filter(a => 
+            a.Atividade.toLowerCase().includes(searchVal) || 
+            a['Plano de ação'].toLowerCase().includes(searchVal)
+        );
+    }
 
     filtersConfig.forEach(filter => {
         const selectedValues = getCustomSelectValues(filter.id);

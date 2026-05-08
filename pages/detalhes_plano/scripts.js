@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         const planActions = jsonAcoes.filter(a => a["Plano de ação"] === planData.Nome);
+        window.currentPlanActions = planActions;
         ordenarJsonAcoes(planActions);
 
         renderPlanDetails(planData, planActions);
@@ -79,6 +80,17 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
             });
         }
+
+        document.getElementById('search-acoes-detalhes').addEventListener('input', function() {
+            const searchVal = this.value.toLowerCase();
+            const filtered = window.currentPlanActions.filter(a => 
+                a.Atividade.toLowerCase().includes(searchVal) || 
+                (a.Descrição && a.Descrição.toLowerCase().includes(searchVal))
+            );
+            
+            if (typeof populateKanbanBoard === 'function') populateKanbanBoard(filtered);
+            if (typeof populateActionsTable === 'function') populateActionsTable(filtered);
+        });
 
     } catch (error) {
         console.error("Erro ao carregar página de detalhes:", error);
