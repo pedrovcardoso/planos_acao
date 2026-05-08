@@ -38,6 +38,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     gerarCards(jsonPlanos)
     setupFilters()
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('create') === 'true') {
+        if (typeof window.openModalForNewPlan === 'function') {
+            window.openModalForNewPlan();
+        }
+    }
+
   } catch (error) {
     console.error("Ocorreu um erro no carregamento da página:", error);
   } finally {
