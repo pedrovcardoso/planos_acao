@@ -174,15 +174,26 @@
             </div>
         </section>
 
-        <section class="flex flex-wrap gap-2 items-center justify-center p-4">
-            <div class="bg-white p-1 rounded-lg border border-slate-200 flex items-center shadow-sm">
+        <section class="flex flex-col md:flex-row justify-between items-center gap-4 py-2">
+            <div class="bg-white p-1 rounded-xl border border-slate-200 flex items-center shadow-sm overflow-hidden">
                 <button id="view-kanban-btn"
-                    class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700">
-                    <ion-icon name="grid-outline" class="mr-2"></ion-icon> Kanban
+                    class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-sky-600 text-white shadow-md">
+                    <ion-icon name="grid-outline" class="text-lg"></ion-icon> Kanban
                 </button>
                 <button id="view-table-btn"
-                    class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
-                    <ion-icon name="list-outline" class="mr-2"></ion-icon> Tabela
+                    class="px-5 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-all duration-300 flex items-center gap-2">
+                    <ion-icon name="list-outline" class="text-lg"></ion-icon> Tabela
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button id="download-excel" class="group flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 font-bold hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-all duration-300">
+                    <ion-icon name="document-text-outline" class="text-xl text-emerald-500 group-hover:scale-110 transition-transform"></ion-icon>
+                    Excel
+                </button>
+                <button id="download-pdf" class="group flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 font-bold hover:bg-rose-50 hover:border-rose-200 hover:text-rose-700 transition-all duration-300">
+                    <ion-icon name="file-tray-full-outline" class="text-xl text-rose-500 group-hover:scale-110 transition-transform"></ion-icon>
+                    PDF
                 </button>
             </div>
         </section>
@@ -221,6 +232,9 @@
     <script src='../../components/ui/kanbanBoard.js'></script>
     <script src='../../components/ui/tableBoard.js'></script>
     <script src='scripts.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 

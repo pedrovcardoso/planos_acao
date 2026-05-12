@@ -7,6 +7,7 @@ const tableColumnConfig = [
     { key: 'Data fim', label: 'Fim', className: 'text-center', width: 150, filterable: true },
     { key: 'Status', label: 'Status', className: 'text-center', width: 180, filterable: true },
     { key: 'Unidades', label: 'Unidades', className: '', width: 200, filterable: true },
+    { key: 'Responsaveis', label: 'Responsáveis', className: '', width: 250, filterable: true },
     { key: 'Observações', label: 'Observações', className: '', width: 300, filterable: true }
 ];
 
@@ -14,12 +15,11 @@ function populateActionsTable(actionsData, containerId = 'table-container') {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const plansUnitMap = new Map();
+    const plansMap = new Map();
     if (Array.isArray(window.jsonPlanos)) {
         window.jsonPlanos.forEach(plan => {
-            if (plan.Nome && Array.isArray(plan.objPessoas)) {
-                const units = new Set(plan.objPessoas.map(person => person.Unidade));
-                plansUnitMap.set(plan.Nome, units);
+            if (plan.Nome) {
+                plansMap.set(plan.Nome, plan);
             }
         });
     }
@@ -44,9 +44,11 @@ function populateActionsTable(actionsData, containerId = 'table-container') {
     }).join('');
 
     const bodyHtml = actionsData.map(task => {
-        const planUnits = plansUnitMap.get(task['Plano de ação']);
+        const plan = plansMap.get(task['Plano de ação']);
+        const planUnits = plan && plan.objPessoas ? new Set(plan.objPessoas.map(p => p.Unidade)) : new Set();
+        
         let showWarning = false;
-        if (planUnits && Array.isArray(task.Unidades) && task.Unidades.length > 0) {
+        if (plan && Array.isArray(task.Unidades) && task.Unidades.length > 0) {
             if (task.Unidades.some(taskUnit => !planUnits.has(taskUnit))) {
                 showWarning = true;
             }

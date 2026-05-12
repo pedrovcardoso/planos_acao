@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         jsonAcoes = requiredData['acoes.txt'];
         jsonPlanos = requiredData['planos.txt'];
         jsonNotificacoes = requiredData['notificacoes.txt'];
+        window.jsonPlanos = jsonPlanos;
+        window.currentFilteredData = [];
 
         ordenarJsonAcoes(jsonAcoes);
 
@@ -35,6 +37,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         const btnNovaAtividade = document.getElementById('btn-nova-atividade');
         if (btnNovaAtividade) {
             btnNovaAtividade.addEventListener('click', () => window.openModalForNewAction());
+        }
+
+        const btnDownloadExcel = document.getElementById('download-excel');
+        if (btnDownloadExcel) {
+            btnDownloadExcel.addEventListener('click', exportToExcel);
+        }
+
+        const btnDownloadPdf = document.getElementById('download-pdf');
+        if (btnDownloadPdf) {
+            btnDownloadPdf.addEventListener('click', exportToPDF);
         }
 
         filtrarValores();
@@ -65,8 +77,8 @@ function setupViewSwitcher() {
     const viewTable = document.getElementById('table-view');
 
     const setActive = (activeBtn, otherBtn) => {
-        activeBtn.className = "px-4 py-2 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
-        if (otherBtn) otherBtn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
+        activeBtn.className = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-sky-600 text-white shadow-md";
+        if (otherBtn) otherBtn.className = "px-5 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-all duration-300 flex items-center gap-2";
     };
 
     const setView = (activeView, otherView) => {
@@ -202,6 +214,15 @@ function setFilterFromUrl() {
             optionToSelect.selected = true;
             createCustomSelect(filter.id);
             filterApplied = true;
+
+            if (filter.nome === 'Status') {
+                const filtersContainer = document.getElementById('filters-container');
+                const chevron = document.getElementById('filter-chevron');
+                if (filtersContainer && filtersContainer.classList.contains('hidden')) {
+                    filtersContainer.classList.remove('hidden');
+                    if (chevron) chevron.style.transform = 'rotate(180deg)';
+                }
+            }
         }
     });
 
@@ -218,8 +239,277 @@ function filterJson(json, chave, valoresSelecionados) {
 }
 
 function atualizarVisualizacoes(dados) {
+    const plansMap = new Map();
+    if (Array.isArray(window.jsonPlanos)) {
+        window.jsonPlanos.forEach(plan => {
+            if (plan.Nome) plansMap.set(plan.Nome, plan);
+        });
+    }
+
+    dados.forEach(item => {
+        const plan = plansMap.get(item['Plano de ação']);
+        let resolvedResponsaveis = [];
+        if (plan && plan.objPessoas && Array.isArray(item.Unidades)) {
+            resolvedResponsaveis = plan.objPessoas
+                .filter(p => item.Unidades.includes(p.Unidade))
+                .map(p => p.Nome);
+            resolvedResponsaveis = [...new Set(resolvedResponsaveis)];
+        }
+        item.Responsaveis = resolvedResponsaveis;
+    });
+
+    window.currentFilteredData = dados;
     populateKanbanBoard(dados);
     populateActionsTable(dados);
+}
+
+async function exportToExcel() {
+    if (!window.currentFilteredData || window.currentFilteredData.length === 0) {
+        alert("Não há dados para exportar.");
+        return;
+    }
+
+    const appliedFilters = getAppliedFiltersString();
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Ações');
+
+    // Cabeçalho de metadados
+    worksheet.mergeCells('A1:J1');
+    const titleCell = worksheet.getCell('A1');
+    titleCell.value = 'RELATÓRIO DE AÇÕES - PLANOS DE AÇÃO';
+    titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: 'FF1E293B' } };
+    titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+
+    worksheet.mergeCells('A2:J2');
+    worksheet.getCell('A2').value = `Exportado em: ${new Date().toLocaleString('pt-BR')}`;
+    worksheet.getCell('A2').font = { size: 10, color: { argb: 'FF64728B' } };
+    
+    worksheet.mergeCells('A3:J3');
+    worksheet.getCell('A3').value = `Filtros aplicados: ${appliedFilters || 'Nenhum'}`;
+    worksheet.getCell('A3').font = { size: 10, italic: true, color: { argb: 'FF475569' } };
+
+    // Dados da tabela
+    const tableRows = window.currentFilteredData.map(item => {
+        const responsaveis = Array.isArray(item.Responsaveis) ? item.Responsaveis.join(', ') : '-';
+        
+        // Conversão de datas para objeto Date (ExcelJS reconhece e formata melhor)
+        const dataInicio = item['Data de início'] ? new Date(item['Data de início'] + 'T12:00:00') : null;
+        const dataFim = item['Data fim'] ? new Date(item['Data fim'] + 'T12:00:00') : null;
+
+        return [
+            item['Número da atividade'] || '',
+            item['Plano de ação'] || '',
+            item.Atividade || '',
+            item['Descrição da atividade'] || '',
+            dataInicio,
+            dataFim,
+            item.Status || '',
+            Array.isArray(item.Unidades) ? item.Unidades.join(', ') : (item.Unidades || ''),
+            responsaveis,
+            item.Observações || ''
+        ];
+    });
+
+    // Criar a Tabela Nativa do Excel
+    worksheet.addTable({
+        name: 'AcoesTable',
+        ref: 'A5',
+        headerRow: true,
+        totalsRow: false,
+        style: {
+            theme: 'TableStyleMedium9',
+            showRowStripes: true,
+        },
+        columns: [
+            { name: 'Nº Atividade', filterButton: true },
+            { name: 'Plano de Ação', filterButton: true },
+            { name: 'Atividade', filterButton: true },
+            { name: 'Descrição', filterButton: true },
+            { name: 'Data Início', filterButton: true },
+            { name: 'Data Fim', filterButton: true },
+            { name: 'Status', filterButton: true },
+            { name: 'Unidades', filterButton: true },
+            { name: 'Responsáveis', filterButton: true },
+            { name: 'Observações', filterButton: true }
+        ],
+        rows: tableRows,
+    });
+
+    // Ajustar larguras, alinhamentos e formatos das colunas
+    const colConfig = [
+        { key: 'A', width: 15, align: 'center' },             // Nº Atividade
+        { key: 'B', width: 30, align: 'left' },               // Plano de Ação
+        { key: 'C', width: 50, align: 'left' },               // Atividade
+        { key: 'D', width: 40, align: 'left' },               // Descrição
+        { key: 'E', width: 15, align: 'center', fmt: 'dd/mm/yyyy' }, // Data Início
+        { key: 'F', width: 15, align: 'center', fmt: 'dd/mm/yyyy' }, // Data Fim
+        { key: 'G', width: 20, align: 'center' },             // Status
+        { key: 'H', width: 30, align: 'left' },               // Unidades
+        { key: 'I', width: 30, align: 'left' },               // Responsáveis
+        { key: 'J', width: 50, align: 'left' }                // Observações
+    ];
+
+    colConfig.forEach(conf => {
+        const column = worksheet.getColumn(conf.key);
+        column.width = conf.width;
+        column.alignment = { horizontal: conf.align, vertical: 'middle' };
+        if (conf.fmt) {
+            column.numFmt = conf.fmt;
+        }
+    });
+
+    // Garantir que o cabeçalho da tabela mantenha o alinhamento (ExcelJS às vezes reseta no addTable)
+    const headerRow = worksheet.getRow(5);
+    headerRow.eachCell((cell, colNumber) => {
+        const conf = colConfig[colNumber - 1];
+        if (conf) {
+            cell.alignment = { horizontal: conf.align, vertical: 'middle' };
+        }
+    });
+
+    // Gerar o buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const fileName = `acoes_planos_de_acao_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`;
+
+    const typeMap = {
+        description: 'Planilha Excel',
+        accept: { 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'] }
+    };
+
+    await saveFile(blob, fileName, typeMap);
+}
+
+function exportToPDF() {
+    if (!window.currentFilteredData || window.currentFilteredData.length === 0) {
+        alert("Não há dados para exportar.");
+        return;
+    }
+
+    const appliedFilters = getAppliedFiltersString();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'mm', 'a4');
+
+    doc.setFontSize(18);
+    doc.setTextColor(30, 41, 59);
+    doc.text("Relatório de Ações - Planos de Ação", 14, 15);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100, 116, 139);
+    doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 22);
+    
+    // Filtros aplicados no PDF
+    doc.setFontSize(9);
+    doc.setTextColor(71, 85, 105);
+    const splitFilters = doc.splitTextToSize(`Filtros aplicados: ${appliedFilters || 'Nenhum'}`, 270);
+    doc.text(splitFilters, 14, 28);
+
+    const tableData = window.currentFilteredData.map(item => {
+        const responsaveis = Array.isArray(item.Responsaveis) ? item.Responsaveis.join(', ') : '-';
+        const unidades = Array.isArray(item.Unidades) ? item.Unidades.join(', ') : (item.Unidades || '');
+        const dataInicio = item['Data de início'] ? new Date(item['Data de início'] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+        const dataFim = item['Data fim'] ? new Date(item['Data fim'] + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
+
+        return [
+            item['Número da atividade'] || '',
+            item['Plano de ação'] || '',
+            item.Atividade || '',
+            unidades,
+            dataInicio,
+            dataFim,
+            item.Status || '',
+            responsaveis
+        ];
+    });
+
+    doc.autoTable({
+        startY: 32 + (splitFilters.length * 4),
+        head: [['Nº', 'Plano', 'Atividade', 'Unidades', 'Início', 'Fim', 'Status', 'Responsáveis']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [2, 132, 199], fontStyle: 'bold' },
+        styles: { fontSize: 7.5, cellPadding: 2.5, textColor: [51, 65, 85] },
+        columnStyles: {
+            0: { cellWidth: 12 },
+            1: { cellWidth: 35 },
+            2: { cellWidth: 65 },
+            3: { cellWidth: 35 },
+            4: { cellWidth: 22 },
+            5: { cellWidth: 22 },
+            6: { cellWidth: 30 },
+            7: { cellWidth: 45 }
+        },
+        alternateRowStyles: { fillColor: [248, 250, 252] }
+    });
+
+    const pdfName = `acoes_planos_de_acao_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`;
+    const blob = doc.output('blob');
+
+    const typeMap = {
+        description: 'Documento PDF',
+        accept: { 'application/pdf': ['.pdf'] }
+    };
+
+    saveFile(blob, pdfName, typeMap);
+}
+
+async function saveFile(blob, suggestedName, typeMap) {
+    if ('showSaveFilePicker' in window) {
+        try {
+            const handle = await window.showSaveFilePicker({
+                suggestedName: suggestedName,
+                types: [typeMap]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            return;
+        } catch (err) {
+            if (err.name === 'AbortError') return;
+            console.error("Erro ao usar File System Access API:", err);
+        }
+    }
+
+    // Fallback para download direto
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = suggestedName;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
+}
+
+function getAppliedFiltersString() {
+    const applied = [];
+    
+    const searchVal = document.getElementById('search-atividades').value;
+    if (searchVal) applied.push(`Pesquisa: "${searchVal}"`);
+    
+    const periodo = document.getElementById('filter-periodo').value;
+    if (periodo !== '-') {
+        if (periodo === 'especifico') {
+            const ini = document.getElementById('periodo-inicio').value;
+            const fim = document.getElementById('periodo-fim').value;
+            if (ini && fim) applied.push(`Período: ${ini} a ${fim}`);
+        } else {
+            applied.push(`Período: ${periodo === 'mes' ? 'Mês atual' : 'Semana atual'}`);
+        }
+    }
+    
+    filtersConfig.forEach(f => {
+        if (typeof getCustomSelectValues === 'function') {
+            const selected = getCustomSelectValues(f.id);
+            if (selected && selected.length > 0) {
+                const select = document.getElementById(f.id);
+                const names = Array.from(select.options)
+                    .filter(opt => selected.includes(opt.value))
+                    .map(opt => opt.text);
+                applied.push(`${f.nome}: ${names.join(', ')}`);
+            }
+        }
+    });
+    
+    return applied.join(' | ');
 }
 
 function filtrarValores() {

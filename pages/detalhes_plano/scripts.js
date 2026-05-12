@@ -316,17 +316,20 @@ function setupViewSwitcher() {
     const viewKanban = document.getElementById('kanban-view');
     const viewTable = document.getElementById('table-view');
 
+    const activeClass = "px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-sky-600 text-white shadow-md";
+    const inactiveClass = "px-5 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-all duration-300 flex items-center gap-2";
+
     btnKanban.addEventListener('click', () => {
-        btnKanban.className = "px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
-        btnTable.className = "px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
+        btnKanban.className = activeClass;
+        btnTable.className = inactiveClass;
 
         viewKanban.classList.remove('hidden');
         viewTable.classList.add('hidden');
     });
 
     btnTable.addEventListener('click', () => {
-        btnTable.className = "px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-sky-50 text-sky-700";
-        btnKanban.className = "px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
+        btnTable.className = activeClass;
+        btnKanban.className = inactiveClass;
 
         viewTable.classList.remove('hidden');
         viewKanban.classList.add('hidden');
