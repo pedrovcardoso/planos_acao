@@ -64,10 +64,18 @@
                 class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">
                 <ion-icon name="arrow-back"></ion-icon> Voltar para Planos de Ação
             </a>
-            <button id="btn-edit-plan"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-600 transition-colors shadow-sm">
-                <ion-icon name="create-outline"></ion-icon> Editar Plano
-            </button>
+            <div class="flex items-center gap-2">
+                <button id="btn-download-excel" class="group flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-colors shadow-sm">
+                    <ion-icon name="document-text-outline" class="text-lg text-emerald-500 group-hover:scale-110 transition-transform"></ion-icon> Excel
+                </button>
+                <button id="btn-download-pdf" class="group flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-200 transition-colors shadow-sm">
+                    <ion-icon name="file-tray-full-outline" class="text-lg text-rose-500 group-hover:scale-110 transition-transform"></ion-icon> PDF
+                </button>
+                <button id="btn-edit-plan"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-600 transition-colors shadow-sm">
+                    <ion-icon name="create-outline"></ion-icon> Editar Plano
+                </button>
+            </div>
         </div>
 
         <section id="plan-details-container"
@@ -80,7 +88,7 @@
                     <div class="space-y-2 flex-1">
                         <div class="flex items-center gap-3">
                             <span id="plan-status-badge"
-                                class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-600">
+                                class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-600">
                                 Carregando...
                             </span>
                         </div>
@@ -113,7 +121,7 @@
                                     <ion-icon name="document-text-outline"></ion-icon> Processo SEI Principal
                                 </h3>
                                 <div id="plan-sei-main"
-                                    class="text-sm font-medium text-slate-700 font-mono bg-sky-50 inline-block px-3 py-1.5 rounded border border-sky-100">
+                                    class="inline-flex items-center justify-center text-sm font-medium text-slate-700 font-mono bg-sky-50 px-3 py-1.5 rounded border border-sky-100">
                                     --
                                 </div>
                             </div>
@@ -283,6 +291,11 @@
     <script defer src='../../components/ui/tableBoard.js'></script>
 
     <script defer src='scripts.js'></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

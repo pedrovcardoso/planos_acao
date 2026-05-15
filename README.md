@@ -9,6 +9,7 @@ O sistema foi desenvolvido focado em leveza, performance e facilidade de manuten
 ### Front-end
 - **HTML5** e **Vanilla JavaScript**: Estrutura e lógica do sistema, sem frameworks.
 - **Tailwind CSS** e **IonIcons**: Estilização do sistema feita através de classes utilitárias diretamente pelo html.
+- **Bibliotecas de Exportação**: Utiliza **ExcelJS** para geração de planilhas Excel nativas e **jsPDF** (com **jsPDF-AutoTable** e **html2canvas**) para exportação de relatórios em PDF.
 
 ### Back-end & Integração
 - **Power Automate Cloud**: Atua como a "API" do sistema. Diferentes fluxos recebem as requisições HTTP do front-end para buscar ou salvar dados.
